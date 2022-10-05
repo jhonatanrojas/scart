@@ -141,6 +141,7 @@ html.boxed body {
 	background: #e1e1e1 url(../images/bg-pattern-boxed.png) repeat fixed;
 }
 
+
 @media (min-width: 1630px) {
 	html.boxed .page {
 		max-width: 1600px;
@@ -152,6 +153,7 @@ html.boxed body {
 		max-width: 1600px;
 		margin-left: auto;
 		margin-right: auto;
+		
 	}
 	html.boxed .rd-navbar-static.rd-navbar--is-stuck {
 		max-width: 1600px;
@@ -10881,7 +10883,8 @@ html.tablet .ui-to-top {
 
 .rd-navbar {
 	display: none;
-	background: #ffffff;
+	background: #000080;
+
 }
 
 .rd-navbar-toggle {
@@ -11117,12 +11120,13 @@ html.tablet .ui-to-top {
 .rd-navbar-static .rd-nav-link {
 	position: relative;
 	display: inline-block;
-	font-size: 14px;
+	font-size: 16px;
 	line-height: 1.2;
+	font-weight:bold;
 	letter-spacing: .1em;
 	text-transform: uppercase;
 	font-family: "Roboto Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	color: #151515;
+	color: #82e3d0;
 	transition: all .25s ease-in-out;
 }
 
@@ -11394,7 +11398,7 @@ html.tablet .ui-to-top {
 
 .rd-navbar-static .rd-navbar-search-toggle {
 	display: inline-flex;
-	color: #151515;
+	color: #82e3d0;
 }
 
 .rd-navbar-static .rd-navbar-search-toggle span {
@@ -11468,7 +11472,7 @@ html.tablet .ui-to-top {
 	top: 0;
 	right: 0;
 	z-index: 1000;
-	background: #ffffff;
+	background: #4171FC;
 }
 
 .rd-navbar-static .rd-navbar-basket-wrap {
@@ -11669,7 +11673,7 @@ html.tablet .ui-to-top {
 .rd-navbar-static .rd-navbar-search-2 .search-submit {
 	display: inline-block;
 	padding: 10px 30px;
-	font-family: "Roboto Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-family: "Roboto Bold", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .rd-navbar-static .rd-navbar-search-2 * + .rd-search-results-live {
@@ -11813,7 +11817,7 @@ html.tablet .ui-to-top {
 .bg-brown-1 .cart-inline-title,
 .bg-brown-2 .cart-inline-title,
 .bg-primary .cart-inline-title {
-	color: #151515;
+	color: #82e3d0;
 }
 
 .rd-navbar-basket {
@@ -11822,7 +11826,7 @@ html.tablet .ui-to-top {
 	padding: 0 12px 0 0;
 	font-size: 24px;
 	line-height: 1;
-	color: #151515;
+	color: #82e3d0;
 	outline: none;
 	border: none;
 	box-shadow: none;

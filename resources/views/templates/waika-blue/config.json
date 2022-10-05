@@ -1,9 +1,9 @@
 {
     "name": "Waika Blue",
-    "image": "images/slog.jpg",
-    "auth": "S-Cart",
+    "image": "images/logo.jpg",
+    "auth": "jhonatan",
     "email": "jhonatanrojasmd@gmail.com",
     "website": "https://S-Cart.Org",
     "configKey": "waika-blue",
-    "version": "1.0.0"
+    "version": "1.0"
 }
