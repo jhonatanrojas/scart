@@ -5,8 +5,8 @@
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
     <div class="row">
-        <div class="col-12 col-sm-12">
-            <h2>{{ sc_language_render('customer.title_login') }}</h2>
+        <div class="col-12 col-sm-5 m-auto">
+            <h3>{{ sc_language_render('customer.title_login') }}</h3>
             <form action="{{ sc_route('postLogin') }}" method="post" class="box">
                 {!! csrf_field() !!}
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -28,8 +28,15 @@
                         {{ $errors->first('password') }}
                     </span>
                     @endif
+
+                   
             
                 </div>
+                    <div class="m-auto d-flex">
+                        <button type="submit" name="SubmitLogin" class="button button-lg button-secondary w-100 m-auto">{{ sc_language_render('front.login') }}</button>
+                    </div>
+
+                
                 @if (!empty(sc_config('LoginSocialite')))
                     <ul>
                     <li class="rd-dropdown-item">
@@ -55,7 +62,7 @@
                         {{ sc_language_render('customer.title_register') }}
                     </a>
                 </p>
-                <button type="submit" name="SubmitLogin" class="button button-lg button-secondary">{{ sc_language_render('front.login') }}</button>
+               
             </form>
         </div>
     </div>

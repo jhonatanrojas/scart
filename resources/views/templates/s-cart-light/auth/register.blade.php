@@ -5,7 +5,7 @@
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
     <div class="row">
-        <div class="col-12 col-sm-12">
+        <div class="col-12 col-sm-6 m-auto text-center">
             <h2>{{ sc_language_render('customer.title_register') }}</h2>
             <form action="{{sc_route('postRegister')}}" method="post" class="box" id="form-process">
                 {!! csrf_field() !!}
@@ -287,8 +287,8 @@
                         @endif
                     </div>
                     {!! $viewCaptcha ?? ''!!}
-                    <div class="submit">
-                        <button type="submit" name="SubmitCreate" class="button button-lg button-secondary" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
+                    <div class="submit ">
+                        <button type="submit" name="SubmitCreate" class="button button-lg button-secondary w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
                 </div>
             
