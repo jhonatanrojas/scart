@@ -94,6 +94,18 @@
                     </div>
                     @endif
             
+                             @if (sc_config('customer_estado'))
+                    <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
+                        <input type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
+                            name="estado" placeholder="Estado" value="{{ old('estado') }}">
+                        @if ($errors->has('estado'))
+                        <span class="help-block">
+                            {{ $errors->first('estado') }}
+                        </span>
+                        @endif
+                    </div>
+                    @endif
                     @if (sc_config('customer_postcode'))
                     <div class="form-group{{ $errors->has('postcode') ? ' has-error' : '' }}">
                         <input type="text"
