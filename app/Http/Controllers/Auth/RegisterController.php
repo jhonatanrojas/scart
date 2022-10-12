@@ -198,8 +198,8 @@ class RegisterController extends RootFrontController
 
         // );
 
-        echo json_encode($data);
-        exit;
+        // echo json_encode($data);
+        // exit;
 
 
 
