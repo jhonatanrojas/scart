@@ -1,8 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
-
+use App\Models\Estado;
+use App\Models\SC_shop_customer;
+use Google\Service\Blogger\Post;
+use Google\Service\Compute\Region;
+use Google\Service\NetworkManagement\DropInfo;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopEmailTemplate;
 use SCart\Core\Front\Models\ShopCustomer;
@@ -14,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Models\Estado;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends RootFrontController
 {
@@ -80,6 +83,7 @@ class RegisterController extends RootFrontController
     {
         $data['country'] = strtoupper($data['country'] ?? '');
         $dataMap = $this->mappingValidator($data)['dataInsert'];
+ 
 
         $user = ShopCustomer::createCustomer($dataMap);
 
@@ -105,7 +109,13 @@ class RegisterController extends RootFrontController
      * @return void
      */
     public function showRegisterFormProcessFront(...$params)
+
+       
     {
+
+    
+
+
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
             sc_lang_switch($lang);
@@ -137,15 +147,22 @@ class RegisterController extends RootFrontController
         }
         sc_check_view($this->templatePath . '.auth.register');
 
+        $estado = Estado::get();
+
+
+       
+        
+
        
         return view(
+            
             $this->templatePath . '.auth.register',
             array(
                 'title'       => sc_language_render('customer.title_register'),
                 'countries'   => ShopCountry::getCodeAll(),
                 'layout_page' => 'shop_auth',
                 'viewCaptcha' => $viewCaptcha,
-                'estado' => ['zulia','aragua'],
+                'estado' => $estado,
                 'customFields'=> (new ShopCustomField)->getCustomField($type = 'customer'),
                 'breadcrumbs' => [
                     ['url'    => '', 'title' => sc_language_render('customer.title_register')],
@@ -165,11 +182,32 @@ class RegisterController extends RootFrontController
     public function register(Request $request)
     {
         $data = $request->all();
+
+        // $data = array(
+        //     "first_name" => $request->first_name,
+        //     "last_name" => $request->last_name,
+        //     "phone" => $request->phone,
+        //     "cod_estado" => $request->cod_estado,
+        //     "cod_municipio" => $request->cod_municipio,
+        //     "cod_parroquia" => $request->cod_parroquia,
+        //     "address1" => $request->address1,
+        //     "email" => $request->email,
+        //     "password" => $request->password,
+        //     "password_confirmation" => $request->password_confirmation,
+        //     "SubmitCreate" => $request->SubmitCreate,
+
+        // );
+
+        echo json_encode($data);
+        exit;
+
+
+
+    
         $this->validator($data)->validate();
         $user = $this->create($data);
 
-        if ($user) {
-            
+        if ($user) {  
             sc_customer_created_by_client($user, $data);
 
             //Login

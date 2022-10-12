@@ -4,36 +4,43 @@
 <!--form-->
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
-    <div class="row">
-        <div class="col-12 col-sm-12">
-            <h2>{{ sc_language_render('customer.title_register') }}</h2>
+        
+          <div class="card-body w-70 ">
+            <h2 class="text-center">{{ sc_language_render('customer.title_register') }}</h2>
             <form action="{{sc_route('postRegister')}}" method="post" class="box" id="form-process">
-                {!! csrf_field() !!}
-                <div class="form_content" id="collapseExample">
+                <div class="row justify-content-space-around">
+
+                    {!! csrf_field() !!}
+
             
                     @if (sc_config('customer_lastname'))
-                    <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('first_name'))?"input-error":"" }}"
-                            name="first_name" placeholder="{{ sc_language_render('customer.first_name') }}"
-                            value="{{ old('first_name') }}">
-                        @if ($errors->has('first_name'))
-                        <span class="help-block">
-                            {{ $errors->first('first_name') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('first_name'))?"input-error":"" }}"
+                                name="first_name" placeholder="{{ sc_language_render('customer.first_name') }}"
+                                value="{{ old('first_name') }}">
+                            @if ($errors->has('first_name'))
+                            <span class="help-block">
+                                {{ $errors->first('first_name') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
-                    <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('last_name'))?"input-error":"" }}"
-                            name="last_name" placeholder="{{ sc_language_render('customer.last_name') }}" value="{{ old('last_name') }}">
-                        @if ($errors->has('last_name'))
-                        <span class="help-block">
-                            {{ $errors->first('last_name') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('last_name'))?"input-error":"" }}"
+                                name="last_name" placeholder="{{ sc_language_render('customer.last_name') }}" value="{{ old('last_name') }}">
+                            @if ($errors->has('last_name'))
+                            <span class="help-block">
+                                {{ $errors->first('last_name') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @else
+                   <div class="col-md-6">
                     <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                         <input type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('first_name'))?"input-error":"" }}"
@@ -44,32 +51,38 @@
                         </span>
                         @endif
                     </div>
+                   </div>
                     @endif
             
                     @if (sc_config('customer_name_kana'))
-                    <div class="form-group{{ $errors->has('first_name_kana') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('first_name_kana'))?"input-error":"" }}"
-                            name="first_name_kana" placeholder="{{ sc_language_render('customer.first_name_kana') }}"
-                            value="{{ old('first_name_kana') }}">
-                        @if ($errors->has('first_name_kana'))
-                        <span class="help-block">
-                            {{ $errors->first('first_name_kana') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('first_name_kana') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('first_name_kana'))?"input-error":"" }}"
+                                name="first_name_kana" placeholder="{{ sc_language_render('customer.first_name_kana') }}"
+                                value="{{ old('first_name_kana') }}">
+                            @if ($errors->has('first_name_kana'))
+                            <span class="help-block">
+                                {{ $errors->first('first_name_kana') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
-                    <div class="form-group{{ $errors->has('last_name_kana') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('last_name_kana'))?"input-error":"" }}"
-                            name="last_name_kana" placeholder="{{ sc_language_render('customer.last_name_kana') }}" value="{{ old('last_name_kana') }}">
-                        @if ($errors->has('last_name_kana'))
-                        <span class="help-block">
-                            {{ $errors->first('last_name_kana') }}
-                        </span>
-                        @endif
+                    <div class="col-3">
+                        <div class="form-group{{ $errors->has('last_name_kana') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('last_name_kana'))?"input-error":"" }}"
+                                name="last_name_kana" placeholder="{{ sc_language_render('customer.last_name_kana') }}" value="{{ old('last_name_kana') }}">
+                            @if ($errors->has('last_name_kana'))
+                            <span class="help-block">
+                                {{ $errors->first('last_name_kana') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
+                   <div class="col-md-6">
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         <input type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('email'))?"input-error":"" }}"
@@ -80,45 +93,114 @@
                         </span>
                         @endif
                     </div>
+                   </div>
             
                     @if (sc_config('customer_phone'))
-                    <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('phone'))?"input-error":"" }}"
-                            name="phone" placeholder="{{ sc_language_render('customer.phone') }}" value="{{ old('phone') }}">
-                        @if ($errors->has('phone'))
-                        <span class="help-block">
-                            {{ $errors->first('phone') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('phone'))?"input-error":"" }}"
+                                name="phone" placeholder="{{ sc_language_render('customer.phone') }}" value="{{ old('phone') }}">
+                            @if ($errors->has('phone'))
+                            <span class="help-block">
+                                {{ $errors->first('phone') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
-                             @if (sc_config('customer_estado'))
-                    <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
-                        <input type="text"
+                     @if (sc_config('customer_estado'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
+                            <select required ="{{ old('estado') }}" type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
-                            name="estado" placeholder="Estado" value="{{ old('estado') }}">
-                        @if ($errors->has('estado'))
-                        <span class="help-block">
-                            {{ $errors->first('estado') }}
-                        </span>
-                        @endif
+                            name="cod_estado" id="cod_estado"   >
+    
+                            <option  value="0">Seleccióna un Estado</option>
+    
+                            @foreach ($estado as $estados)
+                            
+                            <option 
+                            data-latitud={{$estados->latitud}} 
+                             data-longitud={{$estados->longitud}}
+                             value=" {{$estados->codigoestado}}"
+                              >
+                              {{$estados->nombre}}
+                            </option>           
+                            @endforeach                
+                        </select>
+                            @if ($errors->has('estado'))
+                            <span class="help-block">
+                                {{ $errors->first('estado') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+
+
+                    @endif
+                     @if (sc_config('customer_municipio'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('municipio') ? ' has-error' : '' }}">
+                            <select required type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('municipio'))?"input-error":"" }}"
+                            name="cod_municipio" id="cod_municipio">
+    
+                            <option value="0">Seleccióna un Municipio</option>
+                            
+                        
+                        </select>
+                            @if ($errors->has('municipio'))
+                            <span class="help-block">
+                                {{ $errors->first('municipio') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
+
+
+                     @if (sc_config('customer_parroquias'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
+                            <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
+                             <select  required type="text"
+                             class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
+                             name="cod_parroquia" id="cod_parroquia" >
+     
+                             <option value="0">Seleccióna una parroquias</option>
+                             
+                         
+                         </select>
+                             @if ($errors->has('parroquias'))
+                             <span class="help-block">
+                                 {{ $errors->first('parroquias') }}
+                             </span>
+                             @endif
+                         </div>
+                         </div>
+                    </div>
+                    
+                    @endif
+
+
                     @if (sc_config('customer_postcode'))
-                    <div class="form-group{{ $errors->has('postcode') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('postcode'))?"input-error":"" }}"
-                            name="postcode" placeholder="{{ sc_language_render('customer.postcode') }}" value="{{ old('postcode') }}">
-                        @if ($errors->has('postcode'))
-                        <span class="help-block">
-                            {{ $errors->first('postcode') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('postcode') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('postcode'))?"input-error":"" }}"
+                                name="postcode" placeholder="{{ sc_language_render('customer.postcode') }}" value="{{ old('postcode') }}">
+                            @if ($errors->has('postcode'))
+                            <span class="help-block">
+                                {{ $errors->first('postcode') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
+                   <div class="col-md-6">
                     <div class="form-group{{ $errors->has('address1') ? ' has-error' : '' }}">
                         <input type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('address1'))?"input-error":"" }}"
@@ -129,8 +211,10 @@
                         </span>
                         @endif
                     </div>
+                   </div>
 
                     @if (sc_config('customer_address2'))
+                   <div class="col-md-6">
                     <div class="form-group{{ $errors->has('address2') ? ' has-error' : '' }}">
                         <input type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('address2'))?"input-error":"" }}"
@@ -141,64 +225,73 @@
                         </span>
                         @endif
                     </div>
+                   </div>
                     @endif
             
                     @if (sc_config('customer_address3'))
-                    <div class="form-group{{ $errors->has('address3') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('address3'))?"input-error":"" }}"
-                            name="address3" placeholder="{{ sc_language_render('customer.address3') }}" value="{{ old('address3') }}">
-                        @if ($errors->has('address3'))
-                        <span class="help-block">
-                            {{ $errors->first('address3') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('address3') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('address3'))?"input-error":"" }}"
+                                name="address3" placeholder="{{ sc_language_render('customer.address3') }}" value="{{ old('address3') }}">
+                            @if ($errors->has('address3'))
+                            <span class="help-block">
+                                {{ $errors->first('address3') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
 
                     @if (sc_config('customer_company'))
-                    <div class="form-group{{ $errors->has('company') ? ' has-error' : '' }}">
-                        <input type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('company'))?"input-error":"" }}"
-                            name="company" placeholder="{{ sc_language_render('customer.company') }}" value="{{ old('company') }}">
-                        @if ($errors->has('company'))
-                        <span class="help-block">
-                            {{ $errors->first('company') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('company') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('company'))?"input-error":"" }}"
+                                name="company" placeholder="{{ sc_language_render('customer.company') }}" value="{{ old('company') }}">
+                            @if ($errors->has('company'))
+                            <span class="help-block">
+                                {{ $errors->first('company') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
                     @if (sc_config('customer_country'))
-                    <div class="form-group  {{ $errors->has('country') ? ' has-error' : '' }}">
-                        <select class="form-control country" style="width: 100%;" name="country">
-                            <option>__{{ sc_language_render('customer.country') }}__</option>
-                            @foreach ($countries as $k => $v)
-                            <option value="{{ $k }}" {{ (old('country') ==$k) ? 'selected':'' }}>{{ $v }}</option>
-                            @endforeach
-                        </select>
-                        @if ($errors->has('country'))
-                        <span class="help-block">
-                            {{ $errors->first('country') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group  {{ $errors->has('country') ? ' has-error' : '' }}">
+                            <select class="form-control country" style="width: 100%;" name="country">
+                                <option>__{{ sc_language_render('customer.country') }}__</option>
+                                @foreach ($countries as $k => $v)
+                                <option value="{{ $k }}" {{ (old('country') ==$k) ? 'selected':'' }}>{{ $v }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('country'))
+                            <span class="help-block">
+                                {{ $errors->first('country') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
                     @if (sc_config('customer_sex'))
-                    <div class="form-group{{ $errors->has('sex') ? ' has-error' : '' }}">
-                        <label
-                            class="validate account_input {{ ($errors->has('sex'))?"input-error":"" }}">{{ sc_language_render('customer.sex') }}:
-                        </label>
-                        <label class="radio-inline"><input value="0" type="radio" name="sex"
-                                {{ (old('sex') == 0)?'checked':'' }}> {{ sc_language_render('customer.sex_women') }}</label>
-                        <label class="radio-inline"><input value="1" type="radio" name="sex"
-                                {{ (old('sex') == 1)?'checked':'' }}> {{ sc_language_render('customer.sex_men') }}</label>
-                        @if ($errors->has('sex'))
-                        <span class="help-block">
-                            {{ $errors->first('sex') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('sex') ? ' has-error' : '' }}">
+                            <label
+                                class="validate account_input {{ ($errors->has('sex'))?"input-error":"" }}">{{ sc_language_render('customer.sex') }}:
+                            </label>
+                            <label class="radio-inline"><input value="0" type="radio" name="sex"
+                                    {{ (old('sex') == 0)?'checked':'' }}> {{ sc_language_render('customer.sex_women') }}</label>
+                            <label class="radio-inline"><input value="1" type="radio" name="sex"
+                                    {{ (old('sex') == 1)?'checked':'' }}> {{ sc_language_render('customer.sex_men') }}</label>
+                            @if ($errors->has('sex'))
+                            <span class="help-block">
+                                {{ $errors->first('sex') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
                     @endif
             
@@ -228,6 +321,7 @@
                         @endif
                     </div>
                     @endif
+ 
             
 
 {{-- Custom fields --}}
@@ -251,7 +345,7 @@
                                 @endif
                             @elseif($field->option == 'select')
                                 @if ($default)
-                                <select class="form-control input-sm {{ $field->code }}" style="width: 100%;"
+                                <select required class="form-control input-sm {{ $field->code }}" style="width: 100%;"
                                     name="fields[{{ $field->code }}]">
                                     <option value="">{{ sc_language_render($field->name) }}</option>
                                     @foreach ($default as $key => $name)
@@ -278,16 +372,19 @@
 {{-- //Custom fields --}}
 
 
-                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                        <input type="password"
-                            class="is_required validate account_input form-control {{ ($errors->has('password'))?"input-error":"" }}"
-                            name="password" placeholder="{{ sc_language_render('customer.password') }}" value="">
-                        @if ($errors->has('password'))
-                        <span class="help-block">
-                            {{ $errors->first('password') }}
-                        </span>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                            <input type="password"
+                                class="is_required validate account_input form-control {{ ($errors->has('password'))?"input-error":"" }}"
+                                name="password" placeholder="{{ sc_language_render('customer.password') }}" value="">
+                            @if ($errors->has('password'))
+                            <span class="help-block">
+                                {{ $errors->first('password') }}
+                            </span>
+                            @endif
+                        </div>
                     </div>
+                   <div class="col-md-6">
                     <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
                         <input type="password"
                             class="is_required validate account_input form-control {{ ($errors->has('password_confirmation'))?"input-error":"" }}"
@@ -298,16 +395,25 @@
                         </span>
                         @endif
                     </div>
+                   </div>
                     {!! $viewCaptcha ?? ''!!}
+                   <div class="col-md-12">
                     <div class="submit">
-                        <button type="submit" name="SubmitCreate" class="button button-lg button-secondary" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
+                        <button type="submit" name="SubmitCreate" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
+                   </div>
                 </div>
             
+
+                
+             
             </form>
-        </div>
-    </div>
+            
+          </div>
+
 </div>
 </section>
+
+@vite('resources/js/estado.js')
 <!--/form-->
 @endsection
