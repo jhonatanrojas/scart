@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Municipio;
+use App\Http\Controllers\Parroquia;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::get('municipio/{id}', [Municipio::class , 'get_municipio']);
+Route::get('parroquia/{municipio}/{estado}', [Parroquia::class , 'get_parroquia']);

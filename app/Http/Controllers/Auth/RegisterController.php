@@ -1,11 +1,227 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
-class RegisterController extends \SCart\Core\Front\Controllers\Auth\RegisterController
+use App\Models\Estado;
+use App\Models\SC_shop_customer;
+use Google\Service\Blogger\Post;
+use Google\Service\Compute\Region;
+use Google\Service\NetworkManagement\DropInfo;
+use SCart\Core\Front\Controllers\RootFrontController;
+use SCart\Core\Front\Models\ShopEmailTemplate;
+use SCart\Core\Front\Models\ShopCustomer;
+use SCart\Core\Front\Models\ShopCustomField;
+use SCart\Core\Front\Models\ShopCountry;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use SCart\Core\Front\Controllers\Auth\AuthTrait;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+
+class RegisterController extends RootFrontController
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Register Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles the registration of new users as well as their
+    | validation and creation. By default this controller uses a trait to
+    | provide this functionality without requiring any additional code.
+    |
+     */
+
+    use RegistersUsers;
+    use AuthTrait;
+
+    /**
+     * Where to redirect users after registration.
+     *
+     * @var string
+     */
+    // protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        return sc_route('customer.index');
+    }
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('guest');
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        $dataMapping = $this->mappingValidator($data);
+        if (sc_captcha_method() && in_array('register', sc_captcha_page())) {
+            $data['captcha_field'] = $data[sc_captcha_method()->getField()] ?? '';
+            $dataMapping['validate']['captcha_field'] = ['required', 'string', new \SCart\Core\Rules\CaptchaRule];
+        }
+        return Validator::make($data, $dataMapping['validate'], $dataMapping['messages']);
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return \SCart\Core\Front\Models\ShopCustomer
+     */
+    protected function create(array $data)
+    {
+        $data['country'] = strtoupper($data['country'] ?? '');
+        $dataMap = $this->mappingValidator($data)['dataInsert'];
+ 
+
+        $user = ShopCustomer::createCustomer($dataMap);
+
+        return $user;
+    }
+    
+    public function showRegistrationForm()
+    {
+        return redirect(sc_route('register'));
+        // return view('auth.register');
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        redirect()->route('home')->with(['message' => sc_language_render('customer.register_success')]);
+    }
+
+
+    /**
+     * Process front form register
+     *
+     * @param [type] ...$params
+     * @return void
+     */
+    public function showRegisterFormProcessFront(...$params)
+
+       
+    {
+
+    
+
+
+        if (config('app.seoLang')) {
+            $lang = $params[0] ?? '';
+            sc_lang_switch($lang);
+        }
+        return $this->_showRegisterForm();
+    }
+
+
+    /**
+     * Form register
+     *
+     * @return  [type]  [return description]
+     */
+    private function _showRegisterForm()
+    {
+        if (session('customer')) {
+            return redirect()->route('home');
+        }
+        $viewCaptcha = '';
+        if (sc_captcha_method() && in_array('register', sc_captcha_page())) {
+            if (view()->exists(sc_captcha_method()->pathPlugin.'::render')) {
+                $dataView = [
+                    'titleButton' => sc_language_render('customer.signup'),
+                    'idForm' => 'form-process',
+                    'idButtonForm' => 'button-form-process',
+                ];
+                $viewCaptcha = view(sc_captcha_method()->pathPlugin.'::render', $dataView)->render();
+            }
+        }
+        sc_check_view($this->templatePath . '.auth.register');
+
+        $estado = Estado::get();
+
+
+       
+        
+
+       
+        return view(
+            
+            $this->templatePath . '.auth.register',
+            array(
+                'title'       => sc_language_render('customer.title_register'),
+                'countries'   => ShopCountry::getCodeAll(),
+                'layout_page' => 'shop_auth',
+                'viewCaptcha' => $viewCaptcha,
+                'estado' => $estado,
+                'customFields'=> (new ShopCustomField)->getCustomField($type = 'customer'),
+                'breadcrumbs' => [
+                    ['url'    => '', 'title' => sc_language_render('customer.title_register')],
+                ],
+            )
+        );
+    }
+
+
+    /**
+     * Handle a registration request for the application.
+     * User for Front
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        $data = $request->all();
+
+        // $data = array(
+        //     "first_name" => $request->first_name,
+        //     "last_name" => $request->last_name,
+        //     "phone" => $request->phone,
+        //     "cod_estado" => $request->cod_estado,
+        //     "cod_municipio" => $request->cod_municipio,
+        //     "cod_parroquia" => $request->cod_parroquia,
+        //     "address1" => $request->address1,
+        //     "email" => $request->email,
+        //     "password" => $request->password,
+        //     "password_confirmation" => $request->password_confirmation,
+        //     "SubmitCreate" => $request->SubmitCreate,
+
+        // );
+
+        // echo json_encode($data);
+        // exit;
+
+
+
+    
+        $this->validator($data)->validate();
+        $user = $this->create($data);
+
+        if ($user) {  
+            sc_customer_created_by_client($user, $data);
+
+            //Login
+            $this->guard()->login($user);
+            
+            if ($response = $this->registered($request, $user)) {
+                return $response;
+            }
+        } else {
+            return back()->withInput();
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([], 201)
+                    : redirect($this->redirectPath());
     }
 }
