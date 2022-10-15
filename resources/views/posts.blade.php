@@ -135,10 +135,5 @@
 </section>
 @vite('resources/js/adjuntar_document.js')
 
-@push('styles')
 
-@endpush
-
-@push('scripts')
-@endpush
 @endsection
