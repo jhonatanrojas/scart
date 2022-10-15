@@ -23,12 +23,12 @@
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
                     <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Cedula</label>
+                        <label for="image" class="col-sm-2 col-form-label">Contacia</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" id="image" name="image"
                                     value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image  placeholder="" />
+                                    class="form-control input image "/>
                                 <div class="input-group-append">
                                     <a data-input="image" data-preview="preview_image" data-type="category"
                                         class="btn btn-primary lfm">
@@ -60,7 +60,7 @@
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
                     <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Rif</label>
+                        <label for="image" class="col-sm-2 col-form-label">cedula</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" id="image" name="image"
@@ -96,7 +96,7 @@
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
                     <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Contacias</label>
+                        <label for="image" class="col-sm-2 col-form-label">rif</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" id="image" name="image"
