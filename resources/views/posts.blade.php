@@ -22,30 +22,26 @@
                     
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
-                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Contacia</label>
+                    <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image"
-                                    value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image "/>
+                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                    <a data-input="image" data-preview="preview_image" data-type="category"
-                                        class="btn btn-primary lfm">
-                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
-                                    </a>
+                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                   <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                 </a>
                                 </div>
                             </div>
-                            @if ($errors->has('image'))
-                            <span class="form-text">
-                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
-                            </span>
-                            @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$category['image']??''))
-                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @if ($errors->has('image'))
+                                    <span class="form-text">
+                                        <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                                    </span>
                                 @endif
-
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$banner['image']??''))
+                                <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -59,30 +55,26 @@
                     
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
-                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">cedula</label>
+                    <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image"
-                                    value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image" placeholder="" />
+                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                    <a data-input="image" data-preview="preview_image" data-type="category"
-                                        class="btn btn-primary lfm">
-                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
-                                    </a>
+                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                   <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                 </a>
                                 </div>
                             </div>
-                            @if ($errors->has('image'))
-                            <span class="form-text">
-                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
-                            </span>
-                            @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$category['image']??''))
-                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @if ($errors->has('image'))
+                                    <span class="form-text">
+                                        <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                                    </span>
                                 @endif
-
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$banner['image']??''))
+                                <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -95,34 +87,29 @@
                     
                     <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
-                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">rif</label>
+                    <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image"
-                                    value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image" placeholder="" />
+                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                    <a data-input="image" data-preview="preview_image" data-type="category"
-                                        class="btn btn-primary lfm">
-                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
-                                    </a>
+                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                   <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                 </a>
                                 </div>
                             </div>
-                            @if ($errors->has('image'))
-                            <span class="form-text">
-                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
-                            </span>
-                            @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$category['image']??''))
-                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @if ($errors->has('image'))
+                                    <span class="form-text">
+                                        <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                                    </span>
                                 @endif
-
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$banner['image']??''))
+                                <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
+                                @endif
                             </div>
                         </div>
                     </div>
-                  
     
                   
                     
