@@ -28,7 +28,7 @@ class PostController extends Controller
             
         // }
 
-        return view('posts')
+        return view('templates\s-cart-light\account/posts')
             ->with(
                 [
                     'title'       => 'adjuntar documento',
