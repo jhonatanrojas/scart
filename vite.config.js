@@ -5,8 +5,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-               
-                'resources/js/estado.js',
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/adjuntar_document.js',
             ],
             refresh: true,
         }),

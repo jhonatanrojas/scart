@@ -11,4 +11,7 @@
     <li class="list-group-item">
         <a href="{{ sc_route('customer.order_list') }}"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i> {{ sc_language_render('customer.order_history') }}</a>
     </li>
+    <li class="list-group-item">
+        <a href="{{route('adjuntar_document')}}"><i class="fa fa-list-alt" aria-hidden="true"></i>Adjuntar documentos </a>
+    </li>
 </ul>

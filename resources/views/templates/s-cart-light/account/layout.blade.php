@@ -3,7 +3,7 @@
 @section('block_main')
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
-      <div class="row">
+      <div class="row align-items-md-end">
         <div class="col-12 col-sm-12 col-md-3">
           @include($sc_templatePath.'.account.nav_customer')
         </div>

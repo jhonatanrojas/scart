@@ -183,26 +183,6 @@ class RegisterController extends RootFrontController
     {
         $data = $request->all();
 
-        // $data = array(
-        //     "first_name" => $request->first_name,
-        //     "last_name" => $request->last_name,
-        //     "phone" => $request->phone,
-        //     "cod_estado" => $request->cod_estado,
-        //     "cod_municipio" => $request->cod_municipio,
-        //     "cod_parroquia" => $request->cod_parroquia,
-        //     "address1" => $request->address1,
-        //     "email" => $request->email,
-        //     "password" => $request->password,
-        //     "password_confirmation" => $request->password_confirmation,
-        //     "SubmitCreate" => $request->SubmitCreate,
-
-        // );
-
-        // echo json_encode($data);
-        // exit;
-
-
-
     
         $this->validator($data)->validate();
         $user = $this->create($data);
