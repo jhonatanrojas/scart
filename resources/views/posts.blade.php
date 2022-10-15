@@ -10,10 +10,11 @@
     <div class="container  ">
 
       <div class="row ">
-        <div class="col-12 col-sm-12 col-md-12">
+        <div class="col-12 col-sm-12 col-md-4">
           @include($sc_templatePath.'.account.nav_customer')
         </div>
-        <div class="container">
+        <div class="">
+        
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
@@ -21,12 +22,30 @@
                     
                         <img width="20%" class="img-fluid" src="../images/cedula-icon.png" alt="cedula">
          
-                    <div class="d-flex  ">
-                        <p class="h4">Cedula </p>
-                        <input accept=".png, .jpg, .jpeg"  id="file" class="form-control " name="cedula" type="file" class="form-control-file" />
-                        <div id="preview"></div>
-                        
-                    </div>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" id="cedula" name="cedula"
+                                    value="{{ old('image',$category['image']??'') }}"
+                                    class="form-control input image" placeholder="" />
+                                <div class="input-group-append">
+                                    <a data-input="image" data-preview="preview_image" data-type="category"
+                                        class="btn btn-primary lfm">
+                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                    </a>
+                                </div>
+                            </div>
+                            @if ($errors->has('image'))
+                            <span class="form-text">
+                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                            </span>
+                            @endif
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$category['image']??''))
+                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @endif
+        
+                            </div>
+                        </div>
                   
     
                   
@@ -39,10 +58,30 @@
                 
                     
     
-                    <div class="d-flex">
-                        <p class="h4">Rif </p>
-                        <input accept=".png, .jpg, .jpeg"  id="file" class="form-control" name="Rif" type="file" class="form-control-file" />
-                    </div>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" id="rif" name="rif"
+                                    value="{{ old('image',$category['image']??'') }}"
+                                    class="form-control input image" placeholder="" />
+                                <div class="input-group-append">
+                                    <a data-input="image" data-preview="preview_image" data-type="category"
+                                        class="btn btn-primary lfm">
+                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                    </a>
+                                </div>
+                            </div>
+                            @if ($errors->has('image'))
+                            <span class="form-text">
+                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                            </span>
+                            @endif
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$category['image']??''))
+                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @endif
+        
+                            </div>
+                        </div>
                     <div id="preview3"></div>
                 </div>
                 <div class="d-flex  align-items-center">
@@ -52,10 +91,30 @@
              
                     
 
-                    <div class="d-flex  ">
-                        <p class="h4">Constancia</p>
-                        <input  accept=".png, .jpg, .jpeg"  id="file2" class="form-control" name="carta_trabajo" type="file" class="form-control-file" />
-                    </div>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" id="contacia" name="contacia"
+                                    value="{{ old('image',$category['image']??'') }}"
+                                    class="form-control input image" placeholder="" />
+                                <div class="input-group-append">
+                                    <a data-input="image" data-preview="preview_image" data-type="category"
+                                        class="btn btn-primary lfm">
+                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                    </a>
+                                </div>
+                            </div>
+                            @if ($errors->has('image'))
+                            <span class="form-text">
+                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                            </span>
+                            @endif
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$category['image']??''))
+                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @endif
+        
+                            </div>
+                        </div>
                        
                         <div id="preview2"></div>
                    
@@ -73,7 +132,7 @@
                 <input type="hidden" name="email" value="{{$customer['email']}}">
                 <input type="hidden" name="phone" value="{{ $customer['phone'] }}">
 
-                
+               
     
                
             </form>
@@ -83,4 +142,11 @@
 </div>
 </section>
 @vite('resources/js/adjuntar_document.js')
+
+@push('styles')
+
+@endpush
+
+@push('scripts')
+@endpush
 @endsection
