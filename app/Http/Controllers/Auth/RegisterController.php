@@ -212,6 +212,10 @@ class RegisterController extends RootFrontController
 
             //Login
             $this->guard()->login($user);
+            session(['customer' => auth()->user()->toJson(),
+            'perfil' =>'cliente'
+        
+        ]);
             
             if ($response = $this->registered($request, $user)) {
                 return $response;
