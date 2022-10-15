@@ -14,7 +14,10 @@
 
             
                     @if (sc_config('customer_lastname'))
+
+                   
                     <div class="col-md-6">
+                        
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('first_name'))?"input-error":"" }}"
@@ -27,6 +30,22 @@
                             @endif
                         </div>
                     </div>
+                    
+                   
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
+                                name="first_name" placeholder="Introduce la Cedula"
+                                value="{{ old('cedula') }}">
+                            @if ($errors->has('cedula'))
+                            <span class="help-block">
+                                {{ $errors->first('cedula') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
                             <input type="text"
@@ -38,6 +57,20 @@
                             </span>
                             @endif
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
+                                name="first_name" placeholder="Introduce la Cedula"
+                                value="{{ old('cedula') }}">
+                            @if ($errors->has('cedula'))
+                            <span class="help-block">
+                                {{ $errors->first('cedula') }}
+                            </span>
+                            @endif
+                        </div>
+                       
                     </div>
                     @else
                    <div class="col-md-6">
@@ -68,7 +101,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-6">
                         <div class="form-group{{ $errors->has('last_name_kana') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('last_name_kana'))?"input-error":"" }}"
