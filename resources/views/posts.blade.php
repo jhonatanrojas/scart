@@ -18,15 +18,17 @@
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
-                <div class="d-flex align-items-center ">
+                <div class="d-flex  ">
                     
-                        <img width="20%" class="img-fluid" src="../images/cedula-icon.png" alt="cedula">
-         
+                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
+                    
+                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">Cedula</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="cedula" name="cedula"
+                                <input type="text" id="image" name="image"
                                     value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image" placeholder="" />
+                                    class="form-control input image  placeholder="" />
                                 <div class="input-group-append">
                                     <a data-input="image" data-preview="preview_image" data-type="category"
                                         class="btn btn-primary lfm">
@@ -43,57 +45,25 @@
                                 @if (old('image',$category['image']??''))
                                 <img src="{{ sc_file(old('image',$category['image']??'')) }}">
                                 @endif
-        
-                            </div>
-                        </div>
-                  
-    
-                  
-                    
-                </div>
-                
-                <div class="d-flex m-2 align-items-center">
-                  
-                        <img width="20%" src="../images/cedula-icon.png" alt="cedula">
-                
-                    
-    
-                        <div class="col-sm-8">
-                            <div class="input-group">
-                                <input type="text" id="rif" name="rif"
-                                    value="{{ old('image',$category['image']??'') }}"
-                                    class="form-control input image" placeholder="" />
-                                <div class="input-group-append">
-                                    <a data-input="image" data-preview="preview_image" data-type="category"
-                                        class="btn btn-primary lfm">
-                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
-                                    </a>
-                                </div>
-                            </div>
-                            @if ($errors->has('image'))
-                            <span class="form-text">
-                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
-                            </span>
-                            @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$category['image']??''))
-                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
-                                @endif
-        
-                            </div>
-                        </div>
-                    <div id="preview3"></div>
-                </div>
-                <div class="d-flex  align-items-center">
-                
-                        <img width="20%" src="../images/cedula-icon.png" alt="cedula">
-                        
-             
-                    
 
+                            </div>
+                        </div>
+                    </div>
+                  
+    
+                  
+                    
+                </div>
+                
+                <div class="d-flex  ">
+                    
+                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
+                    
+                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">Rif</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="contacia" name="contacia"
+                                <input type="text" id="image" name="image"
                                     value="{{ old('image',$category['image']??'') }}"
                                     class="form-control input image" placeholder="" />
                                 <div class="input-group-append">
@@ -112,14 +82,49 @@
                                 @if (old('image',$category['image']??''))
                                 <img src="{{ sc_file(old('image',$category['image']??'')) }}">
                                 @endif
-        
+
                             </div>
                         </div>
-                       
-                        <div id="preview2"></div>
-                   
+                    </div>
+                  
+    
+                  
                     
+                </div>
+                <div class="d-flex  ">
                     
+                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
+                    
+                    <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
+                        <label for="image" class="col-sm-2 col-form-label">Contacias</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" id="image" name="image"
+                                    value="{{ old('image',$category['image']??'') }}"
+                                    class="form-control input image" placeholder="" />
+                                <div class="input-group-append">
+                                    <a data-input="image" data-preview="preview_image" data-type="category"
+                                        class="btn btn-primary lfm">
+                                        <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
+                                    </a>
+                                </div>
+                            </div>
+                            @if ($errors->has('image'))
+                            <span class="form-text">
+                                <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
+                            </span>
+                            @endif
+                            <div id="preview_image" class="img_holder">
+                                @if (old('image',$category['image']??''))
+                                <img src="{{ sc_file(old('image',$category['image']??'')) }}">
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                  
+    
+                  
                     
                 </div>
 
