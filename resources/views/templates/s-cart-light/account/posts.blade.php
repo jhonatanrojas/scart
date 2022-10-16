@@ -28,7 +28,7 @@
                 <div class=" h5">
 
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o text-info fs-4 ">Cedula</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o  fs-4 ">Cedula</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$banner['cedula']??'') }}" class="form-control image" placeholder=""  />
@@ -60,7 +60,7 @@
                     
                     
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt text-info">Rif</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$banner['rif']??'') }}" class="form-control image" placeholder=""  />
@@ -90,7 +90,7 @@
                 <div class="  h5">
          
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt text-info Constancia">Constancia trabajo</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt  Constancia">Constancia trabajo</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$banner['carta_trabajo']??'') }}" class="form-control image" placeholder=""  />
@@ -118,7 +118,7 @@
                 </div>
 
                 <div class="mt-3 p-2 ">
-                    <button id="guarda"  class="btn btn-primary w-100">guardar</button>
+                    <button id="guarda"  class="btn btn-primary w-50">guardar</button>
 
                 </div>
                 <input  type="hidden" name="first_name" value="{{$customer['first_name']}}">

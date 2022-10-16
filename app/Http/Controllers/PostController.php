@@ -25,9 +25,6 @@ class PostController extends Controller
             $customer = auth()->user();
             $id = $customer['id'];
 
-    
-      
-        
         $documento = SC__documento::where('id_usuario', $id)->get();
 
         if(!isset($documento[0]['id_usuario']) == $id){
@@ -74,14 +71,9 @@ class PostController extends Controller
         ]);
   
         if ($validator->fails()) {
-
             return redirect('/adjuntar_document')->with('error', 'Adjuntar Cedula  Rif y Contancia de trabajo');
         }
 
-       
-
-        
-            
             $customer = auth()->user();
             $id = $customer['id'];
 
@@ -98,21 +90,13 @@ class PostController extends Controller
          
             if(isset($documento[0]['id_usuario'])  == $id){
                 return redirect('/adjuntar_document')->with('error', 'Disculpa ya se Adjunto tus documentos');
-            }else{
-                $saveFile->save();
-
-            }
-           
-            
+            }else $saveFile->save();
 
             if($saveFile){
                 return redirect('/adjuntar_document')->with('success', 'Datos enviado con exito');
              }
             
-      
-       
-       
-  
+
        
     }
 }

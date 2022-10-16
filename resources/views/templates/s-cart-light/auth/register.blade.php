@@ -13,11 +13,45 @@
                     {!! csrf_field() !!}
 
             
-                    @if (sc_config('customer_lastname'))
-
-                   
+                    @if (sc_config('customer_nacionalidad'))
                     <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
+                            <select required type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
+                            name="nacionalidad" id="nacionalidad">
+    
+                            <option value="0">Seleccióna un nacionalidad</option>
+                            <option value="{{ old('nacionalidad') }}">Venezolano(a)</option>
+                            <option value="{{ old('nacionalidad') }}">Extranjero(a)</option>
+                            
                         
+                            </select>
+                            @if ($errors->has('nacionalidad'))
+                            <span class="help-block">
+                                {{ $errors->first('nacionalidad') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                    @endif
+                    @if (sc_config('customer_cedula'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
+                            <input type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
+                                name="first_name" placeholder="{{ sc_language_render('customer.cedula') }}"
+                                value="{{ old('cedula') }}">
+                            @if ($errors->has('cedula'))
+                            <span class="help-block">
+                                {{ $errors->first('cedula') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                    
+                    <div class="col-md-6">
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('first_name'))?"input-error":"" }}"
@@ -30,22 +64,6 @@
                             @endif
                         </div>
                     </div>
-                    
-                   
-                    <div class="col-md-6">
-                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
-                            <input type="text"
-                                class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
-                                name="first_name" placeholder="Introduce la Cedula"
-                                value="{{ old('cedula') }}">
-                            @if ($errors->has('cedula'))
-                            <span class="help-block">
-                                {{ $errors->first('cedula') }}
-                            </span>
-                            @endif
-                        </div>
-                       
-                    </div>
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
                             <input type="text"
@@ -57,20 +75,6 @@
                             </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
-                            <input type="text"
-                                class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
-                                name="first_name" placeholder="Introduce la Cedula"
-                                value="{{ old('cedula') }}">
-                            @if ($errors->has('cedula'))
-                            <span class="help-block">
-                                {{ $errors->first('cedula') }}
-                            </span>
-                            @endif
-                        </div>
-                       
                     </div>
                     @else
                    <div class="col-md-6">
@@ -101,7 +105,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-3">
                         <div class="form-group{{ $errors->has('last_name_kana') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('last_name_kana'))?"input-error":"" }}"
@@ -146,7 +150,7 @@
                      @if (sc_config('customer_estado'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
-                            <select required value="{{ old('estado') }}" type="text"
+                            <select required ="{{ old('estado') }}" type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
                             name="cod_estado" id="cod_estado"   >
     
@@ -176,7 +180,7 @@
                      @if (sc_config('customer_municipio'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('municipio') ? ' has-error' : '' }}">
-                            <select required  type="text"
+                            <select required type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('municipio'))?"input-error":"" }}"
                             name="cod_municipio" id="cod_municipio">
     
@@ -198,7 +202,7 @@
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
                             <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
-                             <select  required  type="text"
+                             <select  required type="text"
                              class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
                              name="cod_parroquia" id="cod_parroquia" >
      
@@ -378,7 +382,7 @@
                                 @endif
                             @elseif($field->option == 'select')
                                 @if ($default)
-                                <select class="form-control input-sm {{ $field->code }}" style="width: 100%;"
+                                <select required class="form-control input-sm {{ $field->code }}" style="width: 100%;"
                                     name="fields[{{ $field->code }}]">
                                     <option value="">{{ sc_language_render($field->name) }}</option>
                                     @foreach ($default as $key => $name)
