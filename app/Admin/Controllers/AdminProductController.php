@@ -79,6 +79,7 @@ class AdminProductController extends RootAdminController
             'name'     => sc_language_render('product.name'),
             'category' => sc_language_render('product.category'),
         ];
+        $listTh['cuotas'] = 'Cuotas';
         if (sc_config_admin('product_cost')) {
             $listTh['cost'] = sc_language_render('product.cost');
         }
@@ -117,6 +118,7 @@ class AdminProductController extends RootAdminController
         ];
 
         $dataTmp = (new AdminProduct)->getProductListAdmin($dataSearch);
+       
         $arrProductId = $dataTmp->pluck('id')->toArray();
         $categoriesTmp = (new AdminProduct)->getListCategoryIdFromProductId($arrProductId);
 
@@ -132,6 +134,7 @@ class AdminProductController extends RootAdminController
         }
 
         $dataTr = [];
+           
         foreach ($dataTmp as $key => $row) {
             $kind = $this->kinds()[$row['kind']] ?? $row['kind'];
             if ($row['kind'] == SC_PRODUCT_BUILD) {
@@ -153,6 +156,8 @@ class AdminProductController extends RootAdminController
                 'category' => implode(';<br>', $arrName),
                 
             ];
+     $dataMap['cuotas'] = $row['nro_coutas'];
+
             if (sc_config_admin('product_cost')) {
                 $dataMap['cost'] = $row['cost'];
             }
@@ -252,6 +257,7 @@ class AdminProductController extends RootAdminController
                 </form>';
         //=topMenuRight
 
+     
         return view($this->templatePathAdmin.'screen.list')
             ->with($data);
     }
@@ -401,10 +407,12 @@ class AdminProductController extends RootAdminController
      * Post create new item in admin
      * @return [type] [description]
      */
-
+//crear producto
     public function postCreate()
     {
         $data = request()->all();
+
+    
         $langFirst = array_key_first(sc_language_all()->toArray()); //get first code language active
         $data['alias'] = !empty($data['alias'])?$data['alias']:$data['descriptions'][$langFirst]['name'];
         $data['alias'] = sc_word_format_url($data['alias']);
@@ -416,6 +424,7 @@ class AdminProductController extends RootAdminController
                     'kind'                       => 'required',
                     'sort'                       => 'numeric|min:0',
                     'minimum'                    => 'numeric|min:0',
+                    'nro_coutas'                    => 'numeric|min:0',
                     'descriptions.*.name'        => 'required|string|max:100',
                     'descriptions.*.keyword'     => 'nullable|string|max:100',
                     'descriptions.*.description' => 'nullable|string|max:100',
@@ -450,6 +459,7 @@ class AdminProductController extends RootAdminController
 
             case SC_PRODUCT_BUILD: //product build
                 $arrValidation = [
+                    'nro_coutas' => 'required',
                     'kind'                       => 'required',
                     'sort'                       => 'numeric|min:0',
                     'minimum'                    => 'numeric|min:0',
@@ -521,6 +531,7 @@ class AdminProductController extends RootAdminController
         $subImages       = $data['sub_image'] ?? [];
         $downloadPath    = $data['download_path'] ?? '';
         $dataCreate = [
+            'nro_coutas' => $data['nro_coutas'],
             'brand_id'       => $data['brand_id'] ?? "",
             'supplier_id'    => $data['supplier_id'] ?? "",
             'price'          => $data['price'] ?? 0,
@@ -549,6 +560,7 @@ class AdminProductController extends RootAdminController
         }
         //insert product
         $dataCreate = sc_clean($dataCreate, [], true);
+ 
         $product = AdminProduct::createProductAdmin($dataCreate);
 
         //Promoton price
