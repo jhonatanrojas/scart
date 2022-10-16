@@ -6,6 +6,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/adjuta_ducument.css',
                 'resources/js/app.js',
                 'resources/js/adjuntar_document.js',
                 'resources/js/estado.js',
