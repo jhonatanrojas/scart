@@ -8,8 +8,8 @@
     
     <div class="container  ">
 
-      <div class="row ">
-        <div class="col-12 col-sm-12 col-md-4">
+      <div class="row  ">
+        <div class="col-12 col-sm-12 col-md-6">
           @include($sc_templatePath.'.account.nav_customer')
         </div>
         <div class="">
@@ -17,17 +17,17 @@
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
-                <div class="d-flex  ">
+                <div class=" ">
                     
-                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
+                  
                     
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
+                        <label for="image" class="col-sm-2 col-form-label">Cedula</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
+                                <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$banner['cedula']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                 <a data-input="cedula" data-preview="cedula" data-type="cedula" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
                                  </a>
                                 </div>
@@ -37,9 +37,9 @@
                                         <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
                                     </span>
                                 @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$banner['image']??''))
-                                <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
+                            <div id="cedula" class="img_holder">
+                                @if (old('cedula',$banner['cedula']??''))
+                                <img width="20%" src="{{ sc_file(old('cedula',$banner['cedula']??'')) }}">
                                 @endif
                             </div>
                         </div>
@@ -50,17 +50,16 @@
                     
                 </div>
                 
-                <div class="d-flex  ">
+                <div class=" ">
                     
-                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
                     
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
+                        <label for="image" class="col-sm-2 col-form-label">Rif</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
+                                <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$banner['rif']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                 <a data-input="rif" data-preview="preview_image" data-type="rif" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
                                  </a>
                                 </div>
@@ -70,11 +69,11 @@
                                         <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
                                     </span>
                                 @endif
-                            <div id="preview_image" class="img_holder">
-                                @if (old('image',$banner['image']??''))
-                                <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
+                            {{-- <div id="preview_image" class="img_holder">
+                                @if (old('rif',$banner['rif']??''))
+                                <img src="{{ sc_file(old('rif',$banner['rif']??'')) }}">
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                   
@@ -83,14 +82,12 @@
                     
                 </div>
                 <div class="d-flex  ">
-                    
-                    <img width="20%" src="../images/cedula-icon.png" alt="cedula">
-                    
+         
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.banner.image') }}</label>
+                        <label for="image" class="col-sm-2 col-form-label">constancia de trabajo</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
+                                <input readonly type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
                                  <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
@@ -102,11 +99,11 @@
                                         <i class="fa fa-info-circle"></i> {{ $errors->first('image') }}
                                     </span>
                                 @endif
-                            <div id="preview_image" class="img_holder">
+                            {{-- <div id="preview_image" class="img_holder">
                                 @if (old('image',$banner['image']??''))
                                 <img src="{{ sc_file(old('image',$banner['image']??'')) }}">
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
     
