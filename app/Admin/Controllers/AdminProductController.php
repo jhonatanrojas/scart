@@ -24,6 +24,7 @@ use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Admin\Models\AdminStore;
 use SCart\Core\Admin\Models\AdminCategory;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ModalidadPago; 
 use DB;
 
 class AdminProductController extends RootAdminController
@@ -156,7 +157,9 @@ class AdminProductController extends RootAdminController
                 'category' => implode(';<br>', $arrName),
                 
             ];
-     $dataMap['cuotas'] = $row['nro_coutas'];
+
+
+           $dataMap['cuotas'] = $row['nro_coutas'];
 
             if (sc_config_admin('product_cost')) {
                 $dataMap['cost'] = $row['cost'];
@@ -272,7 +275,7 @@ class AdminProductController extends RootAdminController
         // html add more images
         $htmlMoreImage = '<div class="input-group"><input type="text" id="id_sub_image" name="sub_image[]" value="image_value" class="form-control rounded-0 input-sm sub_image" placeholder=""  /><span class="input-group-btn"><a data-input="id_sub_image" data-preview="preview_sub_image" data-type="product" class="btn btn-primary lfm"><i class="fa fa-picture-o"></i> Choose</a></span></div><div id="preview_sub_image" class="img_holder"></div>';
         //end add more images
-
+        $modalidad_pago = ModalidadPago::all();
         // html select attribute
         $htmlProductAtrribute = '<tr><td><br><input type="text" name="attribute[attribute_group][name][]" value="attribute_value" class="form-control rounded-0 input-sm" placeholder="' . sc_language_render('product.admin.add_attribute_place') . '" /></td><td><br><input type="number" step="0.01" name="attribute[attribute_group][add_price][]" value="add_price_value" class="form-control rounded-0 input-sm" placeholder="' . sc_language_render('product.admin.add_price_place') . '"></td><td><br><span title="Remove" class="btn btn-flat btn-sm btn-danger removeAttribute"><i class="fa fa-times"></i></span></td></tr>';
         //end select attribute
@@ -291,6 +294,7 @@ class AdminProductController extends RootAdminController
             'kinds'                => $this->kinds(),
             'attributeGroup'       => $this->attributeGroup,
             'htmlMoreImage'        => $htmlMoreImage,
+            'modalidad_pago' =>$modalidad_pago ,
             'htmlProductAtrribute' => $htmlProductAtrribute,
             'listWeight'           => $this->listWeight,
             'listLength'           => $this->listLength,
@@ -693,6 +697,8 @@ class AdminProductController extends RootAdminController
         
         $listProductSingle = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE]]);
 
+
+        $modolidad_pago = ModalidadPago::all();
         // html select product group
         $htmlSelectGroup = '<div class="select-product">';
         $htmlSelectGroup .= '<table width="100%"><tr><td width="80%"><select class="form-control rounded-0 productInGroup select2" data-placeholder="' . sc_language_render('product.admin.select_product_in_group') . '" style="width: 100%;" name="productInGroup[]" >';
@@ -740,6 +746,7 @@ class AdminProductController extends RootAdminController
             'htmlProductAtrribute' => $htmlProductAtrribute,
             'listWeight'           => $this->listWeight,
             'listLength'           => $this->listLength,
+            'modalidad_pago'       => $modolidad_pago
 
         ];
 
@@ -776,6 +783,7 @@ class AdminProductController extends RootAdminController
                     'descriptions.*.description' => 'nullable|string|max:500',
                     'descriptions.*.content' => 'required|string',
                     'category' => 'required',
+                    'nro_coutas' => 'required',
                     'sku' => 'required|regex:/(^([0-9A-Za-z\-_]+)$)/|product_sku_unique:'.$id,
                     'alias' => 'required|regex:/(^([0-9A-Za-z\-_]+)$)/|string|max:120|product_alias_unique:'.$id,
                 ];
@@ -870,6 +878,7 @@ class AdminProductController extends RootAdminController
         $subImages       = $data['sub_image'] ?? [];
         $downloadPath    = $data['download_path'] ?? '';
         $dataUpdate = [
+            'nro_coutas'     => $data['nro_coutas'] ?? '',
             'image'        => $data['image'] ?? '',
             'tax_id'       => $data['tax_id'] ?? "",
             'brand_id'     => $data['brand_id'] ?? "",

@@ -434,24 +434,49 @@
 @endif
 
 
-<div class="form-group row kind   {{ $errors->has('cuotas') ? ' text-red' : '' }}">
-    <label for="price" class="col-sm-2 col-form-label">Numero de cuotas</label>
+<div class="form-group row kind   {{ $errors->has('nro_coutas') ? ' text-red' : '' }}">
+    <label for="nro_coutas" class="col-sm-2 col-form-label">Numero de cuotas</label>
     <div class="col-sm-8">
         <div class="input-group">
             <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-cash-register	"></i></span>
             </div>
             <input type="number" step="0.01" style="width: 100px;" id="nro_coutas" name="nro_coutas"
-                value="{!! old('price')??0 !!}" class="form-control input-sm price"
+                value="{!! old('nro_coutas')??0 !!}" class="form-control input-sm price"
                 placeholder="" />
         </div>
-        @if ($errors->has('cuotas'))
+        @if ($errors->has('nro_coutas'))
         <span class="form-text">
-            <i class="fa fa-info-circle"></i> {{ $errors->first('cuotas') }}
+            <i class="fa fa-info-circle"></i> {{ $errors->first('nro_coutas') }}
         </span>
         @endif
     </div>
 </div>
+
+
+
+                <div class="form-group row kind   {{ $errors->has('modalidad_pago') ? ' text-red' : '' }}">
+                <label for="modalidad_pago"
+                    class="col-sm-2 col-form-label"> Modalidad de pagos
+                </label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                    <select class="form-control input-sm modalidad_pago select2"
+                        name="modalidad_pago">
+                        @foreach ($modalidad_pago as $k => $v)
+                        <option value="{{ $k }}" {{ (old('modalidad_pago') ==$k) ? 'selected':'' }}>{{ $v->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    
+                    </div>
+                    @if ($errors->has('modalidad_pago'))
+                    <span class="form-text">
+                        <i class="fa fa-info-circle"></i> {{ $errors->first('modalidad_pago') }}
+                    </span>
+                    @endif
+                </div>
+                </div>
 @if (sc_config_admin('product_tax'))
                         {{-- select tax --}}
                         <div class="form-group row kind   {{ $errors->has('tax_id') ? ' text-red' : '' }}">
