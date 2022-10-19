@@ -1,5 +1,5 @@
 @extends($templatePathAdmin.'layout')
-
+{{-- <?=dd($parroquia[0]->codigoparroquia)?> --}}
 @section('main')
    <div class="row">
       <div class="col-sm-12">
@@ -15,6 +15,8 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
+
+                
                 <form action="{{ $url_action }}" method="post" accept-charset="UTF-8" class="form-horizontal" id="form-main"  enctype="multipart/form-data">
 
 
@@ -40,6 +42,7 @@
     
                                 </div>
                             </div>
+                            
                             <div class="form-group row {{ $errors->has('last_name') ? ' text-red' : '' }}">
                                 <label for="last_name"
                                     class="col-sm-2 col-form-label">{{ sc_language_render('customer.last_name') }}</label>
@@ -55,6 +58,27 @@
                                     @if($errors->has('last_name'))
                                     <span class="form-text">{{ $errors->first('last_name') }}</span>
                                     @endif
+    
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
+                                <label for="cedula"
+                                    class="col-sm-2 col-form-label">Cedulas</label>
+    
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                    <input id="cedula" type="text" class="form-control" name="cedula" 
+                                        value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
+                                    </div>
+                                    @if($errors->has('first_name'))
+                                    <span class="form-text">{{ $errors->first('cedula') }}</span>
+                                    @endif
+                                    
     
                                 </div>
                             </div>
@@ -354,6 +378,111 @@
                                         @endif
                                 </div>
                             </div>
+                            <div class="form-group  row {{ $errors->has('estado') ? ' text-red' : '' }}">
+                                <label for="estado" class="col-sm-2  col-form-label">{{ sc_language_render('customer.estado') }}</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                        <select required  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
+                            name="cod_estado" id="cod_estado"   >
+                            <option  value="">Seleccióna un Estado</option>
+                            <?php
+                            if(isset($estado)){
+                                foreach ($estado as $key => $estado) {
+                                    if(isset($customer['cod_estado']) and $customer['cod_estado'] == $estado->codigoestado){
+                                        echo "<option selected value='".$estado->codigoestado."'  data-latitud=".$estado->latitud."  data-longitud=".$estado->longitud." >".$estado->nombre."</option>";     
+                                    }else{
+                                        echo "<option value='".$estado->codigoestado."' data-latitud=".$estado->latitud."  data-longitud=".$estado->longitud." >".$estado->nombre."</option>";
+                                    }
+                                }
+                            }
+                        ?>            
+                        </select>
+                                    </div>
+                                        @if ($errors->has('estado'))
+                                            <span class="form-text">
+                                                <i class="fa fa-info-circle"></i> {{ $errors->first('estado') }}
+                                            </span>
+                                        @else
+                                            @if ($customer)
+                                                <span class="form-text text-info">
+                                                     seleciona un estado para cambiar muncipio y parroquia
+                                                 </span>
+                                            @endif
+                                        @endif
+                                </div>
+                            </div>
+                            <div class="form-group  row {{ $errors->has('estado') ? ' text-red' : '' }}">
+                                <label for="municipio" class="col-sm-2  col-form-label">{{ sc_language_render('customer.municipio') }}</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                        <select class="form-control show-tick" id="cod_municipio" name="cod_municipio">
+                                            <option value="0">Seleccione un Municipio</option>
+                                    <?php
+                                        if(isset($municipio)){
+                                        foreach ($municipio as $key => $municipios) {
+                                        if(isset($customer['cod_municipio']) and $customer['cod_municipio'] == $municipios->codigomunicipio){
+                                        echo "<option selected value='". $municipios->codigomunicipio."' >".$municipios->nombre."</option>";     
+                                        }
+                                        }
+                                    }
+                                    ?>        
+                                            </select>
+                                    </div>
+                                        @if ($errors->has('estado'))
+                                            <span class="form-text">
+                                                <i class="fa fa-info-circle"></i> {{ $errors->first('estado') }}
+                                            </span>
+                                        @else
+                                            @if ($customer)
+                                            <span class="form-text text-info">
+                                                seleciona un municipio para cambiar  parroquia
+                                            </span>
+                                            @endif
+                                        @endif
+                                </div>
+                            </div>
+                            <div class="form-group  row {{ $errors->has('cod_parroquia') ? ' text-red' : '' }}">
+                                <label for="cod_parroquia" class="col-sm-2  col-form-label">{{ sc_language_render('customer.parroquia') }}</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                        <select class="form-control show-tick" id="cod_parroquia" name="cod_parroquia">
+                                            <option value="0">Seleccione un Municipio</option>
+                                    <?php
+                                        if(isset($parroquia)){
+                                        foreach ($parroquia as $key => $parroquias) {
+                                           
+                                        if(isset($customer['cod_parroquia']) and $customer['cod_parroquia'] == $parroquias->codigoparroquia){
+                                           
+                                        echo "<option selected value='". $parroquias->codigoparroquia."' >".$parroquias->nombre."</option>";     
+                                        }
+                                        }
+                                    }
+                                    ?>        
+                                            </select>
+                                    </div>
+                                        @if ($errors->has('parroquias'))
+                                            <span class="form-text">
+                                                <i class="fa fa-info-circle"></i> {{ $errors->first('parroquias') }}
+                                            </span>
+                                        @else
+                                            @if ($customer)
+                                                <span class="form-text">
+                                                     {!! sc_language_render('customer.parroquia') !!}
+                                                 </span>
+                                            @endif
+                                        @endif
+                                </div>
+                            </div>
                             
                             @if ($customer['provider'])
                             <div class="form-group  row">
@@ -515,6 +644,8 @@
 
         </div>
     </div>
+
+@vite('resources/js/estado.js')
 @endsection
 
 @push('styles')

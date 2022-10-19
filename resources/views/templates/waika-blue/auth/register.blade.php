@@ -151,11 +151,11 @@
                      @if (sc_config('customer_estado'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
-                            <select required  type="text"
+                            <select  required="{{ old('estado') }}"  type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
                             name="cod_estado" id="cod_estado"   >
     
-                            <option  value="">Seleccióna un Estado</option>
+                            <option  value="{{ old('estado') }}">Seleccióna un Estado</option>
     
                             @foreach ($estado as $estados)
                             
@@ -181,7 +181,7 @@
                      @if (sc_config('customer_municipio'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('municipio') ? ' has-error' : '' }}">
-                            <select required type="text"
+                            <select  type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('municipio'))?"input-error":"" }}"
                             name="cod_municipio" id="cod_municipio">
     
@@ -203,7 +203,7 @@
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
                             <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
-                             <select  required type="text"
+                             <select  type="text"
                              class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
                              name="cod_parroquia" id="cod_parroquia" >
      

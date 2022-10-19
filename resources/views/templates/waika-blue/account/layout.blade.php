@@ -3,13 +3,24 @@
 @section('block_main')
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
+      
       <div class="row">
+       
         <div class="col-12 col-sm-12 col-md-3">
+          
           @include($sc_templatePath.'.account.nav_customer')
         </div>
         <div class="col-12 col-sm-12 col-md-9 min-height-37vh">
+          
             @section('block_main_profile')
             @show
+            <div class=" text-center ">
+              @if (isset($mensaje) && $mensaje != "")
+              <div class="alert alert-danger">
+                 <span class="h5"> {{ $mensaje }} <a class="text-info" href="{{route('adjuntar_document')}}">haga click aqui para  Adjuntar</a></span>
+              </div>
+              @endif
+          </div>
         </div>
       </div>
     </div>

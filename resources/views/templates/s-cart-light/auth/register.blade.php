@@ -20,9 +20,9 @@
                             class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
                             name="nacionalidad" id="nacionalidad">
     
-                            <option value="0">Seleccióna un nacionalidad</option>
-                            <option value="{{ old('nacionalidad') }}">Venezolano(a)</option>
-                            <option value="{{ old('nacionalidad') }}">Extranjero(a)</option>
+                            <option value="">Seleccióna un nacionalidad</option>
+                            <option value="V">Venezolano(a)</option>
+                            <option value="E">Extranjero(a)</option>
                             
                         
                             </select>
@@ -40,8 +40,9 @@
                         <div class="form-group{{ $errors->has('cedula') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('cedula'))?"input-error":"" }}"
-                                name="first_name" placeholder="{{ sc_language_render('customer.cedula') }}"
+                                name="cedula" id="cedula" placeholder="{{ sc_language_render('customer.cedula') }}"
                                 value="{{ old('cedula') }}">
+
                             @if ($errors->has('cedula'))
                             <span class="help-block">
                                 {{ $errors->first('cedula') }}
@@ -150,11 +151,11 @@
                      @if (sc_config('customer_estado'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
-                            <select required ="{{ old('estado') }}" type="text"
+                            <select   type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
                             name="cod_estado" id="cod_estado"   >
     
-                            <option  value="0">Seleccióna un Estado</option>
+                            <option  value="">Seleccióna un Estado</option>
     
                             @foreach ($estado as $estados)
                             
@@ -180,11 +181,11 @@
                      @if (sc_config('customer_municipio'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('municipio') ? ' has-error' : '' }}">
-                            <select required type="text"
+                            <select  type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('municipio'))?"input-error":"" }}"
                             name="cod_municipio" id="cod_municipio">
     
-                            <option value="0">Seleccióna un Municipio</option>
+                            <option value="">Seleccióna un Municipio</option>
                             
                         
                         </select>
@@ -202,11 +203,11 @@
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
                             <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
-                             <select  required type="text"
+                             <select  type="text"
                              class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
                              name="cod_parroquia" id="cod_parroquia" >
      
-                             <option value="0">Seleccióna una parroquias</option>
+                             <option value="">Seleccióna una parroquias</option>
                              
                          
                          </select>

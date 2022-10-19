@@ -9,6 +9,8 @@ $layout_page = shop_product_detail
 
 @extends($sc_templatePath.'.layout')
 
+
+
 {{-- block_main --}}
 @section('block_main_content_center')
 @php
@@ -16,6 +18,7 @@ $layout_page = shop_product_detail
 @endphp
       <!-- Single Product-->
       <section class="section section-sm section-first bg-default">
+        
         <div class="container">
           <div class="row row-30">
             <div class="col-lg-6">

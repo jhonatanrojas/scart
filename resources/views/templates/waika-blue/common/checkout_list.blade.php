@@ -5,6 +5,9 @@
               <tr style="background: #eaebec">
                   <th style="width: 50px;">No.</th>
                   <th>{{ sc_language_render('product.name') }}</th>
+                  <th >cantida de cuotas</th>
+                  <th >modalidad de cuotas</th>
+                  <th >precio parcial</th>
                   <th>{{ sc_language_render('product.price') }}</th>
                   <th>{{ sc_language_render('product.quantity') }}</th>
                   <th>{{ sc_language_render('product.subtotal') }}</th>
@@ -43,8 +46,12 @@
                           </span>
                       </a>
                   </td>
-
+          
+                  <td>{!! $product->nro_coutas !!}  cuotas</td>
+                  <td>MENSULA</td>
                   <td>{!! $product->showPrice() !!}</td>
+                  <td>{!! $product->showPrice() !!}</td>
+                  
 
                   <td class="cart-col-qty">
                       <div class="cart-qty">

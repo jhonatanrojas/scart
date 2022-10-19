@@ -20,6 +20,8 @@ $layout_page = shop_profile
       </div>
       @else
       <div class="row" id="order-body">
+
+       
       <div class="col-sm-6">
         <table class="table table-bordered">
            <tr>

@@ -7,9 +7,20 @@
 <section class="section section-sm section-first bg-default text-md-left">
     
     <div class="container  ">
+       
 
-      <div class="row  ">
-        <div class="col-12 col-sm-12 col-md-6">
+      <div class="row justify-content-around">
+        <div class="col-12 col-md-12">
+            <div class=" text-center ">
+                @if (isset($mensaje) && $mensaje != "")
+                <div class="alert alert-danger">
+                   <span class="h5"> {{ $mensaje }} </span>
+                </div>
+                @endif
+            </div>
+        </div>
+    
+        <div class="col-12 col-sm-12 col-md-4">
           @include($sc_templatePath.'.account.nav_customer')
         </div>
         <div class="">
@@ -17,12 +28,10 @@
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
-                <div class=" ">
-                    
-                  
-                    
+                <div class=" h5">
+
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Cedula</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o  fs-4 ">Cedula</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$banner['cedula']??'') }}" class="form-control image" placeholder=""  />
@@ -50,11 +59,11 @@
                     
                 </div>
                 
-                <div class=" ">
+                <div class="h5">
                     
                     
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">Rif</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$banner['rif']??'') }}" class="form-control image" placeholder=""  />
@@ -81,15 +90,15 @@
                   
                     
                 </div>
-                <div class="d-flex  ">
+                <div class="  h5">
          
                     <div class="form-group  row {{ $errors->has('image') ? ' text-red' : '' }}">
-                        <label for="image" class="col-sm-2 col-form-label">constancia de trabajo</label>
+                        <label for="image" class="col-sm-12 col-form-label fa fa-list-alt  Constancia">Constancia trabajo</label>
                         <div class="col-sm-8">
                             <div class="input-group">
-                                <input readonly type="text" id="image" name="image" value="{{ old('image',$banner['image']??'') }}" class="form-control image" placeholder=""  />
+                                <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$banner['carta_trabajo']??'') }}" class="form-control image" placeholder=""  />
                                 <div class="input-group-append">
-                                 <a data-input="image" data-preview="preview_image" data-type="images" class="btn btn-primary lfm">
+                                 <a data-input="carta_trabajo" data-preview="preview_image" data-type="carta_trabajo" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
                                  </a>
                                 </div>
@@ -111,11 +120,11 @@
                     
                 </div>
 
-                <div class="mt-3 m-auto text-center">
-                    <button id="guarda"  class="btn btn-primary">guardar</button>
+                <div class="mt-3 p-2 ">
+                    <button id="guarda"  class="btn btn-primary w-50">guardar</button>
 
                 </div>
-                <input  accept=".png, .jpg, .jpeg" type="hidden" name="first_name" value="{{$customer['first_name']}}">
+                <input  type="hidden" name="first_name" value="{{$customer['first_name']}}">
                 <input type="hidden" name="id_usu" value="{{$customer['id']}}">
                 <input type="hidden" name="email" value="{{$customer['email']}}">
                 <input type="hidden" name="phone" value="{{ $customer['phone'] }}">
@@ -130,6 +139,7 @@
 </div>
 </section>
 @vite('resources/js/adjuntar_document.js')
+@vite('resources/css/app.css')
 
 
 @endsection

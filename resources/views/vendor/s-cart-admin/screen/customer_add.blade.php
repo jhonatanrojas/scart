@@ -38,6 +38,8 @@
     
                                 </div>
                             </div>
+
+                           
                             <div class="form-group row {{ $errors->has('last_name') ? ' text-red' : '' }}">
                                 <label for="last_name"
                                     class="col-sm-2 col-form-label">{{ sc_language_render('customer.last_name') }}</label>
@@ -75,7 +77,29 @@
     
                                 </div>
                             </div>
+
+                            
                             @endif
+
+                            {{-- <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
+                                <label for="cedula"
+                                    class="col-sm-2 col-form-label">Cedulas</label>
+    
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                    <input id="cedula" type="text" class="form-control" name="cedula" 
+                                        value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
+                                    </div>
+                                    @if($errors->has('first_name'))
+                                    <span class="form-text">{{ $errors->first('cedula') }}</span>
+                                    @endif
+                                    
+    
+                                </div>
+                            </div> --}}
     
                             @if (sc_config_admin('customer_name_kana'))
                             <div class="form-group row {{ $errors->has('first_name_kana') ? ' text-red' : '' }}">

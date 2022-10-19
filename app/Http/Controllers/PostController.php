@@ -28,7 +28,7 @@ class PostController extends Controller
         $documento = SC__documento::where('id_usuario', $id)->get();
 
         if(!isset($documento[0]['id_usuario']) == $id){
-           $dato = "Adjunte los documentos para procesar su solicitudes de compras";
+           $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
         }else{
             $dato = "";
         }
@@ -83,7 +83,7 @@ class PostController extends Controller
             $saveFile->telefono =$request->phone;
             $saveFile->id_usuario = $id;
             $saveFile->cedula = $request->cedula;
-            $saveFile->cedula = $request->rif;
+            $saveFile->rif = $request->rif;
             $saveFile->carta_trabajo = $request->carta_trabajo;
 
             $documento = SC__documento::where('id_usuario', $id)->get();
