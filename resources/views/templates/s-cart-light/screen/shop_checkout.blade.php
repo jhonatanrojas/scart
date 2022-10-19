@@ -16,9 +16,19 @@ $layout_page = shop_checkout
 
 @extends($sc_templatePath.'.layout')
 
+
+
+
 @section('block_main')
 <section class="section section-xl bg-default text-md-left">
     <div class="container">
+        <div class=" text-center ">
+            @if (isset($mensaje) && $mensaje != "")
+            <div class="alert alert-danger">
+               <span class="h6"> {{ $mensaje }} <a class="text-info" href="{{route('adjuntar_document')}}">haga click aqui para  Adjuntar</a></span>
+            </div>
+            @endif
+        </div>
         <div class="row">
             @if (count($cartItem) ==0)
             <div class="col-md-12 text-danger min-height-37vh">
@@ -371,9 +381,9 @@ $layout_page = shop_checkout
                         {{-- Button checkout --}}
                         <div class="row" style="padding-bottom: 20px;">
                             <div class="col-md-12 text-center">
-                                <div class="pull-right">
+                                <div class="">
                                     {!! $viewCaptcha ?? ''!!}
-                                    <button class="button button-lg button-secondary" type="submit" id="button-form-process">{{ sc_language_render('cart.checkout') }}</button>
+                                    <button class="button button-lg button-secondary w-50" type="submit" id="button-form-process">{{ sc_language_render('cart.checkout') }}</button>
                                 </div>
                             </div>
                         </div>

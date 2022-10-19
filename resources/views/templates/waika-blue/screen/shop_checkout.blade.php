@@ -16,9 +16,19 @@ $layout_page = shop_checkout
 
 @extends($sc_templatePath.'.layout')
 
+
+
+
 @section('block_main')
 <section class="section section-xl bg-default text-md-left">
     <div class="container">
+        <div class=" text-center ">
+            @if (isset($mensaje) && $mensaje != "")
+            <div class="alert alert-danger">
+               <span class="h6"> {{ $mensaje }} <a class="text-info" href="{{route('adjuntar_document')}}">haga click aqui para  Adjuntar</a></span>
+            </div>
+            @endif
+        </div>
         <div class="row">
             @if (count($cartItem) ==0)
             <div class="col-md-12 text-danger min-height-37vh">
@@ -51,6 +61,7 @@ $layout_page = shop_checkout
                                     <option value="new" {{ (old('address_process') ==  'new') ? 'selected':''}}>{{ sc_language_render('cart.add_new_address') }}</option>
                                 </select>
                             </div>
+                            
                         @endif
                         {{--// Select address if customer login --}}
                         
@@ -263,6 +274,26 @@ $layout_page = shop_checkout
                         {{-- Total --}}
                         <div class="row">
                             <div class="col-md-12">
+                                <select class="form-control" name="" style="width: 100%;" id="">
+                                    <option value="">Abonar inicial</option>
+                                    <option value="">0%</option>
+                                    <option value="">10%</option>
+                                    <option value="">20%</option>
+                                    <option value="">30%</option>
+                                    <option value="">40%</option>
+                                    <option value="">50%</option>
+                                    <option value="">60%</option>
+                                    <option value="">70%</option>
+                                    <option value="">80%</option>
+                                    <option value="">90%</option>
+                                    <option value="">100%</option>
+                                    {{-- @foreach ($addressList as $k => $address)
+                                    <option value="{{ $address->id }}" {{ (old('address_process') ==  $address->id) ? 'selected':''}}>- {{ $address->first_name. ' '.$address->last_name.', '.$address->address1.' '.$address->address2.' '.$address->address3 }}</option>
+                                    @endforeach
+                                    <option value="new" {{ (old('address_process') ==  'new') ? 'selected':''}}>{{ sc_language_render('cart.add_new_address') }}</option> --}}
+                                </select>
+                            </div>
+                            <div class="col-md-12">
                                 {{-- Data total --}}
                                 @include($sc_templatePath.'.common.render_total')
                                 {{-- Data total --}}
@@ -371,9 +402,9 @@ $layout_page = shop_checkout
                         {{-- Button checkout --}}
                         <div class="row" style="padding-bottom: 20px;">
                             <div class="col-md-12 text-center">
-                                <div class="pull-right">
+                                <div class="">
                                     {!! $viewCaptcha ?? ''!!}
-                                    <button class="button button-lg button-secondary" type="submit" id="button-form-process">{{ sc_language_render('cart.checkout') }}</button>
+                                    <button class="button button-lg button-secondary w-50" type="submit" id="button-form-process">{{ sc_language_render('cart.checkout') }}</button>
                                 </div>
                             </div>
                         </div>

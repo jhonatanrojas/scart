@@ -17,6 +17,9 @@ $layout_page = shop_page
             </div>
         </div>
     </div>
+    
+
+    
 </section>
 @endsection
 

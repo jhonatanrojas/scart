@@ -7,15 +7,18 @@
 <section class="section section-sm section-first bg-default text-md-left">
     
     <div class="container  ">
-        <div class="m-auto">
-            @if (isset($mensaje) && $mensaje != "")
-            <div class="alert alert-danger">
-                {{ $mensaje }}
-            </div>
-            @endif
-        </div>
+       
 
       <div class="row justify-content-around">
+        <div class="col-12 col-md-12">
+            <div class=" text-center ">
+                @if (isset($mensaje) && $mensaje != "")
+                <div class="alert alert-danger">
+                   <span class="h5"> {{ $mensaje }} </span>
+                </div>
+                @endif
+            </div>
+        </div>
     
         <div class="col-12 col-sm-12 col-md-4">
           @include($sc_templatePath.'.account.nav_customer')

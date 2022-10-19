@@ -26,12 +26,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('municipio/{id}', [Municipio::class , 'get_municipio']);
 Route::get('parroquia/{municipio}/{estado}', [Parroquia::class , 'get_parroquia']);
 
-// Route::get('adjuntar_document',[Adjuntar_document::class , 'index'])->name('adjuntar_document');
-
-// Route::get('enviar_document',[Adjuntar_document::class , 'enviar_document'])->name('enviar_document');
-
-
 Route::controller(PostController::class)->group(function(){
     Route::get('/adjuntar_document', 'index')->name('adjuntar_document');
     Route::post('/enviar_document', [PostController::class , 'enviar_document'])->name('enviar_document');
 });
+
+
+
+

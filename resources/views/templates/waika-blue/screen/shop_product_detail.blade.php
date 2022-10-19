@@ -16,8 +16,11 @@ $layout_page = shop_product_detail
 @endphp
       <!-- Single Product-->
       <section class="section section-sm section-first bg-default">
+     
         <div class="container">
+          
           <div class="row row-30">
+           
             <div class="col-lg-6">
               <div class="slick-vertical slick-product">
                 <!-- Slick Carousel-->
