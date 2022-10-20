@@ -111,22 +111,22 @@ $(document).ready(function () {
 
 
 
-   const  nacionalidad = document.getElementById("nacionalidad")
-   nacionalidad.addEventListener("change" , function(e){
+  //  const  nacionalidad = document.getElementById("nacionalidad")
+  //  nacionalidad.addEventListener("change" , function(e){
    
     
-    const  nacionalidad2 = document.getElementById("nacionalidad").value
-    if( nacionalidad2 == "V" ){
-      console.log(nacionalidad2)
-      $("#cedula").val("V:")
-    }else if(nacionalidad2 == "E"){
-      $("#cedula").val("E:")
-    }else{
-      $("#cedula").val("")
-    }
+  //   const  nacionalidad2 = document.getElementById("nacionalidad").value
+  //   if( nacionalidad2 == "V" ){
+  //     console.log(nacionalidad2)
+  //     $("#cedula").val("V:")
+  //   }else if(nacionalidad2 == "E"){
+  //     $("#cedula").val("E:")
+  //   }else{
+  //     $("#cedula").val("")
+  //   }
    
 
-   })
+  //  })
 
 
 

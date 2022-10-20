@@ -8,3 +8,7 @@ INSERT INTO sc_languages (id, code, text, position, location, created_at, update
 INSERT INTO sc_languages (id, code, text, position, location, created_at, updated_at) VALUES (NULL, 'customer.estado', 'Estado', 'customer', 'es', NULL, NULL);
 
 ALTER TABLE sc_shop_product ADD COLUMN id_modalidad_pagos int NOT NULL DEFAULT '0';
+
+INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_nacionalidad_required', '1', '0', '1', '0', '', NULL, NULL);
+
+INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_municipio_required', '1', '0', '1', '1', '', NULL, NULL);
