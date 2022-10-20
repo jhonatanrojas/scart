@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
-use SCart\Core\Front\Models\ShopProduct;
+use App\Models\ShopProduct;
 
 class ShopProductController extends RootFrontController
 {
@@ -147,6 +147,7 @@ class ShopProductController extends RootFrontController
             $productRelation = (new ShopProduct)
                 ->getProductToCategory($arrCategoriId)
                 ->setLimit(sc_config('product_relation', $storeId))
+              
                 ->setRandom()
                 ->getData();
 

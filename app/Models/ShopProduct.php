@@ -1,5 +1,5 @@
 <?php
-namespace SCart\Core\Front\Models;
+namespace App\Models;
 
 use SCart\Core\Front\Models\ShopAttributeGroup;
 use SCart\Core\Front\Models\ShopCategory;
@@ -12,7 +12,8 @@ use SCart\Core\Front\Models\ShopStore;
 use SCart\Core\Front\Models\ShopProductStore;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use Illuminate\Database\Eloquent\Model;
-
+use SCart\Core\Front\Models\ShopProductImage;
+use App\Models\ModalidadPago;
 
 class ShopProduct extends Model
 {
@@ -69,6 +70,7 @@ class ShopProduct extends Model
         return $this->hasMany(ShopProductImage::class, 'product_id', 'id');
     }
 
+    
     public function descriptions()
     {
         return $this->hasMany(ShopProductDescription::class, 'product_id', 'id');
@@ -85,6 +87,12 @@ class ShopProduct extends Model
     public function downloadPath()
     {
         return $this->hasOne(ShopProductDownload::class, 'product_id', 'id');
+    }
+    
+    public function modalidad(){
+
+        return $this->belongsTo(ModalidadPago::class, 'id_modalidad_pagos', 'id');
+
     }
 
     //Function get text description
@@ -189,6 +197,7 @@ class ShopProduct extends Model
         if (empty($key)) {
             return null;
         }
+
         $storeId = empty($storeId) ? config('app.storeId') : $storeId;
         $tableStore = (new ShopStore)->getTable();
         $tableProductStore = (new ShopProductStore)->getTable();
@@ -211,6 +220,12 @@ class ShopProduct extends Model
 
         $product = $this->leftJoin($tableDescription, $tableDescription . '.product_id', $this->getTable() . '.id');
         
+        $tablemodalidadpago = (new ModalidadPago)->getTable();
+        $dataSelectModalidad  = $this->getTable().'.*, '.$tablemodalidadpago;
+        $product =  $product->leftJoin($tablemodalidadpago, $tablemodalidadpago . '.id', $this->getTable() . '.id_modalidad_pagos');
+
+        $dataSelect .= ', '.$dataSelectModalidad.'.name as modalidad ';
+
         if (sc_check_multi_shop_installed()) {
             $dataSelect .= ', '.$tableProductStore.'.store_id';
             $product = $product->join($tableProductStore, $tableProductStore.'.product_id', $this->getTable() . '.id');
@@ -249,6 +264,7 @@ class ShopProduct extends Model
             ->with('stores')
             ->with('promotionPrice');
         $product = $product->first();
+;
         return $product;
     }
 

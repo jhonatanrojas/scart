@@ -273,26 +273,7 @@ $layout_page = shop_checkout
                     <div class="col-md-6">
                         {{-- Total --}}
                         <div class="row">
-                            <div class="col-md-12">
-                                <select class="form-control" name="" style="width: 100%;" id="">
-                                    <option value="">Abonar inicial</option>
-                                    <option value="">0%</option>
-                                    <option value="">10%</option>
-                                    <option value="">20%</option>
-                                    <option value="">30%</option>
-                                    <option value="">40%</option>
-                                    <option value="">50%</option>
-                                    <option value="">60%</option>
-                                    <option value="">70%</option>
-                                    <option value="">80%</option>
-                                    <option value="">90%</option>
-                                    <option value="">100%</option>
-                                    {{-- @foreach ($addressList as $k => $address)
-                                    <option value="{{ $address->id }}" {{ (old('address_process') ==  $address->id) ? 'selected':''}}>- {{ $address->first_name. ' '.$address->last_name.', '.$address->address1.' '.$address->address2.' '.$address->address3 }}</option>
-                                    @endforeach
-                                    <option value="new" {{ (old('address_process') ==  'new') ? 'selected':''}}>{{ sc_language_render('cart.add_new_address') }}</option> --}}
-                                </select>
-                            </div>
+                  
                             <div class="col-md-12">
                                 {{-- Data total --}}
                                 @include($sc_templatePath.'.common.render_total')

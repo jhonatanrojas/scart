@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopCountry;
-use SCart\Core\Front\Models\ShopOrder;
+use App\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderStatus;
 use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Front\Models\ShopCustomer;

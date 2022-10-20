@@ -7,7 +7,7 @@
                   <th>{{ sc_language_render('product.name') }}</th>
                   <th > Cuotas</th>
                  
-                  <th > Pagos</th>
+                  <th > Pagos de</th>
                   <th>{{ sc_language_render('product.price') }}</th>
                   <th>{{ sc_language_render('product.quantity') }}</th>
                   <th>{{ sc_language_render('product.subtotal') }}</th>
@@ -20,7 +20,7 @@
                       $n++;
                       // Check product in cart
                       $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
-                      dd(   $product );
+           
                       if(!$product) {
                           continue;
                       }
@@ -48,9 +48,13 @@
                       </a>
                   </td>
           
-                  <td>{!! $product->nro_coutas !!}  {!! $product->id_mdodalidad !!}</td>
-            
-                  <td>{!! $product->showPrice() !!}</td>
+                  <td>{!! $product->nro_coutas !!} </td>
+                  @php
+                  
+                
+               $total_cuotas=  $product->price / $product->nro_coutas;  
+                 @endphp
+                  <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
                   <td>{!! $product->showPrice() !!}</td>
                   
 

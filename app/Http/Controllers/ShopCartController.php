@@ -5,23 +5,27 @@ use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopAttributeGroup;
 use SCart\Core\Front\Models\ShopCountry;
-use SCart\Core\Front\Models\ShopOrder;
+use App\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderTotal;
-use SCart\Core\Front\Models\ShopProduct;
+
 use SCart\Core\Front\Models\ShopCustomer;
 use SCart\Core\Front\Models\ShopCustomerAddress;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ShopProduct;
 
 class ShopCartController extends RootFrontController
 {
+
+ 
     const ORDER_STATUS_NEW = 1;
     const PAYMENT_UNPAID   = 1;
     const SHIPPING_NOTSEND = 1;
 
     public function __construct()
     {
+ 
         parent::__construct();
     }
 
