@@ -10,6 +10,8 @@ use SCart\Core\Front\Models\ShopProductPromotion;
 use SCart\Core\Front\Models\ShopTax;
 use SCart\Core\Front\Models\ShopStore;
 use SCart\Core\Front\Models\ShopProductStore;
+use SCart\Core\Front\Models\ShopProductAttribute;
+
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use Illuminate\Database\Eloquent\Model;
 use SCart\Core\Front\Models\ShopProductImage;
