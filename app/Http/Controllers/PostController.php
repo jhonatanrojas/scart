@@ -33,7 +33,7 @@ class PostController extends Controller
             $dato = "";
         }
 
-        return view('templates\s-cart-light\account/posts')
+        return view('templates/s-cart-light/account/posts')
             ->with(
                 [
                     'title'       => 'adjuntar documento',
