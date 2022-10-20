@@ -50,9 +50,11 @@
           
                   <td>{!! $product->nro_coutas !!} </td>
                   @php
-                  
-                
-               $total_cuotas=  $product->price / $product->nro_coutas;  
+                  $total_cuotas=0;
+                  if($product->nro_coutas>0){
+                    $total_cuotas=  $product->price / $product->nro_coutas;  
+
+                  }
                  @endphp
                   <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
                   <td>{!! $product->showPrice() !!}</td>
