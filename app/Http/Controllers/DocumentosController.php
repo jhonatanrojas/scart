@@ -44,7 +44,7 @@ class DocumentosController extends Controller
            
         }
 
-        return view('templates\s-cart-light\account/documentos')
+        return view('templates/s-cart-light/account/documentos')
             ->with(
                 [
                     'title'       => 'adjuntar documento',
