@@ -49,7 +49,7 @@
                         @error('cedula')
                             <small style="color: red">{{$message}}</small>
                         @enderror
-                        <div style="border: solid 1px red" id="cedula" class="img_holder">
+                        <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="cedula" class="img_holder">
                             @if (old('cedula',$documentos[0]['cedula']??''))
                             <img src="{{ sc_file(old('cedula',$documentos[0]['cedula']??'')) }}">
                             @endif
@@ -77,7 +77,7 @@
                             @error('rif')
                             <small style="color: red">{{$message}}</small>
                         @enderror
-                        <div style="border: solid 1px red" id="rif" class="img_holder">
+                        <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="rif" class="img_holder">
                             @if (old('rif',$documentos[0]['rif']??''))
                             <img  src="{{ sc_file(old('rif',$documentos[0]['rif']??'')) }}">
                             @endif
@@ -103,7 +103,7 @@
                             @error('carta_trabajo')
                             <small style="color: red">{{$message}}</small>
                         @enderror
-                            <div style="border: solid 1px red" id="carta_trabajo" class="img_holder">
+                            <div style="border: solid 1px rgba(78, 78, 78, 0.466)" id="carta_trabajo" class="img_holder">
                                 @if (old('carta_trabajo',$documentos[0]['carta_trabajo']??''))
                                 <img src="{{ sc_file(old('carta_trabajo',$documentos[0]['carta_trabajo']??'')) }}">
                                 @endif
