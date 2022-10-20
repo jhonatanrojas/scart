@@ -5,9 +5,9 @@
               <tr style="background: #eaebec">
                   <th style="width: 50px;">No.</th>
                   <th>{{ sc_language_render('product.name') }}</th>
-                  <th >cantida de cuotas</th>
-                  <th >modalidad de cuotas</th>
-                  <th >precio parcial</th>
+                  <th > Cuotas</th>
+                 
+                  <th > Pagos</th>
                   <th>{{ sc_language_render('product.price') }}</th>
                   <th>{{ sc_language_render('product.quantity') }}</th>
                   <th>{{ sc_language_render('product.subtotal') }}</th>
@@ -20,6 +20,7 @@
                       $n++;
                       // Check product in cart
                       $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
+                      dd(   $product );
                       if(!$product) {
                           continue;
                       }
@@ -47,8 +48,8 @@
                       </a>
                   </td>
           
-                  <td>{!! $product->nro_coutas !!}  cuotas</td>
-                  <td>MENSULA</td>
+                  <td>{!! $product->nro_coutas !!}  {!! $product->id_mdodalidad !!}</td>
+            
                   <td>{!! $product->showPrice() !!}</td>
                   <td>{!! $product->showPrice() !!}</td>
                   

@@ -16,8 +16,10 @@ $layout_page = shop_profile
            
         </div>
     </div>
-    <p class="text-center text-success h4">Bienvenido <span> {{ $customer['first_name'] }} {{ $customer['last_name'] }}</span>!</p>
-   
+    <p class="text-center text-success h4">Bienvenido  <span> {{ $customer['first_name'] }} {{ $customer['last_name'] }}</span>!</p>
+   <br>
+   <p class="text-center text-info h5"> <a href="es/cart.html">Ir al carrito de compras</a>  </p>
+
    </div>
    
 @endsection
