@@ -7,7 +7,7 @@
         
           <div class="card-body w-70 ">
             <h2 class="text-center">{{ sc_language_render('customer.title_register') }}</h2>
-            <form action="{{sc_route('postRegister')}}" method="post" class="box" id="form-process">
+            <form action="{{sc_route('postRegister')}}" method="post" class="box  " id="form-process">
                 <div class="row justify-content-space-around">
 
                     {!! csrf_field() !!}
@@ -16,13 +16,13 @@
                     @if (sc_config('customer_nacionalidad'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
-                            <select required type="text"
+                            <select  type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
                             name="nacionalidad" id="nacionalidad">
     
                             <option value="">Seleccióna un nacionalidad</option>
-                            <option value="V">Venezolano(a)</option>
-                            <option value="E">Extranjero(a)</option>
+                            <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
+                            <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
                             
                         
                             </select>
@@ -151,26 +151,26 @@
                      @if (sc_config('customer_estado'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('estado') ? ' has-error' : '' }}">
-                            <select   type="text"
+                            <select    type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('estado'))?"input-error":"" }}"
                             name="cod_estado" id="cod_estado"   >
     
-                            <option  value="">Seleccióna un Estado</option>
+                            <option  value="0">Seleccióna un Estado</option>
     
                             @foreach ($estado as $estados)
                             
                             <option 
                             data-latitud={{$estados->latitud}} 
                              data-longitud={{$estados->longitud}}
-                             value=" {{$estados->codigoestado}}"
+                             value="{{ $estados->codigoestado }}" {{ (old('cod_estado')) ? 'selected':'' }}
                               >
                               {{$estados->nombre}}
                             </option>           
                             @endforeach                
                         </select>
-                            @if ($errors->has('estado'))
+                            @if ($errors->has('cod_estado'))
                             <span class="help-block">
-                                {{ $errors->first('estado') }}
+                                {{ $errors->first('cod_estado') }}
                             </span>
                             @endif
                         </div>
@@ -180,18 +180,18 @@
                     @endif
                      @if (sc_config('customer_municipio'))
                     <div class="col-md-6">
-                        <div class="form-group{{ $errors->has('municipio') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('cod_municipio') ? ' has-error' : '' }}">
                             <select  type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('municipio'))?"input-error":"" }}"
+                            class="is_required validate account_input form-control {{ ($errors->has('cod_municipio'))?"input-error":"" }}"
                             name="cod_municipio" id="cod_municipio">
     
                             <option value="">Seleccióna un Municipio</option>
                             
                         
                         </select>
-                            @if ($errors->has('municipio'))
+                            @if ($errors->has('cod_municipio'))
                             <span class="help-block">
-                                {{ $errors->first('municipio') }}
+                                {{ $errors->first('cod_municipio') }}
                             </span>
                             @endif
                         </div>
@@ -314,24 +314,9 @@
                     </div>
                     @endif
             
-                    @if (sc_config('customer_sex'))
-                    <div class="col-md-6">
-                        <div class="form-group{{ $errors->has('sex') ? ' has-error' : '' }}">
-                            <label
-                                class="validate account_input {{ ($errors->has('sex'))?"input-error":"" }}">{{ sc_language_render('customer.sex') }}:
-                            </label>
-                            <label class="radio-inline"><input value="0" type="radio" name="sex"
-                                    {{ (old('sex') == 0)?'checked':'' }}> {{ sc_language_render('customer.sex_women') }}</label>
-                            <label class="radio-inline"><input value="1" type="radio" name="sex"
-                                    {{ (old('sex') == 1)?'checked':'' }}> {{ sc_language_render('customer.sex_men') }}</label>
-                            @if ($errors->has('sex'))
-                            <span class="help-block">
-                                {{ $errors->first('sex') }}
-                            </span>
-                            @endif
-                        </div>
-                    </div>
-                    @endif
+                   
+                   
+                
             
                     @if (sc_config('customer_birthday'))
                     <div class="form-group{{ $errors->has('birthday') ? ' has-error' : '' }}">
@@ -359,7 +344,7 @@
                         @endif
                     </div>
                     @endif
- 
+                   
             
 
 {{-- Custom fields --}}
@@ -434,6 +419,26 @@
                         @endif
                     </div>
                    </div>
+
+                   @if (sc_config('customer_sex'))
+                   <div class="col-md-6">
+                      <div class="form-group{{ $errors->has('sex') ? ' has-error' : '' }}">
+                          <label
+                              class="validate account_input {{ ($errors->has('sex'))?"input-error":"" }}">{{ sc_language_render('customer.sex') }}:
+                          </label>
+                          <label class="radio-inline"><input value="0" type="radio" name="sex"
+                                  {{ (old('sex') == 0)?'checked':'' }}> {{ sc_language_render('customer.sex_women') }}</label>
+                          <label class="radio-inline"><input value="1" type="radio" name="sex"
+                                  {{ (old('sex') == 1)?'checked':'' }}> {{ sc_language_render('customer.sex_men') }}</label>
+                          @if ($errors->has('sex'))
+                          <span class="help-block">
+                              {{ $errors->first('sex') }}
+                          </span>
+                          @endif
+                      </div>
+                  </div>
+                  @endif
+
                     {!! $viewCaptcha ?? ''!!}
                    <div class="col-md-12">
                     <div class="submit">
@@ -453,5 +458,6 @@
 </section>
 
 @vite('resources/js/estado.js')
+
 <!--/form-->
 @endsection
