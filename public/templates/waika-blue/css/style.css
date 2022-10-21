@@ -2122,7 +2122,7 @@ a, a:focus, a:active, a:hover {
 }
 
 a, a:focus, a:active {
-	color: #d9a1a3;
+	color: #007bff;
 }
 
 a:hover {
@@ -2169,7 +2169,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .link-tag:hover {
-	color: #d9a1a3;
+	color: #000051;
 }
 
 .link-shop {

@@ -213,7 +213,7 @@ class ShopOrder extends Model
             // Process event created
             sc_event_order_created($order);
 
-            $return = ['error' => 0, 'orderID' => $orderID, 'msg' => "", 'detail' => $order];
+         $return = ['error' => 0, 'orderID' => $orderID, 'msg' => "", 'detail' => $order];
         } catch (\Throwable $e) {
             DB::connection(SC_CONNECTION)->rollBack();
             $return = ['error' => 1, 'msg' => $e->getMessage()];
