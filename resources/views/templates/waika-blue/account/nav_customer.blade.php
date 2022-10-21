@@ -9,6 +9,9 @@
         <a href="{{ sc_route('customer.address_list') }}"><i class="fa fa-id-card-o" aria-hidden="true"></i> {{ sc_language_render('customer.address_list') }}</a>
     </li>
     <li class="list-group-item">
+        <a href="{{ sc_route('customer.order_list') }}"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i> Historial de pagos</a>
+    </li>
+    <li class="list-group-item">
         <a href="{{ sc_route('customer.order_list') }}"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i> {{ sc_language_render('customer.order_history') }}</a>
     </li>
     <li class="list-group-item">
