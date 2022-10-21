@@ -180,24 +180,24 @@
 @endif
 
 
-                        <div class="form-group row  {{ $errors->has('alias') ? ' text-red' : '' }}">
-                            <label for="alias" class="col-sm-2 col-form-label">{!! sc_language_render('admin.category.alias') !!}</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                    </div>
-                                    <input type="text" id="alias" name="alias"
-                                        value="{{ old('alias',($category['alias']??'')) }}" class="form-control"
-                                        placeholder="" />
-                                </div>
-                                @if ($errors->has('alias'))
-                                <span class="form-text">
-                                    <i class="fa fa-info-circle"></i> {{ $errors->first('alias') }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>                        
+<div class="form-group row  {{ $errors->has('alias') ? ' text-red' : '' }}">
+    <label for="alias" class="col-sm-2 col-form-label">{!! sc_language_render('admin.category.alias') !!}</label>
+    <div class="col-sm-8">
+        <div class="input-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+            </div>
+            <input type="text" id="alias" name="alias"
+                value="{{ old('alias',($category['alias']??'')) }}" class="form-control"
+                placeholder="" />
+        </div>
+        @if ($errors->has('alias'))
+        <span class="form-text">
+            <i class="fa fa-info-circle"></i> {{ $errors->first('alias') }}
+        </span>
+        @endif
+    </div>
+</div>                        
 
                         <div class="form-group row  {{ $errors->has('image') ? ' text-red' : '' }}">
                             <label for="image" class="col-sm-2 col-form-label">{{ sc_language_render('admin.category.image') }}</label>

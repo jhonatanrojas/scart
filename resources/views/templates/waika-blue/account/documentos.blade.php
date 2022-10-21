@@ -41,7 +41,7 @@
                                 <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o  fs-4 ">Cedula</label>
                                 <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar cedula"  />
                                 <div class="input-group-append">
-                                 <a data-input="cedula" data-preview="cedula" data-type="cedula" class="btn btn-primary lfm">
+                                 <a data-input="category" data-preview="cedula" data-type="category" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i>
                                  </a>
                                 </div>

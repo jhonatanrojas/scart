@@ -13,6 +13,10 @@
 	--color-stop-2: #76aa6f;
 }
 
+.fa-list-alt{
+	color: black;
+}
+
 a:focus,
 button:focus {
 	outline: none !important;

@@ -41,7 +41,7 @@
                                 <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o  fs-4 ">Cedula</label>
                                 <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar cedula"  />
                                 <div class="input-group-append">
-                                 <a data-input="cedula" data-preview="cedula" data-type="cedula" class="btn btn-primary lfm">
+                                 <a data-input="image" data-preview="cedula" data-type="file" class="btn btn-primary lfm">
                                    <i class="fa fa-image"></i>
                                  </a>
                                 </div>
@@ -51,7 +51,7 @@
                         @enderror
                         <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="cedula" class="img_holder">
                             @if (old('cedula',$documentos[0]['cedula']??''))
-                            <img src="{{ sc_file(old('cedula',$documentos[0]['cedula']??'')) }}">
+                            <img src="{{ sc_file(old('image',$documentos[0]['cedula']??'')) }}">
                             @endif
                         </div>
                         </div>
