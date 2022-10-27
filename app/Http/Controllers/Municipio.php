@@ -11,7 +11,7 @@ class Municipio extends Controller
     public function get_municipio($id ){
         $ID = intval($id);
         $municipio = ModelsMunicipio::where('codigoestado', $ID)->get();
-
+        
         return response()->json(['respuesta' => $municipio]);
 
     }

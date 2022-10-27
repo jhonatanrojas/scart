@@ -6,7 +6,213 @@ $layout_page = shop_product_detail
 - $productRelation: no paginate
 */
 @endphp
+<style>
+  @import url('https://fonts.googleapis.com/css?family=DM+Sans&display=swap');
 
+
+
+
+  .modal .modal-dialog{
+    width: 80%;
+    /* border: solid 1px red */
+  }
+  /* .modal-lg { max-width: 80%; } */
+
+
+  .radioContenedor2 #descotado:hover{
+    color : white;
+    
+
+
+  }
+
+
+
+#contenedor, #contenedorTabla {
+  /* background-color: #FFF; */
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  /* overflow: hidden; */
+  width: 100%;
+  max-width: 100%;
+  /* margin: 20px; */
+}
+
+#contenedorTabla {
+  width: 800px;
+  max-height: 820px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #16a0b3;
+}
+
+.header, thead {
+  border-bottom: 1px solid #F0F0F0;
+  background-color: #F7F7F7;
+  padding: 20px 40px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+#frmPrestamo {
+  padding: 30px 40px;
+}
+
+#frmPrestamo .control, #amortizaciones .control, .radios {
+  margin-bottom: 10px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+#frmPrestamo .control label {
+  margin-bottom: 5px;
+}
+
+#frmPrestamo .control input, #frmPrestamo .control select {
+  border: 2px solid #F0F0F0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+
+#frmPrestamo .control input:focus {
+  outline: 0;
+  border-color: royalblue;
+}
+
+#frmPrestamo button {
+  background: rgba(65, 105, 225, 90%);
+  border: 2px solid royalblue;
+  border-radius: 4px;
+  color: #FFF;
+  display: block;
+  font-family: inherit;
+  font-size: medium;
+  padding: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+table {
+  border: 2px solid royalblue;
+  border-collapse: collapse;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+  font-family: inherit;
+  font-size: 0.9em;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+table thead tr {
+  background: royalblue;
+  color: white;
+  text-align: left;
+  font-weight: bold;
+}
+
+table thead, td {
+  padding: 12px 15px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #F0F0F0;
+}
+
+table tbody tr:nth-last-of-type(even) {
+  background-color: #F3F3F3;
+}
+
+table tbody tr:last-of-type {
+  border-bottom: 2px solid royalblue;
+}
+
+table tbody tr:hover {
+  color: white;
+  background: #4169e0e6;
+}
+
+table tfoot {
+  background: royalblue;
+  color: white;
+}
+
+.radios {
+  padding: 10px 20px;
+}
+
+.radioContenedor {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 30px;
+  margin: 10px;
+}
+.radioContenedor2 {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 30px;
+  margin: 10px;
+}
+
+.radioContenedor input {
+  display: none;
+}
+.radioContenedor2 input {
+  display: none;
+  
+}
+
+
+
+.radioContenedor:hover .circle {
+  background-color: royalblue;
+}
+
+
+.radioContenedor input:checked + .circle {
+  background-color: royalblue;
+}
+
+.radioContenedor input:checked + .circle:after {
+  content: '';
+  height: 10px;
+  width: 10px;
+  background-color: white;
+  position: absolute;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+</style>
 @extends($sc_templatePath.'.layout')
 
 {{-- block_main --}}
@@ -45,7 +251,7 @@ $layout_page = shop_product_detail
                 @if ($countItem > 1)
                 <div class="slick-slider child-carousel slick-nav-1" id="child-carousel" data-arrows="true" data-items="{{ $countItem }}" data-sm-items="{{ $countItem }}" data-md-items="{{ $countItem }}" data-lg-items="{{ $countItem }}" data-xl-items="{{ $countItem }}" data-xxl-items="{{ $countItem }}" data-md-vertical="true" data-for="#carousel-parent">
                     <div class="item">
-                      <div class="slick-product-figure"><img src="{{ sc_file($product->getImage()) }}" alt="" width="530" height="480"/>
+                      <div class="slick-product-figure"><img src="{{ sc_file($product->getImage()) }}" alt="" width="600" height="480"/>
                       </div>
                     </div>
                     @foreach ($product->images as $key=>$image)
@@ -65,32 +271,70 @@ $layout_page = shop_product_detail
               <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
               <div class="single-product">
-                <h3 class="text-transform-none font-weight-medium" id="product-detail-name">{{ $product->name }}</h3>
+                <h4 class="text-transform-none font-weight-medium" id="product-detail-name">{{ $product->name }}</h4>
                 
                 {!! $product->displayVendor() !!}
                 
-                <p>
+                {{-- <p>
                   SKU: <span id="product-detail-model">{{ $product->sku }}</span>
-                </p>
+                </p> --}}
 
                 {{-- Show price --}}
-                <div class="group-md group-middle">
+                <div class="">
                   <div class="single-product-price" id="product-detail-price">
                     {!! $product->showPriceDetail() !!}
+                    @php
+                
+                    $total_cuotas=0;
+                    if($product->nro_coutas>0){
+                    $total_cuotas=  $product->price / $product->nro_coutas;  
+
+                  }
+                  @endphp
+                   
+                  </div>
+                  <div>
+                    <small class=" text-info ">adquiera el producto y pagalo en {!! $product->nro_coutas !!} cuotas  {!! $product->modalidad !!} de {!! $total_cuotas !!}$ </small>
                   </div>
                 </div>
                 {{--// Show price --}}
 
                 <hr class="hr-gray-100">
+                <div class="d-flex">
+                 
+                  
+
+                  <div  class="form-check d-flex  radioContenedor2 m-3">
+                  
+                    <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
+                    <label id="finansiamiento" class="btn btn-outline-primary" for="danger_outlined">Financiamiento</label>
+                   
+                   
+                  </div>
+                  <div class="form-check  radioContenedor2 m-3">
+                     <input value="active" type="radio" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
+                    <label id="descotado" class="  btn btn-outline-primary" for="flexRadioDefault2">De contado</label>
+                     
+       
+                   
+                  </div>
+
+                 
+
+                </div>
+                <div>
+                  <p class="text-danger" id="msg"></p>
+                </div>
+                <hr class="hr-gray-100">
 
                 {{-- Button add to cart --}}
                 @if ($product->kind != SC_PRODUCT_GROUP && $product->allowSale() && !sc_config('product_cart_off'))
-                <div class="group-xs group-middle">
-                    <div class="product-stepper">
+                <div id="group" class="group-xs group-middle" style="display: none;">
+                    <div class="product-stepper" >
                       <input class="form-input" name="qty" type="number" data-zeros="true" value="1" min="1" max="100">
                     </div>
                     <div>
-                        <button class="button button-lg button-secondary button-zakaria" type="submit">{{ sc_language_render('action.add_to_cart') }}</button>
+                        <button    id="buton"  class="button button-lg button-secondary button-zakaria" type="submit">{{ sc_language_render('action.add_to_cart') }}</button>
                     </div>
                 </div>
                 @endif
@@ -190,13 +434,17 @@ $layout_page = shop_product_detail
                 <hr class="hr-gray-100">
 
                 {{-- Social --}}
-                <div class="group-xs group-middle"><span class="list-social-title">Share</span>
+                <div class=" d-flex">
+                 <div>
+                  <span class="">Compartir</span>
+                 </div>
                   <div>
+
                     <ul class="list-inline list-social list-inline-sm">
-                      <li><a class="icon mdi mdi-facebook" href="#"></a></li>
-                      <li><a class="icon mdi mdi-twitter" href="#"></a></li>
-                      <li><a class="icon mdi mdi-instagram" href="#"></a></li>
-                      <li><a class="icon mdi mdi-google-plus" href="#"></a></li>
+                      <li><a target="blank" class="icon mdi mdi-facebook" href="https://api.whatsapp.com/send?phone=584126354041"></a></li>
+                      {{-- <li><a class="icon mdi mdi-twitter" href="#"></a></li> --}}
+                      <li><a target="blank" class="icon mdi mdi-instagram" href="https://www.instagram.com/waikaimport/"></a></li>
+                      {{-- <li><a class="icon mdi mdi-google-plus" href="#"></a></li> --}}
                     </ul>
                   </div>
                 </div>
@@ -248,16 +496,259 @@ $layout_page = shop_product_detail
         </div>
       </section>
       @endif
-
+      <div class="modal fade mt-3" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+             
+            </div>
+            <div class="modal-body">
+              <form>
+                <div id="w-100">
+                  <div class="header">
+                    <h5 class="text-center">Calcular financiamiento</h5>
+                  </div>
+                  <div name="frmPrestamo" id="frmPrestamo">
+                
+                    <div class="">
+                      <label for="monto">$Monto: </label>
+                      <input  readonly value="{{$product->price}}" class="form-control   " type="number" name="monto" id="monto" placeholder="monto" 
+                       >
+                    </div>
+                    <div class="">
+                      <label  for="periodo">forma de pago:
+                        
+                      </label>
+                      <select id="modalidad" class="form-control w-100 modalidad_pago select2"
+                      name="modalidad_pago">
+                      <?php
+                          if(isset($modalida_pago)){
+                              foreach ($modalida_pago as $key => $pagos) {
+                                  if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
+                                      echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                  }else{
+                                      echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                  }
+                              }
+                          }
+                      ?>   
+              
+                      
+                  </select>
+                    </div>
+                    <div class="">
+                      <label for="plazo">Cuotas:
+                      </label>
+                            <select class="form-control w-100 select2" name="Cuotas" id="Cuotas">
+                              @foreach ($cuotas as $cuotas )
+                              @if ($cuotas)
+                              <option value="{{$cuotas->numero_cuotas}}">{{$cuotas->numero_cuotas}}</option>
+                              @endif
+                              @endforeach
+                            </select>
+                     
+                    </div>
+                    <div class="">
+                      <label for="inicial">Inicial  </label>
+                     
+                         <select class="form-control w-100 select2"  name="inicial" id="inicial">
+                          <option value="0">sin inicial(0%)</option>
+                          <option value="30">con  inicial(30%)</option>
+                         
+                         </select>
+                    </div>
+                
+                    <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
+                  </div>
+                </div>
+              </form>
+              
+              <table class="tab">
+                <thead>
+                    <tr>
+                        <td>NRO</td>
+                        <td>CUOTAS</td>
+                        <td>INICIAL</td>
+                        <td>MONTO A PAGAR</td>
+                    </tr>
+                </thead>
+                <tbody id="tab">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="ft">TOTAL</td>
+                        <td id="t1"></td>
+                        <td id="t2"></td>
+                        <td id="t3"></td>
+                    </tr>
+                </tfoot>
+            </table>
+                    </div>
+                    <div class="modal-footer">
+                      <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button disabled type="button" class="btn btn-primary">continuar</button>
+                    </div>
+               
+            </div>
+            
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
 <!--/product-details-->
+<h4 id="error"></h4>
+
+
+
+
+<script>
+
+  // function simularPrestamo(){
+  //   let monto = document.getElementById("monto").value
+  //   let Cuotas = document.getElementById("Cuotas").value
+  //   let modalidad_pago = document.getElementById("modalidad").value
+  //   console.log(monto)
+
+  // }
+
+
+  function gen_table(){
+    document.getElementById("tab").innerHTML="";
+    let monto=Number(document.getElementById("monto").value);
+    let n2=Number(document.getElementById("Cuotas").value);
+    let n3=Number(document.getElementById("inicial").value);
+    let inicial = parseInt(n3);
+
+//     let plazoMensual = document.getElementById('mensual').checked
+//   let plazoAnual = document.getElementById('anual').checked
+
+//   if ( plazoMensual === true ) {
+//     this.plazo = plazo
+//   } else if ( plazoAnual === true ) {
+//     this.plazo = plazo * 12
+//   } else {
+//     alert('No seleccionaste ningún tipo de plazo')
+//   }
+
+//   switch ( periodo ) {
+//     case 'semanal':
+//       let fechaFin = new Date(fechaInicio)
+//       fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
+//       let tiempo = fechaFin.getTime() - fechaInicio.getTime()
+//       let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
+//       totalPagos = Math.ceil(dias / 7)
+//       break
+//     case 'quincenal':
+//       totalPagos = plazo * 2
+//       break
+//     case 'mensual':
+//       totalPagos = plazo
+//       break
+//     default:
+//       alert('No seleccionaste ningún periodo de pagos')
+//       break
+//   }
+// }
+    if(monto>0){   
+        for(i=1;i<=n2;i++){
+            ca=monto/n2;
+            d1=ca.toFixed(2);
+            i2=((monto*inicial)/100)/n2;
+            d2=i2.toFixed(2);
+            r=ca+i2;
+            d3=r.toFixed(2);
+            document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
+                    `<tr>
+                        <td>${i}</td>
+                        <td>${ca}$</td>
+                        <td>${d2}$</td>
+                        <td>${d3}$</td>
+                    </tr>`;
+        }
+        n1=monto.toFixed(1);
+        t_i=i2*n2;
+        d4=t_i.toFixed(1);
+        t_p=r*n2;
+        d5=t_p.toFixed(1);
+        document.getElementById("t1").innerHTML= n1;
+        document.getElementById("t2").innerHTML=d4;
+        document.getElementById("t3").innerHTML=d5;        
+    }else{
+        alert("Falta ingresar un Número");
+    }
+}
+
+    var msg = document.getElementById('msg');
+    const  Buyblock = document.getElementById("buy_block");
+    const ye = document.getElementById("flexRadioDefault2");
+    const no = document.getElementById("danger_outlined");
+    ye.addEventListener("click" ,validachecke1);
+    no.addEventListener("click" ,validachecke2);
+    function validachecke1(){
+      if(ye.checked) { 
+        let msg = document.getElementById('msg').style.display = "none";
+        const group = document.getElementById("group").style.display = "block"
+        var stylies = document.getElementById("descotado")
+        stylies.style.backgroundColor= "#4169e0e6";
+        stylies.style.color = "#fff" ;
+        stylies.style.fo
+     
+        let finansiamiento = document.getElementById("finansiamiento");
+        finansiamiento.style.backgroundColor= "";
+        finansiamiento.style.color = "#dc3545";
+    
+     }
+    };
+    function validachecke2(){
+      if(no.checked) { 
+        let msg = document.getElementById('msg').style.display = "none";
+        const group = document.getElementById("group").style.display = "none";
+        let finansiamiento = document.getElementById("finansiamiento");
+        finansiamiento.style.color = "#fff";
+        finansiamiento.style.backgroundColor= "#4169e0e6";
+        var stylies = document.getElementById("descotado")
+        stylies.style.backgroundColor= "";
+        stylies.style.color = "#dc3545" ;
+       
+    
+     }
+    };
+
+
+
+
+
+
+// simulador de creditos 
+
+Buyblock.addEventListener("submit" ,function(e){
+  e.preventDefault()
+   const no = document.getElementById("danger_outlined")
+   const ye = document.getElementById("flexRadioDefault2")
+   if(ye.checked) {
+    Buyblock.submit()
+   }
+    else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';
+
+    
+});
+
+
+
+
+
+
+
+</script>
 @endsection
 {{-- block_main --}}
-
 
 @push('styles')
 {{-- Your css style --}}
 @endpush
 
 @push('scripts')
-{{-- //script here --}}
+
+
+    
 @endpush

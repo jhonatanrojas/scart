@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\ModalidadPago;
+use App\Models\Productos_cuotas;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use App\Models\ShopProduct;
@@ -143,6 +145,11 @@ class ShopProductController extends RootFrontController
             $dato = "";
         }
            }
+          $modalida_pago =  ModalidadPago::all();
+          $cuotas =  Productos_cuotas::where('id_producto',$product->id)->get();
+      
+
+         
 
             $productRelation = (new ShopProduct)
                 ->getProductToCategory($arrCategoriId)
@@ -156,6 +163,8 @@ class ShopProductController extends RootFrontController
                 $this->templatePath . '.screen.shop_product_detail',
                 array(
                     'title'           => $product->name,
+                    'modalida_pago'           =>$modalida_pago,
+                    'cuotas'           =>$cuotas,
                     'mensaje'           =>"",
                     'description'     => $product->description,
                     'keyword'         => $product->keyword,
