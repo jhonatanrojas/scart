@@ -5,18 +5,18 @@
           <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}"/>
           </a>
       </div>
-      <h5 class="product-title"><a href="{{ $product->getUrl() }}">{{ $product->name }}</a></h5>
+      <h6 class="product-title"><a href="{{ $product->getUrl() }}">{{ $product->name }}</a></h6>
       
-      @if (empty($hiddenStore))
+      {{-- @if (empty($hiddenStore))
       {!! $product->displayVendor() !!}
-      @endif
+      @endif --}}
 
-      @if ($product->allowSale() && !sc_config('product_cart_off'))
+      {{-- @if ($product->allowSale() && !sc_config('product_cart_off'))
       <a onClick="addToCartAjax('{{ $product->id }}','default','{{ $product->store_id }}')" class="button button-secondary button-zakaria add-to-cart-list">
         <i class="fa fa-cart-plus"></i> {{sc_language_render('action.add_to_cart')}}</a>
-      @endif
+      @endif --}}
 
-      {!! $product->showPrice() !!}
+      {{-- {!! $product->showPrice() !!} --}}
     </div>
     
     @if ($product->price != $product->getFinalPrice() && $product->kind !=SC_PRODUCT_GROUP)

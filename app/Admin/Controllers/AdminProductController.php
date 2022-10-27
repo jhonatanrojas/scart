@@ -24,7 +24,8 @@ use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Admin\Models\AdminStore;
 use SCart\Core\Admin\Models\AdminCategory;
 use Illuminate\Support\Facades\Validator;
-use App\Models\ModalidadPago; 
+use App\Models\ModalidadPago;
+use App\Models\Productos_cuotas;
 use DB;
 
 class AdminProductController extends RootAdminController
@@ -271,7 +272,11 @@ class AdminProductController extends RootAdminController
      */
     public function create()
     {
+
+       
+
         $categories = (new AdminCategory)->getTreeCategoriesAdmin();
+       
         // html add more images
         $htmlMoreImage = '<div class="input-group"><input type="text" id="id_sub_image" name="sub_image[]" value="image_value" class="form-control rounded-0 input-sm sub_image" placeholder=""  /><span class="input-group-btn"><a data-input="id_sub_image" data-preview="preview_sub_image" data-type="product" class="btn btn-primary lfm"><i class="fa fa-picture-o"></i> Choose</a></span></div><div id="preview_sub_image" class="img_holder"></div>';
         //end add more images
@@ -311,8 +316,10 @@ class AdminProductController extends RootAdminController
      */
     public function createProductBuild()
     {
-        $categories = (new AdminCategory)->getTreeCategoriesAdmin();
 
+       
+        $categories = (new AdminCategory)->getTreeCategoriesAdmin();
+       
         $listProductSingle = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE]]);
 
         // html select product build
@@ -415,6 +422,8 @@ class AdminProductController extends RootAdminController
     public function postCreate()
     {
         $data = request()->all();
+
+        
 
     
         $langFirst = array_key_first(sc_language_all()->toArray()); //get first code language active
@@ -567,6 +576,13 @@ class AdminProductController extends RootAdminController
         $dataCreate = sc_clean($dataCreate, [], true);
  
         $product = AdminProduct::createProductAdmin($dataCreate);
+
+        // dd($product);
+        $saveFile = new Productos_cuotas;
+        $saveFile->id_producto =$product->id;
+        $saveFile->numero_cuotas =$product->nro_coutas;
+        $saveFile->id_modalidad_pago =$product->id_modalidad_pagos;
+        $saveFile->save();
 
         //Promoton price
         if (isset($data['price_promotion']) && in_array($data['kind'], [SC_PRODUCT_SINGLE, SC_PRODUCT_BUILD])) {
@@ -726,10 +742,13 @@ class AdminProductController extends RootAdminController
         $htmlProductAtrribute = '<tr><td><br><input type="text" name="attribute[attribute_group][name][]" value="attribute_value" class="form-control rounded-0 input-sm" placeholder="' . sc_language_render('product.admin.add_attribute_place') . '" /></td><td><br><input type="number" step="0.01" name="attribute[attribute_group][add_price][]" value="add_price_value" class="form-control rounded-0 input-sm" placeholder="' . sc_language_render('product.admin.add_price_place') . '"></td><td><br><span title="Remove" class="btn btn-flat btn-sm btn-danger removeAttribute"><i class="fa fa-times"></i></span></td></tr>';
         //end select attribute
 
+        $datos_produtos = Productos_cuotas::where('id_producto',$product->id)->get();
+
 
         $data = [
             'title'                => sc_language_render('product.admin.edit'),
             'subTitle'             => '',
+            'datos_produtos'             => $datos_produtos,
             'title_description'    => '',
             'icon'                 => 'fa fa-edit',
             'languages'            => $this->languages,
@@ -769,6 +788,8 @@ class AdminProductController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
         $data = request()->all();
+
+       
         $langFirst = array_key_first(sc_language_all()->toArray()); //get first code language active
         $data['alias'] = !empty($data['alias'])?$data['alias']:$data['descriptions'][$langFirst]['name'];
         $data['alias'] = sc_word_format_url($data['alias']);
@@ -870,6 +891,7 @@ class AdminProductController extends RootAdminController
                 ->withInput($data);
         }
         //Edit
+        // dd($data);
 
         $category        = $data['category'] ?? [];
         $attribute       = $data['attribute'] ?? [];

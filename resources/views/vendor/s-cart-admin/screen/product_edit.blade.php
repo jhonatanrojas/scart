@@ -1,5 +1,6 @@
 @extends($templatePathAdmin.'layout')
 
+
 @section('main')
 <style>
     #start-add {
@@ -484,11 +485,20 @@
                 <div class="col-sm-8">
                     <div class="input-group">
                     <select class="form-control input-sm modalidad_pago select2"
-                        name="modalidad_pago">
-                        @foreach ($modalidad_pago as $k => $v)
-                        <option value="{{ $k }}" {{ (old('modalidad_pago') ==$k) ? 'selected':'' }}>{{ $v->name }}
-                        </option>
-                        @endforeach
+                        name="modalidad_pagos">
+                        <?php
+                            if(isset($modalidad_pago)){
+                                foreach ($modalidad_pago as $key => $pagos) {
+                                    if(isset($product->id_modalidad_pagos) and $product->id_modalidad_pagos == $pagos->id){
+                                        echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                    }else{
+                                        echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                    }
+                                }
+                            }
+                        ?>   
+
+                        
                     </select>
                     
                     </div>
@@ -1141,12 +1151,114 @@
                     </div>
                     @endforeach
 @endif
-{{-- //Custom fields --}}
+
+<div class="">
+    <div class="form-group row  ">
+        <label for="date_available" class="col-sm-2 col-form-label">modalidad de pago</label>
+        <div class="col-md-8">
+            <div class=" input-group">
+                <select id="modalidad" class="form-control w-100 modalidad_pago select2"
+                    name="modalidad_pago">
+                    <?php
+                        if(isset($modalidad_pago)){
+                            foreach ($modalidad_pago as $key => $pagos) {
+                                if(isset($product->id_modalidad_pagos) and $product->id_modalidad_pagos == $pagos->id){
+                                    echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                }else{
+                                    echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                }
+                            }
+                        }
+                    ?>   
+            
+                    
+                </select>
+            </div>
+        </div>
+    
+    </div>
+   
+    <div class="form-group row kind kind0 kind1   ">
+        <label for="date_available" class="col-sm-2 col-form-label">cuotas</label>
+        <div class="col-md-8">
+            <div class="input-group">
+                <input  type="number" id="coutas" name="coutas"
+                    value="" class="form-control nro_coutas"
+                    placeholder="agregar cuotas" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group row kind kind0 kind1 text-center  ">
+        <div class="col-md-12">
+            <button type="button"
+    class="btn  btn-success add_attributes"
+    >
+    <i class="fa fa-plus text-center" aria-hidden="true"></i>
+    Agregar 
+    </button>
+        </div>
+</div>
+    @if (!empty($datos_produtos[0]->id_producto))
+    <div class="  col-md-8 m-auto mb-5">
+        <hr class="kind ">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>cuotas</th>
+                      <th>modalida de pago</th>
+                      <th>Eliminar</th>
+                    </tr>
+                  </thead>
+            @foreach ($datos_produtos as  $v)
+           
+              
+                <tbody>
+               
+                        <td>{{$v->numero_cuotas}}</td>
+                        
+                        <td>
+                            @foreach ($modalidad_pago as  $c)
+                            @if ($c->id == $v->id_modalidad_pago)
+                             {{$c->name}}
+                            
+                                
+                            
+                            @endif
+                            @endforeach
+                           
+                           
+                           
+                        </td>
+
+                        <td><span onclick="deleteItem('{{$v->id_producto}}','{{$v->id}}');" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span></td>
+                        
+                
+               
+           
+                   
+                </tbody>
+                {{-- //Custom 19969775 --}}
+             
+
+            @endforeach
+        </table>
+
+       
+    </div>
+  
 
 
+    @endif
+
+    
 
 
-                </div>
+<input type="hidden" value="{{$product->id}}" name="{{$product->id}}" id="id_product">
+
+</div>
+
+
+</div>
 
 
 
@@ -1159,7 +1271,7 @@
 
                     <div class="col-md-8">
                         <div class="btn-group float-right">
-                            <button type="submit" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
+                            <button type="submit" id="envia" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
                         </div>
 
                         <div class="btn-group float-left">
@@ -1315,9 +1427,11 @@ $('.add_attribute').click(function(event) {
         $(this).closest('tr').remove();
     });
 });
+
 $('.removeAttribute').click(function(event) {
     $(this).closest('tr').remove();
 });
+
 //end select attributes
 
 $('textarea.editor').ckeditor(
@@ -1330,6 +1444,118 @@ $('textarea.editor').ckeditor(
         filebrowserWindowHeight: '500'
     }
 );
+
+
+// 89
+$('.add_attributes').click(function(event) {
+ let numero_cuotas = $('#coutas').val()
+ let id_modalidad_pago = $('#modalidad').val()
+ let id_product = $('#id_product').val()
+if(numero_cuotas.length > 0){
+    $.ajax({
+          dataType: "json",
+          data: {id:id_product,id_modalidad_pago:id_modalidad_pago,numero_cuotas:numero_cuotas},
+          url: `/product`,
+          type: "get",
+  
+            success: function (respuestas) {
+               
+//              const Toast = Swal.mixin({
+//             toast: true,
+//             position: 'top-end',
+//             showConfirmButton: false,
+//             timer: 3000,
+//             timerProgressBar: true,
+//             didOpen: (toast) => {
+//                 toast.addEventListener('mouseenter', Swal.stopTimer)
+//                 toast.addEventListener('mouseleave', Swal.resumeTimer)
+                
+//             }
+            
+//             })
+
+// Toast.fire({
+//   icon: 'success',
+//   title: 'Registro actulizado '
+// })
+
+location.reload();
+          },
+          error: function (xhr, err) {
+            alert(
+              "readyState =" +
+                xhr.readyState +
+                " estado =" +
+                xhr.status +
+                "respuesta =" +
+                xhr.responseText
+            );
+            alert("ocurrio un error intente de nuevo");
+          },
+        });
+
+
+}else{
+    alert("numero de cuota vasio")
+}
+
+
+
+
+
+
+
+   
+});
+function deleteItem(id,id2){
+    console.log(id2)
+    $.ajax({
+          dataType: "json",
+          data: { id:id , "_token": "{{ csrf_token() }}"},
+          url: `/product/${id}/${id2}`,
+          type: "delete",
+  
+            success: function (respuestas) {
+             
+//                         const Toast = Swal.mixin({
+//             toast: true,
+//             position: 'top-end',
+//             showConfirmButton: false,
+//             timer: 3000,
+//             timerProgressBar: true,
+//             didOpen: (toast) => {
+//                 toast.addEventListener('mouseenter', Swal.stopTimer)
+//                 toast.addEventListener('mouseleave', Swal.resumeTimer)
+                
+//             }
+            
+//             })
+
+// Toast.fire({
+//   icon: 'success',
+//   title: 'Registro actulizado '
+// })
+
+location.reload();
+
+     
+           
+          },
+          error: function (xhr, err) {
+            alert(
+              "readyState =" +
+                xhr.readyState +
+                " estado =" +
+                xhr.status +
+                "respuesta =" +
+                xhr.responseText
+            );
+            alert("ocurrio un error intente de nuevo");
+          },
+        });
+}
 </script>
+
+
 
 @endpush
