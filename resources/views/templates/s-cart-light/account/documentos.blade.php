@@ -132,8 +132,7 @@
 
 </div>
 </section>
-@vite('resources/js/adjuntar_document.js')
-@vite('resources/css/app.css')
+
 
 
 @endsection

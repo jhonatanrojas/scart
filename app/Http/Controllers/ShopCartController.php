@@ -5,7 +5,7 @@ use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopAttributeGroup;
 use SCart\Core\Front\Models\ShopCountry;
-use App\Models\ShopOrder;
+use SCart\Core\Front\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderTotal;
 
 use SCart\Core\Front\Models\ShopCustomer;

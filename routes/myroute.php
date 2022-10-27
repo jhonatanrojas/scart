@@ -141,9 +141,26 @@ Route::group(['prefix' => 'product'], function () use ($nameSpaceAdminProduct) {
 
 });
 
+$nameSpaceFrontCustomer = 'App\Http\Controllers';
+$suffix = sc_config('SUFFIX_URL')??'';
+$prefixCustomerClient = sc_config('PREFIX_MEMBER') ?? 'customer';
 
 
+Route::group(
+    [
+        'prefix' => $langUrl.$prefixCustomerClient,
+        'middleware' => $midlware
+    ],
+    function ($router) use ($suffix, $nameSpaceFrontCustomer) {
+        $prefixCustomerCHistorial   = sc_config('PREFIX_MEMBER_CHANGE_INFO')??'historial-pagos';
+        $router->get('/historial-pagos', $nameSpaceFrontCustomer.'\ShopAccountController@historialPagos')
+            ->name('customer.historial_pagos');
 
+            $router->get('/reportar-pago/{id}', $nameSpaceFrontCustomer.'\ShopAccountController@reportarPago')
+            ->name('customer.reportar_pago');
+
+    }
+);
 
 
 

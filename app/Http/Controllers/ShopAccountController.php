@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopCountry;
-use App\Models\ShopOrder;
+use SCart\Core\Front\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderStatus;
 use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Front\Models\ShopCustomer;
@@ -366,6 +366,64 @@ class ShopAccountController extends RootFrontController
             sc_lang_switch($lang);
         }
         return $this->_addressList();
+    }
+
+    public function reportarPago(...$params)
+    {
+        if (config('app.seoLang')) {
+            $lang = $params[0] ?? '';
+            $id = $params[1] ?? '';
+            sc_lang_switch($lang);
+        } else {
+            $id = $params[0] ?? '';
+        }
+        $customer = auth()->user();
+
+
+        sc_check_view($this->templatePath . '.account.reportar_pago');
+        return view($this->templatePath . '.account.reportar_pago')
+        ->with(
+            [
+            'title'           =>'Reportar pago',
+
+     
+            'customer'        => $customer,
+            'layout_page'     => 'shop_profile',
+            'breadcrumbs'     => [
+                ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
+                ['url'        => '', 'title' => 'Historial de pagos'],
+            ],
+            ]
+        );
+    }
+
+    public function historialPagos()
+    {
+        if (config('app.seoLang')) {
+            $lang = $params[0] ?? '';
+            $id = $params[1] ?? '';
+            sc_lang_switch($lang);
+        } else {
+            $id = $params[0] ?? '';
+        }
+        $customer = auth()->user();
+
+
+        sc_check_view($this->templatePath . '.account.reportar_pago');
+        return view($this->templatePath . '.account.reportar_pago')
+        ->with(
+            [
+            'title'           =>'Historial de pagos',
+
+     
+            'customer'        => $customer,
+            'layout_page'     => 'shop_profile',
+            'breadcrumbs'     => [
+                ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
+                ['url'        => '', 'title' => 'Reportar  pago'],
+            ],
+            ]
+        );
     }
 
     /**

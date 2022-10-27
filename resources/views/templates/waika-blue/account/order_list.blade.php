@@ -42,7 +42,10 @@ $layout_page = shop_profile
             <td>{{ $statusOrder[$order->status]}}</td>
             <td>{{ $order->created_at }}</td>
             <td>
-              <a href="{{ sc_route('customer.order_detail', ['id' => $order->id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a>
+              <a href="{{ sc_route('customer.order_detail', ['id' => $order->id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
+              <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+
+
             </td>
           </tr>
           @endforeach
