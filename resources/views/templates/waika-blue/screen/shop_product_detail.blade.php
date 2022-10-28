@@ -504,7 +504,7 @@ table tfoot {
              
             </div>
             <div class="modal-body">
-              <form>
+              <form action="" method="POST">
                 <div id="w-100">
                   <div class="header">
                     <h5 class="text-center">Calcular financiamiento</h5>
@@ -526,9 +526,9 @@ table tfoot {
                           if(isset($modalida_pago)){
                               foreach ($modalida_pago as $key => $pagos) {
                                   if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
-                                      echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                      echo "<option selected value='".$pagos->name."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
                                   }else{
-                                      echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                      echo "<option value='".$pagos->name."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
                                   }
                               }
                           }
@@ -562,18 +562,22 @@ table tfoot {
                     <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
                 </div>
-              </form>
+             
               
               <table class="tab">
-                <thead>
-                    <tr>
-                        <td>NRO</td>
-                        <td>CUOTAS</td>
-                        <td>INICIAL</td>
-                        <td>MONTO A PAGAR</td>
-                    </tr>
-                </thead>
+                
                 <tbody id="tab">
+                  <thead>
+                    <tr>
+                      <td>NRO</td>
+                      <td>INICIAL</td>
+                      <td id="cuotass">CUOTAS</td>
+                      <td>DEUDA</td>
+                      <td>MONTO A PAGAR</td>
+                      <td>FECHA</td>
+                  </tr>
+                    
+                </thead>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -581,19 +585,22 @@ table tfoot {
                         <td id="t1"></td>
                         <td id="t2"></td>
                         <td id="t3"></td>
+                        <td id="t4"></td>
+                        <td id="t5"></td>
                     </tr>
                 </tfoot>
             </table>
                     </div>
                     <div class="modal-footer">
                       <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button disabled type="button" class="btn btn-primary">continuar</button>
+                      <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">continuar</button>
                     </div>
                
             </div>
             
           </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+        </div>
+      </form><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 <!--/product-details-->
 <h4 id="error"></h4>
@@ -603,79 +610,121 @@ table tfoot {
 
 <script>
 
-  // function simularPrestamo(){
-  //   let monto = document.getElementById("monto").value
-  //   let Cuotas = document.getElementById("Cuotas").value
-  //   let modalidad_pago = document.getElementById("modalidad").value
-  //   console.log(monto)
-
-  // }
-
-
+  // simulador de creditos 
   function gen_table(){
     document.getElementById("tab").innerHTML="";
+    document.getElementById("butto_modal").disabled = false;
     let monto=Number(document.getElementById("monto").value);
     let n2=Number(document.getElementById("Cuotas").value);
     let n3=Number(document.getElementById("inicial").value);
     let inicial = parseInt(n3);
+    const plazoMensual = document.getElementById('modalidad')
+    var selected = plazoMensual.options[plazoMensual.selectedIndex].text;
+    var today = new Date();
+    // obtener la fecha de hoy en formato `MM/DD/YYYY`
+    var fechaInicio = today.toLocaleDateString('en-US');
+    let periodo = selected;
+    let totalPagos ,  plazo ,fechaPago;
+    var primerFechaPago = true
 
-//     let plazoMensual = document.getElementById('mensual').checked
-//   let plazoAnual = document.getElementById('anual').checked
+    if(monto>0){ 
+      document.getElementById("cuotass").innerHTML= "CUOTAS" + "/" +selected.toUpperCase();
+      
+      if ( true ) {
+        plazo = n2
+      } else {
+        alert('No seleccionaste ningún tipo de plazo')
+      }
 
-//   if ( plazoMensual === true ) {
-//     this.plazo = plazo
-//   } else if ( plazoAnual === true ) {
-//     this.plazo = plazo * 12
-//   } else {
-//     alert('No seleccionaste ningún tipo de plazo')
-//   }
 
-//   switch ( periodo ) {
-//     case 'semanal':
-//       let fechaFin = new Date(fechaInicio)
-//       fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
-//       let tiempo = fechaFin.getTime() - fechaInicio.getTime()
-//       let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
-//       totalPagos = Math.ceil(dias / 7)
-//       break
-//     case 'quincenal':
-//       totalPagos = plazo * 2
-//       break
-//     case 'mensual':
-//       totalPagos = plazo
-//       break
-//     default:
-//       alert('No seleccionaste ningún periodo de pagos')
-//       break
-//   }
-// }
-    if(monto>0){   
-        for(i=1;i<=n2;i++){
-            ca=monto/n2;
-            d1=ca.toFixed(2);
+      
+      switch ( periodo ) {
+        case 'Semanal':
+          let fechaFin = new Date(today)
+          fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
+          let tiempo = fechaFin.getTime() - today.getTime()
+          let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
+          totalPagos = Math.ceil(dias / 7)
+          break
+        case 'Quincenal':
+          totalPagos = plazo * 2
+          break
+        case 'Mensual':
+          totalPagos = plazo
+          
+          break
+        default:
+          alert('No seleccionaste ningún periodo de pagos')
+          break
+      }
+
+     let  montoTotal = monto
+      var cuotaTotal = monto / n2
+      let texto
+
+
+      for(i=1;i<=n2;i++){  
+        
+        texto = (i + 1)
+
+        if ( primerFechaPago === true ) {
+            fechaPago = new Date(fechaInicio)
+            primerFechaPago = false
+          } else {
+            if ( periodo === 'semanal' ) {
+              fechaPago.setDate(fechaPago.getDate() + 7)
+            } else if ( periodo === 'Quincenal' ) {
+              fechaPago.setDate(fechaPago.getDate() + 15)
+            } else if ( periodo === 'Mensual' ) {
+              fechaPago.setMonth(fechaPago.getMonth() + 1)
+            }
+          }
+          texto = fechaPago.toLocaleDateString()
+         
+
+          monto -= cuotaTotal
+
+            ca=monto;
+            d1=ca.toFixed(2) ;
             i2=((monto*inicial)/100)/n2;
-            d2=i2.toFixed(2);
-            r=ca+i2;
+            d2=cuotaTotal.toFixed(2);
+            r=ca;
+            deudas = ((n2 + i2 - ca ) ) ;
             d3=r.toFixed(2);
+            deuda=deudas.toFixed(1);
             document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
-                    `<tr>
+                    `
+                    
+                    
+                    
+                    <tr>
                         <td>${i}</td>
-                        <td>${ca}$</td>
+                        <td>${i2}$</td>
                         <td>${d2}$</td>
+                        <td>${deuda}$</td>
                         <td>${d3}$</td>
+                        <td>${texto}</td>
                     </tr>`;
         }
-        n1=monto.toFixed(1);
+        n1= monto/n2;
         t_i=i2*n2;
-        d4=t_i.toFixed(1);
+        d4=t_i.toFixed(2);
         t_p=r*n2;
-        d5=t_p.toFixed(1);
-        document.getElementById("t1").innerHTML= n1;
-        document.getElementById("t2").innerHTML=d4;
-        document.getElementById("t3").innerHTML=d5;        
+        d5=t_p.toFixed(2);
+        document.getElementById("t1").innerHTML=d4;
+        document.getElementById("t2").innerHTML= "$"+cuotaTotal  ;
+        document.getElementById("t3").innerHTML= "$"+deuda;        
+        document.getElementById("t4").innerHTML= "$"+montoTotal ;       
+        document.getElementById("t5").innerHTML= texto ;       
+        
+        
+
     }else{
         alert("Falta ingresar un Número");
     }
+
+  
+
 }
 
     var msg = document.getElementById('msg');
@@ -715,11 +764,6 @@ table tfoot {
     };
 
 
-
-
-
-
-// simulador de creditos 
 
 Buyblock.addEventListener("submit" ,function(e){
   e.preventDefault()
