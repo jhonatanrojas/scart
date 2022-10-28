@@ -610,7 +610,7 @@ table tfoot {
 
 <script>
 
-  
+  // simulador de creditos 
   function gen_table(){
     document.getElementById("tab").innerHTML="";
     document.getElementById("butto_modal").disabled = false;
@@ -763,7 +763,7 @@ table tfoot {
      }
     };
 
-// simulador de creditos 
+
 
 Buyblock.addEventListener("submit" ,function(e){
   e.preventDefault()
