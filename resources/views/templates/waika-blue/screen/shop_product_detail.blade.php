@@ -673,10 +673,8 @@ table tfoot {
                   }
                 }
                 texto = fechaPago.toLocaleDateString()
-              
 
-                monto -= cuotaTotal
-
+                  monto -= cuotaTotal
                   ca=monto;
                   d1=ca.toFixed(2) ;
                   i2=((monto*inicial)/100)/n2;
