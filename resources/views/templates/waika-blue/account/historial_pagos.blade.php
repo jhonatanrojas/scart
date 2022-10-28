@@ -12,11 +12,7 @@ $layout_page = shop_profile
 @section('block_main_profile')
 <h6 class="title-store">{{ $title }}</h6>
     
-<div class="d-flex justify-content-end">
-    <div class="d-flex align-items-end">
-        <button class="btn btn-info mb-2"> Reportar Pago </button>
-    </div>
-</div>
+
       <table class="table box table-bordered" width="100%">
         <thead>
           <tr>
