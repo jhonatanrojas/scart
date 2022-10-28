@@ -312,7 +312,7 @@ table tfoot {
                    
                   </div>
                   <div class="form-check  radioContenedor2 m-3">
-                     <input value="active" type="radio" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
+                     <input  value="active" type="radio" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
                     <label id="descotado" class="  btn btn-outline-primary" for="flexRadioDefault2">De contado</label>
                      
        
@@ -329,7 +329,7 @@ table tfoot {
 
                 {{-- Button add to cart --}}
                 @if ($product->kind != SC_PRODUCT_GROUP && $product->allowSale() && !sc_config('product_cart_off'))
-                <div id="group" class="group-xs group-middle" style="display: none;">
+                <div id="group" class="group-xs group-middle" >
                     <div class="product-stepper" >
                       <input class="form-input" name="qty" type="number" data-zeros="true" value="1" min="1" max="100">
                     </div>
@@ -573,7 +573,6 @@ table tfoot {
                       <td>INICIAL</td>
                       <td id="cuotass">CUOTAS</td>
                       <td>DEUDA</td>
-                      <td>MONTO A PAGAR</td>
                       <td>FECHA</td>
                   </tr>
                     
@@ -586,7 +585,7 @@ table tfoot {
                         <td id="t2"></td>
                         <td id="t3"></td>
                         <td id="t4"></td>
-                        <td id="t5"></td>
+                        
                     </tr>
                 </tfoot>
             </table>
@@ -608,182 +607,171 @@ table tfoot {
 
 
 
-<script>
+      <script>
 
-  // simulador de creditos 
-  function gen_table(){
-    document.getElementById("tab").innerHTML="";
-    document.getElementById("butto_modal").disabled = false;
-    let monto=Number(document.getElementById("monto").value);
-    let n2=Number(document.getElementById("Cuotas").value);
-    let n3=Number(document.getElementById("inicial").value);
-    let inicial = parseInt(n3);
-    const plazoMensual = document.getElementById('modalidad')
-    var selected = plazoMensual.options[plazoMensual.selectedIndex].text;
-    var today = new Date();
-    // obtener la fecha de hoy en formato `MM/DD/YYYY`
-    var fechaInicio = today.toLocaleDateString('en-US');
-    let periodo = selected;
-    let totalPagos ,  plazo ,fechaPago;
-    var primerFechaPago = true
+        // simulador de creditos 
+        function gen_table(){
+          document.getElementById("tab").innerHTML="";
+          document.getElementById("butto_modal").disabled = false;
+          let monto=Number(document.getElementById("monto").value);
+          let n2=Number(document.getElementById("Cuotas").value);
+          let n3=Number(document.getElementById("inicial").value);
+          let inicial = parseInt(n3);
+          const plazoMensual = document.getElementById('modalidad')
+          var selected = plazoMensual.options[plazoMensual.selectedIndex].text;
+          var today = new Date();
+          // obtener la fecha de hoy en formato `MM/DD/YYYY`
+          var fechaInicio = today.toLocaleDateString('en-US');
+          let periodo = selected;
+          let totalPagos ,  plazo ,fechaPago;
+          var primerFechaPago = true
 
-    if(monto>0){ 
-      document.getElementById("cuotass").innerHTML= "CUOTAS" + "/" +selected.toUpperCase();
-      
-      if ( true ) {
-        plazo = n2
-      } else {
-        alert('No seleccionaste ningún tipo de plazo')
-      }
-
-
-      
-      switch ( periodo ) {
-        case 'Semanal':
-          let fechaFin = new Date(today)
-          fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
-          let tiempo = fechaFin.getTime() - today.getTime()
-          let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
-          totalPagos = Math.ceil(dias / 7)
-          break
-        case 'Quincenal':
-          totalPagos = plazo * 2
-          break
-        case 'Mensual':
-          totalPagos = plazo
-          
-          break
-        default:
-          alert('No seleccionaste ningún periodo de pagos')
-          break
-      }
-
-     let  montoTotal = monto
-      var cuotaTotal = monto / n2
-      let texto
-
-
-      for(i=1;i<=n2;i++){  
-        
-        texto = (i + 1)
-
-        if ( primerFechaPago === true ) {
-            fechaPago = new Date(fechaInicio)
-            primerFechaPago = false
-          } else {
-            if ( periodo === 'semanal' ) {
-              fechaPago.setDate(fechaPago.getDate() + 7)
-            } else if ( periodo === 'Quincenal' ) {
-              fechaPago.setDate(fechaPago.getDate() + 15)
-            } else if ( periodo === 'Mensual' ) {
-              fechaPago.setMonth(fechaPago.getMonth() + 1)
+          if(monto>0){ 
+            document.getElementById("cuotass").innerHTML= "CUOTAS" + "/" +selected.toUpperCase();
+            
+            if ( true ) {
+              plazo = n2
+            } else {
+              alert('No seleccionaste ningún tipo de plazo')
             }
+            switch ( periodo ) {
+              case 'Semanal':
+                let fechaFin = new Date(today)
+                fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
+                let tiempo = fechaFin.getTime() - today.getTime()
+                let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
+                totalPagos = Math.ceil(dias / 7)
+                break
+              case 'Quincenal':
+                totalPagos = plazo * 2
+                break
+              case 'Mensual':
+                totalPagos = plazo
+                
+                break
+              default:
+                alert('No seleccionaste ningún periodo de pagos')
+                break
+            }
+
+            let  montoTotal = monto
+            var cuotaTotal = monto / n2
+            let texto
+            for(i=1;i<=n2;i++){  
+              texto = (i + 1)
+
+              if ( primerFechaPago === true ) {
+                  fechaPago = new Date(fechaInicio)
+                  primerFechaPago = false
+                } else {
+                  if ( periodo === 'semanal' ) {
+                    fechaPago.setDate(fechaPago.getDate() + 7)
+                  } else if ( periodo === 'Quincenal' ) {
+                    fechaPago.setDate(fechaPago.getDate() + 15)
+                  } else if ( periodo === 'Mensual' ) {
+                    fechaPago.setMonth(fechaPago.getMonth() + 1)
+                  }
+                }
+                texto = fechaPago.toLocaleDateString()
+
+                  monto -= cuotaTotal
+                  ca=monto;
+                  d1=ca.toFixed(2) ;
+                  i2=((monto*inicial)/100)/n2;
+                  d2=cuotaTotal.toFixed(2);
+                  r=ca;
+                  deudas = ((n2 + i2 - ca ) ) ;
+                  d3=r.toFixed(2);
+                  deuda=deudas.toFixed(1);
+                  document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
+                          `
+                          
+                          
+                          
+                          <tr>
+                              <td>${i}</td>
+                              <td>${i2}$</td>
+                              <td>${d2}$</td>
+                              <td>${d3}$</td>
+                              <td>${texto}</td>
+                          </tr>`;
+              }
+              n1= monto/n2;
+              t_i=i2*n2;
+              d4=t_i.toFixed(2);
+              t_p=r*n2;
+              d5=t_p.toFixed(2);
+              document.getElementById("t1").innerHTML=d4;
+              document.getElementById("t2").innerHTML= "$"+cuotaTotal  ;
+              document.getElementById("t3").innerHTML= "$"+montoTotal ;        
+              document.getElementById("t4").innerHTML= texto ;       
+                
+              
+              
+
+          }else{
+              alert("Falta ingresar un Número");
           }
-          texto = fechaPago.toLocaleDateString()
-         
 
-          monto -= cuotaTotal
+        
 
-            ca=monto;
-            d1=ca.toFixed(2) ;
-            i2=((monto*inicial)/100)/n2;
-            d2=cuotaTotal.toFixed(2);
-            r=ca;
-            deudas = ((n2 + i2 - ca ) ) ;
-            d3=r.toFixed(2);
-            deuda=deudas.toFixed(1);
-            document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
-                    `
-                    
-                    
-                    
-                    <tr>
-                        <td>${i}</td>
-                        <td>${i2}$</td>
-                        <td>${d2}$</td>
-                        <td>${deuda}$</td>
-                        <td>${d3}$</td>
-                        <td>${texto}</td>
-                    </tr>`;
+      }
+
+          var msg = document.getElementById('msg');
+          const  Buyblock = document.getElementById("buy_block");
+          const ye = document.getElementById("flexRadioDefault2");
+          const no = document.getElementById("danger_outlined");
+          var stylies = document.getElementById("descotado")
+          stylies.style.backgroundColor= "#4169e0e6";
+          stylies.style.color = "#fff" ;
+          ye.addEventListener("click" ,validachecke1);
+          no.addEventListener("click" ,validachecke2);
+          function validachecke1(){
+            if(ye.checked) { 
+              let msg = document.getElementById('msg').style.display = "none";
+              const group = document.getElementById("group").style.display = "block"
+              var stylies = document.getElementById("descotado")
+              stylies.style.backgroundColor= "#4169e0e6";
+              stylies.style.color = "#fff" ;
+              
+          
+              let finansiamiento = document.getElementById("finansiamiento");
+              finansiamiento.style.backgroundColor= "";
+              finansiamiento.style.color = "#dc3545";
+          
+          }
+          };
+          function validachecke2(){
+            if(no.checked) { 
+              let msg = document.getElementById('msg').style.display = "none";
+              const group = document.getElementById("group").style.display = "none";
+              let finansiamiento = document.getElementById("finansiamiento");
+              finansiamiento.style.color = "#fff";
+              finansiamiento.style.backgroundColor= "#4169e0e6";
+              var stylies = document.getElementById("descotado")
+              stylies.style.backgroundColor= "";
+              stylies.style.color = "#dc3545" ;
+            
+          
+          }
+          };
+
+
+
+      Buyblock.addEventListener("submit" ,function(e){
+        e.preventDefault()
+        const no = document.getElementById("danger_outlined")
+        const ye = document.getElementById("flexRadioDefault2")
+        if(!ye.checked) {
+          Buyblock.submit()
         }
-        n1= monto/n2;
-        t_i=i2*n2;
-        d4=t_i.toFixed(2);
-        t_p=r*n2;
-        d5=t_p.toFixed(2);
-        document.getElementById("t1").innerHTML=d4;
-        document.getElementById("t2").innerHTML= "$"+cuotaTotal  ;
-        document.getElementById("t3").innerHTML= "$"+deuda;        
-        document.getElementById("t4").innerHTML= "$"+montoTotal ;       
-        document.getElementById("t5").innerHTML= texto ;       
-        
-        
+          else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';
 
-    }else{
-        alert("Falta ingresar un Número");
-    }
-
-  
-
-}
-
-    var msg = document.getElementById('msg');
-    const  Buyblock = document.getElementById("buy_block");
-    const ye = document.getElementById("flexRadioDefault2");
-    const no = document.getElementById("danger_outlined");
-    ye.addEventListener("click" ,validachecke1);
-    no.addEventListener("click" ,validachecke2);
-    function validachecke1(){
-      if(ye.checked) { 
-        let msg = document.getElementById('msg').style.display = "none";
-        const group = document.getElementById("group").style.display = "block"
-        var stylies = document.getElementById("descotado")
-        stylies.style.backgroundColor= "#4169e0e6";
-        stylies.style.color = "#fff" ;
-        stylies.style.fo
-     
-        let finansiamiento = document.getElementById("finansiamiento");
-        finansiamiento.style.backgroundColor= "";
-        finansiamiento.style.color = "#dc3545";
-    
-     }
-    };
-    function validachecke2(){
-      if(no.checked) { 
-        let msg = document.getElementById('msg').style.display = "none";
-        const group = document.getElementById("group").style.display = "none";
-        let finansiamiento = document.getElementById("finansiamiento");
-        finansiamiento.style.color = "#fff";
-        finansiamiento.style.backgroundColor= "#4169e0e6";
-        var stylies = document.getElementById("descotado")
-        stylies.style.backgroundColor= "";
-        stylies.style.color = "#dc3545" ;
-       
-    
-     }
-    };
+          
+      });
 
 
-
-Buyblock.addEventListener("submit" ,function(e){
-  e.preventDefault()
-   const no = document.getElementById("danger_outlined")
-   const ye = document.getElementById("flexRadioDefault2")
-   if(ye.checked) {
-    Buyblock.submit()
-   }
-    else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';
-
-    
-});
-
-
-
-
-
-
-
-</script>
+      </script>
 @endsection
 {{-- block_main --}}
 
