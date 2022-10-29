@@ -93,7 +93,7 @@ class ShopProduct extends Model
     
     public function modalidad(){
 
-        return $this->belongsTo(ModalidadPago::class, 'id_modalidad_pagos', 'id');
+        return $this->belongsTo(ModalidadPago::class,  'id','id_modalidad_pagos');
 
     }
 

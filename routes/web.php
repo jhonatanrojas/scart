@@ -22,6 +22,7 @@ Route::controller(Productos_cuota::class)->group(function(){
 });
 
 
+Route::post('/reportar-pago', 'ShopAccountController@postReportarPago')->name('post_reporte_pago');
 
 
 

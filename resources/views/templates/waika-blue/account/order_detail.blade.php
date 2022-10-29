@@ -85,15 +85,7 @@ $layout_page = shop_profile
    <div class="col-sm-6">
     <table  class="table table-bordered">
         <tr><td class="td-title">{{ sc_language_render('order.order_status') }}:</td><td>{{ $statusOrder[$order->status] }}</td></tr>
-        <tr><td>{{ sc_language_render('order.shipping_status') }}:</td><td>{{ $statusShipping[$order->shipping_status]??'' }}</td></tr>
-        <tr><td>{{ sc_language_render('order.shipping_method') }}:</td><td>{{ $order->shipping_method }}</td></tr>
-        <tr><td>{{ sc_language_render('order.payment_method') }}:</td><td>{{ $order->payment_method }}</td></tr>
-        <tr>
-          <td class="td-title">{{ sc_language_render('order.currency') }}:</td><td>{{ $order->currency }}</td>
-        </tr>
-        <tr>
-          <td class="td-title">{{ sc_language_render('order.exchange_rate') }}:</td><td>{{ ($order->exchange_rate)??1 }}</td>
-        </tr>
+
     </table>
   </div>
 </div>
@@ -161,10 +153,7 @@ $layout_page = shop_profile
                   @if ($element['code'] =='shipping')
                     <tr><td>{!! $element['title'] !!}:</td><td style="text-align:right">{{ sc_currency_format($element['value']) }}</td></tr>
                   @endif
-                  @if ($element['code'] =='discount')
-                    <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right">{{ sc_currency_format($element['value']) }}</td></tr>
-                  @endif
-
+                
                    @if ($element['code'] =='total')
                     <tr style="background:#f5f3f3;font-weight: bold;"><td>{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
                   @endif

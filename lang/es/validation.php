@@ -73,9 +73,9 @@ return [
     'filled' => 'El campo :attribute debe tener un valor.
     ',
     'gt' => [
-        'numeric' => 'El :attribute debe ser mayor que :valor.',
+        'numeric' => 'El :attribute debe ser mayor que value.',
         'file' => '
-        El :attribute debe ser mayor que :valor kilobytes.',
+        El :attribute debe ser mayor que value kilobytes.',
         'string' => '
         El :attribute debe ser mayor que los :valores.',
         'array' => '
@@ -83,10 +83,10 @@ return [
     ],
     'gte' => [
         'numeric' => '
-        El :attribute debe ser mayor o igual que :valor.',
+        El :attribute debe ser mayor o igual que value.',
         'file' => '
-        El :attribute debe ser mayor o igual al :valor en kilobytes.',
-        'string' => 'El :attribute debe ser mayor o igual que :valor caracteres.
+        El :attribute debe ser mayor o igual al value en kilobytes.',
+        'string' => 'El :attribute debe ser mayor o igual que value caracteres.
         ',
         'array' => '
         El :attribute debe tener :elementos de valor o más.',
@@ -109,22 +109,22 @@ return [
     El :attribute debe ser una cadena JSON válida.',
     'lt' => [
         'numeric' => '
-        El :attribute debe ser menor que :valor.',
+        El :attribute debe ser menor que value.',
         'file' => '
         El :attribute debe ser menor que :value kilobytes.',
         'string' => '
         Español
         The :attribute must be less than :value characters.
-        El :attribute debe tener menos de :valor de caracteres.',
+        El :attribute debe tener menos de value de caracteres.',
         'array' => '
         El :attribute debe tener menos de :elementos de valor.',
     ],
     'lte' => [
         'numeric' => '
-        El :attribute debe ser menor o igual que el :valor.',
-        'file' => 'El :attribute debe ser menor o igual al :valor en kilobytes.',
+        El :attribute debe ser menor o igual que el value.',
+        'file' => 'El :attribute debe ser menor o igual al value en kilobytes.',
         'string' => '
-        El :attribute debe ser menor o igual que :valor caracteres.',
+        El :attribute debe ser menor o igual que value caracteres.',
         'array' => 'El :attribute no debe tener más de :elementos de valor.
         ',
     ],
@@ -136,12 +136,12 @@ return [
         'string' => '
         El :attribute no puede ser mayor que :max caracteres.',
         'array' => '
-        El :attribute no puede tener más de :máx elementos.',
+        El :attribute no puede tener más de :max elementos.',
     ],
     'mimes' => '
-    El :attribute debe ser un archivo de tipo: :valores.',
+    El :attribute debe ser un archivo de type: :values.',
     'mimetypes' => '
-    El :attribute debe ser un archivo de tipo: :valores.',
+    El :attribute debe ser un archivo de type: :values.',
     'min' => [
         'numeric' => '
         El :attribute debe ser al menos :min.',
@@ -166,27 +166,27 @@ return [
     El formato de :attribute no es válido.',
     'required' => 'El campo :attribute es obligatorio.',
     'required_if' => '
-    El campo :attribute es obligatorio cuando :otro es :valor.',
+    El campo :attribute es obligatorio cuando :otro es value.',
     'required_unless' => '
     El campo :attribute es obligatorio a menos que :otro esté en :valores.',
     'required_with' => '
-    El campo :attribute es obligatorio cuando :valores está presente.',
+    El campo :attribute es obligatorio cuando :values está presente.',
     'required_with_all' => '
-    El campo :attribute es obligatorio cuando los :valores están presentes.',
+    El campo :attribute es obligatorio cuando los :values están presentes.',
     'required_without' => '
-    El campo :attribute es obligatorio cuando :valores no está presente.',
+    El campo :attribute es obligatorio cuando :values no está presente.',
     'required_without_all' => '
-    El campo :attribute es obligatorio cuando ninguno de los :valores está presente.',
+    El campo :attribute es obligatorio cuando ninguno de los :values está presente.',
     'same' => 'El :attribute y :otro deben coincidir.',
     'size' => [
         'numeric' => '
-        El :attribute debe ser :tamaño.',
+        El :attribute debe ser :size.',
         'file' => '
         El :attribute debe ser :size kilobytes.',
         'string' => '
-        El :attribute debe tener :tamaño de caracteres.',
+        El :attribute debe tener :size de caracteres.',
         'array' => '
-        El :attribute debe contener :elementos de tamaño.',
+        El :attribute debe contener :size de tamaño.',
     ],
     'starts_with' => '
     El :attribute debe comenzar con uno de los siguientes: :valores.',

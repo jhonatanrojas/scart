@@ -12,3 +12,6 @@ ALTER TABLE sc_shop_product ADD COLUMN id_modalidad_pagos int NOT NULL DEFAULT '
 INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_nacionalidad_required', '1', '0', '1', '0', '', NULL, NULL);
 
 INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_municipio_required', '1', '0', '1', '1', '', NULL, NULL);
+ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEFAULT '0';
+ALTER TABLE sc_shop_order_detail ADD COLUMN fecha_primer_pago date DEFAULT null;
+ chown www-data:www-data 

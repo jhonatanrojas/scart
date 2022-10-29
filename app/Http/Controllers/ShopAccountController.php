@@ -15,7 +15,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
+use App\Models\Catalogo\MetodoPago;
+use App\Models\HistorialPago;
 
+
+use Illuminate\Support\Facades\File;
 class ShopAccountController extends RootFrontController
 {
     use AuthTrait;
@@ -367,7 +371,7 @@ class ShopAccountController extends RootFrontController
         }
         return $this->_addressList();
     }
-
+ 
     public function reportarPago(...$params)
     {
         if (config('app.seoLang')) {
@@ -378,8 +382,11 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
+        $order = ShopOrder::where('id', $id) ->where('customer_id', $customer->id)->first();
 
+  
 
+           $metodos_pagos= MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')
         ->with(
@@ -388,6 +395,8 @@ class ShopAccountController extends RootFrontController
 
      
             'customer'        => $customer,
+             'metodos_pagos'  => $metodos_pagos,
+             'order' => $order,
             'layout_page'     => 'shop_profile',
             'breadcrumbs'     => [
                 ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
@@ -397,6 +406,42 @@ class ShopAccountController extends RootFrontController
         );
     }
 
+    public function postReportarPago(Request $request){
+        $user = Auth::user();
+        $cId = $user->id;
+        $data = request()->all();
+
+        $request->validate([
+            'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
+            'monto' => 'required',
+            'referencia' => 'required',
+            'order_id'=>'required'
+        ]);
+        $fileName = time().'.'.$request->capture->extension();  
+        $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
+        $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+
+        $data_pago =[
+         'order_id' =>$request->order_id,
+         'customer_id' => $cId,
+         'order_detail_id' =>$request->id_detalle_orden ,
+         'producto_id' =>$request->product_id,
+         'metodo_pago_id' =>$request->forma_pago,
+         'fecha_pago' =>$request->fecha,
+         'importe_pagado' =>$request->monto,
+         'comment' =>$request->observacion,
+         'moneda' =>$request->moneda,
+         'comprobante'=>   $path_archivo,
+         'payment_status' => 2
+
+        ];
+
+        $order = HistorialPago::create($data_pago);
+
+        return redirect(sc_route('customer.historial_pagos'))
+        ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
+       
+    }
     public function historialPagos()
     {
         if (config('app.seoLang')) {
@@ -407,10 +452,15 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
+    $historial_pagos=   HistorialPago::where('payment_status','<>', 1)
 
+        ->orderByDesc('id')
+        ->get();
+     
+      
 
-        sc_check_view($this->templatePath . '.account.reportar_pago');
-        return view($this->templatePath . '.account.reportar_pago')
+        sc_check_view($this->templatePath . '.account.historial_pagos');
+        return view($this->templatePath . '.account.historial_pagos')
         ->with(
             [
             'title'           =>'Historial de pagos',
@@ -418,8 +468,9 @@ class ShopAccountController extends RootFrontController
      
             'customer'        => $customer,
             'layout_page'     => 'shop_profile',
+            'historial_pagos'=> $historial_pagos,
             'breadcrumbs'     => [
-                ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
+                ['url'        => sc_route('customer.historial_pagos'), 'title' => sc_language_render('front.my_account')],
                 ['url'        => '', 'title' => 'Reportar  pago'],
             ],
             ]
