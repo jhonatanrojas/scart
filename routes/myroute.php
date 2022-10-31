@@ -141,6 +141,15 @@ Route::group(['prefix' => 'product'], function () use ($nameSpaceAdminProduct) {
 
 });
 
+Route::group(['prefix' => 'order'], function () use ($nameSpaceAdminProduct) {
+    Route::get('/detalle_pago','App\Admin\Controllers\HistorialPagosController@detalle')->name('historial_pagos.detalle');
+  
+
+});
+
+
+
+
 $nameSpaceFrontCustomer = 'App\Http\Controllers';
 $suffix = sc_config('SUFFIX_URL')??'';
 $prefixCustomerClient = sc_config('PREFIX_MEMBER') ?? 'customer';

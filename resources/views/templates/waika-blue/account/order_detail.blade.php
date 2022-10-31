@@ -97,12 +97,11 @@ $layout_page = shop_profile
             <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th>{{ sc_language_render('product.name') }}</th>
-                    <th>{{ sc_language_render('product.sku') }}</th>
+                    <th>Producto</th>
+
                     <th class="product_price">{{ sc_language_render('product.price') }}</th>
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_total">{{ sc_language_render('order.totals.sub_total') }}</th>
-                    <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,11 +119,11 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                            <td>{{ $item->sku }}</td>
+                  
                             <td class="product_price">{{ $item->price }}</td>
                             <td class="product_qty">x  {{ $item->qty }}</td>
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
-                            <td class="product_tax">{{ $item->tax }}</td>
+                          
                           </tr>
                     @endforeach
                 </tbody>
@@ -172,5 +171,44 @@ $layout_page = shop_profile
 
 
       @endif
+      <div class="d-flex justify-content-end">
+        
+        <div class=" align-self-end ">        <a  class="btn btn-info" href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+        </div>
+      </div>
+      <table class="table box table-bordered" width="100%">
+        <thead>
+          <tr>
+            <th style="width: 50px;">No.</th>
+            <th style="width: 100px;">Id Orden</th>
+            <th>Pagado</th>
+            <th>Forma de pago</th>
+            <th>estatus del pago</th>
+            <th>{{ sc_language_render('common.created_at') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($historial_pagos as $historial)
+          <tr>
+          @php
+          $n = (isset($n)?$n:0);
+          $n++;
+          @endphp
+        <td><span class="item_21_id">{{ $n }}</span></td>
+        <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
+        <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
+        <td><span class="item_21_sku">{{ $historial->metodo_pago->name}}</span></td>
+        <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
+        <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
+        <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
+        </td>
+      </tr>
+
+@endforeach
+
+        </tbody>
+      </table>
+
     </div>
 @endsection

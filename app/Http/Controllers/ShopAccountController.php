@@ -328,7 +328,16 @@ class ShopAccountController extends RootFrontController
             return $this->pageNotFound();
         }
 
+
+    $historial_pagos =   HistorialPago::where('order_id', $id)
+        ->orderByDesc('id')->get();
+        
+
+        
         $id = $customer['id'];
+
+
+ 
         $documento = SC__documento::where('id_usuario', $id)->get();
 
         if(!isset($documento[0]['id_usuario']) == $id){
@@ -349,6 +358,7 @@ class ShopAccountController extends RootFrontController
             'order'           => $order,
             'customer'        => $customer,
             'layout_page'     => 'shop_profile',
+            'historial_pagos'   => $historial_pagos,
             'breadcrumbs'     => [
                 ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
                 ['url'        => '', 'title' => $title],
