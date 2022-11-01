@@ -449,7 +449,7 @@ table tfoot {
                   </div>
                 </div>
                 {{--// Social --}}
-
+                  <input type="hidden" name="Cuotas" value="{!!$product->nro_coutas!!}">
               </div>
             </form>
             </div>
@@ -504,19 +504,20 @@ table tfoot {
              
             </div>
             <div class="modal-body">
-              <form action="" method="POST">
+              <form action="{{ sc_route('cart.add') }}" method="POST">
                 <div id="w-100">
+                   {{ csrf_field() }}
                   <div class="header">
                     <h5 class="text-center">Calcular financiamiento</h5>
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
                     <div class="">
-                      <label for="monto">$Monto: </label>
-                      <input  readonly value="{{$product->price}}" class="form-control   " type="number" name="monto" id="monto" placeholder="monto" 
+                      <label for="monto">Monto: </label>
+                      <input  readonly value="{{$product->price}}" class="form-control   " type="text" name="monto" id="monto" placeholder="monto" 
                        >
                     </div>
-                    <div class="">
+                    <div class="mt-2 mb-2">
                       <label  for="periodo">forma de pago:
                         
                       </label>
@@ -537,7 +538,7 @@ table tfoot {
                       
                   </select>
                     </div>
-                    <div class="">
+                    <div class="mt-2 mb-2">
                       <label for="plazo">Cuotas:
                       </label>
                             <select class="form-control w-100 select2" name="Cuotas" id="Cuotas">
@@ -549,12 +550,16 @@ table tfoot {
                             </select>
                      
                     </div>
+
+                    <div class="mt-2 mb-2 w-100">
+                      <label for="fecha">Fecha del primer pago: <input class="form-control " type="date" name="fecha" id="fecha"  data-mdb-inline="true" size="100" placeholder="fecha"></label>
+                    </div>
                     <div class="">
                       <label for="inicial">Inicial  </label>
                      
                          <select class="form-control w-100 select2"  name="inicial" id="inicial">
                           <option value="0">sin inicial(0%)</option>
-                          <option value="30">con  inicial(30%)</option>
+                          <option value="30">con inicial(30%)</option>
                          
                          </select>
                     </div>
@@ -599,6 +604,10 @@ table tfoot {
             
           </div><!-- /.modal-content -->
         </div>
+        <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
+              <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
+              <input  name="qty" type="hidden"  value="1" min="1" max="100">
+              <input  name="financiamiento" type="hidden"  value="1"  max="100">
       </form><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 <!--/product-details-->
@@ -619,9 +628,18 @@ table tfoot {
           let inicial = parseInt(n3);
           const plazoMensual = document.getElementById('modalidad')
           var selected = plazoMensual.options[plazoMensual.selectedIndex].text;
-          var today = new Date();
-          // obtener la fecha de hoy en formato `MM/DD/YYYY`
-          var fechaInicio = today.toLocaleDateString('en-US');
+
+      
+          fechaInicio = new Date(document.getElementById('fecha').value)
+          fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
+
+          if(fechaInicio == "Invalid Date"){
+            var fechaInicio  = new Date();
+            var fechaInicio = fechaInicio.toLocaleDateString('en-US');
+            // obtener la fecha de hoy en formato `MM/DD/YYYY`
+          }
+         
+
           let periodo = selected;
           let totalPagos ,  plazo ,fechaPago;
           var primerFechaPago = true
@@ -636,9 +654,9 @@ table tfoot {
             }
             switch ( periodo ) {
               case 'Semanal':
-                let fechaFin = new Date(today)
+                let fechaFin = new Date(fechaInicio)
                 fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
-                let tiempo = fechaFin.getTime() - today.getTime()
+                let tiempo = fechaFin.getTime() - fechaInicio.getTime()
                 let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
                 totalPagos = Math.ceil(dias / 7)
                 break
@@ -721,6 +739,7 @@ table tfoot {
           const  Buyblock = document.getElementById("buy_block");
           const ye = document.getElementById("flexRadioDefault2");
           const no = document.getElementById("danger_outlined");
+          ye.checked
           var stylies = document.getElementById("descotado")
           stylies.style.backgroundColor= "#4169e0e6";
           stylies.style.color = "#fff" ;

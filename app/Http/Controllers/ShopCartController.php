@@ -57,6 +57,10 @@ class ShopCartController extends RootFrontController
         $this->clearSession();
         
         $cart = Cart::content();
+        // dd($this->templatePath);
+        
+
+        // dd(ShopAttributeGroup::pluck('name', 'id')  |);
 
         sc_check_view($this->templatePath . '.screen.shop_cart');
         return view(
@@ -84,6 +88,7 @@ class ShopCartController extends RootFrontController
     public function prepareCheckout()
     {
         $customer = auth()->user();
+        
 
         //Not allow for guest
         if (!sc_config('shop_allow_guest') && !$customer) {
@@ -159,6 +164,7 @@ class ShopCartController extends RootFrontController
      */
     private function _getCheckout()
     {
+       
         $dataCheckout = session('dataCheckout') ?? '';
         $storeCheckout = session('storeCheckout') ?? '';
         //If cart info empty
@@ -205,6 +211,7 @@ class ShopCartController extends RootFrontController
         $customer = auth()->user();
         if ($customer) {
             $address = $customer->getAddressDefault();
+            
             if ($address) {
                 $addressDefaul = [
                     'first_name'      => $address->first_name,
@@ -329,6 +336,7 @@ class ShopCartController extends RootFrontController
      */
     public function processCheckout()
     {
+        
         $dataCheckout  = session('dataCheckout') ?? '';
         $storeCheckout = session('storeCheckout') ?? '';
         //If cart info empty
@@ -337,6 +345,7 @@ class ShopCartController extends RootFrontController
         }
 
         $customer = auth()->user();
+       
 
         //Not allow for guest
         if (!sc_config('shop_allow_guest') && !$customer) {
@@ -344,6 +353,7 @@ class ShopCartController extends RootFrontController
         }
 
         $data = request()->all();
+      
 
         $dataMap = sc_order_mapping_validate();
         $validate = $dataMap['validate'];
@@ -450,6 +460,7 @@ class ShopCartController extends RootFrontController
     private function _getCheckoutConfirm()
     {
         //Check shipping address
+       
         if (
             !session('shippingAddress')
         ) {
@@ -530,9 +541,12 @@ class ShopCartController extends RootFrontController
      */
     public function addOrder(Request $request)
     {
+      
         $agent = new \Jenssegers\Agent\Agent();
         $customer = auth()->user();
         $uID = $customer->id ?? 0;
+
+        
 
         //if cart empty
         if (count(session('dataCheckout', [])) == 0) {
@@ -544,6 +558,9 @@ class ShopCartController extends RootFrontController
         } //
 
         $data = request()->all();
+        
+
+       
         if (!$data) {
             return redirect(sc_route('cart'));
         } else {
@@ -554,7 +571,28 @@ class ShopCartController extends RootFrontController
             $address_process = session('address_process') ?? '';
             $storeCheckout   = session('storeCheckout') ?? '';
             $dataCheckout    = session('dataCheckout') ?? '';
+            
         }
+
+        foreach($dataCheckout as $card_detalle){
+            
+           $datos = [
+            'modalidad_pago' => $card_detalle->modalidad_pago,
+            'nro_coutas' => $card_detalle->Cuotas,
+            'inicial' => $card_detalle->inicial,
+            'modalidad_de_compra' => $card_detalle->financiamiento ?? 0,
+            'fecha_pago' => $card_detalle->fecha ?? '',
+           ];
+
+        }
+
+        // dd($dataCheckout);
+
+       
+
+       
+
+     
 
         //Process total
         $subtotal = (new ShopOrderTotal)->sumValueTotal('subtotal', $dataTotal); //sum total
@@ -567,6 +605,11 @@ class ShopCartController extends RootFrontController
         //end total
 
         $dataOrder['store_id']        = $storeCheckout;
+        $dataOrder['modalidad_pago']        = $datos['modalidad_pago'];
+        $dataOrder['nro_coutas']        = $datos['nro_coutas'];
+        $dataOrder['modalidad_de_compra']        = $datos['modalidad_de_compra'];
+        $dataOrder['inicial']        = $datos['inicial'];
+        $dataOrder['fecha_pago']        = $datos['fecha_pago'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['subtotal']        = $subtotal;
         $dataOrder['shipping']        = $shipping;
@@ -623,6 +666,8 @@ class ShopCartController extends RootFrontController
         if (!empty($shippingAddress['comment'])) {
             $dataOrder['comment']       = $shippingAddress['comment'];
         }
+      
+        
 
         $arrCartDetail = [];
         foreach ($dataCheckout as $cartItem) {
@@ -630,11 +675,18 @@ class ShopCartController extends RootFrontController
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = sc_currency_value($cartItem->price);
             $arrDetail['qty']         = $cartItem->qty;
+            // $arrDetail['id_modalidad_pagos']         = $cartItem->modalidad_pago;
+            $arrDetail['nro_coutas']  = $cartItem->Cuotas;
+            $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento ?? 0;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
             $arrDetail['total_price'] = sc_currency_value($cartItem->price) * $cartItem->qty;
             $arrCartDetail[]          = $arrDetail;
         }
+
+        // dd($dataCheckout);
+
+       
 
         //Set session info order
         session(['dataOrder' => $dataOrder]);
@@ -691,14 +743,34 @@ class ShopCartController extends RootFrontController
     public function addToCart()
     {
         $data      = request()->all();
-
+      
+       
+        
         //Process escape
         $data      = sc_clean($data);
+
+       
+ 
+       
+        if(isset($data['financiamiento']) == "1"){
+            $productId = $data['product_id'];
+            $qty       = $data['qty'] ?? 0;
+            $storeId   = $data['storeId'] ?? config('app.storeId');
+            $financiamiento = $data['financiamiento'] ??'';
+            $modalidad_pago = $data['modalidad_pago'] ?? '';
+            $Cuotas = $data['Cuotas'] ??0;
+            $fecha = $data['fecha'] ?? '';
+            $inicial = $data['inicial']?? 0;
+
+        }else{
+            $productId = $data['product_id'];
+            $qty       = $data['qty'] ?? 0;
+            $Cuotas = $data['Cuotas'] ?? 0;
+            $modalidad_pago = $data['modalidad_pago']?? 0;
+            $storeId   = $data['storeId'] ?? config('app.storeId');
+        }
        
 
-        $productId = $data['product_id'];
-        $qty       = $data['qty'] ?? 0;
-        $storeId   = $data['storeId'] ?? config('app.storeId');
 
        
 
@@ -713,6 +785,7 @@ class ShopCartController extends RootFrontController
         //End attribute price
 
         $product = (new ShopProduct)->getDetail($productId, null, $storeId);
+       
 
         if (!$product) {
             return response()->json(
@@ -725,21 +798,53 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
-            $options = $formAttr;
-            $dataCart = array(
+            if(isset($data['financiamiento']) == "1"){
+                $options = $formAttr;
+                $dataCart = array(
                 'id'      => $productId,
                 'name'    => $product->name,
+                'financiamiento'    => $financiamiento ,
+                'modalidad_pago'    => $modalidad_pago,
+                'Cuotas'    => $Cuotas,
+                'fecha'    => $fecha,
+                'inicial'    => $inicial,
                 'qty'     => $qty,
                 'price'   => $product->getFinalPrice() + $optionPrice,
                 'tax'     => $product->getTaxValue(),
                 'storeId' => $storeId,
             );
             $dataCart['options'] = $options;
+            
             Cart::add($dataCart);
+           
             return redirect(sc_route('cart'))
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
                 );
+            }else if(!isset($data['financiamiento']) == "1"){
+                $options = $formAttr;
+                $dataCart = array(
+                    'id'      => $productId,
+                    'name'    => $product->name,
+                    'Cuotas'    => $Cuotas,
+                    'modalidad_pago'    => $modalidad_pago,
+                    'qty'     => $qty,
+                    'price'   => $product->getFinalPrice() + $optionPrice,
+                    'tax'     => $product->getTaxValue(),
+                    'storeId' => $storeId,
+                );
+                $dataCart['options'] = $options; 
+                Cart::add($dataCart);
+
+                return redirect(sc_route('cart'))
+                ->with(
+                    ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
+                );
+
+            };
+            
+           
+            
         } else {
             return redirect(sc_route('cart'))
                 ->with(
@@ -755,17 +860,29 @@ class ShopCartController extends RootFrontController
      * @return [json]
      */
     public function addToCartAjax(Request $request)
+  
     {
+        
+       
+        
         if (!$request->ajax()) {
+           
             return redirect(sc_route('cart'));
         }
+      
         $data     = request()->all();
+       
+
+        
+       
         $instance = $data['instance'] ?? 'default';
         $id       = $data['id'] ?? '';
         $storeId  = $data['storeId'] ?? config('app.storeId');
+        
         $cart     = Cart::instance($instance);
 
         $product = (new ShopProduct)->getDetail($id, null, $storeId);
+        // dd($product);
         if (!$product) {
             return response()->json(
                 [
@@ -864,9 +981,13 @@ class ShopCartController extends RootFrontController
     public function updateToCart(Request $request)
     {
         if (!$request->ajax()) {
+           
             return redirect(sc_route('cart'));
         }
         $data    = request()->all();
+       
+        
+        
         $id      = $data['id'] ?? '';
         $rowId   = $data['rowId'] ?? '';
         $new_qty = $data['new_qty'] ?? 0;
@@ -921,6 +1042,7 @@ class ShopCartController extends RootFrontController
     private function _wishlist()
     {
         $wishlist = Cart::instance('wishlist')->content();
+        
         sc_check_view($this->templatePath . '.screen.shop_wishlist');
         return view(
             $this->templatePath . '.screen.shop_wishlist',
@@ -959,6 +1081,7 @@ class ShopCartController extends RootFrontController
     private function _compare()
     {
         $compare = Cart::instance('compare')->content();
+      
 
         sc_check_view($this->templatePath . '.screen.shop_compare');
         return view(
