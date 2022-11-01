@@ -17,3 +17,14 @@ ALTER TABLE sc_shop_order_detail ADD COLUMN fecha_primer_pago date DEFAULT null;
  chown www-data:www-data 
 
  ALTER TABLE sc_historial_pagos ADD COLUMN observacion  text NOT NULL DEFAULT '';
+> Jhonatan Rojas:
+ALTER TABLE sc_shop_order_detail
+ADD COLUMN abono_inicial decimal(15,2) DEFAULT '0.00';
+ALTER TABLE sc_shop_order_detail ADD COLUMN id_modalidad_pago int NOT NULL DEFAULT '0';
+ALTER TABLE sc_shop_order_detail ADD COLUMN id_modalidad_pago int NOT NULL DEFAULT '0';
+
+ ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_pago VARCHAR(100)
+
+ALTER TABLE sc_shop_order ADD COLUMN modalidad_de_compra int NOT NULL DEFAULT '0';
+
+ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEFAULT '0';

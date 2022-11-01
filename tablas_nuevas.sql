@@ -68,3 +68,6 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
 
  ALTER TABLE sc_historial_pagos ADD COLUMN observacion   varchar(255)  DEFAULT '';
+ ALTER TABLE sc_shop_order ADD modalidad_pago VARCHAR(100)
+
+
