@@ -143,7 +143,8 @@ Route::group(['prefix' => 'product'], function () use ($nameSpaceAdminProduct) {
 
 Route::group(['prefix' => 'order'], function () use ($nameSpaceAdminProduct) {
     Route::get('/detalle_pago','App\Admin\Controllers\HistorialPagosController@detalle')->name('historial_pagos.detalle');
-  
+    Route::post('/estatus-pago', 'App\Admin\Controllers\HistorialPagosController@postEstatusPago')->name('post_status_pago');
+
 
 });
 

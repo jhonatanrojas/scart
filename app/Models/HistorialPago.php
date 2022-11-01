@@ -8,7 +8,7 @@ use App\Models\Catalogo\MetodoPago;
 use App\Models\Catalogo\PaymentStatus;
 
 use App\Models\ShopProduct;
-
+use App\Models\SC_shop_customer;
 
 class HistorialPago extends Model
 {
@@ -31,6 +31,12 @@ class HistorialPago extends Model
     public function estatus(){
 
         return $this->hasOne(PaymentStatus::class, 'id', 'payment_status');
+
+    }
+
+    public function cliente(){
+
+        return $this->hasOne(SC_shop_customer::class, 'id', 'customer_id');
 
     }
   

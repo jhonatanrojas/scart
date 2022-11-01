@@ -434,6 +434,8 @@ class ShopAccountController extends RootFrontController
         $data_pago =[
          'order_id' =>$request->order_id,
          'customer_id' => $cId,
+        'referencia' =>$request->referencia,
+
          'order_detail_id' =>$request->id_detalle_orden ,
          'producto_id' =>$request->product_id,
          'metodo_pago_id' =>$request->forma_pago,

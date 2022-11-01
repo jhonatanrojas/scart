@@ -117,6 +117,42 @@
 
       </div>
 
+      <!-- Modal -->
+<div class="modal fade" id="modal_estatus_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{{route('post_status_pago')}}"  method="post">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modificar el estatus</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       @csrf
+        <div class="form-group">
+          <label for="estatus_pagos"></label>
+          <select class="form-control" id="estatus_pagos" name="estatus_pagos">
+            @foreach ($statusPayment as $item)
+            <option  value="@php echo $item->id @endphp  "  >   @php  echo $item->name @endphp</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="observacion">Observación</label>
+       <input type="text" class="form-control" id="observacion" name="observacion">
+        </div>
+        <input type="hidden" name="id_pago" id="id_pago">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 
       <!-- /.card-header -->
       <div class="card-body p-0" id="pjax-container">
@@ -189,6 +225,7 @@
     <!-- /.card -->
   </div>
 </div>
+
 @endsection
 
 
@@ -201,6 +238,14 @@
    <script src="{{ sc_file('admin/plugin/jquery.pjax.js')}}"></script>
 
   <script type="text/javascript">
+
+$('.mostrar_estatus_pago').click(function(){
+  $("#modal_estatus_pago").modal('show');
+
+  $("#id_pago").val($(this).data('id'))
+  
+
+    });
 
     $('.grid-refresh').click(function(){
       $.pjax.reload({container:'#pjax-container'});

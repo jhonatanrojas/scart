@@ -15,3 +15,5 @@ INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`
 ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEFAULT '0';
 ALTER TABLE sc_shop_order_detail ADD COLUMN fecha_primer_pago date DEFAULT null;
  chown www-data:www-data 
+
+ ALTER TABLE sc_historial_pagos ADD COLUMN observacion  text NOT NULL DEFAULT '';

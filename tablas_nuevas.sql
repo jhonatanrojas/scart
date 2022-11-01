@@ -66,3 +66,5 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (4, 'Pago Movil', NULL, NULL),
 (5, 'Monedero Digital', NULL, NULL),
 
+
+ ALTER TABLE sc_historial_pagos ADD COLUMN observacion   varchar(255)  DEFAULT '';

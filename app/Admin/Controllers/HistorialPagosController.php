@@ -1,16 +1,8 @@
 <?php
 namespace App\Admin\Controllers;
 
-use SCart\Core\Admin\Admin;
 use SCart\Core\Admin\Controllers\RootAdminController;
-use SCart\Core\Front\Models\ShopAttributeGroup;
-use SCart\Core\Front\Models\ShopCountry;
-use SCart\Core\Front\Models\ShopCurrency;
-
-use SCart\Core\Admin\Models\AdminOrder;
-use SCart\Core\Admin\Models\AdminProduct;
-use SCart\Core\Front\Models\ShopOrderTotal;
-use Validator;
+use Illuminate\Http\Request;
 use App\Models\HistorialPago;
 use App\Models\Catalogo\PaymentStatus;
 
@@ -63,6 +55,7 @@ class HistorialPagosController extends RootAdminController
         $listTh = [
             'Nro orden'      => 'Nro de orden',
             'Importe pagado'       => 'Importe pagado',
+            'Referencia'       => 'Referencia',
             'Metodo de pago'      => 'Metodo de pago',
             'Estatus' => 'Estatus',
             'Creado'   =>  'Creado',
@@ -90,14 +83,29 @@ class HistorialPagosController extends RootAdminController
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
         ];
-
-  
-        $dataTmp  =   HistorialPago::where('order_id',$id_orden)
-        ->orderByDesc('id')
-        ->paginate(20);
-        
+     
+        $dataTmp = (new HistorialPago);
+        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
 
 
+
+            $dataTmp = $dataTmp->Where('payment_status',  $sort_order)
+            ->where('order_id',$id_orden)
+            ->orderByDesc('id')
+            ->paginate(20);
+        } else {
+         
+            $dataTmp = $dataTmp
+            ->where('order_id',$id_orden)
+            ->orderByDesc('id')
+            ->paginate(20);
+        }
+
+
+
+        if(isset($dataTmp[0]->cliente->first_name)){
+            $data ['title'] ='Detalle de pago- Cliente: '.$dataTmp[0]->cliente->first_name.'  '.$dataTmp[0]->cliente->last_name;
+        }
 
 
         $dataTr = [];
@@ -105,15 +113,17 @@ class HistorialPagosController extends RootAdminController
             $dataTr[$row->id ] = [
                 'Nro orden' =>  $row->order_id,
                 'Importe pagado' =>  $row->importe_pagado,
+                'Referencia' =>  $row->referencia,
+                
                 'Metodo de pago' =>  $row->metodo_pago->name,
-                'Estatus' => $row->estatus->name,
+                'Estatus' => $row->estatus->name .'<br><small>'.$row->observacion.'</small>' ,
                 'Creado' =>  $row->created_at->format('d/m/Y'),
          
             
                 'action' => '
-                    <a href="' . sc_route_admin('admin_customer.edit', ['id' => $row->id ? $row->id  : 'not-found-id']) . '"><span title="Ver orden" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                    <a href="#" data-id="'.$row->id.'"><span  data-id="'.$row->id.'" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
 
-                    <a href="' . sc_route_admin('admin_customer.document', ['id' => $row->id  ? $row->id : 'not-found-id']) . '"><span title="' . sc_language_render('action.documetos') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;
+                    <a target="_blank" href="'. sc_file( $row->comprobante).'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;
 
 
                     
@@ -123,7 +133,8 @@ class HistorialPagosController extends RootAdminController
         }
 
         $data['listTh'] = $listTh;
-
+        $data['statusPayment'] = $statusPayment;
+      
         
         $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
@@ -215,5 +226,32 @@ class HistorialPagosController extends RootAdminController
         $orderList = $orderList->paginate(20);
 
         return $orderList;
+    }
+    public function postEstatusPago(Request $request){
+     
+        $data = request()->all();
+      
+        $request->validate([
+           
+            'estatus_pagos' => 'required',
+            'observacion' => 'required',
+            'id_pago' => 'required'
+          
+        ]);
+      
+
+        $order = HistorialPago::where('id', $request->id_pago)
+        ->update([
+            'payment_status' =>$request->estatus_pagos,
+            'observacion' => $request->observacion
+            
+        
+        ]);
+   
+
+        return redirect()->back()
+        ->with(['success' => 'Accion completada']);
+      
+       
     }
 }

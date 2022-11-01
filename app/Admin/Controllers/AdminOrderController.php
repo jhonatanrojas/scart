@@ -14,6 +14,8 @@ use SCart\Core\Admin\Models\AdminCustomer;
 use SCart\Core\Admin\Models\AdminOrder;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
+
+use App\Models\HistorialPago;
 use Validator;
 
 class  AdminOrderController extends RootAdminController
@@ -68,6 +70,7 @@ class  AdminOrderController extends RootAdminController
 
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
             'status'         => sc_language_render('order.admin.status'),
+            'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
             // Only show store info if store is root
@@ -109,7 +112,7 @@ class  AdminOrderController extends RootAdminController
                 $dataStores = [];
             }
         }
-
+     
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
@@ -134,11 +137,12 @@ class  AdminOrderController extends RootAdminController
                 }
             }
 
+            $dataMap['pagos'] =    HistorialPago::where('order_id',$row['id'])->count();
             $dataMap['created_at'] = $row['created_at'];
             $dataMap['action'] = '
             
             <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
-            <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class="fa fa-shopping-cart"></i></span></a>&nbsp;
+            <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class="fa fa-credit-card"></i></span></a>&nbsp;
             <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
             ';
             $dataTr[$row['id']] = $dataMap;
