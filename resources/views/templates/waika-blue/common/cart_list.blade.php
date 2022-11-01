@@ -67,7 +67,7 @@
   
                     {{-- <td>{!! $product->showPrice() !!}</td> --}}
                     <td>${{$item->Cuotas}}</td>
-                    <td>{{$item->modalidad_pago}}</td>
+                    <td>{{$item->modalidad_pago  == "2" ? "Quincenal ":"Mensual"}}</td>
                     <td>{{$item->inicial}}%</td>
   
                     <td class="cart-col-qty">
