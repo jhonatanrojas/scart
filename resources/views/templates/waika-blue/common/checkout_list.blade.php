@@ -1,10 +1,11 @@
 
 {!!$financiamiento = $cartItem[0]->financiamiento!!}
+
 <div class="col-md-12">
   <div class="table-responsive">
       <table class="table box table-bordered">
           <thead>
-             @if (isset($cartItem[0]->financiamiento) === "1")
+             @if (!empty($financiamiento))
               <tr style="background: #eaebec">
                   <th style="width: 50px;">No.</th>
                   <th>{{ sc_language_render('product.name') }}</th>
@@ -63,15 +64,15 @@
                   </td>
 
 
-                  @if (isset($item->financiamiento)==="1")
-                  <td>{!!$item->modalidad_pago!!}</td>
+                  @if (!empty($financiamiento))
+                  <td>{!!$item->modalidad_pago == "2" ? "Quinsenal":"Mensual"!!}</td>
                   <td>{!!$item->Cuotas!!}</td>
                   @else
                   <td>{!! $product->nro_coutas !!} </td>
                       
                   @endif
                   @php
-                  if(isset($item->financiamiento)==="1"){
+                  if(!empty($financiamiento)){
                     $total_cuotas=0;
                   if($product->nro_coutas>0){
                     $total_cuotas=  $product->price / $item->Cuotas;  
@@ -87,7 +88,7 @@
                   }
                 
                  @endphp
-                  @if (isset($item->financiamiento)==="1")
+                  @if (!empty($financiamiento))
                   <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
                   <td>{!! $item->inicial !!}%</td>
                   <td>{!! $product->showPrice() !!}</td>

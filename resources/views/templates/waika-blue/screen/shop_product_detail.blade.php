@@ -6,6 +6,8 @@ $layout_page = shop_product_detail
 - $productRelation: no paginate
 */
 @endphp
+
+
 <style>
   @import url('https://fonts.googleapis.com/css?family=DM+Sans&display=swap');
 
@@ -450,6 +452,7 @@ table tfoot {
                 </div>
                 {{--// Social --}}
                   <input type="hidden" name="Cuotas" value="{!!$product->nro_coutas!!}">
+                  <input type="hidden" name="modalidad_pago" value="{!!$product->modalidad!!}">
               </div>
             </form>
             </div>
@@ -527,14 +530,14 @@ table tfoot {
                           if(isset($modalida_pago)){
                               foreach ($modalida_pago as $key => $pagos) {
                                   if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
-                                      echo "<option selected value='".$pagos->name."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                      echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
                                   }else{
-                                      echo "<option value='".$pagos->name."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                      echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
                                   }
                               }
                           }
                       ?>   
-              
+             
                       
                   </select>
                     </div>
@@ -551,10 +554,12 @@ table tfoot {
                      
                     </div>
 
-                    <div class="mt-2 mb-2 w-100">
-                      <label for="fecha">Fecha del primer pago: <input class="form-control " type="date" name="fecha" id="fecha"  data-mdb-inline="true" size="100" placeholder="fecha"></label>
+                    <div class="control">
+                      <label for="fecha">Fecha del primer pago: <input type="date" value="{!!date("d-m-y")!!}" name="fecha" id="fecha" placeholder="fecha"></label>
                     </div>
-                    <div class="">
+
+                   
+                    <div class="mt-0">
                       <label for="inicial">Inicial  </label>
                      
                          <select class="form-control w-100 select2"  name="inicial" id="inicial">
@@ -627,8 +632,8 @@ table tfoot {
           let n3=Number(document.getElementById("inicial").value);
           let inicial = parseInt(n3);
           const plazoMensual = document.getElementById('modalidad')
-          var selected = plazoMensual.options[plazoMensual.selectedIndex].text;
-
+          var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
+            console.log(selected)
       
           fechaInicio = new Date(document.getElementById('fecha').value)
           fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
@@ -660,10 +665,10 @@ table tfoot {
                 let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
                 totalPagos = Math.ceil(dias / 7)
                 break
-              case 'Quincenal':
+              case '2':
                 totalPagos = plazo * 2
                 break
-              case 'Mensual':
+              case '3':
                 totalPagos = plazo
                 
                 break
@@ -684,9 +689,9 @@ table tfoot {
                 } else {
                   if ( periodo === 'semanal' ) {
                     fechaPago.setDate(fechaPago.getDate() + 7)
-                  } else if ( periodo === 'Quincenal' ) {
+                  } else if ( periodo === '2' ) {
                     fechaPago.setDate(fechaPago.getDate() + 15)
-                  } else if ( periodo === 'Mensual' ) {
+                  } else if ( periodo === '3' ) {
                     fechaPago.setMonth(fechaPago.getMonth() + 1)
                   }
                 }
