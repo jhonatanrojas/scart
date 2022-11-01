@@ -452,7 +452,7 @@ table tfoot {
                 </div>
                 {{--// Social --}}
                   <input type="hidden" name="Cuotas" value="{!!$product->nro_coutas!!}">
-                  <input type="hidden" name="modalidad_pago" value="{!!$product->modalidad!!}">
+                  <input type="hidden" name="modalidad_pago" value="{!!$product->modalidad == "Mensual" ? 3: 2!!}">
               </div>
             </form>
             </div>

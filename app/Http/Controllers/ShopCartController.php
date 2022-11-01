@@ -577,24 +577,14 @@ class ShopCartController extends RootFrontController
         foreach($dataCheckout as $card_detalle){
             
            $datos = [
-            'id_modalidad_pago' => $card_detalle->modalidad_pago,
-            'nro_coutas' => $card_detalle->Cuotas,
+            'modalidad_de_compra' => $card_detalle->financiamiento,
             'fecha_primer_pago' => $card_detalle->fecha ,
            ];
 
-
-            
-    
-
         }
 
-        // dd($dataCheckout);
+    
 
-       
-
-       
-
-     
 
         //Process total
         $subtotal = (new ShopOrderTotal)->sumValueTotal('subtotal', $dataTotal); //sum total
@@ -607,8 +597,7 @@ class ShopCartController extends RootFrontController
         //end total
 
         $dataOrder['store_id']        = $storeCheckout;
-        $dataOrder['nro_coutas']        = $datos['nro_coutas'];
-        $dataOrder['id_modalidad_pago']        = $datos['id_modalidad_pago'];
+        $dataOrder['modalidad_de_compra']        = $datos['modalidad_de_compra'];
         $dataOrder['fecha_primer_pago']        = $datos['fecha_primer_pago'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['subtotal']        = $subtotal;
