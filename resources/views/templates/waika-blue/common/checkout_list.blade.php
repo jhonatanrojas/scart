@@ -1,17 +1,31 @@
+
+{!!$financiamiento = $cartItem[0]->financiamiento!!}
 <div class="col-md-12">
   <div class="table-responsive">
       <table class="table box table-bordered">
           <thead>
+             @if (isset($cartItem[0]->financiamiento) === "1")
               <tr style="background: #eaebec">
                   <th style="width: 50px;">No.</th>
                   <th>{{ sc_language_render('product.name') }}</th>
+                  <th > Modalidad de pagos</th>
                   <th > Cuotas</th>
-                 
                   <th > Pagos de</th>
+                  <th >Inicial</th>
                   <th>{{ sc_language_render('product.price') }}</th>
                   <th>{{ sc_language_render('product.quantity') }}</th>
                   <th>{{ sc_language_render('product.subtotal') }}</th>
               </tr>
+              @else
+                <th style="width: 50px;">No.</th>
+                  <th>{{ sc_language_render('product.name') }}</th>
+                  <th > Cuotas</th>
+                  <th > Pagos de</th>
+                  <th>{{ sc_language_render('product.price') }}</th>
+                  <th>{{ sc_language_render('product.quantity') }}</th>
+                  <th>{{ sc_language_render('product.subtotal') }}</th>
+
+              @endif
           </thead>
           <tbody>
               @foreach($cartItem as $item)
@@ -47,19 +61,41 @@
                           </span>
                       </a>
                   </td>
-          
+
+
+                  @if (isset($item->financiamiento)==="1")
+                  <td>{!!$item->modalidad_pago!!}</td>
+                  <td>{!!$item->Cuotas!!}</td>
+                  @else
                   <td>{!! $product->nro_coutas !!} </td>
+                      
+                  @endif
                   @php
-                  $total_cuotas=0;
+                  if(isset($item->financiamiento)==="1"){
+                    $total_cuotas=0;
+                  if($product->nro_coutas>0){
+                    $total_cuotas=  $product->price / $item->Cuotas;  
+
+                  }
+
+                  }else{
+                    $total_cuotas=0;
                   if($product->nro_coutas>0){
                     $total_cuotas=  $product->price / $product->nro_coutas;  
 
                   }
+                  }
+                
                  @endphp
+                  @if (isset($item->financiamiento)==="1")
                   <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
+                  <td>{!! $item->inicial !!}%</td>
                   <td>{!! $product->showPrice() !!}</td>
                   
-
+                  @else
+                  <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
+                  <td>{!! $product->showPrice() !!}</td>
+                  @endif
                   <td class="cart-col-qty">
                       <div class="cart-qty">
                         {{$item->qty}}

@@ -7,7 +7,7 @@ $layout_page = shop_cart
 - $attributesGroup: array
 */
 @endphp
-
+{{-- <?= dd($cart)?> --}}
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
@@ -27,6 +27,8 @@ $layout_page = shop_cart
 
             {{-- Render cart item for earch shop --}}
             @foreach ($cartTmp as $sId => $cartItem)
+      
+            
             <div class="col-md-12">
                 <h5><i class="fa fa-shopping-bag" aria-hidden="true"></i>  {{ sc_store('title', $sId) }}</h5>
             </div>
