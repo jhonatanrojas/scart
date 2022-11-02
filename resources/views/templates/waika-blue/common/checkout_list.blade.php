@@ -89,12 +89,12 @@
                 
                  @endphp
                   @if (!empty($financiamiento))
-                  <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
+                  <td>${!! $total_cuotas !!} </td>
                   <td>{!! $item->inicial !!}%</td>
                   <td>{!! $product->showPrice() !!}</td>
                   
                   @else
-                  <td>${!! $total_cuotas !!} {!! $product->modalidad !!}</td>
+                  <td>${!! $total_cuotas !!} </td>
                   <td>{!! $product->showPrice() !!}</td>
                   @endif
                   <td class="cart-col-qty">

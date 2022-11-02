@@ -5,6 +5,7 @@ use App\Models\Estado;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\SC__documento;
+use Illuminate\Http\Request;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopCountry;
 use SCart\Core\Front\Models\ShopLanguage;
@@ -12,7 +13,7 @@ use SCart\Core\Admin\Models\AdminCustomer;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class AdminCustomerController extends RootAdminController
 {
@@ -482,6 +483,46 @@ class AdminCustomerController extends RootAdminController
         $id = request('id');
         AdminCustomer::deleteAddress($id);
         return json_encode(['error' => 0, 'msg' => sc_language_render('customer.delete_address_success')]);
+    }
+    public function documentn(Request $request)
+    {
+
+       $datos =  $request->all();
+
+        $request->validate([
+            'cedula' => 'required',
+            'carta_trabajo' => 'required',
+            'rif' => 'required',
+        ]);
+       
+        
+  
+            $id = $datos['id_usuario'];
+            $saveFile = new SC__documento;
+            $saveFile->first_name =$datos["first_name"];
+            $saveFile->email =$datos['email'];
+            $saveFile->telefono =$datos['phone'];
+            $saveFile->id_usuario = $datos['id_usuario'];
+            $saveFile->cedula = $datos['cedula'];
+            $saveFile->rif = $datos['rif'];
+            $saveFile->carta_trabajo = $datos['carta_trabajo'];
+
+            $documento = SC__documento::where('id_usuario', $id)->get();
+         
+            if(isset($documento[0]['id_usuario'])  == $id){
+                return redirect('')->with('error', 'Disculpa ya se Adjunto los documentos');
+
+                return redirect()->route('admin_customer.document', ['id' => $datos['id_usuario']])
+                ->with(['error' => "error al guardar los datos"]);
+            }else $saveFile->save();
+
+            if($saveFile){
+                return redirect()->route('admin_customer.document', ['id' => $datos['id_usuario']])
+            ->with(['success' => sc_language_render('customer.update_success')]);
+             }
+
+        
+       
     }
 
     /**

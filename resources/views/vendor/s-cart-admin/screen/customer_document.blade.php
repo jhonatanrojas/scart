@@ -102,6 +102,8 @@
 }
 </style>
 
+
+{{-- {!!dd($documento)!!} --}}
 @extends($templatePathAdmin.'layout')
 @section('main')
 @if (!empty($documento))
@@ -200,7 +202,120 @@
 
 
 @else
+ {{-- t1 --}}
 <h1 class="text-center text-info">El Cliente no adjutado los documentos </h1>
+
+<div class="container  ">
+       
+
+      <div class="col-12 col-md-12">
+          <div class=" text-center ">
+              @if (isset($mensaje) && $mensaje != "")
+              <div class="alert alert-danger">
+                 <span class="h6"> {{ $mensaje }} </span>
+              </div>
+              @endif
+          </div>
+      </div>
+  
+    
+
+      <div class="row  align-items-center justify-content-center">
+      <form action="{{route('document_admin')}}"  method="post" enctype="multipart/form-data">
+         
+              @csrf
+              <div class="col-md-12">
+                <div class="input-group">
+                    <label for="cedula" class="col-sm-12 col-form-label fa fa-list-alt ">Cedula</label>
+                    <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar Cedula"  />
+                    <div class="input-group-append">
+                     <a data-input="cedula" data-preview="cedula" data-type="cedula" class="btn btn-primary lfm">
+                       <i class="fa fa-image"></i>
+                     </a>
+                    </div>
+                </div>
+                @error('cedula')
+                <small style="color: red">{{$message}}</small>
+            @enderror
+            <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="cedula" class="img_holder">
+                @if (old('cedula',$documentos[0]['cedula']??''))
+                <img  src="{{ sc_file(old('cedula',$documentos[0]['cedula']??'')) }}">
+                @endif
+            </div> 
+            </div>
+       
+                
+
+                
+                     
+                      <div class="col-md-12">
+                          <div class="input-group">
+                              <label for="rif" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
+                              <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$documentos[0]['rif'] ??'') }}" class="form-control image" placeholder="Adjuntar Rif"  />
+                              <div class="input-group-append">
+                               <a data-input="rif" data-preview="rif" data-type="rif" class="btn btn-primary lfm">
+                                 <i class="fa fa-image"></i>
+                               </a>
+                              </div>
+                          </div>
+                          @error('rif')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
+                      <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="rif" class="img_holder">
+                          @if (old('rif',$documentos[0]['rif']??''))
+                          <img  src="{{ sc_file(old('rif',$documentos[0]['rif']??'')) }}">
+                          @endif
+                      </div> 
+                      </div>
+                 
+                
+  
+       
+       
+                 
+                     
+                      <div class="col-md-12 ">
+                          <div class="input-group">
+                              <label for="image" class="col-sm-12  fa fa-list-alt   ">Constancia trabajo</label>
+                              <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$documentos[0]['carta_trabajo'] ??'') }}" class="form-control image" placeholder="adjuntar Constancia trabajo "  />
+                              <div class="input-group-append">
+                               <a data-input="carta_trabajo" data-preview="carta_trabajo" data-type="carta_trabajo" class="btn btn-primary lfm">
+                                 <i class="fa fa-image"></i> 
+                               </a>
+                              </div>
+                          </div>
+                          @error('carta_trabajo')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
+                          <div style="border: solid 1px rgba(78, 78, 78, 0.466)" id="carta_trabajo" class="img_holder">
+                              @if (old('carta_trabajo',$documentos[0]['carta_trabajo']??''))
+                              <img src="{{ sc_file(old('carta_trabajo',$documentos[0]['carta_trabajo']??'')) }}">
+                              @endif
+                          </div>
+                      </div>
+                
+  
+
+              <div class=" col-12 mt-6 p-2 text-center ">
+                  <button id="guarda"  class="btn btn-primary w-100">guardar</button>
+
+              </div>
+              <input  type="hidden" name="first_name" value="{{$customer['first_name']}}">
+              <input type="hidden" name="id_usu" value="{{$customer['id']}}">
+              <input type="hidden" name="email" value="{{$customer['email']}}">
+              <input type="hidden" name="phone" value="{{ $customer['phone'] }}">
+
+         
+            <input type="hidden" name="id_usuario" value="{!!$customer->id!!}">
+          </form>
+        </div>
+          
+   
+  
+     
+
+
+</div>
     
     @endif
 
@@ -214,5 +329,48 @@ $('#descarga[download]').each(function() {
 
   $a.attr('href', 'data:application/octet-stream,' + encodeURIComponent(fileUrl));
 });
+
+
+function printErrorMsg (msg) {
+    $(".print-error-msg").find("ul").html('');
+    $(".print-error-msg").css('display','block');
+    $.each( msg, function( key, value ) {
+        $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+    });
+}
+
+document.getElementById("file").onchange=function(e){
+    let readi = new FileReader()
+
+    readi.readAsDataURL(e.target.files[0])
+    readi.onload = function(){
+        let preview = document.getElementById("preview")
+        let img  = document.createElement("img")
+        img.style.width = "20%"
+        img.src =  readi.result
+
+        preview.appendChild(img)
+
+
+    }
+
+}
+document.getElementById("file2").onchange=function(e){
+    let readi = new FileReader()
+
+    readi.readAsDataURL(e.target.files[0])
+    readi.onload = function(){
+        let preview = document.getElementById("preview2")
+        let img  = document.createElement("img")
+        img.style.width = "20%"
+        img.src =  readi.result
+
+        preview.appendChild(img)
+
+
+    }
+
+}
+
 </script>
 @endsection

@@ -314,7 +314,7 @@ table tfoot {
                    
                   </div>
                   <div class="form-check  radioContenedor2 m-3">
-                     <input  value="active" type="radio" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
+                     <input checked  value="active" type="checkbox" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
                     <label id="descotado" class="  btn btn-outline-primary" for="flexRadioDefault2">De contado</label>
                      
        
@@ -555,7 +555,7 @@ table tfoot {
                     </div>
 
                     <div class="control">
-                      <label for="fecha">Fecha del primer pago: <input type="date" value="{!!date("d-m-y")!!}" name="fecha" id="fecha" placeholder="fecha"></label>
+                      <label for="fecha">Fecha del primer pago: <input type="date" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha"></label>
                     </div>
 
                    
@@ -622,7 +622,7 @@ table tfoot {
 
 
       <script>
-
+ 
         // simulador de creditos 
         function gen_table(){
           document.getElementById("tab").innerHTML="";
@@ -633,7 +633,7 @@ table tfoot {
           let inicial = parseInt(n3);
           const plazoMensual = document.getElementById('modalidad')
           var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
-            console.log(selected)
+          
       
           fechaInicio = new Date(document.getElementById('fecha').value)
           fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
@@ -679,6 +679,8 @@ table tfoot {
 
             let  montoTotal = monto
             var cuotaTotal = monto / n2
+            let Inicial = montoTotal/inicial
+            Inicial == Infinity ? Inicial = 0 : Inicial
             let texto
             for(i=1;i<=n2;i++){  
               texto = (i + 1)
@@ -700,7 +702,7 @@ table tfoot {
                   monto -= cuotaTotal
                   ca=monto;
                   d1=ca.toFixed(2) ;
-                  i2=((monto*inicial)/100)/n2;
+                  i2= Inicial;
                   d2=cuotaTotal.toFixed(2);
                   r=ca;
                   deudas = ((n2 + i2 - ca ) ) ;
@@ -744,7 +746,7 @@ table tfoot {
           const  Buyblock = document.getElementById("buy_block");
           const ye = document.getElementById("flexRadioDefault2");
           const no = document.getElementById("danger_outlined");
-          ye.checked
+          
           var stylies = document.getElementById("descotado")
           stylies.style.backgroundColor= "#4169e0e6";
           stylies.style.color = "#fff" ;
@@ -786,7 +788,8 @@ table tfoot {
         e.preventDefault()
         const no = document.getElementById("danger_outlined")
         const ye = document.getElementById("flexRadioDefault2")
-        if(!ye.checked) {
+        console.log(ye.checked)
+        if(ye.checked) {
           Buyblock.submit()
         }
           else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';

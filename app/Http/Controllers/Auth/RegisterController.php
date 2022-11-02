@@ -150,10 +150,6 @@ class RegisterController extends RootFrontController
         $estado = Estado::get();
 
 
-       
-        
-
-       
         return view(
             
             $this->templatePath . '.auth.register',
