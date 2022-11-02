@@ -555,7 +555,10 @@ table tfoot {
                     </div>
 
                     <div class="control">
-                      <label for="fecha">Fecha del primer pago: <input type="date" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha"></label>
+                      <label for="fecha">Fecha del primer pago:   </label>
+                        <input type="date" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
+                      
+                    
                     </div>
 
                    
