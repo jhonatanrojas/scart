@@ -20,29 +20,15 @@ class DocumentosController extends Controller
     public function index()
     {
   
-
         if (Auth::check()) {
             $customer = auth()->user();
             $id = $customer['id'];
 
-       
-           
-
-            // if($documento->isNotEmpty()){ // check if records exists
-
-            //     $getAuthUser_CompanyId = $documento->first()->id; // also update this line 
-              
-            //      //Logic
-            //    }
         $documento = SC__documento::where('id_usuario',$id)->get();
         if(!isset($documento[0]['id_usuario']) == $id){
            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
            
-        }else{
-            $dato = "";
-            
-           
-        }
+        }else $dato = "";
 
         return view('templates/s-cart-light/account/documentos')
             ->with(

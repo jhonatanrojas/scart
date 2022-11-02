@@ -117,6 +117,7 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
     Route::get('/edit/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@edit')->name('admin_customer.edit');
 
     Route::get('/document/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@document')->name('admin_customer.document');
+    Route::post('/document_admin', $nameSpaceAdminCustomer.'\AdminCustomerController@documentn')->name('document_admin');
 
     Route::post('/edit/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@postEdit')->name('admin_customer.edit');
     Route::post('/delete', $nameSpaceAdminCustomer.'\AdminCustomerController@deleteList')->name('admin_customer.delete');
