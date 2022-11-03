@@ -27,16 +27,16 @@
 
         <div class="col-12 col-md-8">
         
-        
+            <div class="row m-auto">
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
-            <div class="row">
+           
                 @csrf
                 
             
 
                    
                        
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="input-group">
                                 <label for="image" class="col-sm-12 col-form-label fa fa-id-card-o  fs-4 ">Cedula</label>
                                 <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar cedula"  />
@@ -64,7 +64,7 @@
                     
                   
                        
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="input-group">
                                 <label for="rif" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
                                 <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$documentos[0]['rif'] ??'') }}" class="form-control image" placeholder="Adjuntar Rif"  />
@@ -90,7 +90,7 @@
          
                    
                        
-                        <div class="col-md-6 tex-center ">
+                        <div class="col-md-12 tex-center ">
                             <div class="input-group">
                                 <label for="image" class="col-sm-12  fa fa-list-alt  text-red ">Constancia trabajo</label>
                                 <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$documentos[0]['carta_trabajo'] ??'') }}" class="form-control image" placeholder="adjuntar Constancia trabajo "  />
@@ -113,7 +113,7 @@
     
 
                 <div class=" col-12 mt-3 p-2 text-center ">
-                    <button id="guarda"  class="btn btn-primary w-50">guardar</button>
+                    <button id="guarda"  class="btn btn-primary w-100">guardar</button>
 
                 </div>
                 <input  type="hidden" name="first_name" value="{{$customer['first_name']}}">
@@ -123,8 +123,9 @@
 
                
     
-            </div>
+           
             </form>
+        </div>
           
         </div>
        

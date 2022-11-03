@@ -144,10 +144,16 @@ class AdminCustomerController extends RootAdminController
      * @return [type] [description]
      */
     public function create()
+
+
+    
     {
+
+        $estado = Estado::get();
         $data = [
             'title'             => sc_language_render('customer.admin.add_new_title'),
             'subTitle'          => '',
+            'estado'          => $estado,
             'title_description' => sc_language_render('customer.admin.add_new_des'),
             'icon'              => 'fa fa-plus',
             'countries'         => (new ShopCountry)->getCodeAll(),
@@ -167,26 +173,36 @@ class AdminCustomerController extends RootAdminController
      */
     public function postCreate()
     {
+
+
         $data = request()->all();
         $data['status'] = empty($data['status']) ? 0 : 1;
         $data['store_id'] = session('adminStoreId');
         $dataMapping = $this->mappingValidator($data);
         $validator =  Validator::make($data, $dataMapping['validate'], $dataMapping['messages']);
-        if ($validator->fails()) {
+        if (!$validator->fails()) {
+            
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
 
+      
+
         $data = request()->all();
         $data['status'] = empty($data['status']) ? 0 : 1;
         $data['store_id'] = session('adminStoreId');
 
-        $customer = AdminCustomer::createCustomer($dataMapping['dataCreate']);
+        $customer = AdminCustomer::createCustomer($dataMapping['dataInsert']);
+
+
+       
 
         if ($customer) {
-            sc_customer_created_by_admin($customer, $dataMapping['dataCreate']);
+            sc_customer_created_by_admin($customer, $dataMapping['dataInsert']);
         }
+
+       
 
         return redirect()->route('admin_customer.index')->with('success', sc_language_render('action.create_success'));
     }

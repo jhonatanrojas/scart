@@ -17,11 +17,16 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
             'email' => $dataRaw['email'],
+            'cedula' => $dataRaw['cedula'],
+            'cod_estado' => $dataRaw['cod_estado'],
+            'cod_municipio' => $dataRaw['cod_municipio'],
+            'cod_parroquia' => $dataRaw['cod_parroquia'],
             'password' => bcrypt($dataRaw['password']),
         ];
 
         $validate = [
             'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
+            'cedula' => config('validation.customer.cedula', 'required|string|max:100'),
             'email' => config('validation.customer.email', 'required|string|email|max:255').'|unique:"'.ShopCustomer::class.'",email',
             'password' => config('validation.customer.password_confirm', 'required|confirmed|string|min:6'),
         ];
@@ -192,21 +197,21 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
         }
 
 
-if (sc_config('customer_cedula')) {
-    if (sc_config('customer_cedula_required')) {
-        $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-    } else {
-        $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-    }
-    if (!empty($dataRaw['cedula'])) {
-        if($dataRaw['nacionalidad'] == "V"){
-            $dataInsert['cedula'] = 'V:'.$dataRaw['cedula'];
-        }
-    }else{
-        $dataInsert['cedula'] = 'E:'.$dataRaw['cedula'];
+        if (sc_config('customer_cedula')) {
+            if (sc_config('customer_cedula_required')) {
+                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+            } else {
+                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+            }
+            if (!empty($dataRaw['cedula'])) {
+                if($dataRaw['nacionalidad'] == "V"){
+                    $dataInsert['cedula'] = 'V:'.$dataInsert['cedula'];
+                }
+            }else{
+                $dataInsert['cedula'] = 'E:'.$dataInsert['cedula'];
 
-    }
-}
+            }
+        }
 
 if (sc_config('customer_estado')) {
     $arraycountry = (new Estado)->pluck('codigoestado')->toArray();
@@ -230,21 +235,12 @@ if (sc_config('customer_municipio')) {
         $dataInsert['cod_municipio'] = $dataRaw['cod_municipio'];
     }
 }
-if (sc_config('customer_nacionalidad')) {
-    if (sc_config('customer_nacionalidad_required')) {
-        $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
-    } else {
-        $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
-    }
-    
-}
-
 
 if (sc_config('customer_parroquias')) {
     if (sc_config('customer_phone_required')) {
-        // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
+        $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
     } else {
-        // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
+        $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
     }
     if (!empty($dataRaw['cod_parroquia'])) {
         $dataInsert['cod_parroquia'] = $dataRaw['cod_parroquia'];
@@ -293,3 +289,7 @@ if (sc_config('customer_parroquias')) {
     }
 
 }
+
+
+
+

@@ -61,6 +61,36 @@
     
                                 </div>
                             </div>
+                              @if (sc_config('customer_nacionalidad'))
+                            <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
+                                <label for="first_name"
+                                        class="col-sm-2 col-form-label"> Nacionalidad</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                            </div>
+                                <select  type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
+                                name="nacionalidad" id="nacionalidad">
+        
+                                <option value="">Seleccióna un nacionalidad</option>
+                                <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
+                                <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
+                                
+                            
+                                </select>
+                            </div>
+                                @if ($errors->has('nacionalidad'))
+                                <span class="help-block">
+                                    {{ $errors->first('nacionalidad') }}
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                           
+                       
+                        @endif
 
 
                             <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
