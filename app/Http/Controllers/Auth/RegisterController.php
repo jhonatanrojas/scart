@@ -83,7 +83,7 @@ class RegisterController extends RootFrontController
 
     
     {
-        dd( $data);
+       
         $data['country'] = strtoupper($data['country'] ?? '');
         $dataMap = $this->mappingValidator($data)['dataInsert'];
  
@@ -185,10 +185,10 @@ class RegisterController extends RootFrontController
 
     
         
-        $this->validator($data)->validate();
+        $this->validator($data);
         $user = $this->create($data);
 
-        dd(  $user);
+       
         
 
 

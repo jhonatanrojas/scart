@@ -30,3 +30,13 @@ ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEF
 ALTER TABLE sc_shop_order ADD COLUMN fecha_primer_pago date DEFAULT NULL;
 
   `fecha_venciento` timestamp NULL DEFAULT NULL,
+
+
+  ALTER TABLE `sc_shop_customer` ADD `rif` INT NULL AFTER `cedula`;
+  ALTER TABLE `sc_shop_customer` ADD `razon social` VARCHAR(200) NOT NULL AFTER `id`;
+
+  INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute', 'customer_rif', '1', '0', '1', '0', 'customer.config_manager.rif', NULL, NULL);
+
+  INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute', 'customer_razon_social', '1', '0', '1', '0', 'customer.config_manager.razon_social', NULL, NULL);
+
+  INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute', 'customer_natural_jurídica', '1', '0', '1', '0', 'customer.config_manager.natural_jurídica', NULL, NULL);

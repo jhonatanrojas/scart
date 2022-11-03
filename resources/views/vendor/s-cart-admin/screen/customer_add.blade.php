@@ -1,11 +1,12 @@
 @extends($templatePathAdmin.'layout')
 
 @section('main')
+
    <div class="row">
       <div class="col-sm-12">
          <div class="card">
                 <div class="card-header with-border">
-                    <h2 class="card-title">{{ $title_description??'' }}</h2>
+                    <h2 class="card-title title"> Datos del Reprentante legal</h2>
 
                     <div class="card-tools">
                         <div class="btn-group float-right mr_5">
@@ -19,6 +20,136 @@
 
 
                     <div class="card-body">
+                        @if (sc_config('customer_natural_jurídica'))
+                        <div class="form-group row{{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
+                            <label for="first_name"
+                                    class="col-sm-2 col-form-label title2">Persona Natural </label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                            <select required  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('natural_jurídica'))?"input-error":"" }}"
+                            name="natural_jurídica" id="natural_jurídica">
+
+                            <option value="N" {{ (old('natural_jurídica')) ? 'selected':'' }}>Natural</option>
+                            <option value="J" {{ (old('natural_jurídica')) ? 'selected':'' }}>Juridica</option>
+                            
+                        
+                            </select>
+                        </div>
+                            @if ($errors->has('natural_jurídica'))
+                            <span class="help-block">
+                                {{ $errors->first('natural_jurídica') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+                    @if (sc_config_admin('customer_razon_social'))
+                    <div class="form-group row {{ $errors->has('razon_social') ? ' text-red' : '' }} oculta_razon_social">
+                        <label for="razon_social"
+                            class="col-sm-2 col-form-label">Razon social</label>
+    
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                </div>
+                            <input disabled="true" id="razon_social" placeholder="Razon social" type="text" class="form-control" name="razon_social"
+                                value="{{ (old('razon_social', $customer['razon_social'] ?? ''))}}">
+                            </div>
+                            @if($errors->has('razon_social'))
+                            <span class="form-text">{{ $errors->first('razon_social') }}</span>
+                            @endif
+    
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="oculta_rif">
+                        @if (sc_config_admin('customer_rif'))
+                        <div  class="form-group row {{ $errors->has('rif') ? ' text-red' : '' }}">
+                            <label for="rif"
+                                class="col-sm-2 col-form-label">Rif</label>
+    
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                    </div>
+                                <input disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
+                                    value="{{ (old('rif', $customer['rif'] ?? ''))}}">
+                                </div>
+                                @if($errors->has('rif'))
+                                <span class="form-text">{{ $errors->first('rif') }}</span>
+                                @endif
+    
+                            </div>
+                        </div>
+                        @endif
+
+                    </div>
+                   
+                    @if (sc_config('customer_nacionalidad'))
+                    <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
+                        <label for="first_name"
+                                class="col-sm-2 col-form-label"> Nacionalidad</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                    </div>
+                        <select  type="text"
+                        class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
+                        name="nacionalidad" id="nacionalidad">
+
+                        <option value="">Seleccióna un nacionalidad</option>
+                        <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
+                        <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
+                        
+                    
+                        </select>
+                    </div>
+                        @if ($errors->has('nacionalidad'))
+                        <span class="help-block">
+                            {{ $errors->first('nacionalidad') }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
+
+                
+                @if (sc_config_admin('customer_cedula'))
+                <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
+                    <label for="cedula"
+                        class="col-sm-2 col-form-label">Cedula</label>
+
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                            </div>
+                        <input id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
+                            value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
+                        </div>
+                        @if($errors->has('cedula'))
+                        <span class="form-text">{{ $errors->first('cedula') }}</span>
+                        @endif
+
+                    </div>
+                </div>
+                @endif
+                   
+               
+                @endif
+                    
+                    
+                   
+
+                       
                             @if (sc_config_admin('customer_lastname'))
                             <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
                                 <label for="first_name"
@@ -29,7 +160,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="first_name" type="text" class="form-control" name="first_name"
+                                    <input placeholder="Nombre" id="first_name" type="text" class="form-control" name="first_name"
                                         value="{{ (old('first_name', $customer['first_name'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('first_name'))
@@ -50,7 +181,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="last_name" type="text" class="form-control" name="last_name"
+                                    <input placeholder="Apellido" id="last_name" type="text" class="form-control" name="last_name"
                                         value="{{ (old('last_name', $customer['last_name'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('last_name'))
@@ -60,56 +191,7 @@
                                 </div>
                             </div>
 
-                            @if (sc_config('customer_nacionalidad'))
-                            <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
-                                <label for="first_name"
-                                        class="col-sm-2 col-form-label"> Nacionalidad</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                            </div>
-                                <select  type="text"
-                                class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
-                                name="nacionalidad" id="nacionalidad">
-        
-                                <option value="">Seleccióna un nacionalidad</option>
-                                <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
-                                <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
-                                
                             
-                                </select>
-                            </div>
-                                @if ($errors->has('nacionalidad'))
-                                <span class="help-block">
-                                    {{ $errors->first('nacionalidad') }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                           
-                       
-                        @endif
-                                @if (sc_config_admin('customer_cedula'))
-                                <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
-                                    <label for="cedula"
-                                        class="col-sm-2 col-form-label">Cedula</label>
-        
-                                    <div class="col-sm-8">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                            </div>
-                                        <input id="cedula" type="text" class="form-control" name="cedula"
-                                            value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
-                                        </div>
-                                        @if($errors->has('cedula'))
-                                        <span class="form-text">{{ $errors->first('cedula') }}</span>
-                                        @endif
-        
-                                    </div>
-                                </div>
-                                @endif
                             @else
                             <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
                                 <label for="first_name"
@@ -184,7 +266,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="phone" type="text" class="form-control" name="phone"
+                                    <input placeholder="Telefono" id="phone" type="text" class="form-control" name="phone"
                                         value="{{ (old('phone', $customer['phone'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('phone'))
@@ -226,7 +308,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="email" type="text" class="form-control" name="email"
+                                    <input placeholder="email" id="email" type="text" class="form-control" name="email"
                                         value="{{ (old('email',$customer['email'] ?? ''))}}">
                                     </div>
     
@@ -686,6 +768,7 @@
         </div>
     </div>
     @vite('resources/js/estado.js')
+    <script src="/js/cliente.js"></script>
 @endsection
 
 @push('styles')

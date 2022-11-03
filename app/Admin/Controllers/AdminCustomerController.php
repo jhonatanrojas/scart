@@ -173,8 +173,6 @@ class AdminCustomerController extends RootAdminController
      */
     public function postCreate()
     {
-
-
         $data = request()->all();
         $data['status'] = empty($data['status']) ? 0 : 1;
         $data['store_id'] = session('adminStoreId');
@@ -187,16 +185,11 @@ class AdminCustomerController extends RootAdminController
                 ->withInput();
         }
 
-      
-
         $data = request()->all();
         $data['status'] = empty($data['status']) ? 0 : 1;
         $data['store_id'] = session('adminStoreId');
 
         $customer = AdminCustomer::createCustomer($dataMapping['dataInsert']);
-
-
-       
 
         if ($customer) {
             sc_customer_created_by_admin($customer, $dataMapping['dataInsert']);
