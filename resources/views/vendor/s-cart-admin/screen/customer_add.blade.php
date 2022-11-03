@@ -80,7 +80,7 @@
                                     <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                     </div>
-                                <input disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
+                                <input required disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
                                     value="{{ (old('rif', $customer['rif'] ?? ''))}}">
                                 </div>
                                 @if($errors->has('rif'))
@@ -88,8 +88,12 @@
                                 @endif
     
                             </div>
+
+                            <br>
+                            <h4 class="text-center m-auto">Datos del representante legal </h4>
                         </div>
                         @endif
+                       
 
                     </div>
                    
@@ -102,7 +106,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                     </div>
-                        <select  type="text"
+                        <select required  type="text"
                         class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
                         name="nacionalidad" id="nacionalidad">
 
@@ -132,7 +136,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                             </div>
-                        <input id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
+                        <input required id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
                             value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
                         </div>
                         @if($errors->has('cedula'))
@@ -160,7 +164,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input placeholder="Nombre" id="first_name" type="text" class="form-control" name="first_name"
+                                    <input required placeholder="Nombre" id="first_name" type="text" class="form-control" name="first_name"
                                         value="{{ (old('first_name', $customer['first_name'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('first_name'))
@@ -308,7 +312,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input placeholder="email" id="email" type="text" class="form-control" name="email"
+                                    <input required placeholder="email" id="email" type="text" class="form-control" name="email"
                                         value="{{ (old('email',$customer['email'] ?? ''))}}">
                                     </div>
     

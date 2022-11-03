@@ -88,7 +88,7 @@ class AdminCustomerController extends RootAdminController
                 'address1' => $row['address1'],
                 'address2' => $row['address2'],
                 'address3' => $row['address3'],
-                'country' => $this->countries[$row['country']]->name ?? '',
+                'country' =>  '' ,
                 'status' => $row['status'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
                 'created_at' => $row['created_at'],
                 'action' => '
@@ -194,8 +194,6 @@ class AdminCustomerController extends RootAdminController
         if ($customer) {
             sc_customer_created_by_admin($customer, $dataMapping['dataInsert']);
         }
-
-       
 
         return redirect()->route('admin_customer.index')->with('success', sc_language_render('action.create_success'));
     }
