@@ -442,7 +442,7 @@
                     {!! $viewCaptcha ?? ''!!}
                    <div class="col-md-12">
                     <div class="submit">
-                        <button type="submit" name="SubmitCreate" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
+                        <button type="submit" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
                    </div>
                 </div>

@@ -12,6 +12,7 @@ ALTER TABLE sc_shop_product ADD COLUMN id_modalidad_pagos int NOT NULL DEFAULT '
 INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_nacionalidad_required', '1', '0', '1', '0', '', NULL, NULL);
 
 INSERT INTO `sc_admin_config` (`id`, `group`, `code`, `key`, `value`, `security`, `store_id`, `sort`, `detail`, `created_at`, `updated_at`) VALUES (NULL, '', 'customer_config_attribute_required', 'customer_municipio_required', '1', '0', '1', '1', '', NULL, NULL);
+
 ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEFAULT '0';
 ALTER TABLE sc_shop_order_detail ADD COLUMN fecha_primer_pago date DEFAULT null;
  chown www-data:www-data 
@@ -30,3 +31,16 @@ ALTER TABLE sc_shop_order_detail ADD COLUMN modalidad_de_compra int NOT NULL DEF
 ALTER TABLE sc_shop_order ADD COLUMN fecha_primer_pago date DEFAULT NULL;
 
   `fecha_venciento` timestamp NULL DEFAULT NULL,
+
+
+ALTER TABLE sc_shop_customer ADD rif VARCHAR(100) NULL DEFAULT NULL AFTER razon_social;
+
+  ALTER TABLE sc_shop_customer ADD razon_social VARCHAR(200) NOT NULL AFTER id;
+
+  ALTER TABLE sc_shop_customer ADD `natural_jurídica` VARCHAR(2) NULL DEFAULT NULL AFTER id;
+
+  INSERT INTO sc_admin_config (id, group, code, key, value, security, store_id, sort, detail, created_at, updated_at) VALUES (NULL, '', 'customer_config_attribute', 'customer_rif', '1', '0', '1', '0', 'customer.config_manager.rif', NULL, NULL);
+
+  INSERT INTO sc_admin_config (id, group, code, key, value, security, store_id, sort, detail, created_at, updated_at) VALUES (NULL, '', 'customer_config_attribute', 'customer_razon_social', '1', '0', '1', '0', 'customer.config_manager.razon_social', NULL, NULL);
+
+  INSERT INTO sc_admin_config (id, group, code, key, value, security, store_id, sort, detail, created_at, updated_at) VALUES (NULL, '', 'customer_config_attribute', 'customer_natural_jurídica', '1', '0', '1', '0', 'customer.config_manager.natural_jurídica', NULL, NULL);

@@ -80,7 +80,10 @@ class RegisterController extends RootFrontController
      * @return \SCart\Core\Front\Models\ShopCustomer
      */
     protected function create(array $data)
+
+    
     {
+       
         $data['country'] = strtoupper($data['country'] ?? '');
         $dataMap = $this->mappingValidator($data)['dataInsert'];
  
@@ -181,9 +184,11 @@ class RegisterController extends RootFrontController
         
 
     
-    
-        $this->validator($data)->validate();
+        
+        $this->validator($data);
         $user = $this->create($data);
+
+       
         
 
 

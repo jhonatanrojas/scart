@@ -624,7 +624,7 @@ table tfoot {
 
 
 
-      <script>
+      <script type="text/javascript">
  
         // simulador de creditos 
         function gen_table(){
