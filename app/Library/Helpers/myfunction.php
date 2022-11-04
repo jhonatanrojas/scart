@@ -210,7 +210,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
                 if($dataRaw['nacionalidad'] == "V"){
                     $dataInsert['cedula'] = 'V:'.$dataInsert['cedula'];
                 }
-            }else{
+            }else if($dataRaw['nacionalidad'] == "E"){
                 $dataInsert['cedula'] = 'E:'.$dataInsert['cedula'];
 
             }
