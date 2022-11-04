@@ -12,6 +12,33 @@
 
                     {!! csrf_field() !!}
 
+
+                    @if (sc_config('customer_natural_jurídica'))
+                    <div class="col-md-6">
+                    <div class="form-group {{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
+                       
+                     
+                        <select required  type="text"
+                        class="is_required validate account_input form-control {{ ($errors->has('natural_jurídica'))?"input-error":"" }}"
+                        name="natural_jurídica" id="natural_jurídica">
+                        <option value="">Tipo de Persona </option>
+
+                        <option value="N" {{ (old('natural_jurídica')) ? 'selected':'' }}>Natural</option>
+                        <option value="J" {{ (old('natural_jurídica')) ? 'selected':'' }}>Juridica</option>
+                        
+                    
+                        </select>
+                   
+                        @if ($errors->has('natural_jurídica'))
+                        <span class="help-block">
+                            {{ $errors->first('natural_jurídica') }}
+                        </span>
+                        @endif
+                  
+                </div>
+                @endif
+            </div>
+
             
                     @if (sc_config('customer_nacionalidad'))
                     <div class="col-md-6">
@@ -29,6 +56,41 @@
                             @if ($errors->has('nacionalidad'))
                             <span class="help-block">
                                 {{ $errors->first('nacionalidad') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                    @endif
+                    @if (sc_config('customer_razon_social'))
+                    <div class="col-md-6 oculta_razon_social">
+                        <div class="form-group{{ $errors->has('razon_social') ? ' has-error' : '' }} ">
+                            <input required disabled="true" type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('razon_social'))?"input-error":"" }}"
+                                name="razon_social" id="razon_social" placeholder="Razon social"
+                                value="{{ old('razon_social') }}">
+
+                            @if ($errors->has('razon_social'))
+                            <span class="help-block">
+                                {{ $errors->first('razon_social') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                    @endif
+
+                    @if (sc_config('customer_rif'))
+                    <div class="col-md-6 oculta_rif">
+                        <div class="form-group{{ $errors->has('rif') ? ' has-error' : '' }}">
+                            <input required disabled="true" type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('rif'))?"input-error":"" }}"
+                                name="rif" id="rif" placeholder="Rif"
+                                value="{{ old('rif') }}">
+
+                            @if ($errors->has('rif'))
+                            <span class="help-block">
+                                {{ $errors->first('rif') }}
                             </span>
                             @endif
                         </div>
@@ -203,7 +265,7 @@
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
                             <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
-                             <select  type="text"
+                             <select required  type="text"
                              class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
                              name="cod_parroquia" id="cod_parroquia" >
      
@@ -456,7 +518,7 @@
 
 </div>
 </section>
-
+<script src="/js/cliente1.js"></script>
 @vite('resources/js/estado.js')
 
 <!--/form-->

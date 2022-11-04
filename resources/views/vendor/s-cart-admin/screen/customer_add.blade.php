@@ -80,7 +80,7 @@
                                     <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                     </div>
-                                <input required disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
+                                <input  disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
                                     value="{{ (old('rif', $customer['rif'] ?? ''))}}">
                                 </div>
                                 @if($errors->has('rif'))
@@ -136,7 +136,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                             </div>
-                        <input required id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
+                        <input min="4" maxlength="20" id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
                             value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
                         </div>
                         @if($errors->has('cedula'))
@@ -185,7 +185,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input placeholder="Apellido" id="last_name" type="text" class="form-control" name="last_name"
+                                    <input required placeholder="Apellido" id="last_name" type="text" class="form-control" name="last_name"
                                         value="{{ (old('last_name', $customer['last_name'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('last_name'))
@@ -366,7 +366,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <select class="form-control show-tick" id="cod_municipio" name="cod_municipio">
+                                        <select required class="form-control show-tick" id="cod_municipio" name="cod_municipio">
                                             <option value="0">Seleccione un Municipio</option>
                                     <?php
                                         if(isset($municipio)){
@@ -400,7 +400,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <select class="form-control show-tick" id="cod_parroquia" name="cod_parroquia">
+                                        <select required class="form-control show-tick" id="cod_parroquia" name="cod_parroquia">
                                             <option value="0">Seleccione un Parroquia</option>
                                     <?php
                                         if(isset($parroquia)){

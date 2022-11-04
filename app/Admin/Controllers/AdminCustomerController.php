@@ -178,7 +178,9 @@ class AdminCustomerController extends RootAdminController
         $data['store_id'] = session('adminStoreId');
         $dataMapping = $this->mappingValidator($data);
         $validator =  Validator::make($data, $dataMapping['validate'], $dataMapping['messages']);
-        if (!$validator->fails()) {
+
+        
+        if ($validator->fails()) {
             
             return redirect()->back()
                 ->withErrors($validator)

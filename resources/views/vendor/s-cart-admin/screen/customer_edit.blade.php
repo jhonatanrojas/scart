@@ -61,6 +61,14 @@
     
                                 </div>
                             </div>
+
+                            @php
+                            $pizza  = $customer['cedula'];
+                            $pieces = explode(" ", $pizza);
+                           
+                               
+                            @endphp
+               
                               @if (sc_config('customer_nacionalidad'))
                             <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
                                 <label for="first_name"
@@ -75,8 +83,8 @@
                                 name="nacionalidad" id="nacionalidad">
         
                                 <option value="">Seleccióna un nacionalidad</option>
-                                <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
-                                <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
+                                <option value="V" {{ $pieces[0] == "V" ? 'selected':'' }}>Venezolano(a)</option>
+                                <option value="E" {{ $pieces[0] == "E" ? 'selected':'' }}>Extranjero(a)</option>
                                 
                             
                                 </select>
@@ -92,7 +100,11 @@
                        
                         @endif
 
+                      
 
+                               
+
+                       
                             <div class="form-group row {{ $errors->has('cedula') ? ' text-red' : '' }}">
                                 <label for="cedula"
                                     class="col-sm-2 col-form-label">Cedulas</label>
@@ -103,7 +115,7 @@
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
                                     <input id="cedula" type="text" class="form-control" name="cedula" 
-                                        value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
+                                        value="{{ (old('cedula', $pieces[1] ?? ''))}}">
                                     </div>
                                     @if($errors->has('first_name'))
                                     <span class="form-text">{{ $errors->first('cedula') }}</span>
@@ -588,6 +600,7 @@
                             </span>
                             @endif
                         </div>
+                      
                     </div>
                     @endforeach
 @endif
@@ -599,18 +612,30 @@
 
 
                     <!-- /.card-body -->
+                   
 
-                    <div class="card-footer row">
+                    <div class="card-footer row ">
                         @csrf
-                        <div class="col-md-2">
+                        <div class="col-md-2 mt-2">
                         </div>
     
-                        <div class="col-md-8">
-                            <div class="btn-group float-right">
+                        <div class="col-12 col-md-3 ">
+                            <div class="btn-group ">
                                 <button type="submit" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
                             </div>
+                            
     
-                            <div class="btn-group float-left">
+
+                          
+                        </div>
+                        <div class="col-12 col-md-3  mt-2 ">
+                            <div class="btn-group ">
+                                <a href="{{sc_route_admin('admin_customer.document', ['id' => $customer['id'] ? $customer['id'] : 'not-found-id'])}}"  class="btn btn-info">Ver Documentos adjuntos</a>
+                               </div>
+                        </div>
+                        <div class=" col-12 col-md-3  mt-2">
+                            
+                            <div class="btn-group ">
                                 <button type="reset" class="btn btn-warning">{{ sc_language_render('action.reset') }}</button>
                             </div>
                         </div>
