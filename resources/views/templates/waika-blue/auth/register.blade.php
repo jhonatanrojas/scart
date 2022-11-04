@@ -65,7 +65,7 @@
                     @if (sc_config('customer_razon_social'))
                     <div class="col-md-6 oculta_razon_social">
                         <div class="form-group{{ $errors->has('razon_social') ? ' has-error' : '' }} ">
-                            <input disabled="true" type="text"
+                            <input required disabled="true" type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('razon_social'))?"input-error":"" }}"
                                 name="razon_social" id="razon_social" placeholder="Razon social"
                                 value="{{ old('razon_social') }}">
@@ -83,7 +83,7 @@
                     @if (sc_config('customer_rif'))
                     <div class="col-md-6 oculta_rif">
                         <div class="form-group{{ $errors->has('rif') ? ' has-error' : '' }}">
-                            <input disabled="true" type="text"
+                            <input required disabled="true" type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('rif'))?"input-error":"" }}"
                                 name="rif" id="rif" placeholder="Rif"
                                 value="{{ old('rif') }}">
@@ -265,7 +265,7 @@
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
                             <div class="form-group{{ $errors->has('parroquias') ? ' has-error' : '' }}">
-                             <select  type="text"
+                             <select required  type="text"
                              class="is_required validate account_input form-control {{ ($errors->has('parroquias'))?"input-error":"" }}"
                              name="cod_parroquia" id="cod_parroquia" >
      

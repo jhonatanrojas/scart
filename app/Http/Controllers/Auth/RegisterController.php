@@ -64,8 +64,13 @@ class RegisterController extends RootFrontController
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
+
+   
     {
+       
         $dataMapping = $this->mappingValidator($data);
+
+        
         if (sc_captcha_method() && in_array('register', sc_captcha_page())) {
             $data['captcha_field'] = $data[sc_captcha_method()->getField()] ?? '';
             $dataMapping['validate']['captcha_field'] = ['required', 'string', new \SCart\Core\Rules\CaptchaRule];
@@ -181,15 +186,20 @@ class RegisterController extends RootFrontController
     public function register(Request $request)
     {
         $data = $request->all();
-        
-        $this->validator($data);
+       
+        $this->validator($data)->validate();
         $user = $this->create($data);
+    
+        
+
+        
 
        
         
 
 
         if ($user) {  
+
             sc_customer_created_by_client($user, $data);
 
             //Login
