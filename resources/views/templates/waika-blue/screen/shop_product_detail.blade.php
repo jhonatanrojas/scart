@@ -290,13 +290,14 @@ table tfoot {
                     $total_cuotas=0;
                     if($product->nro_coutas>0){
                     $total_cuotas=  $product->price / $product->nro_coutas;  
+                   
 
                   }
                   @endphp
                    
                   </div>
                   <div>
-                    <small class=" text-info ">adquiera el producto y pagalo en {!! $product->nro_coutas !!} cuotas  {!! $product->modalidad !!} de {!! $total_cuotas !!}$ </small>
+                    <small class=" text-info ">adquiera el producto y pagalo en {!! $product->nro_coutas !!} cuotas  {!! $product->modalidad !!} de {!!  round($total_cuotas)!!}$ </small>
                   </div>
                 </div>
                 {{--// Show price --}}
@@ -593,7 +594,7 @@ table tfoot {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td class="ft">TOTAL</td>
+                        <td>TOTAL</td>
                         <td id="t1"></td>
                         <td id="t2"></td>
                         <td id="t3"></td>
@@ -636,7 +637,8 @@ table tfoot {
           let inicial = parseInt(n3);
           const plazoMensual = document.getElementById('modalidad')
           var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
-          
+          var selectd2 = plazoMensual.options[plazoMensual.selectedIndex].text;
+       
       
           fechaInicio = new Date(document.getElementById('fecha').value)
           fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
@@ -653,7 +655,7 @@ table tfoot {
           var primerFechaPago = true
 
           if(monto>0){ 
-            document.getElementById("cuotass").innerHTML= "CUOTAS" + "/" +selected.toUpperCase();
+            document.getElementById("cuotass").innerHTML= `CUOTAS/${selectd2}`;
             
             if ( true ) {
               plazo = n2
@@ -684,6 +686,8 @@ table tfoot {
             var cuotaTotal = monto / n2
             let Inicial = montoTotal/inicial
             Inicial == Infinity ? Inicial = 0 : Inicial
+
+             
             let texto
             for(i=1;i<=n2;i++){  
               texto = (i + 1)
@@ -705,7 +709,7 @@ table tfoot {
                   monto -= cuotaTotal
                   ca=monto;
                   d1=ca.toFixed(2) ;
-                  i2= Inicial;
+                  i2= Inicial.toFixed(2);
                   d2=cuotaTotal.toFixed(2);
                   r=ca;
                   deudas = ((n2 + i2 - ca ) ) ;
@@ -730,7 +734,7 @@ table tfoot {
               t_p=r*n2;
               d5=t_p.toFixed(2);
               document.getElementById("t1").innerHTML=d4;
-              document.getElementById("t2").innerHTML= "$"+cuotaTotal  ;
+              document.getElementById("t2").innerHTML= "$"+d2  ;
               document.getElementById("t3").innerHTML= "$"+montoTotal ;        
               document.getElementById("t4").innerHTML= texto ;       
                 

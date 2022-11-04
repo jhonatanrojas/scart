@@ -624,9 +624,9 @@
 
 
                             <div class="form-group  row">
-                                <label for="status" class="col-sm-2  col-form-label">{{ sc_language_render('customer.status') }}</label>
+                                {{-- <label for="status" class="col-sm-2  col-form-label">{{ sc_language_render('customer.status') }}</label> --}}
                                 <div class="col-sm-8">
-                                    <input class="checkbox" type="checkbox" name="status"  {{ old('status',(empty($customer['status'])?0:1))?'checked':''}}>
+                                    <input checked class="checkbox" type="hidden" name="status"  value="1">
 
                                 </div>
                             </div>

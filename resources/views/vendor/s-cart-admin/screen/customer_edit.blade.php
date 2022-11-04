@@ -23,6 +23,124 @@
                     <div class="card-body">
                         <div class="fields-group">
 
+                            @if (sc_config('customer_natural_jurídica'))
+                            <div class="form-group row{{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
+                                <label for="first_name"
+                                        class="col-sm-2 col-form-label title2">Persona Natural </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                            </div>
+                                <select required  type="text"
+                                class="is_required validate account_input form-control {{ ($errors->has('natural_jurídica'))?"input-error":"" }}"
+                                name="natural_jurídica" id="natural_jurídica">
+    
+                                <option value="N" {{ $customer['natural_jurídica'] == "N" ? 'selected':'' }}>Natural</option>
+                                <option value="J" {{ $customer['natural_jurídica'] == "J" ? 'selected':'' }}>Juridica</option>
+                                
+                            
+                                </select>
+                            </div>
+                                @if ($errors->has('natural_jurídica'))
+                                <span class="help-block">
+                                    {{ $errors->first('natural_jurídica') }}
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+    
+                        @if (sc_config_admin('customer_razon_social'))
+                        <div class="form-group row {{ $errors->has('razon_social') ? ' text-red' : '' }} oculta_razon_social">
+                            <label for="razon_social"
+                                class="col-sm-2 col-form-label">Razon social</label>
+        
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                    </div>
+                                <input disabled="true" id="razon_social" placeholder="Razon social" type="text" class="form-control" name="razon_social"
+                                    value="{{ (old('razon_social', $customer['razon_social'] ?? ''))}}">
+                                </div>
+                                @if($errors->has('razon_social'))
+                                <span class="form-text">{{ $errors->first('razon_social') }}</span>
+                                @endif
+        
+                            </div>
+                        </div>
+                        @endif
+    
+                        <div class="oculta_rif">
+                            @if (sc_config_admin('customer_rif'))
+                            <div  class="form-group row {{ $errors->has('rif') ? ' text-red' : '' }}">
+                                <label for="rif"
+                                    class="col-sm-2 col-form-label">Rif</label>
+        
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                    <input  disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
+                                        value="{{ (old('rif', $customer['rif'] ?? ''))}}">
+                                    </div>
+                                    @if($errors->has('rif'))
+                                    <span class="form-text">{{ $errors->first('rif') }}</span>
+                                    @endif
+        
+                                </div>
+    
+                                <br>
+                                <h4 class="text-center m-auto">Datos del representante legal </h4>
+                            </div>
+                            @endif
+
+                            @php
+                            $pizza  = $customer['cedula'];
+                            $pieces = explode(" ", $pizza);
+                           
+                               
+                            @endphp
+               
+                           
+
+                           
+    
+                        </div>
+
+                        @if (sc_config('customer_nacionalidad'))
+                        <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
+                            <label for="first_name"
+                                    class="col-sm-2 col-form-label"> Nacionalidad</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                            <select  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
+                            name="nacionalidad" id="nacionalidad">
+    
+                            <option value="">Seleccióna un nacionalidad</option>
+                            <option value="V" {{ $pieces[0] == "V" ? 'selected':'' }}>Venezolano(a)</option>
+                            <option value="E" {{ $pieces[0] == "E" ? 'selected':'' }}>Extranjero(a)</option>
+                            
+                        
+                            </select>
+                        </div>
+                            @if ($errors->has('nacionalidad'))
+                            <span class="help-block">
+                                {{ $errors->first('nacionalidad') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                       
+                   
+                    @endif
+
                             @if (sc_config_admin('customer_lastname'))
                             <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
                                 <label for="first_name"
@@ -62,44 +180,7 @@
                                 </div>
                             </div>
 
-                            @php
-                            $pizza  = $customer['cedula'];
-                            $pieces = explode(" ", $pizza);
-                           
-                               
-                            @endphp
-               
-                              @if (sc_config('customer_nacionalidad'))
-                            <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
-                                <label for="first_name"
-                                        class="col-sm-2 col-form-label"> Nacionalidad</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                            </div>
-                                <select  type="text"
-                                class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
-                                name="nacionalidad" id="nacionalidad">
-        
-                                <option value="">Seleccióna un nacionalidad</option>
-                                <option value="V" {{ $pieces[0] == "V" ? 'selected':'' }}>Venezolano(a)</option>
-                                <option value="E" {{ $pieces[0] == "E" ? 'selected':'' }}>Extranjero(a)</option>
-                                
-                            
-                                </select>
-                            </div>
-                                @if ($errors->has('nacionalidad'))
-                                <span class="help-block">
-                                    {{ $errors->first('nacionalidad') }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                           
-                       
-                        @endif
-
+                          
                       
 
                                
@@ -537,9 +618,9 @@
 
 
                             <div class="form-group  row">
-                                <label for="status" class="col-sm-2  col-form-label">{{ sc_language_render('customer.status') }}</label>
+                                {{-- <label for="status" class="col-sm-2  col-form-label">{{ sc_language_render('customer.status') }}</label> --}}
                                 <div class="col-sm-8">
-                                    <input class="checkbox" type="checkbox" name="status"  {{ old('status',(empty($customer['status'])?0:1))?'checked':''}}>
+                                    <input checked class="checkbox" type="hidden" name="status"  value="1">
 
                                 </div>
                             </div>
@@ -699,7 +780,7 @@
 
         </div>
     </div>
-
+<script src="/js/cliente1.js"></script>
 @vite('resources/js/estado.js')
 @endsection
 

@@ -11,6 +11,7 @@ natural_Jurídica.addEventListener("change", function (e) {
   if (e.target.value == "J") {
     document.getElementById("razon_social").disabled = false;
     document.getElementById("rif").disabled = false;
+    document.querySelector('.title') ?document.querySelector('.title').style.display='block' : "";
     valor = "";
     ocutaInput(valor);
   } else if (e.target.value == "N") {
@@ -22,6 +23,13 @@ natural_Jurídica.addEventListener("change", function (e) {
     ocutaInput(valor);
   }
 });
+
+if(natural_Jurídica.value == "J"){
+  document.getElementById("razon_social").disabled = false;
+    document.getElementById("rif").disabled = false;
+    valor = "";
+    ocutaInput(valor);
+}
 
 function ocutaInput(valor) {
   oculta_razon_social.style.display = valor;

@@ -96,6 +96,10 @@
                         </div>
                        
                     </div>
+
+                    <div style="display: none;" class="col-12 text-center title mb-2">
+                        <h5>Datos del representante legal</h5>
+                    </div>
                     @endif
                     @if (sc_config('customer_cedula'))
                     <div class="col-md-6">
