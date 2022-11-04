@@ -5,7 +5,8 @@ use SCart\Core\Admin\Controllers\RootAdminController;
 use Illuminate\Http\Request;
 use App\Models\HistorialPago;
 use App\Models\Catalogo\PaymentStatus;
-
+use SCart\Core\Front\Models\ShopOrder;
+use App\Models\Catalogo\MetodoPago;
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -30,6 +31,131 @@ class HistorialPagosController extends RootAdminController
      */
 
      public function index(){
+
+        $data = [
+            'title'         => 'Historial de pagos', 
+            'subTitle'      => '',
+            'icon'          => 'fa fa-indent',
+            'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+            'removeList'    => 0, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+        //Process add content
+        $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'Nro orden'      => 'Nro de orden /<br> Cliente',
+            'Importe pagado'       => 'Pagado',
+            'Referencia'       => 'Referencia',
+            'Metodo de pago'      => 'Metodo',
+            'Estatus' => 'Estatus',
+            'Comentario' => 'Comentario',
+            'fecha_pago' => 'Fecha pago',
+            'Creado'   =>  'Creado',
+            'action'     => sc_language_render('action.title'),
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+  
+  
+
+   
+        $keyword    = sc_clean(request('keyword') ?? '');
+      $statusPayment = PaymentStatus::select(['name','id'])->get();
+
+
+
+      foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+      }
+      $arrSort['0'] ='Todos';
+
+
+
+        $dataSearch = [
+            'keyword'    => $keyword,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+        ];
+     
+        $dataTmp = $this->getOrderListAdmin($dataSearch);
+      
+
+
+
+    
+
+        $dataTr = [];
+        foreach ($dataTmp as $key => $row) {
+            $dataTr[$row->id ] = [
+                'Nro orden' =>  $row->order_id .'<br>'.$row->cliente->first_name.'  '.$row->cliente->last_name,
+                'Importe pagado' =>  $row->importe_pagado,
+                'Referencia' =>  $row->referencia,
+                
+                'Metodo de pago' =>  $row->metodo_pago->name,
+                'Estatus' => $row->estatus->name .'<br><small>'.$row->observacion.'</small>' ,
+                'Comentario' =>  $row->comment,
+                'fecha_pago' =>  $row->fecha_pago,
+                
+                'Creado' =>  $row->created_at->format('d/m/Y'),
+         
+            
+                'action' => '
+                    <a href="#" data-id="'.$row->id.'"><span  data-id="'.$row->id.'" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+
+                    <a target="_blank" href="'. sc_file( $row->comprobante).'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;
+
+
+                    
+                    '
+                ,
+            ];
+        }
+
+        $data['listTh'] = $listTh;
+        $data['statusPayment'] = $statusPayment;
+      
+        
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+
+        //menuRight
+        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_customer.create') . '" class="btn  btn-success  btn-flat" title="New" id="button_create_new">
+                           <i class="fa fa-plus" title="'.sc_language_render('admin.add_new').'"></i>
+                           </a>';
+        //=menuRight
+
+        //menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $status) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+        $data['urlSort'] = sc_route_admin('historial_pagos.index', request()->except(['_token', '_pjax', 'sort_order']));
+        $data['optionSort'] = $optionSort;
+        //=menuSort
+
+        //menuSearch
+        $data['topMenuRight'][] = '
+                <form action="' . sc_route_admin('historial_pagos.index') . '" id="button_search">
+                <div class="input-group input-group" style="width: 350px;">
+                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="Buscar por numero de orden" value="' . $keyword . '">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                </form>';
+        //=menuSearch
+
+        return view($this->templatePathAdmin.'pagos.detalle')
+            ->with($data);
    
      }
 
@@ -58,6 +184,7 @@ class HistorialPagosController extends RootAdminController
             'Referencia'       => 'Referencia',
             'Metodo de pago'      => 'Metodo de pago',
             'Estatus' => 'Estatus',
+            'Observación' =>'Comentario',
             'Creado'   =>  'Creado',
             'action'     => sc_language_render('action.title'),
         ];
@@ -117,6 +244,7 @@ class HistorialPagosController extends RootAdminController
                 
                 'Metodo de pago' =>  $row->metodo_pago->name,
                 'Estatus' => $row->estatus->name .'<br><small>'.$row->observacion.'</small>' ,
+                'Comentario' =>  $row->comment,
                 'Creado' =>  $row->created_at->format('d/m/Y'),
          
             
@@ -171,6 +299,54 @@ class HistorialPagosController extends RootAdminController
             ->with($data);
     }
 
+    public function reportarPago(...$params)
+    {
+     
+            $id = $params[0] ?? '';
+        
+   
+            $data = [
+                'title'         => 'Reportar Pago', 
+                'subTitle'      => '',
+                'icon'          => 'fa fa-indent',
+                'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+                'removeList'    => 0, // 1 - Enable function delete list item
+                'buttonRefresh' => 0, // 1 - Enable button refresh
+                'buttonSort'    => 1, // 1 - Enable button sort
+                'css'           => '',
+                'js'            => '',
+            ];
+            //Process add content
+            $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+            $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+            $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+            $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+            $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+    
+         
+            $id_orden=request('id');
+      
+
+    
+            $order = ShopOrder::where('id', $id_orden)->first();
+
+            $data['order']=$order;
+            $data['metodos_pagos']= MetodoPago::all();
+    
+           
+
+    
+    
+         
+    
+            return view($this->templatePathAdmin.'pagos.crear_pago')
+                ->with($data);
+  
+
+ 
+        
+    }
+
     public static function getOrderListAdmin(array $dataSearch)
     {
         $keyword      = $dataSearch['keyword'] ?? '';
@@ -193,7 +369,7 @@ class HistorialPagosController extends RootAdminController
         }
         if ($keyword) {
             $orderList = $orderList->where(function ($sql) use ($keyword) {
-                $sql->Where('id', $keyword);
+                $sql->Where('order_id', $keyword);
             });
         }
 

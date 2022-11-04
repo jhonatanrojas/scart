@@ -1,6 +1,15 @@
 @extends($templatePathAdmin.'layout')
 
 @section('main')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
    <div class="row">
       <div class="col-md-12">
          <div class="card">
@@ -39,61 +48,100 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row {{ $errors->has('email') ? ' text-red' : '' }}" id="email">
-                                <label for="email" class="col-sm-2 col-form-label">{{ sc_language_render('order.email') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <input type="email" id="email" name="email" required value="{{ old('email') }}" class="form-control email" placeholder="" />
+                      
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group  {{ $errors->has('first_name') ? ' text-red' : '' }}">
+                                        <label for="first_name" class="col-sm-2 col-form-label">{{ sc_language_render('order.first_name') }}</label>
+                        
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                                </div>
+                                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control first_name" placeholder="" />
+                                            </div>
+                                                @if ($errors->has('first_name'))
+                                                    <span class="text-sm">
+                                                        {{ $errors->first('first_name') }}
+                                                    </span>
+                                                @endif
+                                        
                                     </div>
-                                        @if ($errors->has('email'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('email') }}
-                                            </span>
-                                        @endif
                                 </div>
+
+                                <div class="col-md-6">
+
+                                    @if (sc_config_admin('customer_lastname'))
+                                    <div class="form-group  {{ $errors->has('last_name') ? ' text-red' : '' }}">
+                                        <label for="last_name" class="col-sm-2 col-form-label">{{ sc_language_render('order.last_name') }}</label>
+                                    
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                                </div>
+                                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control last_name" placeholder="" />
+                                            </div>
+                                                @if ($errors->has('last_name'))
+                                                    <span class="text-sm">
+                                                        {{ $errors->first('last_name') }}
+                                                    </span>
+                                                @endif
+                                      
+                                    </div>
+                                @endif
+                                </div>
+                            </div>
+                    
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group  {{ $errors->has('email') ? ' text-red' : '' }}" id="email">
+                                        <label for="email" class="col-form-label">{{ sc_language_render('order.email') }}</label>
+                                     
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                </div>
+                                                <input type="email" id="email" name="email" required value="{{ old('email') }}" class="form-control email" placeholder="" />
+                                            </div>
+                                                @if ($errors->has('email'))
+                                                    <span class="text-sm">
+                                                        {{ $errors->first('email') }}
+                                                    </span>
+                                                @endif
+                                       
+                                    </div>
+        
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    @if (sc_config_admin('customer_phone'))
+                                    <div class="form-group   {{ $errors->has('phone') ? ' text-red' : '' }}">
+                                        <label for="phone" class="col-sm-2 col-form-label">{{ sc_language_render('order.phone') }}</label>
+                                        
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-phone fa-fw"></i></span>
+                                                </div>
+                                                <input style="width: 150px" type="text" id="phone" name="phone" value="{{ old('phone') }}" class="form-control phone" placeholder="Input Phone" />
+                                            </div>
+                                                @if ($errors->has('phone'))
+                                                    <span class="text-sm">
+                                                        {{ $errors->first('phone') }}
+                                                    </span>
+                                                @endif
+                                     
+                                    </div>
+                                @endif
+        
+                                </div>
+
                             </div>
 
-                            <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
-                                <label for="first_name" class="col-sm-2 col-form-label">{{ sc_language_render('order.first_name') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control first_name" placeholder="" />
-                                    </div>
-                                        @if ($errors->has('first_name'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('first_name') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
-
-                        @if (sc_config_admin('customer_lastname'))
-                            <div class="form-group row {{ $errors->has('last_name') ? ' text-red' : '' }}">
-                                <label for="last_name" class="col-sm-2 col-form-label">{{ sc_language_render('order.last_name') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control last_name" placeholder="" />
-                                    </div>
-                                        @if ($errors->has('last_name'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('last_name') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
-                        @endif
+                        
 
                         @if (sc_config_admin('customer_name_kana'))
-                            <div class="form-group row {{ $errors->has('first_name_kana') ? ' text-red' : '' }}">
+                            <div class="form-group  {{ $errors->has('first_name_kana') ? ' text-red' : '' }}">
                                 <label for="first_name_kana" class="col-sm-2 col-form-label">{{ sc_language_render('order.first_name_kana') }}</label>
                                 <div class="col-sm-8">
                                     <div class="input-group mb-3">
@@ -167,23 +215,7 @@
                             </div>
                         @endif
 
-                            <div class="form-group row {{ $errors->has('address1') ? ' text-red' : '' }}">
-                                <label for="address1" class="col-sm-2 col-form-label">{{ sc_language_render('order.address1') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <input type="text" id="address1" name="address1" value="{{ old('address1') }}" class="form-control address1" placeholder="" />
-                                    </div>
-                                    @if ($errors->has('address1'))
-                                        <span class="text-sm">
-                                            {{ $errors->first('address1') }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
+                          
                         @if (sc_config_admin('customer_address2'))    
                             <div class="form-group row {{ $errors->has('address2') ? ' text-red' : '' }}">
                                 <label for="address2" class="col-sm-2 col-form-label">{{ sc_language_render('order.address2') }}</label>
@@ -243,96 +275,18 @@
                             </div>
                         @endif
 
-                        @if (sc_config_admin('customer_phone'))
-                            <div class="form-group row  {{ $errors->has('phone') ? ' text-red' : '' }}">
-                                <label for="phone" class="col-sm-2 col-form-label">{{ sc_language_render('order.phone') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-phone fa-fw"></i></span>
-                                        </div>
-                                        <input style="width: 150px" type="text" id="phone" name="phone" value="{{ old('phone') }}" class="form-control phone" placeholder="Input Phone" />
-                                    </div>
-                                        @if ($errors->has('phone'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('phone') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
-                        @endif
-
-                            <div class="form-group row  {{ $errors->has('currency') ? ' text-red' : '' }}">
-                                <label for="currency" class="col-sm-2 asterisk col-form-label">{{ sc_language_render('order.currency') }}</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control currency " style="width: 100%;" name="currency" >
-                                        <option value=""></option>
-                                      @foreach ($currencies as  $v)
-                                            <option value="{{ $v->code }}" {{ (old('currency') == $v->code) ? 'selected':'' }}>{{ $v->name}}</option>
-                                        @endforeach
-                                    </select>
-                                        @if ($errors->has('currency'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('currency') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group row  {{ $errors->has('exchange_rate') ? ' text-red' : '' }}">
-                                <label for="exchange_rate" class="col-sm-2 col-form-label">{{ sc_language_render('order.exchange_rate') }}</label>
-                                <div class="col-sm-8">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-money fw" aria-hidden="true"></i></span>
-                                        </div>
-                                        <input style="width: 150px" type="text" id="exchange_rate" name="exchange_rate" value="{{ old('exchange_rate') }}" class="form-control exchange_rate" placeholder="Input Exchange rate" />
-                                    </div>
-                                        @if ($errors->has('exchange_rate'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('exchange_rate') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
+                     
+                        
+                      
                             <div class="form-group row">
                                 <label for="comment" class="col-sm-2 col-form-label">{{ sc_language_render('order.note') }}</label>
                                 <div class="col-sm-8">
                                     <textarea name="comment" class="form-control comment" rows="5" placeholder="">{!! old('comment') !!}</textarea>
                                 </div>
                             </div>
+                            <hr>
 
-                            <div class="form-group row  {{ $errors->has('payment_method') ? ' text-red' : '' }}">
-                                <label for="payment_method" class="col-sm-2 col-form-label">{{ sc_language_render('order.payment_method') }}</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control payment_method " style="width: 100%;" name="payment_method">
-                                      @foreach ($paymentMethod as $k => $v)
-                                            <option value="{{ $k }}" {{ (old('payment_method') ==$k) ? 'selected':'' }}>{{ sc_language_render($v)}}</option>
-                                        @endforeach
-                                    </select>
-                                        @if ($errors->has('payment_method'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('payment_method') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
 
-                            <div class="form-group row  {{ $errors->has('shipping_method') ? ' text-red' : '' }}">
-                                <label for="shipping_method" class="col-sm-2 col-form-label">{{ sc_language_render('order.shipping_method') }}</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control shipping_method " style="width: 100%;" name="shipping_method">
-                                      @foreach ($shippingMethod as $k => $v)
-                                            <option value="{{ $k }}" {{ (old('shipping_method') ==$k) ? 'selected':'' }}>{{ sc_language_render($v)}}</option>
-                                        @endforeach
-                                    </select>
-                                        @if ($errors->has('shipping_method'))
-                                            <span class="text-sm">
-                                                {{ $errors->first('shipping_method') }}
-                                            </span>
-                                        @endif
-                                </div>
-                            </div>
 
                             <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
                                 <label for="status" class="col-sm-2 col-form-label">{{ sc_language_render('order.status') }}</label>
@@ -350,9 +304,27 @@
                                 </div>
                             </div>
 
-                            <hr>
+                          
+
+                            <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
+                                <label for="Modalidad" class="col-sm-2 col-form-label">Modalidad de compra</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control status " style="width: 100%;" name="modalidad_compra">
+                           
+                                            <option value="0" {{ (old('modalidad_compra') ==0) ? 'selected':'' }}>Al contado</option>
+                                            <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }}>Financiamento</option>
+                                    </select>
+                                        @if ($errors->has('modalidad_compra'))
+                                            <span class="text-sm">
+                                                {{ $errors->first('modalidad_compra') }}
+                                            </span>
+                                        @endif
+                                </div>
+                            </div>
 
                     </div>
+                    <input type="hidden" name="currency" value="USD">
+      
                     <!-- /.card-body -->
 
                     <div class="card-footer row">

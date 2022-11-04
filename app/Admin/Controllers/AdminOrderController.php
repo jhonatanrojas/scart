@@ -119,9 +119,10 @@ class  AdminOrderController extends RootAdminController
         });
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
+         
             $dataMap = [
                 'email'          => $row['email'] ?? 'N/A',
-                'total'          => sc_currency_render_symbol($row['total'] ?? 0, $row['currency']),
+                'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
             ];
             if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -139,10 +140,15 @@ class  AdminOrderController extends RootAdminController
 
             $dataMap['pagos'] =    HistorialPago::where('order_id',$row['id'])->count();
             $dataMap['created_at'] = $row['created_at'];
+            $btn_pagos='';
+            if($dataMap['pagos']>0)
+            $btn_pagos=' <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-university "></i></span></a>&nbsp;';
             $dataMap['action'] = '
             
+            
             <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
-            <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class="fa fa-credit-card"></i></span></a>&nbsp;
+            '.$btn_pagos.'
+            <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
             <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
             ';
             $dataTr[$row['id']] = $dataMap;
@@ -270,14 +276,13 @@ class  AdminOrderController extends RootAdminController
     public function postCreate()
     {
         $data = request()->all();
+    
         $validate = [
             'first_name'      => 'required|max:100',
-            'address1'        => 'required|max:100',
-            'exchange_rate'   => 'required',
-            'currency'        => 'required',
+            'email'   => 'required',
             'status'          => 'required',
-            'payment_method'  => 'required',
-            'shipping_method' => 'required',
+     
+    
         ];
         if (sc_config_admin('customer_lastname')) {
             $validate['last_name'] = 'required|max:100';
@@ -333,6 +338,8 @@ class  AdminOrderController extends RootAdminController
         $validator = Validator::make($data, $validate, $messages);
 
         if ($validator->fails()) {
+
+
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
@@ -343,18 +350,19 @@ class  AdminOrderController extends RootAdminController
             'first_name'      => $data['first_name'],
             'last_name'       => $data['last_name'] ?? '',
             'status'          => $data['status'],
-            'currency'        => $data['currency'],
-            'address1'        => $data['address1'],
+            'currency'        => $data['currency'] ?? '',
+            'address1'        => $data['address1']?? '',
             'address2'        => $data['address2'] ?? '',
             'address3'        => $data['address3'] ?? '',
             'country'         => $data['country'] ?? '',
             'company'         => $data['company'] ?? '',
             'postcode'        => $data['postcode'] ?? '',
             'phone'           => $data['phone'] ?? '',
-            'payment_method'  => $data['payment_method'],
-            'shipping_method' => $data['shipping_method'],
-            'exchange_rate'   => $data['exchange_rate'],
+            'payment_method'  => $data['payment_method']?? 0,
+            'shipping_method' => $data['shipping_method']?? 0,
+            'exchange_rate'   => $data['exchange_rate'] ?? 0,
             'email'           => $data['email'],
+            'modalidad_de_compra'           => $data['modalidad_compra'],
             'comment'         => $data['comment'],
         ];
         $dataCreate = sc_clean($dataCreate, [], true);
