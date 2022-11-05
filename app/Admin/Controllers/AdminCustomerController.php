@@ -252,6 +252,7 @@ class AdminCustomerController extends RootAdminController
             'title' => "Documentos",
             'subTitle' => '',
             'documento' => $documento,
+            'id_cliente' => $id,
             'title_description' => '',
             'estado' => $estado,
             'municipio' => $municipio,

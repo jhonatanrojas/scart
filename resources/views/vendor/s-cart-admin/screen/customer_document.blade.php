@@ -229,7 +229,7 @@
                     <label for="cedula" class="col-sm-12 col-form-label fa fa-list-alt ">Cedula</label>
                     <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar Cedula"  />
                     <div class="input-group-append">
-                     <a data-input="cedula" data-preview="cedula" data-type="cedula" class="btn btn-primary lfm">
+                     <a data-input="cedula" data-preview="cedula"dat-working_dir="asadsada"    data-type="{{$id_cliente}}"  data-id="{{$id_cliente}}" class="btn btn-primary lfm">
                        <i class="fa fa-image"></i>
                      </a>
                     </div>
@@ -253,7 +253,7 @@
                               <label for="rif" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
                               <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$documentos[0]['rif'] ??'') }}" class="form-control image" placeholder="Adjuntar Rif"  />
                               <div class="input-group-append">
-                               <a data-input="rif" data-preview="rif" data-type="rif" class="btn btn-primary lfm">
+                               <a data-input="rif" data-preview="rif" data-type="{{$id_cliente}}" class="btn btn-primary lfm">
                                  <i class="fa fa-image"></i>
                                </a>
                               </div>
@@ -279,7 +279,7 @@
                               <label for="image" class="col-sm-12  fa fa-list-alt   ">Constancia trabajo</label>
                               <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$documentos[0]['carta_trabajo'] ??'') }}" class="form-control image" placeholder="adjuntar Constancia trabajo "  />
                               <div class="input-group-append">
-                               <a data-input="carta_trabajo" data-preview="carta_trabajo" data-type="carta_trabajo" class="btn btn-primary lfm">
+                               <a data-input="carta_trabajo" data-preview="carta_trabajo" data-type="{{$id_cliente}}" class="btn btn-primary lfm">
                                  <i class="fa fa-image"></i> 
                                </a>
                               </div>
