@@ -1201,6 +1201,7 @@ class ShopCartController extends RootFrontController
         // Process after order compled: send mail, data response ...
         $dataResponse = $this->processAfterOrderSuccess($orderID);
 
+ 
         return redirect(sc_route('order.success'))->with($dataResponse);
     }
 

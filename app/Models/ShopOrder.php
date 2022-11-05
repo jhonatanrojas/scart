@@ -9,7 +9,7 @@ use SCart\Core\Front\Models\ShopOrderTotal;
 use app\Models\ShopProduct;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ModalidadPago;
 
 class ShopOrder extends Model
 {
@@ -47,6 +47,12 @@ class ShopOrder extends Model
     public function history()
     {
         return $this->hasMany(ShopOrderHistory::class, 'order_id', 'id');
+    }
+
+    public function modalidad(){
+
+        return $this->belongsTo(ModalidadPago::class,  'id','id_modalidad_pagos');
+
     }
     protected static function boot()
     {

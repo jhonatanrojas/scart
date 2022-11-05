@@ -2,7 +2,7 @@
 
 @section('main')
  <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12"> 
        <div class="card">
 
           <div class="card-header with-border">
@@ -16,6 +16,7 @@
                   </div>
               </div>
           </div>
+    
 
           <div class="row" id="order-body">
             <div class="col-sm-6">
@@ -74,16 +75,40 @@
                     </tr>
                     @endif
 
+                    <tr>
+                      <td class="td-title">Ver documentos:</td>
+                      <td>
+                        @if (empty($documento))
+                        El cliente no ha adjuntado Documentos <br>
+                        @endif
+                        <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
+                      </td>
+                    </tr>
                 </table>
             </div>
             <div class="col-sm-6">
                 <table  class="table table-bordered">
-                    <tr><td  class="td-title">{{ sc_language_render('order.order_status') }}:</td><td><a href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a></td></tr>
-                    <tr><td>{{ sc_language_render('order.shipping_status') }}:</td><td><a href="#" class="updateStatus" data-name="shipping_status" data-type="select" data-source ="{{ json_encode($statusShipping) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_status') }}">{{ $statusShipping[$order->shipping_status]??$order->shipping_status }}</a></td></tr>
+                    <tr><td  class="td-title">{{ sc_language_render('order.order_status') }}:</td><td>
+                      <a href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
+                    </td></tr>
+                    
+
+                    <tr>
+                      <td> Modalidad de compra</td>
+                      <td>
+                        {{ ($order->modalidad_de_compra) ? 'Financiamiento' :'Al contado'; }}
+                      </td>
+                    </tr>
+                    @if ($order->modalidad_de_compra==0)
+                    <tr><td>{{ sc_language_render('order.shipping_status') }}:</td><td>
+                      
+                      <a href="#" class="updateStatus" data-name="shipping_status" data-type="select" data-source ="{{ json_encode($statusShipping) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_status') }}">{{ $statusShipping[$order->shipping_status]??$order->shipping_status }}</a>
+                    
+                    </td></tr>
                     <tr><td>{{ sc_language_render('order.payment_status') }}:</td><td><a href="#" class="updateStatus" data-name="payment_status" data-type="select" data-source ="{{ json_encode($statusPayment) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_status') }}">{{ $statusPayment[$order->payment_status]??$order->payment_status }}</a></td></tr>
                     <tr><td>{{ sc_language_render('order.shipping_method') }}:</td><td><a href="#" class="updateStatus" data-name="shipping_method" data-type="select" data-source ="{{ json_encode($shippingMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_method') }}">{{ $order->shipping_method }}</a></td></tr>
                     <tr><td>{{ sc_language_render('order.payment_method') }}:</td><td><a href="#" class="updateStatus" data-name="payment_method" data-type="select" data-source ="{{ json_encode($paymentMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_method') }}">{{ $order->payment_method }}</a></td></tr>
-                    <tr><td>{{ sc_language_render('order.domain') }}:</td><td>{{ $order->domain }}</td></tr>
+                    @endif
                     <tr><td></i> {{ sc_language_render('admin.created_at') }}:</td><td>{{ $order->created_at }}</td></tr>
                   </table>
                  <table class="table table-hover box-body text-wrap table-bordered">
@@ -91,7 +116,13 @@
                       <td class="td-title"><i class="far fa-money-bill-alt nav-icon"></i> {{ sc_language_render('order.currency') }}:</td><td>{{ $order->currency }}</td>
                     </tr>
                     <tr>
-                      <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td><td>{{ ($order->exchange_rate)??1 }}</td>
+                      <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td>
+                      <td>
+                        <a href="#" class="updateStatus" data-value="{{($order->exchange_rate)??1  }}" data-name="exchange_rate" data-type="text" min=0 data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="tipo de cambio">{{ $order->exchange_rate }}</a>
+
+          
+                      
+                      </td>
                     </tr>
                 </table>
             </div>
@@ -114,21 +145,27 @@
       <input type="hidden" name="order_id"  value="{{ $order->id }}">
       <div class="row">
         <div class="col-sm-12">
+     
           <div class="card collapsed-card">
           <div class="table-responsive">
             <table class="table table-hover box-body text-wrap table-bordered">
                 <thead>
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
-                    <th>{{ sc_language_render('product.sku') }}</th>
+                    <th>Cuotas</th>
+                    <th>Modalidad</th>
+                    <th class="product_qty">Inicial</th>
+                    <th class="product_qty">Cant</th>
                     <th class="product_price">{{ sc_language_render('product.price') }}</th>
-                    <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
-                    <th class="product_total">{{ sc_language_render('product.total_price') }}</th>
+
                     <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
+                    <th class="product_total">Total</th>
+
                     <th>{{ sc_language_render('action.title') }}</th>
                   </tr>
                 </thead>
                 <tbody>
+          
                     @foreach ($order->details as $item)
                           <tr>
                             <td>{{ $item->name }}
@@ -143,13 +180,53 @@
                               @endphp
                             {!! $html !!}
                             </td>
-                            <td>{{ $item->sku }}</td>
-                            <td class="product_price"><a href="#" class="edit-item-detail" data-value="{{ $item->price }}" data-name="price" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('product.price') }}">{{ $item->price }}</a></td>
-                            <td class="product_qty">x <a href="#" class="edit-item-detail" data-value="{{ $item->qty }}" data-name="qty" data-type="number" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.qty') }}"> {{ $item->qty }}</a></td>
-                            <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
-                            <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
                             <td>
-                                <span  onclick="deleteItem({{ $item->id }});" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                              <a href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                                data-title="Cuotas">{{  $item->nro_coutas }}</a>
+                              
+                             </td>
+                        
+
+                             <td>
+                              <a href="#" class="updateStatus" data-name="id_modalidad_pago" data-type="select"
+                               data-source ="{{ json_encode($modalidad_pago) }}"  
+                               data-pk="{{ $item->id }}" data-value="{!! $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica'  !!}"
+                                 data-url="{{ route("admin_order.edit_item") }}" 
+                                 data-title="Modalidad de pago">{{ $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica' }}</a>
+
+                             </td>
+                             <td>
+                              <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
+                               data-source ='{"0":"Sin inicial","30":"Con inicial 30%"}'  
+                               data-pk="{{ $item->id }}"
+                                data-value=" @if  ($item->abono_inicial>0 )
+                                
+                                Con Inicial 30%
+                                @else
+                                Sin inicial   
+                                
+                                @endif"
+                                 data-url="{{ route("admin_order.edit_item") }}" 
+                                 data-title="Inicial"> @if  ($item->abono_inicial>0 )
+                                
+                                 Con Inicial 30%
+                                 @else
+                                 Sin inicial    
+                                 
+                                 @endif"</a>
+
+                             </td>
+                             <td class="product_qty">x <a href="#" class="edit-item-detail" data-value="{{ $item->qty }}" data-name="qty" data-type="number" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.qty') }}"> {{ $item->qty }}</a></td>
+
+                            <td class="product_price">
+                              <a href="#" class="edit-item-detail" data-value="{{ $item->price }}" data-name="price" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('product.price') }}">{{ $item->price }}</a>
+                            
+                            </td>
+                            <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
+
+                            <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+                            <td>
+                                <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
                           </tr>
                     @endforeach
@@ -266,6 +343,7 @@
       </div>
 @php
   $htmlSelectProduct = '<tr>
+    
               <td>
                 <select onChange="selectProduct($(this));"  class="add_id form-control select2" name="add_id[]" style="width:100% !important;">
                 <option value="0">'.sc_language_render('order.admin.select_product').'</option>';
@@ -274,15 +352,44 @@
                     $htmlSelectProduct .='<option  value="'.$pId.'" >'.$product['name'].'('.$product['sku'].')</option>';
                    }
                 }
+                $htmlSelectProduct .='
+              </select>
+              <span class="add_attr"></span>
+            </td>
+            <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
+
+            <td>
+                <select class="add_id form-control select2" name="add_modalidad[]" style="width:100% !important;">
+                <option value="0"> Seleccionar Modalidad</option>';
+                if(count($modalidad_pago)){
+                  foreach ($modalidad_pago as $pId => $modalidad){
+                  
+                    $htmlSelectProduct .='<option  value="'.$pId.'" >'.$modalidad.'</option>';
+                   }
+                }
   $htmlSelectProduct .='
               </select>
               <span class="add_attr"></span>
             </td>
-              <td><input type="text" disabled class="add_sku form-control"  value=""></td>
-              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
+
+            <td>
+                <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
+                <option value="0"> Sin Inicial</option>
+                <option value="30">  Inicial 30%</option>
+                ';
+          
+         
+  $htmlSelectProduct .='
+              </select>
+              <span class="add_attr"></span>
+            </td>
+
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
-              <td><input type="number" disabled class="add_total form-control" value="0"></td>
+
+              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
+
+              <td><input type="number" disabled class="add_total form-control" value="0"></td>
               <td><button onClick="$(this).parent().parent().remove();" class="btn btn-danger btn-md btn-flat" data-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></button></td>
             </tr>
           <tr>

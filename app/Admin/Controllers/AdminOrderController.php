@@ -11,12 +11,14 @@ use SCart\Core\Front\Models\ShopOrderStatus;
 use SCart\Core\Front\Models\ShopPaymentStatus;
 use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Admin\Models\AdminCustomer;
-use SCart\Core\Admin\Models\AdminOrder;
+use App\Models\AdminOrder;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
-
+use App\Models\ModalidadPago;
 use App\Models\HistorialPago;
 use Validator;
+use App\Models\SC__documento;
+use FFI;
 
 class  AdminOrderController extends RootAdminController
 {
@@ -367,6 +369,8 @@ class  AdminOrderController extends RootAdminController
         ];
         $dataCreate = sc_clean($dataCreate, [], true);
         $order = AdminOrder::create($dataCreate);
+    
+       
         AdminOrder::insertOrderTotal([
             ['id' => sc_uuid(),'code' => 'subtotal', 'value' => 0, 'title' => sc_language_render('order.totals.sub_total'), 'sort' => ShopOrderTotal::POSITION_SUBTOTAL, 'order_id' => $order->id],
             ['id' => sc_uuid(),'code' => 'tax', 'value' => 0, 'title' => sc_language_render('order.totals.tax'), 'sort' => ShopOrderTotal::POSITION_TAX, 'order_id' => $order->id],
@@ -388,9 +392,22 @@ class  AdminOrderController extends RootAdminController
     public function detail($id)
     {
         $order = AdminOrder::getOrderAdmin($id);
+      
+      
+        
+ 
 
+       
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+
+        $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
+        $documento = SC__documento::where('id_usuario', $id)->get();
+ 
+        if(!$documento->isNotEmpty()){
+             $documento= [];
+ 
         }
         $products = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE, SC_PRODUCT_BUILD]]);
         $paymentMethod = [];
@@ -403,12 +420,15 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $shippingMethod[$key] = sc_language_render($value->detail);
         }
+
+     
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
                 'icon' => 'fa fa-file-text-o',
                 "order" => $order,
+                "modalidad_pago" =>  $modalidad_pago,
                 "products" => $products,
                 "statusOrder" => $this->statusOrder,
                 "statusPayment" => $this->statusPayment,
@@ -545,9 +565,15 @@ class  AdminOrderController extends RootAdminController
         $addIds = request('add_id');
         $add_price = request('add_price');
         $add_qty = request('add_qty');
+        $add_nro_cuota = request('add_nro_cuota');
+        $add_modalidad = request('add_modalidad');
         $add_att = request('add_att');
         $add_tax = request('add_tax');
         $orderId = request('order_id');
+
+        $add_inicial = request('add_inicial');
+
+ 
         $items = [];
 
         $order = AdminOrder::getOrderAdmin($orderId);
@@ -568,6 +594,9 @@ class  AdminOrderController extends RootAdminController
                     'qty' => $add_qty[$key],
                     'price' => $add_price[$key],
                     'total_price' => $add_price[$key] * $add_qty[$key],
+                    'nro_coutas' =>  $add_nro_cuota[$key],
+                    'id_modalidad_pago' => $add_modalidad[$key],
+                    'abono_inicial' => $add_inicial[$key],
                     'sku' => $product->sku,
                     'tax' => $add_tax[$key],
                     'attribute' => $pAttr,
@@ -608,7 +637,9 @@ class  AdminOrderController extends RootAdminController
     public function postEditItem()
     {
         try {
+          
             $id = request('pk');
+         
             $field = request('name');
             $value = request('value');
             $item = ShopOrderDetail::find($id);
