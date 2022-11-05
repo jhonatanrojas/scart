@@ -544,9 +544,14 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 if (!function_exists('sc_customer_data_edit_mapping') && !in_array('sc_customer_data_edit_mapping', config('helper_except', []))) {
     function sc_customer_data_edit_mapping(array $dataRaw)
     {
+
+        
         $dataUpdate = [
             'first_name' => $dataRaw['first_name'],
             'cedula' => $dataRaw['cedula'],
+            'natural_jurídica' => $dataRaw['natural_jurídica'],
+            'rif' => $dataRaw['rif'] ?? 0,
+            'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
         ];
         if (isset($dataRaw['status'])) {
             $dataUpdate['status']  = $dataRaw['status'];
