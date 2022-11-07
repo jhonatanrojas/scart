@@ -425,7 +425,6 @@ class  AdminOrderController extends RootAdminController
             $shippingMethod[$key] = sc_language_render($value->detail);
         }
 
-     
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
                 "title" => sc_language_render('order.order_detail'),

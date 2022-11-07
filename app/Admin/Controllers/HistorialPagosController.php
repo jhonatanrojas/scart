@@ -431,7 +431,7 @@ class HistorialPagosController extends RootAdminController
 
      
 
-        if($tiene_convenio ){
+        if(!$tiene_convenio ){
          $r_convenio=   Convenio::create([
                 'order_id'=> request()->c_order_id,
                 'nro_convenio' =>  str_pad($countConvenio+1, 0, 6, STR_PAD_LEFT),

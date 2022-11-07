@@ -541,7 +541,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
  *
  * @return  [array]              [return description]
  */
-if (!function_exists('sc_customer_data_edit_mapping') && !in_array('sc_customer_data_edit_mapping', config('helper_except', []))) {
+
     function sc_customer_data_edit_mapping(array $dataRaw)
     {
 
@@ -553,6 +553,7 @@ if (!function_exists('sc_customer_data_edit_mapping') && !in_array('sc_customer_
             'rif' => $dataRaw['rif'] ?? 0,
             'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
         ];
+     
         if (isset($dataRaw['status'])) {
             $dataUpdate['status']  = $dataRaw['status'];
         }
@@ -839,7 +840,7 @@ if (!function_exists('sc_customer_data_edit_mapping') && !in_array('sc_customer_
         ];
         return $dataMap;
     }
-}
+
 
 function fecha_to_sql ($fecha_europea, $con_horas=true) {
 		
