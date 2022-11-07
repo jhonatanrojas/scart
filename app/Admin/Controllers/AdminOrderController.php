@@ -12,6 +12,7 @@ use SCart\Core\Front\Models\ShopPaymentStatus;
 use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
+use App\Models\Convenio;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use App\Models\ModalidadPago;
@@ -140,7 +141,9 @@ class  AdminOrderController extends RootAdminController
                 }
             }
 
-            $dataMap['pagos'] =    HistorialPago::where('order_id',$row['id'])->count();
+            $dataMap['pagos'] =    HistorialPago::where('order_id',$row['id'])
+                                        ->where('payment_status',' <>',1)
+                                        ->count();
             $dataMap['created_at'] = $row['created_at'];
             $btn_pagos='';
             if($dataMap['pagos']>0)
@@ -393,15 +396,16 @@ class  AdminOrderController extends RootAdminController
     {
         $order = AdminOrder::getOrderAdmin($id);
       
-      
-        
- 
-
-       
+    
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
+   
+        $convenio = Convenio::where('order_id',$id)->first();
+
+        $historialPagos =  HistorialPago::Where('order_id',$id)
+        ->orderBy('fecha_venciento')->get();
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
         $documento = SC__documento::where('id_usuario', $id)->get();
  
@@ -427,7 +431,9 @@ class  AdminOrderController extends RootAdminController
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
                 'icon' => 'fa fa-file-text-o',
+                'convenio'=>$convenio,
                 "order" => $order,
+                'historial_pagos'=>$historialPagos,
                 "modalidad_pago" =>  $modalidad_pago,
                 "products" => $products,
                 "statusOrder" => $this->statusOrder,
@@ -441,7 +447,17 @@ class  AdminOrderController extends RootAdminController
             ]
         );
     }
+    public function geDetailorder()
+    {
+        $id = request('id');
+        $order = AdminOrder::getOrderAdmin($id);
+      
+    
+     return  response()->json($order );
+     
 
+     
+    }
     /**
      * [getInfoUser description]
      * @param   [description]

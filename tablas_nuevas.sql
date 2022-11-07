@@ -33,6 +33,25 @@ CREATE TABLE `sc_historial_pagos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE sc_convenios;
+CREATE TABLE `sc_convenios` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `order_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nro_convenio` varchar(50) NOT NULL,
+  `fecha_pagos` date NULL DEFAULT NULL,
+  `nro_coutas` int NOT NULL DEFAULT '0',
+  `total` decimal(15,2) DEFAULT '0.00',
+  `inicial` decimal(15,2) DEFAULT '0.00',
+  `modalidad` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+
 
 
 CREATE TABLE `sc_modalidad_pagos` (

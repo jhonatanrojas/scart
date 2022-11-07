@@ -4,9 +4,12 @@ namespace App\Admin\Controllers;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use Illuminate\Http\Request;
 use App\Models\HistorialPago;
+use App\Models\Convenio;
 use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
+use App\Models\AdminOrder;
+
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -86,7 +89,7 @@ class HistorialPagosController extends RootAdminController
         ];
      
         $dataTmp = $this->getOrderListAdmin($dataSearch);
-      
+
 
 
 
@@ -94,12 +97,16 @@ class HistorialPagosController extends RootAdminController
 
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
+
+            $order = AdminOrder::getOrderAdmin($row->order_id);
+            
             $dataTr[$row->id ] = [
-                'Nro orden' =>  $row->order_id .'<br>'.$row->cliente->first_name.'  '.$row->cliente->last_name,
+                
+                'Nro orden' =>  $row->order_id .'<br>'.$order->first_name.'  '.$order->last_name,
                 'Importe pagado' =>  $row->importe_pagado,
                 'Referencia' =>  $row->referencia,
                 
-                'Metodo de pago' =>  $row->metodo_pago->name,
+                'Metodo de pago' =>  isset($row->metodo_pago->name)?$row->metodo_pago->name :'',
                 'Estatus' => $row->estatus->name .'<br><small>'.$row->observacion.'</small>' ,
                 'Comentario' =>  $row->comment,
                 'fecha_pago' =>  $row->fecha_pago,
@@ -228,6 +235,7 @@ class HistorialPagosController extends RootAdminController
             ->paginate(20);
         }
 
+  
 
 
         if(isset($dataTmp[0]->cliente->first_name)){
@@ -403,6 +411,73 @@ class HistorialPagosController extends RootAdminController
 
         return $orderList;
     }
+    public function postCrearConvenio(){
+     
+        $data = request()->all();
+      
+  
+        request()->validate([
+           
+            'c_order_id' => 'required',
+            '_monto' => 'required',
+            'c_fecha_inicial' => 'required'
+          
+        ]);
+      
+
+        $tiene_convenio = Convenio::where('order_id', request()->c_order_id)->first();
+        $countConvenio = Convenio::count();    
+
+
+     
+
+        if($tiene_convenio ){
+         $r_convenio=   Convenio::create([
+                'order_id'=> request()->c_order_id,
+                'nro_convenio' =>  str_pad($countConvenio+1, 0, 6, STR_PAD_LEFT),
+                'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
+                'nro_coutas'=> request()->c_nro_coutas,
+                'total'=> request()->_monto,
+                'inicial'=> request()->c_inicial,
+                'modalidad'=> request()->c_modalidad,
+
+            ]);
+          
+       
+
+            //generar pagos
+                $ncouta=1;
+            foreach (request()->coutas_calculo as $key => $value) {
+           
+
+    
+     $data_pago =[
+                'order_id' =>request()->c_order_id,
+                'customer_id' => 0,              
+                'payment_status' => 1,
+                'importe_couta'=>$value,
+                'fecha_venciento' =>fecha_to_sql(request()->fechas_pago_cuotas[$key]),
+                'nro_coutas' =>$ncouta,
+               ];
+       
+               $order = HistorialPago::create($data_pago);
+              echo  $ncouta++;
+            }
+
+        }else{
+            //actualiza
+        }
+
+
+    
+   
+
+        return redirect()->back()
+        ->with(['success' => 'Accion completada']);
+      
+       
+    }
+
     public function postEstatusPago(Request $request){
      
         $data = request()->all();

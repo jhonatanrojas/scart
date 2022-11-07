@@ -841,6 +841,60 @@ if (!function_exists('sc_customer_data_edit_mapping') && !in_array('sc_customer_
     }
 }
 
+function fecha_to_sql ($fecha_europea, $con_horas=true) {
+		
+    $fecha_europea = str_replace("/", "-", $fecha_europea);
+    
+    if ($con_horas) {
+
+        $fecha_sql = date("Y-m-d H:i:s", strtotime($fecha_europea));
+
+    }
+    else {
+
+        $fecha_sql = date("Y-m-d", strtotime($fecha_europea));
+
+    }
+    
+    return $fecha_sql;
+
+}
+
+function fecha_europea ($fecha_sql) {
+
+		// Por defecto
+		$fecha_europea = $fecha_sql;
+	
+		// Obtenemos el valor time de la fecha SQL, para transformar la fecha
+		$time_fecha_sql = strtotime($fecha_sql);
+	
+		// Si es fecha solo
+		if (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}$/", $fecha_sql)) {
+	
+			// Obtenemos la nueva fecha
+			$fecha_europea = date("d/m/Y", $time_fecha_sql);
+	
+		}
+	
+		// Si es fecha y hora (con segundos)
+		elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
+	
+			// Obtenemos la nueva fecha 
+			$fecha_europea = date("d/m/Y", $time_fecha_sql);
+	
+		}
+	
+		// Si es fecha y hora (sin segundos)
+		elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
+	
+			// Obtenemos la nueva fecha 
+			$fecha_europea = date("d/m/Y H:i", $time_fecha_sql);
+	
+		}
+	
+		return $fecha_europea;
+	
+	}
 function sc_order_process_after_success(string $orderID = null):array
 {
 

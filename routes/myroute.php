@@ -148,6 +148,8 @@ Route::group(['prefix' => 'order'], function () use ($nameSpaceAdminProduct) {
     Route::post('/estatus-pago', 'App\Admin\Controllers\HistorialPagosController@postEstatusPago')->name('post_status_pago');
     Route::get('/historial_pagos','App\Admin\Controllers\HistorialPagosController@index')->name('historial_pagos.index');
     Route::get('/reportar_pago','App\Admin\Controllers\HistorialPagosController@reportarPago')->name('historial_pagos.reportar');
+    Route::get('/obtener_orden','App\Admin\Controllers\AdminOrderController@geDetailorder')->name('obtener_orden');
+    Route::post('/crear_convenio', 'App\Admin\Controllers\HistorialPagosController@postCrearConvenio')->name('crear_convenio');
 
 
 });

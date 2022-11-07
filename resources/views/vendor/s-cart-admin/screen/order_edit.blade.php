@@ -14,6 +14,15 @@
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                       <a class="btn btn-flat" target=_new title="Invoice" href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs"> {{ sc_language_render('order.invoice') }}</span></a>
                   </div>
+           @if(count($order->details)>0 && $order->status==3)
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
+                     
+                    
+                    </span></a>
+                </div>
+                  @endif
+
               </div>
           </div>
     
@@ -99,6 +108,14 @@
                         {{ ($order->modalidad_de_compra) ? 'Financiamiento' :'Al contado'; }}
                       </td>
                     </tr>
+                    <tr>
+                      <td> Convenio</td>
+                      <td>
+                        {{ ($convenio) ? str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT)  :'No se ha parametrizado el convenio'}}
+                      </td>
+                    </tr>
+
+                    
                     @if ($order->modalidad_de_compra==0)
                     <tr><td>{{ sc_language_render('order.shipping_status') }}:</td><td>
                       
@@ -246,6 +263,94 @@
       </div>
 </form>
 
+<div class="modal fade mt-3" id="modal_convenio" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+       
+      </div>
+      <div class="modal-body">
+        <form action="{{ sc_route('crear_convenio') }}" method="POST">
+          <div id="w-100">
+             {{ csrf_field() }}
+            <div class="header">
+              <h5 class="text-center">{!! count($order->details) ? $order->details[0]->name : 0 !!} </h5>
+            </div>
+            <div name="frmPrestamo" id="frmPrestamo">
+          <input type="hidden" name="c_producto" value="{!! count($order->details) ? $order->details[0]->name : 0 !!} ">
+          <input type="hidden" name="c_order_id" value="{!! $order->id !!} ">
+
+          <div class="form-group">
+                <label for="monto">Monto: </label>
+                <input  readonly value="{!! count($order->details) ? $order->details[0]->price : 0 !!}" class="form-control   " type="text" name="_monto" id="c_monto" placeholder="monto">
+              </div>
+
+              <div class="row">
+
+                <div class="form-group col-md-6">
+                  <label for="monto">Cuotas: </label>
+                  <input  readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="monto">Modalidad: </label>
+                  <input  readonly value="0" class="form-control   " type="text" name="c_modalidad" id="c_modalidad" placeholder="_nro_cuotas">
+                </div>
+              </div>
+
+              <div class="row">
+              <div class="form-group col-md-6">
+                <label for="monto">Fecha de primer pago: </label>
+                <input   value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="date" name="c_fecha_inicial" id="c_fecha_inicial" placeholder="_nro_cuotas">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="monto">Inicial: </label>
+                <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
+              </div>
+            </div>
+         
+           
+         
+
+
+             
+           
+          
+              <button type="button"  class=" btn btn-info" id="simular" onclick="gen_table(true)"> CALCULAR</button>
+            </div>
+          </div>
+       
+        
+        <table class="table table-striped ">
+          
+          <tbody id="tab">
+            <thead class="thead-dark">
+              <tr>
+                <td>NRO</td>
+            
+                <td id="cuotass">CUOTAS $</td>
+                <td>DEUDA $</td>
+                <td>FECHA DE PAGO</td>
+            </tr>
+              
+          </thead>
+          </tbody>
+     
+      </table>
+              </div>
+              <div class="modal-footer">
+                <button  type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Crear Convenio</button>
+              </div>
+         
+      </div>
+      
+    </div><!-- /.modal-content -->
+  </div>
+ 
+        <input  name="qty" type="hidden"  value="1" min="1" max="100">
+        <input  name="financiamiento" type="hidden"  value="1"  max="100">
+</form><!-- /.modal-dialog -->
       <div class="row">
         {{-- Total --}}
           <div class="col-sm-6">
@@ -282,6 +387,39 @@
               </table>
             </div>
 
+            <table class="table box table-bordered" width="100%">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">No.</th>
+     
+                  <th>Cuota</th>
+
+                  <th>estatus </th>
+                  <th>Fecha de pagos</th>
+                  <th></th>
+          
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($historial_pagos as $historial)
+                <tr>
+                @php
+                $n = (isset($n)?$n:0);
+                $n++;
+                @endphp
+              <td><span class="item_21_id">{{ $n }}</span></td>
+ 
+              <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
+
+              <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
+              <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
+            <td>                    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+            </td>
+            </tr>
+      @endforeach
+              </tbody>
+            </table>
+      
           </div>
           {{-- //End total --}}
 
@@ -402,6 +540,43 @@
     </div>
   </div>
 </div>
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="modal_estatus_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form action="{{route('post_status_pago')}}"  method="post">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar el estatus</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+             @csrf
+              <div class="form-group">
+                <label for="estatus_pagos"></label>
+                <select class="form-control" id="estatus_pagos" name="estatus_pagos">
+                  @foreach ($statusPayment as $key => $item)
+                  <option  value="@php echo $key @endphp  "  >   @php  echo $item @endphp</option>
+                  @endforeach
+                </select>
+              </div>
+      
+              <div class="form-group">
+                <label for="observacion">Observación</label>
+             <input type="text" class="form-control" id="observacion" name="observacion">
+              </div>
+              <input type="hidden" name="id_pago" id="id_pago">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+            </div>
+          </div>
+        </div>
 @endsection
 
 
@@ -444,6 +619,176 @@
 
 <script type="text/javascript">
 
+$('.mostrar_estatus_pago').click(function(){
+  $("#modal_estatus_pago").modal('show');
+
+  $("#id_pago").val($(this).data('id'))
+  
+
+    });
+
+function abrir_modal(){
+
+  gen_table(false)
+}
+function gen_table(fecha_p=false){
+    
+
+    $.ajax({
+                url : '{{ sc_route_admin('obtener_orden') }}',
+                type : "get",
+                dateType:"application/json; charset=utf-8",
+                data : {
+                     id : '{{ $order->id }}',
+                    
+                },
+            beforeSend: function(){
+                $('#loading').show();
+            },
+            success: function(returnedData){
+              $("#modal_convenio").modal('show')
+              $('#loading').hide();
+              $("#c_monto").val(returnedData.subtotal)
+              $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
+              $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
+              $("#c_inicial").val(returnedData.details[0].abono_inicial)
+            
+              if(fecha_p==false){
+                $("#c_fecha_inicial").val(returnedData.details[0].fecha_primer_pago)
+                fechaInicio = new Date(returnedData.details[0].fecha_primer_pago)
+                  }else{
+                    fechaInicio = new Date($("#c_fecha_inicial").val())
+                  }
+   
+              
+              document.getElementById("tab").innerHTML="";
+          document.getElementById("butto_modal").disabled = false;
+          let monto=Number(returnedData.subtotal);
+          let n2=Number(returnedData.details[0].nro_coutas);
+          let n3=Number(returnedData.details[0].abono_inicial);
+          let inicial = parseInt(n3);
+
+          var selected =returnedData.details[0].id_modalidad_pago;
+          var selectd2 =returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal';
+       
+      
+          
+          fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
+
+          if(fechaInicio == "Invalid Date"){
+            var fechaInicio  = new Date();
+            var fechaInicio = fechaInicio.toLocaleDateString('en-US');
+            // obtener la fecha de hoy en formato `MM/DD/YYYY`
+          }
+         
+
+          let periodo = selected;
+      
+          let totalPagos ,  plazo ,fechaPago;
+          var primerFechaPago = true
+
+          if(monto>0){ 
+            document.getElementById("cuotass").innerHTML= `CUOTAS $/${selectd2}`;
+            
+            if ( true ) {
+              plazo = n2
+            } else {
+              alert('No seleccionaste ningún tipo de plazo')
+            }
+
+     
+            switch ( periodo ) {
+              case 1:
+                let fechaFin = new Date(fechaInicio)
+                fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
+                let tiempo = fechaFin.getTime() - fechaInicio.getTime()
+                let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
+                totalPagos = Math.ceil(dias / 7)
+                break
+              case 2:
+                totalPagos = plazo * 2
+                break
+              case 3:
+                totalPagos = plazo
+                
+                break
+              default:
+                alert('No seleccionaste ningún periodo de pagos')
+                break
+            }
+
+            let  montoTotal = monto
+            var cuotaTotal = monto / n2
+            let Inicial = montoTotal/inicial
+            Inicial == Infinity ? Inicial = 0 : Inicial
+
+             
+            let texto
+            for(i=1;i<=n2;i++){  
+              texto = (i + 1)
+
+              if ( primerFechaPago == true ) {
+                  fechaPago = new Date(fechaInicio)
+                  primerFechaPago = false
+                } else {
+                  if ( periodo == '1' ) {
+                    fechaPago.setDate(fechaPago.getDate() + 7)
+                  } else if ( periodo == '2' ) {
+                    fechaPago.setDate(fechaPago.getDate() + 15)
+                  } else if ( periodo == '3' ) {
+                    fechaPago.setMonth(fechaPago.getMonth() + 1)
+                  }
+                }
+                texto = fechaPago.toLocaleDateString()
+
+                  monto -= cuotaTotal
+                  ca=monto;
+                  d1=ca.toFixed(2) ;
+                  i2= Inicial.toFixed(2);
+                  d2=cuotaTotal.toFixed(2);
+                  r=ca;
+                  deudas = ((n2 + i2 - ca ) ) ;
+                  d3=r.toFixed(2);
+                  deuda=deudas.toFixed(1);
+                  document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
+                          `
+                          
+                          
+                          
+                          <tr>
+                              <td>${i}</td>
+                            
+                              <td> <input readonly class="form-control" name="coutas_calculo[]" type="text" value="${d2}"> </td>
+                              <td> ${d3} </td>
+                              <td> <input  readonly class="form-control"  name="fechas_pago_cuotas[]" type="text" value="${texto}"> </td>
+                          </tr>`;
+              }
+              n1= monto/n2;
+              t_i=i2*n2;
+              d4=t_i.toFixed(2);
+              t_p=r*n2;
+              d5=t_p.toFixed(2);
+              document.getElementById("t1").innerHTML=d4;
+   ;
+              document.getElementById("t3").innerHTML= "$"+montoTotal ;        
+              document.getElementById("t4").innerHTML= texto ;       
+                
+              
+              
+
+          }else{
+              alert("Falta ingresar un Número");
+          }
+    console.log(returnedData)
+
+                $('#loading').hide();
+                }
+            });
+        
+
+        
+
+      }
 function update_total(e){
     node = e.closest('tr');
     var qty = node.find('.add_qty').eq(0).val();
