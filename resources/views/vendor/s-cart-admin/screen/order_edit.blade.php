@@ -16,9 +16,7 @@
                       <a class="btn btn-flat" target=_new title="Invoice" href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs"> {{ sc_language_render('order.invoice') }}</span></a>
                   </div>
                   
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar Combenio</span></a>
-                </div>
+                 
                
            @if(count($order->details)>0 && $order->status==3 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -27,6 +25,10 @@
                     
                     </span></a>
                 </div>
+                @else
+                <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar Combenio</span></a>
+              </div>
                   @endif
 
               </div>
@@ -312,6 +314,10 @@
               <div class="form-group col-md-6">
                 <label for="monto">Inicial: </label>
                 <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="nro_convenio">numero de convenio: </label>
+                <input class="form-control   " type="text" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
               </div>
             </div>
          

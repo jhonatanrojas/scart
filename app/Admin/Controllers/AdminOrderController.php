@@ -20,8 +20,10 @@ use App\Models\HistorialPago;
 use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_shop_customer;
+use App\Models\shop_order_detail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use FFI;
+use SCart\Core\Front\Models\ShopCustomFieldDetail;
 
 class  AdminOrderController extends RootAdminController
 {
@@ -426,6 +428,8 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $shippingMethod[$key] = sc_language_render($value->detail);
         }
+
+    
 
       
 
@@ -874,19 +878,21 @@ class  AdminOrderController extends RootAdminController
     {
 
         $order = AdminOrder::getOrderAdmin($id);
-
         $convenio = Convenio::where('order_id',$id)->first();
-
-        
-
        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
         $result = $usuario->all();
 
+        $productoDetail = shop_order_detail::where('order_id' , $id)->get();
+        $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
+       
         
         foreach($result as $c){
             $dato_usuario = [
 
                 'subtotal' => $c['subtotal'],
+                'natural_jurídica' => $c['natural_jurídica'],
+                'razon_social' => $c['razon_social'],
+                'rif' => $c['rif'],
                 'first_name' => $c['first_name'],
                 'last_name' => $c['last_name'],
                 'phone' => $c['phone'],
@@ -896,13 +902,21 @@ class  AdminOrderController extends RootAdminController
                 'cod_estado' => $c['cod_estado'],
                 'cod_municipio' => $c['cod_municipio'],
                 'cod_parroquia' => $c['cod_parroquia'],
+                [
+                    'id'=> $order['id'],
+                    'subtotal'=> $order['subtotal']
+
+                ]
 
             ];
 
 
         }
 
-        // dd($convenio);
+  
+        
+
+       
        
        
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
@@ -911,9 +925,10 @@ class  AdminOrderController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
         
-        $pdf = Pdf::loadView($this->templatePathAdmin.'screen.pdf', ['dato_usuario'=>$dato_usuario],
-
+        $pdf = Pdf::loadView($this->templatePathAdmin.'screen.pdf', 
+        ['dato_usuario'=>$dato_usuario],
         ['convenio'=>$convenio],
+        
 
         
     );
