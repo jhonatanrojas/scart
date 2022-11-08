@@ -920,7 +920,7 @@
                             &nbsp; &nbsp; &nbsp; &nbsp; Municipio:{{$dato_usuario['cod_municipio']}}</span></p>
                 </td>
                 <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3"> &nbsp;
+                    <p class="c5"><span class=""> &nbsp;
                             &nbsp;Parroquia:{{$dato_usuario['cod_parroquia']}}</span></p>
                 </td>
                 <td class="c6" colspan="1" rowspan="1">
@@ -963,20 +963,20 @@
                         &nbsp; &nbsp;</span></p>
             </td>
             <td class="c23" colspan="2" rowspan="1">
-                <p class="c5"><span class="c3">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <p class="c5"><span class="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         &nbsp; &nbsp; &nbsp; Marca:</span></p>
             </td>
         </tr>
         <tr  class="c4">
             <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="c3">Tiempo de Garant&iacute;a:{{$convenio->fecha_pagos}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <p class="c5"><span class="">Tiempo de Garant&iacute;a:{{$convenio->fecha_pagos}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
             </td>
             <td class="c29 c22" colspan="1" rowspan="1">
                 <p class="c5 c24"><span class="c8"></span></p>
             </td>
             <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="c3"> &nbsp;
+                <p class="c5"><span class=""> &nbsp;
                         &nbsp;Precio:{{$convenio->total}}</span></p>
             </td>
             <td class="c17" colspan="1" rowspan="1">
@@ -993,13 +993,13 @@
         </tr>
         <tr class="c4" >
             <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="c3">N&deg; de Lote: </span></p>
+                <p class="c5"><span class="">N&deg; de Lote: </span></p>
             </td>
             <td class="c29 c22" colspan="1" rowspan="1">
                 <p class="c5 c24"><span class="c7 c27"></span></p>
             </td>
             <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="c3 c21">Monto Total &nbsp; &nbsp;a Pagar:{{$dato_usuario[0]['subtotal']}}</span></p>
+                <p class="c5"><span class=" c21">Monto Total &nbsp; &nbsp;a Pagar:{{$dato_usuario[0]['subtotal']}}</span></p>
             </td>
             <td class="c17" colspan="1" rowspan="1">
                 <p class="c5 c24"><span class="c7 c27"></span></p>
@@ -1007,7 +1007,7 @@
         </tr>
         <tr class="c4">
             <td class="c53" colspan="4" rowspan="1">
-                <p class="c19"><span class="c3">Monto de Inicial:{{$convenio->inicial}}% &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <p class="c19"><span class="">Monto de Inicial:{{$convenio->inicial}}% &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Monto de Cuotas:{{$convenio->nro_coutas}}  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         &nbsp; &nbsp; &nbsp; N&ordm; de Cuotas:{{$convenio->nro_coutas}}</span></p>
             </td>

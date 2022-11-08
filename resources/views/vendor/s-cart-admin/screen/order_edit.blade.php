@@ -27,7 +27,7 @@
                 </div>
                 @else
                 <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar Combenio</span></a>
+                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">descargar convenio</span></a>
               </div>
                   @endif
 
