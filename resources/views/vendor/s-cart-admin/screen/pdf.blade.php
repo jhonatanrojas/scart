@@ -730,7 +730,7 @@
         <p class="c5"><span class="c2 c10">Clausula Tercera:</span><span class="c7">&nbsp;</span><span class="c2">“El Beneficiario”</span><span class="c7">&nbsp;se compromete mediante el presente Convenio del programa de “</span><span class="c2">Pagos Fraccionados para el Auto Financiamiento Colectivo</span><span class="c7">”</span><span class="c2">&nbsp;</span><span class="c7">a pagar cuotas cada @if ($convenio->modalidad == "Mensual")
             treinta
             @else
-            quinse
+            quince
             @endif
             ({{$convenio->nro_coutas}}) días</span><span class="c2">&nbsp;</span><span class="c7">que representan mínimo el diez por ciento (10%) del monto total del precio del producto ofertado por </span><span class="c2">“WAIKA IMPORT C.A”</span><span class="c7">, en el transcurso de diez (10), quincenas continuas.</span></p>
 
