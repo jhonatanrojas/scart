@@ -416,6 +416,11 @@ class ShopAccountController extends RootFrontController
         );
     }
 
+    public function convenio(){
+
+        return view($this->templatePath . '.convenio');
+    }
+
     public function postReportarPago(Request $request){
         $user = Auth::user();
         $cId = $user->id;
