@@ -1,10 +1,15 @@
 <?php
 namespace App\Admin\Controllers;
 
+use App\Models\AdminOrder;
+use App\Models\Convenio;
 use App\Models\Estado;
+use App\Models\HistorialPago;
+use App\Models\ModalidadPago;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\SC__documento;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopCountry;
@@ -542,4 +547,7 @@ class AdminCustomerController extends RootAdminController
     {
         return (new AdminCustomer)->getCustomerAdmin($id);
     }
+
+
+ 
 }
