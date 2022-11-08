@@ -19,6 +19,8 @@ use App\Models\ModalidadPago;
 use App\Models\HistorialPago;
 use Validator;
 use App\Models\SC__documento;
+use App\Models\SC_shop_customer;
+use Barryvdh\DomPDF\Facade\Pdf;
 use FFI;
 
 class  AdminOrderController extends RootAdminController
@@ -401,7 +403,7 @@ class  AdminOrderController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-   
+           
         $convenio = Convenio::where('order_id',$id)->first();
 
         $historialPagos =  HistorialPago::Where('order_id',$id)
@@ -424,6 +426,8 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $shippingMethod[$key] = sc_language_render($value->detail);
         }
+
+      
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -863,5 +867,57 @@ class  AdminOrderController extends RootAdminController
     public function checkPermisisonItem($id)
     {
         return AdminOrder::getOrderAdmin($id);
+    }
+
+
+    public function downloadPdf($id)
+    {
+
+        $order = AdminOrder::getOrderAdmin($id);
+
+        $convenio = Convenio::where('order_id',$id)->first();
+
+        
+
+       $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        $result = $usuario->all();
+
+        
+        foreach($result as $c){
+            $dato_usuario = [
+
+                'subtotal' => $c['subtotal'],
+                'first_name' => $c['first_name'],
+                'last_name' => $c['last_name'],
+                'phone' => $c['phone'],
+                'email' => $c['email'],
+                'address1' => $c['address1'],
+                'cedula' => $c['cedula'],
+                'cod_estado' => $c['cod_estado'],
+                'cod_municipio' => $c['cod_municipio'],
+                'cod_parroquia' => $c['cod_parroquia'],
+
+            ];
+
+
+        }
+
+        // dd($convenio);
+       
+       
+        $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
+
+        if (!$order) {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+        
+        $pdf = Pdf::loadView($this->templatePathAdmin.'screen.pdf', ['dato_usuario'=>$dato_usuario],
+
+        ['convenio'=>$convenio],
+
+        
+    );
+
+        return $pdf->download('screen.pdf');
     }
 }

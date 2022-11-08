@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\Controllers\AdminOrderController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\Municipio;
 use App\Http\Controllers\Parroquia;
@@ -23,6 +24,8 @@ Route::controller(Productos_cuota::class)->group(function(){
 
 
 Route::post('/reportar-pago', 'ShopAccountController@postReportarPago')->name('post_reporte_pago');
+
+Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 
 
 

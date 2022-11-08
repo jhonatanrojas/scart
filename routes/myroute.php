@@ -124,6 +124,8 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
     Route::get('/update-address/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@updateAddress')->name('admin_customer.update_address');
     Route::post('/update-address/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@postUpdateAddress')->name('admin_customer.post_update_address');
     Route::post('/delete-address', $nameSpaceAdminCustomer.'\AdminCustomerController@deleteAddress')->name('admin_customer.delete_address');
+
+    // Route::get('/downloadpdf',$nameSpaceAdminCustomer.'\AdminCustomerController@downloadPdf' );
 });
 
 if (file_exists(app_path('Admin/Controllers/AdminProductController.php'))) {
