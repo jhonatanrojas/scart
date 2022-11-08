@@ -35,6 +35,7 @@ class DocumentosController extends Controller
                 [
                     'title'       => 'adjuntar documento',
                     'documentos'       => $documento,
+                    'id_cliente' => $id,
                     'customer'    => $customer,
                     'mensaje' => $dato,
                     'countries'   => ShopCountry::getCodeAll(),

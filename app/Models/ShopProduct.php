@@ -96,6 +96,12 @@ class ShopProduct extends Model
         return $this->belongsTo(ModalidadPago::class,  'id','id_modalidad_pagos');
 
     }
+    public function shop_order_detail(){
+
+        return $this->belongsTo(shop_order_detail::class,  'id','id_modalidad_pagos');
+
+    }
+
 
     //Function get text description
     public function getText()
