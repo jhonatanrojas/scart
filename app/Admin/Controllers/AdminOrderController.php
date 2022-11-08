@@ -13,10 +13,13 @@ use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\Convenio;
+use App\Models\Estado;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use App\Models\ModalidadPago;
 use App\Models\HistorialPago;
+use App\Models\Municipio;
+use App\Models\Parroquia;
 use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_shop_customer;
@@ -886,7 +889,31 @@ class  AdminOrderController extends RootAdminController
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
        
         
+     
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
+
+
+
         foreach($result as $c){
+            foreach($estado as $estados){
+           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
+                foreach($municipio as $municipos){
+                    
+                    if($municipos->codigomunicipio ==  $c['cod_municipio']){
+                        $nombremunicipos = $municipos->nombre;
+                        
+                    
+                    }
+                   
+
+                }
+              
+            }
+            
+
+            
             $dato_usuario = [
 
                 'subtotal' => $c['subtotal'],
@@ -899,8 +926,8 @@ class  AdminOrderController extends RootAdminController
                 'email' => $c['email'],
                 'address1' => $c['address1'],
                 'cedula' => $c['cedula'],
-                'cod_estado' => $c['cod_estado'],
-                'cod_municipio' => $c['cod_municipio'],
+                'cod_estado' => $nombreEstado,
+                'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $c['cod_parroquia'],
                 [
                     'id'=> $order['id'],

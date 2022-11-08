@@ -916,16 +916,16 @@
            
             <tr class="c4">
                 <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Estado: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            &nbsp; &nbsp; &nbsp; &nbsp; Municipio:</span></p>
+                    <p class="c5"><span class="">Estado:{{$dato_usuario['cod_estado']}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp; &nbsp; &nbsp; Municipio:{{$dato_usuario['cod_municipio']}}</span></p>
                 </td>
                 <td class="c9 c22" colspan="1" rowspan="1">
                     <p class="c5"><span class="c3"> &nbsp;
-                            &nbsp;Parroquia:</span></p>
+                            &nbsp;Parroquia:{{$dato_usuario['cod_parroquia']}}</span></p>
                 </td>
                 <td class="c6" colspan="1" rowspan="1">
                     <p class="c5"><span class=""> &nbsp; &nbsp; &nbsp; &nbsp;
-                            &nbsp; &nbsp; &nbsp; &nbsp; Ciudad: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp; &nbsp; &nbsp; Ciudad:{{$dato_usuario['cod_municipio']}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                             &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
                 </td>
             </tr>
