@@ -894,28 +894,29 @@ class  AdminOrderController extends RootAdminController
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
 
-
-
+        $nombreEstado=[];
+        $nombreparroquias =[];
+        $nombremunicipos =[];
         foreach($result as $c){
             foreach($estado as $estados){
            if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
                 foreach($municipio as $municipos){
-                    
                     if($municipos->codigomunicipio ==  $c['cod_municipio']){
                         $nombremunicipos = $municipos->nombre;
+                    }
+                }
+                foreach($parroquia as $parroquias){
+                    if($parroquias->codigomunicipio == $c['cod_municipio']){
+                        $nombreparroquias = $parroquias->nombre;
                         
-                    
                     }
                    
-
                 }
               
             }
-            
 
-            
+  
             $dato_usuario = [
-
                 'subtotal' => $c['subtotal'],
                 'natural_jurídica' => $c['natural_jurídica'],
                 'razon_social' => $c['razon_social'],
@@ -928,7 +929,8 @@ class  AdminOrderController extends RootAdminController
                 'cedula' => $c['cedula'],
                 'cod_estado' => $nombreEstado,
                 'cod_municipio' => $nombremunicipos,
-                'cod_parroquia' => $c['cod_parroquia'],
+                'cod_parroquia' => $nombreparroquias,
+                
                 [
                     'id'=> $order['id'],
                     'subtotal'=> $order['subtotal']
