@@ -18,7 +18,7 @@
                   
                  
                
-           @if(count($order->details)>0 && $order->status==3 && empty($convenio))
+           @if(count($order->details)>0 && $order->status==3 && empty($convenio) && $order->modalidad_de_compra == 1)
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
                      
@@ -194,8 +194,11 @@
 
                     <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
                     <th class="product_total">Total</th>
-
-                    <th>{{ sc_language_render('action.title') }}</th>
+                      @if (!$order->modalidad_de_compra == 1)
+                      <th>{{ sc_language_render('action.title') }}</th>
+                          
+                      @endif
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -259,9 +262,12 @@
                             <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+                            @if (!$order->modalidad_de_compra == 1)
                             <td>
-                                <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                              <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
+                                
+                            @endif
                           </tr>
                     @endforeach
 

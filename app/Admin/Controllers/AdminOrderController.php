@@ -408,6 +408,8 @@ class  AdminOrderController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
+        
+
        
 
            
@@ -943,7 +945,7 @@ class  AdminOrderController extends RootAdminController
                 'email' => $c['email'],
                 'address1' => $c['address1'],
                 'cedula' => $c['cedula'],
-                'cod_estado' => $nombreEstado,
+                'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $nombreparroquias,
                 

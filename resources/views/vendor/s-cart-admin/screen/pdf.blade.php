@@ -5,16 +5,15 @@
     <style type="text/css">
         /* @import url('https://themes.googleusercontent.com/fonts/css?kit=l6D95h51ocAZakGcjUM0xD-V5k2sJmZUlF0JUbgNbAjOfsfM6rvuuu7h1pY3r_-A'); */
 
-        ol {
+        body{
             margin: 0;
+            padding: 0;
+            box-sizing: border-box
           
         }
+     
 
-        table td,
-        table th {
-            padding: 5px;
-        }
-
+  
     
 
         .c17 {
@@ -534,9 +533,20 @@
 
         .c51 {
             background-color: #ffffff;
-            max-width: 441.9pt;
             margin: auto;
             
+            
+        }
+        .container{
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: auto;
+        }
+        *{
+            box-sizing: border-box;
+
         }
 
         .c24 {
@@ -735,26 +745,49 @@
         .tbl2{
             border: solid rgba(0, 0, 0, 0.384) 1px;
             margin-left: 25px;
+            display: inline-flex;
         }
+        .logo{
+            display: flex;
+            width: 100%;
+        }
+        .logo .img12{
+            width: 90px;
+            height: 90px;
+        }
+
+
+
+
+ 
+ 
+  
+  caption {
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+  }
+  .convenio{
+    margin-left: 70%;
+  }
+    
+
+
+          
+
+         
     </style>
 </head>
 
 <body class="c51 doc-content">
     <div class="container">
-        <div>
-            <p class="c19"><span class="c18 c36">
-                <span
-                style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 86.27px; height: 63.40px;"><img
-                    alt="" src="C:\xampp\htdocs\scart\public\images\image1.jpg"
-                    style="width: 86.27px; height: 74.49px; margin-left: -0.00px; margin-top: -0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                    ></span>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; N&deg; CONVENIO:{{$convenio->nro_convenio}} &nbsp; </span>
-             
-            </p>
+        <div class="logo">
+            <img  class="img12" alt="logo" src="{{public_path('images/image1.jpg');}}" >
+           
+            <div  class="convenio">
+                Nr CONVENIO:{{$convenio->nro_convenio}} 
+            </div>
         </div>
         <p class="c30"><span class="c14">CONVENIO DE PAGO</span></p>
         <p class="c30"><span class="c10 c50">(</span><span class="c10 c58">Pagos Fraccionados para el Auto Financiamiento
@@ -917,18 +950,31 @@
         <br>
         <br>
         <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+
         <p class="c13"><span class="c14">Datos del Beneficiario</span></p>
 
         @if ($dato_usuario['natural_jurídica'] == "N")
-        <p class="c5"><span class="c2">Persona Natural </span></p>
      
         <table class="c12">
+            <caption>Persona Natural</caption>
             <tr class="c4">
-                <td class="c31" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">Nombres:&nbsp; &nbsp;{{$dato_usuario['first_name']}} </span></p>
+                <td class="c15" colspan="1" rowspan="1">
+                    <p class=""><span class="">Nombres:&nbsp; &nbsp;{{$dato_usuario['first_name']}} </span></p>
                 </td>
-                <td class="c26" colspan="2" rowspan="1">
-                    <p class="c5"><span class="c3">Apellidos:&nbsp; &nbsp;{{$dato_usuario['last_name']}}  </span>
+                <td class="c15" colspan="1" rowspan="1">
+                    <p class=""><span class="">Apellidos:&nbsp; &nbsp;{{$dato_usuario['last_name']}}  </span>
                         <span
                             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 16.67px; height: 11.73px;"><img
                                 alt="" src=""
@@ -940,17 +986,18 @@
                                 title=""></span>
                     </p>
                 </td>
+                <td class="c15" colspan="1" rowspan="1">
+                    <p class=""><span class="">Cedula: &nbsp;{{$dato_usuario['cedula']}} &nbsp; </span></p>
+                </td>
             </tr>
             <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">Cedula: &nbsp;{{$dato_usuario['cedula']}} &nbsp; </span></p>
-                </td>
+                
                 <td class="c9 c22 " colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">  Tlf.
+                    <p class="c5"><span class="">  Tlf.
                             M&oacute;vil:{{$dato_usuario['phone']}}  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; </span></p>
                 </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3"> 
+                <td class="c6" colspan="2" rowspan="1">
+                    <p class="c5"><span class=""> 
                             &nbsp; &nbsp;Tlf. Fijo:</span></p>
                 </td>
             </tr>
@@ -961,137 +1008,90 @@
             </tr>
             <tr class="c4">
                 <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">Estado:{{$dato_usuario['cod_estado']}}
-                            Municipio:&nbsp;{{$dato_usuario['cod_municipio']}}
+                    <p class=""><span class="">Estado:@if (!empty($dato_usuario['cod_estado']))
+                        {{$dato_usuario['cod_estado']}}
+                    @endif
+                           
                         </span></p>
                 </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">Parroquia:{{$dato_usuario['cod_parroquia']}}</span></p>
+                <td class="c15" colspan="1" rowspan="1">
+                    Municipio:&nbsp;{{$dato_usuario['cod_municipio']}}
                 </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">&nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            Ciudad:{{$dato_usuario['cod_municipio']}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            &nbsp; </span></p>
+                <td class="c15" colspan="1" rowspan="1">
+                    <p class=""><span class="">Parroquia:@if (!empty($dato_usuario['cod_parroquia']) )
+                        {{$dato_usuario['cod_parroquia']}}
+                    @endif</span></p>
+                </td>
+                
+            </tr>
+            <tr class="c4">
+                <td class="c15" colspan="3" rowspan="1">
+                    <p class=""><span class="">Direccion&oacute;n:@if(!empty($dato_usuario['address1']))</span></p>
+                    @endif
                 </td>
             </tr>
             <tr class="c4">
-                <td class="c41" colspan="3" rowspan="1">
-                    <p class="c5"><span class="c3">Ubicaci&oacute;n:{{$dato_usuario['address1']}}</span></p>
+                <td class="c15" colspan="3" rowspan="1">
+                    <p class=""><span class="">Correo Electr&oacute;nico:{{$dato_usuario['email']}} </span></p>
                 </td>
-            </tr>
-            <tr class="c24">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="c3">Correo Electr&oacute;nico:{{$dato_usuario['email']}} </span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
+               
             </tr>
         </table>
     
         <p class="c5 c24"><span class="c7 c18"></span></p>
 
         @else
+        <br>
+        <br>
  
-        <p class="c5"><span class="c2">Persona Jur&iacute;dica</span></p>
+    <table  class="c12" >
+            <caption>Persona Jur&iacute;dica</caption>
+ 	<tr class="c4">
+    	<td class="c15" colspan="1"   >Razon social:{{$dato_usuario['razon_social']}}</td>
+        <td  class="c15" colspan="1">Rif:{{$dato_usuario['rif']}}</td>
+        <td class="c15" colspan="2">Cedula:{{$dato_usuario['cedula']}}</td>
+    </tr>
+    <tr class="c4">
+    	
+    	<td class="c15"colspan="1" rowspan="1">Representante Legal:</td>
+        <td class="c15"colspan="3" rowspan="1">Cargo:</td>
         
-        <table class="c12">
-           
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Raz&oacute;n Social:{{$dato_usuario['razon_social']}}</span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="">Rif:{{$dato_usuario['rif']}}</span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c7 c27"></span></p>
-                </td>
-            </tr>
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Representante Legal:</span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-            </tr>
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Cedula:{{$dato_usuario['cedula']}}</span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="">Cargo:</span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c7 c27"></span></p>
-                </td>
-            </tr>
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Tel&eacute;f. M&oacute;vil:{{$dato_usuario['phone']}} </span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Tel&eacute;f. Fijo: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-            </tr>
-            <tr class="c4">
-                <td class="c31" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-                <td class="c9" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-                <td class="c45" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c8"></span></p>
-                </td>
-            </tr>
-           
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Estado:{{$dato_usuario['cod_estado']}} &nbsp;
-                            Municipio:{{$dato_usuario['cod_municipio']}}</span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5"><span class=""> 
-                            Parroquia:{{$dato_usuario['cod_parroquia']}}</span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">
-                            &nbsp; &nbsp; &nbsp; &nbsp; Ciudad:{{$dato_usuario['cod_municipio']}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            </span></p>
-                </td>
-            </tr>
-           
-            <tr class="c4">
-                <td class="c15" colspan="1" rowspan="1">
-                    <p class="c5"><span class="">Correo Electr&oacute;nico:{{$dato_usuario['email']}}</span></p>
-                </td>
-                <td class="c9 c22" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c7 c27"></span></p>
-                </td>
-                <td class="c6" colspan="1" rowspan="1">
-                    <p class="c5 c24"><span class="c7 c27"></span></p>
-                </td>
-            </tr>
-            
-        </table>
-            
+        
+    </tr >
+     <tr class="c4">
+    	
+    	<td class="c15" colspan="1">Teléf. Móvil:{{$dato_usuario['phone']}}			</td>
+        <td class="c15"colspan="3">Teléf. Fijo: :</td>
+        
+        
+    </tr>
+    
+     <tr class="c4">
+    	
+    	<td class="c15" colspan="1" rowspan="1" >Estado:{{empty($dato_usuario['cod_estado']) ?? ""}}
+        </td>
+        <td class="c15"  colspan="1">Municipio:{{$dato_usuario['cod_municipio']}}
+        </td>
+        <td  class="c15" colspan="2" >Parroquia:{{$dato_usuario['cod_parroquia']}}
+        </td>
+        
+        
+    </tr>
+    
+      <tr class="c4">
+    	
+    	<td class="c15" colspan="4" rowspan="1">Correo
+		Electrónico:{{$dato_usuario['email']}}
+        </td>
+        
+        
+    </tr>
+       </table>
+        
+        
         @endif
         
-       
 
-   
     <p class="c32 c24"><span class="c18 c44"></span></p>
     <p class="c24 c54"><span class="c11"></span></p>
     <p class="c37"><span class="c14">Datos del Producto Auto Financiado</span></p>
@@ -1099,84 +1099,75 @@
     <a id="t.651167b8a01bb649db351289fabd668160c17213"></a>
     <a id="t.2"></a>
 
- <table class="c12 tbl2">
-          
+ <table class="c12">
+    {!!$TotalCuotas =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']!!}
         <tr class="c4">
-            <td class="c43" colspan="2" rowspan="1">
-                <p class="c5"><span class="">Cantidad:{{$dato_usuario[0]['cantidaProduc']}} &nbsp; &nbsp; &nbsp; &nbsp; Descripci&oacute;n: &nbsp; &nbsp;{{$dato_usuario[0]['nombreProduct']}}
-                        &nbsp; &nbsp;</span></p>
+            <td class="c15" colspan="1" rowspan="1">
+                Cantidad:{{$dato_usuario[0]['cantidaProduc']}} 
             </td>
-            <td class="c23" colspan="2" rowspan="1">
-                <p class="c5"><span class="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; Marca:</span></p>
+            <td class="c15" colspan="2" rowspan="1">
+                Descripci&oacute;n: {{$dato_usuario[0]['nombreProduct']}}
+                       
             </td>
+            <td class="c15" rowspan="1" colspan="1">
+                Marca: {{$dato_usuario[0]['nombreProduct']}}
+                       
+            </td>
+            
         </tr>
-        <tr  class="c4">
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="">Tiempo de Garant&iacute;a: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
+        <tr>
+            <td colspan="1" ></td>
+            <td style=" font-weight: 400;" colspan="4" rowspan="1"><p class="c14">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Cuotas del Convenio
+                </p>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
             </td>
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5 c24"><span class="c8"></span></p>
-            </td>
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class=""> &nbsp;
-                        &nbsp;Precio: &nbsp;{{$dato_usuario[0]['subtotal']}}</span></p>
-            </td>
-            <td class="c17" colspan="1" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
-            </td>
-        </tr>
-        <tr  class="c4">
-            <td class="c53" colspan="4" rowspan="1">
-                <p class="c13 c24"><span class="c35 c18"></span></p>
-                <p class="c32"><span class="c14">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; &nbsp; Cuotas del Convenio</span></p>
-            </td>
+            <td colspan="1" ></td>
         </tr>
         <tr class="c4" >
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="">N&deg; de Lote:{{$convenio->lote}} </span></p>
+            <td class="c15" colspan="1" rowspan="1">
+               N&deg; de Lote:{{$convenio->lote}} 
             </td>
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
+            {{-- (30 * 900) / 100 --}}
+            
+            <td class="c15" colspan="1" rowspan="1">
+                Monto de Cuotas:{!!round($TotalCuotas)!!}$
+             </td>
+            <td class="c15" colspan="2" rowspan="1">
+                Nº de Cuotas:{{$convenio->nro_coutas}}
             </td>
-            <td class="c29 c22" colspan="1" rowspan="1">
-                <p class="c5"><span class="c21">Monto Total a Pagar:{{$dato_usuario[0]['subtotal']}}</span></p>
-            </td>
-            <td class="c17" colspan="1" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
-            </td>
+            
         </tr>
+        <tr  class="c4">
+            
+            
+            <td class="c15" colspan="1" rowspan="1">
+                Monto de Inicial:{{$dato_usuario[0]['abono_inicial']}}
+                        
+             </td>
+            
+            <td class="c15" colspan="1" rowspan="1">
+                Precio: {{$dato_usuario[0]['subtotal']}}</
+            </td>
+            
+
+            {!!$TotalCuotasInicial =  ($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100!!}
+            
+            <td class="c15" colspan="2" rowspan="1">
+                Monto Total a Pagar:{{!$TotalCuotasInicial == "0" ?$TotalCuotasInicial:$dato_usuario[0]['subtotal']}}
+            </td>
+            
+        </tr>
+       
+        
+        
         <tr class="c4">
-            {!!$TotalCuotas =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']!!}
-            <td class="c53" colspan="4" rowspan="1">
-                <p class="c19"><span class="">Monto de Inicial:{{$dato_usuario[0]['abono_inicial']}}%  &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp;Monto de Cuotas:{!!round($TotalCuotas)!!}$&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; N&ordm; de Cuotas:{{$convenio->nro_coutas}}</span></p>
+            <td class="c15" colspan="4" rowspan="1">
+                D&iacute;as de Pago: 
             </td>
+            
         </tr>
-        <tr class="c52">
-            <td class="c43 c22" colspan="2" rowspan="1">
-                <p class="c5"><span class="c3">D&iacute;as de Pago: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
-            </td>
-            <td class="c23 c22" colspan="2" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
-            </td>
-        </tr>
-        <tr class="c34">
-            <td class="c43" colspan="2" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
-            </td>
-            <td class="c29" colspan="1" rowspan="1">
-                <p class="c5"><span class="c2 c57">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></p>
-            </td>
-            <td class="c47" colspan="1" rowspan="1">
-                <p class="c5 c24"><span class="c7 c27"></span></p>
-            </td>
-        </tr>
+        
     </table> 
    
       
