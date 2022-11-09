@@ -414,13 +414,17 @@ class HistorialPagosController extends RootAdminController
     public function postCrearConvenio(){
      
         $data = request()->all();
+
+        // dd($data);
       
   
         request()->validate([
            
             'c_order_id' => 'required',
             '_monto' => 'required',
-            'c_fecha_inicial' => 'required'
+            'c_fecha_inicial' => 'required',
+            'nro_convenio' => 'required',
+
           
         ]);
       
@@ -434,7 +438,8 @@ class HistorialPagosController extends RootAdminController
         if(!$tiene_convenio ){
          $r_convenio=   Convenio::create([
                 'order_id'=> request()->c_order_id,
-                'nro_convenio' =>  str_pad($countConvenio+1, 0, 6, STR_PAD_LEFT),
+                'nro_convenio' =>  request()->nro_convenio,
+                'lote' =>  request()->lote,
                 'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
                 'nro_coutas'=> request()->c_nro_coutas,
                 'total'=> request()->_monto,

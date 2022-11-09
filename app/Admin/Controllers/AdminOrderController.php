@@ -403,10 +403,12 @@ class  AdminOrderController extends RootAdminController
     {
         $order = AdminOrder::getOrderAdmin($id);
       
-    
+       
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
+
+       
 
            
         $convenio = Convenio::where('order_id',$id)->first();
@@ -882,14 +884,29 @@ class  AdminOrderController extends RootAdminController
 
         $order = AdminOrder::getOrderAdmin($id);
         $convenio = Convenio::where('order_id',$id)->first();
-       $usuario =  SC_shop_customer::where('email', $order['email'])->get();
-        $result = $usuario->all();
+        $historialPagos =  HistorialPago::Where('order_id',$id)
+        ->orderBy('fecha_venciento')->get();
 
+        if (!$order) {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+       
+        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
-       
-        
-     
+        $nombreProduct = [];
+        $cuotas = [];
+        $abono_inicial = [];
+        $id_modalidad_pago = [];
+        foreach($productoDetail as $key => $p){
+            $nombreProduct = $p->name;
+            $cuotas = $p->nro_coutas;
+            $abono_inicial = $p->abono_inicial;
+            $id_modalidad_pago = $p->id_modalidad_pago;
+        }
+
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -915,7 +932,6 @@ class  AdminOrderController extends RootAdminController
               
             }
 
-  
             $dato_usuario = [
                 'subtotal' => $c['subtotal'],
                 'natural_jurídica' => $c['natural_jurídica'],
@@ -932,8 +948,13 @@ class  AdminOrderController extends RootAdminController
                 'cod_parroquia' => $nombreparroquias,
                 
                 [
-                    'id'=> $order['id'],
-                    'subtotal'=> $order['subtotal']
+                    'convenio'=> $convenio->nro_convenio,
+                    'subtotal'=> $order['subtotal'],
+                    'cantidaProduc'=> $cantidaProduc,
+                    'nombreProduct'=> $nombreProduct,
+                    'cuotas' => $cuotas,
+                    'abono_inicial' => $abono_inicial,
+                    'id_modalidad_pago' => $id_modalidad_pago
 
                 ]
 
@@ -942,18 +963,6 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-  
-        
-
-       
-       
-       
-        $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
-
-        if (!$order) {
-            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
-        }
-        
         $pdf = Pdf::loadView($this->templatePathAdmin.'screen.pdf', 
         ['dato_usuario'=>$dato_usuario],
         ['convenio'=>$convenio],
