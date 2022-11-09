@@ -1156,7 +1156,7 @@
             {!!$TotalCuotasInicial =  ($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100!!}
             
             <td class="c15" colspan="2" rowspan="1">
-                Monto Total a Pagar:{{!$TotalCuotasInicial == "0" ?$TotalCuotasInicial:$dato_usuario[0]['subtotal']}}
+                Total - inicial:{{!$TotalCuotasInicial == "0" ?$TotalCuotasInicial:$dato_usuario[0]['subtotal']}}
             </td>
             
         </tr>
@@ -1165,7 +1165,9 @@
         
         <tr class="c4">
             <td class="c15" colspan="4" rowspan="1">
-                D&iacute;as de Pago: 
+                D&iacute;as de Pago: @if (!empty($dato_usuario[0]['fecha_primer_pago']))
+                {{$dato_usuario[0]['fecha_primer_pago']}}
+                @endif
             </td>
             
         </tr>
