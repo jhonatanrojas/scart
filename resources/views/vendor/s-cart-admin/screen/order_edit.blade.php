@@ -18,7 +18,7 @@
                   
                  
                
-           @if(count($order->details)>0 && $order->status==3 && empty($convenio))
+           @if(count($order->details)>0 && $order->status==3 && empty($convenio) && $order->modalidad_de_compra == 1)
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
                      
@@ -126,10 +126,14 @@
                       </td>
                     </tr>
                     <tr>
+                      @if (!$order->modalidad_de_compra == 0)
                       <td> Convenio</td>
                       <td>
+                        
                         {{ ($convenio) ? str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT)  :'No se ha parametrizado el convenio'}}
+                       
                       </td>
+                      @endif
                     </tr>
 
                     
@@ -194,8 +198,11 @@
 
                     <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
                     <th class="product_total">Total</th>
-
-                    <th>{{ sc_language_render('action.title') }}</th>
+                      @if (!$order->modalidad_de_compra == 1)
+                      <th>{{ sc_language_render('action.title') }}</th>
+                          
+                      @endif
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -259,14 +266,17 @@
                             <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+                            @if (!$order->modalidad_de_compra == 1)
                             <td>
-                                <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                              <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
+                                
+                            @endif
                           </tr>
                     @endforeach
 
                     <tr  id="add-item" class="not-print">
-                      <td colspan="7">
+                      <td colspan="8">
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>
                         &nbsp;&nbsp;&nbsp;<button style="display: none; margin-right: 50px" type="button" class="btn btn-flat btn-warning" id="add-item-button-save"  title="Save"><i class="fa fa-save"></i> {{ sc_language_render('action.save') }}</button>
                     </td>
@@ -334,13 +344,7 @@
               </div>
             </div>
          
-           
-         
 
-
-             
-           
-          
               <button type="button"  class=" btn btn-info" id="simular" onclick="gen_table(true)"> CALCULAR</button>
             </div>
           </div>

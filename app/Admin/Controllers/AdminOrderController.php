@@ -408,6 +408,8 @@ class  AdminOrderController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
+        
+
        
 
            
@@ -890,6 +892,7 @@ class  AdminOrderController extends RootAdminController
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
+
        
         $usuario =  SC_shop_customer::where('email', $order['email'])->get();
         $result = $usuario->all();
@@ -943,13 +946,14 @@ class  AdminOrderController extends RootAdminController
                 'email' => $c['email'],
                 'address1' => $c['address1'],
                 'cedula' => $c['cedula'],
-                'cod_estado' => $nombreEstado,
+                'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $nombreparroquias,
                 
                 [
                     'convenio'=> $convenio->nro_convenio,
                     'subtotal'=> $order['subtotal'],
+                    'fecha_primer_pago'=> $order['fecha_primer_pago'],
                     'cantidaProduc'=> $cantidaProduc,
                     'nombreProduct'=> $nombreProduct,
                     'cuotas' => $cuotas,
