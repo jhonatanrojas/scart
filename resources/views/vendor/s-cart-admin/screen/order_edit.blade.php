@@ -126,10 +126,14 @@
                       </td>
                     </tr>
                     <tr>
+                      @if (!$order->modalidad_de_compra == 0)
                       <td> Convenio</td>
                       <td>
+                        
                         {{ ($convenio) ? str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT)  :'No se ha parametrizado el convenio'}}
+                       
                       </td>
+                      @endif
                     </tr>
 
                     
@@ -272,7 +276,7 @@
                     @endforeach
 
                     <tr  id="add-item" class="not-print">
-                      <td colspan="7">
+                      <td colspan="8">
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>
                         &nbsp;&nbsp;&nbsp;<button style="display: none; margin-right: 50px" type="button" class="btn btn-flat btn-warning" id="add-item-button-save"  title="Save"><i class="fa fa-save"></i> {{ sc_language_render('action.save') }}</button>
                     </td>
@@ -340,13 +344,7 @@
               </div>
             </div>
          
-           
-         
 
-
-             
-           
-          
               <button type="button"  class=" btn btn-info" id="simular" onclick="gen_table(true)"> CALCULAR</button>
             </div>
           </div>

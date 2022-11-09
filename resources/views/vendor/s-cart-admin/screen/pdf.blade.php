@@ -1053,7 +1053,7 @@
     </tr>
     <tr class="c4">
     	
-    	<td class="c15"colspan="1" rowspan="1">Representante Legal:</td>
+    	<td class="c15"colspan="1" rowspan="1">Representante Legal:{{$dato_usuario['first_name']}}</td>
         <td class="c15"colspan="3" rowspan="1">Cargo:</td>
         
         
@@ -1068,7 +1068,9 @@
     
      <tr class="c4">
     	
-    	<td class="c15" colspan="1" rowspan="1" >Estado:{{empty($dato_usuario['cod_estado']) ?? ""}}
+    	<td class="c15" colspan="1" rowspan="1" >Estado:@if (!empty($dato_usuario['cod_estado']))
+            {{$dato_usuario['cod_estado']}}
+        @endif
         </td>
         <td class="c15"  colspan="1">Municipio:{{$dato_usuario['cod_municipio']}}
         </td>
