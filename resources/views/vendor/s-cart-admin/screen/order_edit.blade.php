@@ -25,10 +25,16 @@
                     
                     </span></a>
                 </div>
-                @else
-                <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">descargar convenio</span></a>
-              </div>
+               
+               
+                
+                  @endif
+
+                  @if ($order->total >0  && !empty($convenio))
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
+                </div>
+                      
                   @endif
 
               </div>
@@ -105,9 +111,12 @@
             </div>
             <div class="col-sm-6">
                 <table  class="table table-bordered">
-                    <tr><td  class="td-title">{{ sc_language_render('order.order_status') }}:</td><td>
+                    <tr>
+                      <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
+                      <td>
                       <a href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
-                    </td></tr>
+                    </td>
+                  </tr>
                     
 
                     <tr>
@@ -316,8 +325,12 @@
                 <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
               </div>
               <div class="form-group col-md-6">
-                <label for="nro_convenio">numero de convenio: </label>
+                <label for="nro_convenio">Numero de convenio: </label>
                 <input class="form-control   " type="text" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lote">Lote: </label>
+                <input class="form-control   " type="text" name="lote" id="lote" placeholder="Lote ">
               </div>
             </div>
          
