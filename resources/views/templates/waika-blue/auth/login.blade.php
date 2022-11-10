@@ -43,7 +43,7 @@
                 <button type="submit" name="SubmitLogin" class=" button button-lg button-secondary w-100">{{ sc_language_render('front.login') }}</button>
 
                
-                <div class="mt-3">
+                {{-- <div class="mt-3">
                     <ul class="list-inline list-social list-inline-sm d-flex">
                      <li class="col">
                         <a class="icon mdi mdi-facebook" href="https://www.facebook.com/SCart.Ecommerce/"></a>
@@ -58,7 +58,7 @@
                         </a>
                     </li>
                                             </ul>
-                  </div>
+                  </div> --}}
                 @if (!empty(sc_config('LoginSocialite')))
                     <ul>
                     <li class="rd-dropdown-item">
