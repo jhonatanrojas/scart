@@ -475,7 +475,7 @@ class ShopAccountController extends RootFrontController
         ->orderByDesc('id')
         ->get();
      
-      
+
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
         return view($this->templatePath . '.account.historial_pagos')
