@@ -2,11 +2,20 @@
 
 @section('block_main')
 <!--form-->
-<section class="section section-sm section-first bg-default text-md-left">
+<section class="p-0 section section-sm section-first bg-default text-md-left">
     <div class="container">
     <div class="row">
         <div class="col-12 col-md-6 m-auto">
-            <h2>{{ sc_language_render('customer.title_login') }}</h2>
+          
+            <div class="row align-items-center flex-column">
+                <div class="col text-center">
+                    <img width="200px" class="img-fluid" src="/images/logo2.png" alt="">
+                </div>
+                <div class="col ">
+                    <h4 class="text-center">{{ sc_language_render('customer.title_login') }}</h4>
+                </div>
+
+            </div>
             <form action="{{ sc_route('postLogin') }}" method="post" class="box">
                 {!! csrf_field() !!}
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -48,17 +57,27 @@
                     </li>
                     </ul>
                 @endif
-                <p class="lost_password form-group">
-                    <a class="btn btn-link" href="{{ sc_route('forgot') }}">
-                        {{ sc_language_render('customer.password_forgot') }}
-                    </a>
-                    <br>
-                    <a class="btn btn-link" href="{{ sc_route('register') }}">
-                        {{ sc_language_render('customer.title_register') }}
-                    </a>
-                </p>
+                
                
             </form>
+            <div class="d-flex align-items-center">
+                
+                    <div class="col">
+                        <a class="btn btn-link" href="{{ sc_route('forgot') }}">
+                            {{ sc_language_render('customer.password_forgot') }}
+                        </a>
+                    </div>
+                   
+                   
+                
+                
+                    <div class="col">
+                        <a class="btn btn-link" href="{{ sc_route('register') }}">
+                            {{ sc_language_render('customer.title_register') }}
+                        </a>
+                    </div>
+                
+            </div>
         </div>
     </div>
 </div>
