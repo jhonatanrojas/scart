@@ -6,6 +6,7 @@ use SCart\Core\Front\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use Cache;
 use App\Models\ModalidadPago;
+use App\Models\Convenio;
 class AdminOrder extends ShopOrder
 {
     public static $mapStyleStatus = [
@@ -204,6 +205,8 @@ class AdminOrder extends ShopOrder
         $order->total = $total;
         $order->save();
     }
+
+  
 
 
     /**

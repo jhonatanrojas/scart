@@ -307,14 +307,14 @@ table tfoot {
                  
                   
 
-                  <div  class="form-check d-flex  radioContenedor2 m-3">
+                  <div  class="form-check d-flex  radioContenedor2 ">
                   
                     <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label id="finansiamiento" class="btn btn-outline-primary" for="danger_outlined">Financiamiento</label>
+                    <label style="font-style: 1em; " id="finansiamiento" class="btn btn-outline-primary" for="danger_outlined">Adquiéralo financiando</label>
                    
                    
                   </div>
-                  <div class="form-check  radioContenedor2 m-3">
+                  <div class="form-check  radioContenedor2 ">
                      <input checked  value="active" type="checkbox" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
                     <label id="descotado" class="  btn btn-outline-primary" for="flexRadioDefault2">De contado</label>
                      

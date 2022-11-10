@@ -1171,9 +1171,7 @@
         
         <tr class="c4">
             <td class="c15" colspan="4" rowspan="1">
-                D&iacute;as de Pago: @if (!empty($dato_usuario[0]['fecha_primer_pago']))
-                {{$dato_usuario[0]['fecha_primer_pago']}}
-                @endif
+                D&iacute;as de Pago:{{$convenio->fecha_pagos}}
             </td>
             
         </tr>

@@ -415,14 +415,12 @@ class HistorialPagosController extends RootAdminController
      
         $data = request()->all();
 
-        // dd($data);
-      
   
         request()->validate([
            
-            'c_order_id' => 'required',
+            'c_order_id' => 'required' ,
             '_monto' => 'required',
-            'c_fecha_inicial' => 'required',
+            'c_fecha_inicial' => 'required' ,
             'nro_convenio' => 'required',
 
           
@@ -447,6 +445,11 @@ class HistorialPagosController extends RootAdminController
                 'modalidad'=> request()->c_modalidad,
 
             ]);
+   
+
+      
+            
+           
           
        
 
@@ -470,19 +473,7 @@ class HistorialPagosController extends RootAdminController
             }
 
         }else{
-            //actualiza
-            Convenio::update([
-                'order_id'=> request()->c_order_id,
-                'nro_convenio' => str_pad($countConvenio+1, 0, 6, ),
-                'lote' =>  request()->lote,
-                'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
-                'nro_coutas'=> request()->c_nro_coutas,
-                'total'=> request()->_monto,
-                'inicial'=> request()->c_inicial,
-                'modalidad'=> request()->c_modalidad,
-
-            ]);
-            
+ 
             
 
         }
@@ -493,6 +484,25 @@ class HistorialPagosController extends RootAdminController
 
         return redirect()->back()
         ->with(['success' => 'Accion completada']);
+      
+       
+    }
+    public function postUpdate(){
+     
+ 
+        $id = request('pk');
+        $code = request('name');
+        $value = request('value');
+        //actualiza
+        Convenio::where('order_id',$id)->first()->update([
+             "fecha_pagos" => $value
+
+            ]);
+            
+
+        // return redirect()->back()
+        // ->with(['success' => 'Accion completada']);
+        return response()->json(['error' => 0, 'msg' => sc_language_render('action.update_success')]);
       
        
     }

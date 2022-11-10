@@ -77,9 +77,11 @@ class  AdminOrderController extends RootAdminController
 
         $listTh = [
             'email'          => '<i class="fas fa-envelope" aria-hidden="true" title="'.sc_language_render('order.email').'"></i>',
-
+            'Cedula'          => 'Cedula',
+            'Estado'          => 'Estado',
+            'Telefono'          => 'Telefono',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
-            'status'         => sc_language_render('order.admin.status'),
+            'status'         =>"Estatus",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -106,6 +108,9 @@ class  AdminOrderController extends RootAdminController
         $dataSearch = [
             'keyword'      => $keyword,
             'email'        => $email,
+            'Cedula'        => $email,
+            'Estado'        => $email,
+            'Telefono'        => $email,
             'from_to'      => $from_to,
             'end_to'       => $end_to,
             'sort_order'   => $sort_order,
@@ -122,6 +127,8 @@ class  AdminOrderController extends RootAdminController
                 $dataStores = [];
             }
         }
+
+        $estado = Estado::all();
      
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
@@ -129,9 +136,28 @@ class  AdminOrderController extends RootAdminController
         });
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
-         
+            
+            $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
+
+            $colection = $usuario->all();
+
+            $cedula =[];
+            $phone =[];
+            $nombreEstado =[];
+            foreach($colection as $key => $usu){
+                $cedula = $usu['cedula'];
+                $phone = $usu['phone'];
+                foreach($estado as $estados){
+                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}}
+
+
+            }
+
             $dataMap = [
                 'email'          => $row['email'] ?? 'N/A',
+                'Cedula'          => $cedula ?? 'N/A',
+                'Estado'          => $nombreEstado ?? 'N/A',
+                'Telefono'          =>$phone ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
             ];
@@ -276,6 +302,7 @@ class  AdminOrderController extends RootAdminController
         $data['currenciesRate'] = $currenciesRate;
         $data['paymentMethod']  = $paymentMethod;
         $data['shippingMethod'] = $shippingMethod;
+       
 
         return view($this->templatePathAdmin.'screen.order_add')
             ->with($data);
@@ -427,6 +454,7 @@ class  AdminOrderController extends RootAdminController
         $products = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE, SC_PRODUCT_BUILD]]);
         $paymentMethod = [];
         $shippingMethod = [];
+        $fecha_primer_pago = [];
         $paymentMethodTmp = sc_get_plugin_installed('payment', $onlyActive = false);
         foreach ($paymentMethodTmp as $key => $value) {
             $paymentMethod[$key] = sc_language_render($value->detail);
@@ -434,6 +462,10 @@ class  AdminOrderController extends RootAdminController
         $shippingMethodTmp = sc_get_plugin_installed('shipping', $onlyActive = false);
         foreach ($shippingMethodTmp as $key => $value) {
             $shippingMethod[$key] = sc_language_render($value->detail);
+        }
+        $fecha_primer_pago = sc_get_plugin_installed('fecha_primer_pago', $onlyActive = false);
+        foreach ($shippingMethodTmp as $key => $value) {
+            $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
 
     
@@ -457,6 +489,7 @@ class  AdminOrderController extends RootAdminController
                 'attributesGroup' => ShopAttributeGroup::pluck('name', 'id')->all(),
                 'paymentMethod' => $paymentMethod,
                 'shippingMethod' => $shippingMethod,
+                'fecha_primer_pago' => $fecha_primer_pago,
                 'country' => $this->country,
             ]
         );
@@ -509,9 +542,16 @@ class  AdminOrderController extends RootAdminController
      */
     public function postOrderUpdate()
     {
+        
         $id = request('pk');
         $code = request('name');
         $value = request('value');
+        $fecha_primer_pago = request('fecha_primer_pago');
+
+    
+       
+
+        
         if ($code == 'shipping' || $code == 'discount' || $code == 'received' || $code == 'other_fee') {
             $orderTotalOrigin = AdminOrder::getRowOrderTotal($id);
             $orderId = $orderTotalOrigin->order_id;
@@ -520,14 +560,21 @@ class  AdminOrderController extends RootAdminController
             if (!$order) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$orderId]), 'detail' => '']);
             }
+           
+
+           
             $dataRowTotal = [
                 'id' => $id,
+                'fecha_primer_pago' => $fecha_primer_pago,
                 'code' => $code,
                 'value' => $value,
                 'text' => sc_currency_render_symbol($value, $order->currency),
             ];
             AdminOrder::updateRowOrderTotal($dataRowTotal);
+            
         } else {
+
+            
             $orderId = $id;
             $order = AdminOrder::getOrderAdmin($orderId);
             if (!$order) {
@@ -535,6 +582,7 @@ class  AdminOrderController extends RootAdminController
             }
             $oldValue = $order->{$code};
             $order->update([$code => $value]);
+
 
             if ($code == 'status') {
                 //Process finish order
