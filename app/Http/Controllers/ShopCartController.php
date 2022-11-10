@@ -92,7 +92,7 @@ class ShopCartController extends RootFrontController
 
         //Not allow for guest
         if (!sc_config('shop_allow_guest') && !$customer) {
-            return redirect(sc_route('login'));
+            return redirect(sc_route('postRegister'));
         }
 
         $data = request()->all();

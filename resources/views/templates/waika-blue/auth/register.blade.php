@@ -5,8 +5,16 @@
 <section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
         
-          <div class="card-body w-70 ">
-            <h2 class="text-center">{{ sc_language_render('customer.title_register') }}</h2>
+          <div class="card-body w-100 ">
+            <div class="row align-items-center flex-column">
+                <div class="col text-center">
+                    <img width="200px" class="img-fluid" src="/images/logo2.png" alt="">
+                </div>
+                <div class="col ">
+                    <h3 class="text-center">{{ sc_language_render('customer.title_register') }}</h3>
+                </div>
+
+            </div>
             <form action="{{sc_route('postRegister')}}" method="post" class="box  " id="form-process">
                 <div class="row justify-content-space-around">
 
@@ -511,12 +519,19 @@
                         <button type="submit" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
                    </div>
+
+                  
                 </div>
+               
             
 
                 
              
             </form>
+
+            <div class="text-center m-auto mt-5 p-3 h5">
+                <a class="btn btn-link" href="{{sc_route('login')}}">Ya esta Registrado..? Inicia Secion</a>
+             </div>
             
           </div>
 

@@ -48,15 +48,17 @@
                     </li>
                     </ul>
                 @endif
-                <p class="lost_password form-group">
-                    <a class="btn btn-link" href="{{ sc_route('forgot') }}">
-                        {{ sc_language_render('customer.password_forgot') }}
-                    </a>
-                    <br>
-                    <a class="btn btn-link" href="{{ sc_route('register') }}">
-                        {{ sc_language_render('customer.title_register') }}
-                    </a>
-                </p>
+                <div class="d-flex">
+                    <p class="lost_password form-group">
+                        <a class="btn btn-link" href="{{ sc_route('forgot') }}">
+                            {{ sc_language_render('customer.password_forgot') }}
+                        </a>
+                        <br>
+                        <a class="btn btn-link" href="{{ sc_route('register') }}">
+                            {{ sc_language_render('customer.title_register') }}
+                        </a>
+                    </p>
+                </div>
                
             </form>
         </div>
