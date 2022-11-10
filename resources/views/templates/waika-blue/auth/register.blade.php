@@ -2,7 +2,7 @@
 
 @section('block_main')
 <!--form-->
-<section class="section section-sm section-first bg-default text-md-left">
+<section class="p-0 section section-sm section-first bg-default text-md-left">
     <div class="container">
         
           <div class="card-body w-100 ">
@@ -11,7 +11,7 @@
                     <img width="200px" class="img-fluid" src="/images/logo2.png" alt="">
                 </div>
                 <div class="col ">
-                    <h3 class="text-center">{{ sc_language_render('customer.title_register') }}</h3>
+                    <h4 class="text-center">{{ sc_language_render('customer.title_register') }}</h4>
                 </div>
 
             </div>
