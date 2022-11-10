@@ -429,8 +429,10 @@
      
                   <th>Cuota</th>
 
+                  <th>Monto pagado</th>
                   <th>estatus </th>
-                  <th>Fecha de pagos</th>
+                  
+                  <th>Fecha de vencimiento</th>
                   <th></th>
           
                 </tr>
@@ -445,6 +447,7 @@
               <td><span class="item_21_id">{{ $n }}</span></td>
  
               <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
+              <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
 
               <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
               <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
