@@ -2,7 +2,7 @@
 
 @section('block_main')
 <!--form-->
-<section class="p-0 section section-sm section-first bg-default text-md-left">
+<section class=" section section-sm section-first bg-default text-md-left">
     <div class="container">
     <div class="row">
         <div class="col-12 col-md-6 m-auto">
@@ -60,7 +60,7 @@
                 
                
             </form>
-            <div class="d-flex align-items-center">
+            {{-- <div class="d-flex align-items-center">
                 
                     <div class="col">
                         <a class="btn btn-link" href="{{ sc_route('forgot') }}">
@@ -77,7 +77,7 @@
                         </a>
                     </div>
                 
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
