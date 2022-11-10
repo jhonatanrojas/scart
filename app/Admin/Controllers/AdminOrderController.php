@@ -908,6 +908,8 @@ class  AdminOrderController extends RootAdminController
             $abono_inicial = $p->abono_inicial;
             $id_modalidad_pago = $p->id_modalidad_pago;
         }
+        
+       
 
 
         $estado = Estado::all();

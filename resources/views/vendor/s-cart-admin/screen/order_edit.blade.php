@@ -276,8 +276,14 @@
                     @endforeach
 
                     <tr  id="add-item" class="not-print">
-                      <td colspan="8">
+                      <td colspan="7">
+                        @if ($order->total <= 0  && empty($convenio)  &&  $order->modalidad_de_compra == 1 )
+                        <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>  
+                        @endif
+                        @if ($order->modalidad_de_compra == 0)
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>
+                            
+                        @endif
                         &nbsp;&nbsp;&nbsp;<button style="display: none; margin-right: 50px" type="button" class="btn btn-flat btn-warning" id="add-item-button-save"  title="Save"><i class="fa fa-save"></i> {{ sc_language_render('action.save') }}</button>
                     </td>
                   </tr>

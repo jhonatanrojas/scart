@@ -471,6 +471,20 @@ class HistorialPagosController extends RootAdminController
 
         }else{
             //actualiza
+            Convenio::update([
+                'order_id'=> request()->c_order_id,
+                'nro_convenio' => str_pad($countConvenio+1, 0, 6, ),
+                'lote' =>  request()->lote,
+                'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
+                'nro_coutas'=> request()->c_nro_coutas,
+                'total'=> request()->_monto,
+                'inicial'=> request()->c_inicial,
+                'modalidad'=> request()->c_modalidad,
+
+            ]);
+            
+            
+
         }
 
 

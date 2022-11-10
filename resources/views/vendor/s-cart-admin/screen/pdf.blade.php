@@ -1026,7 +1026,8 @@
             </tr>
             <tr class="c4">
                 <td class="c15" colspan="3" rowspan="1">
-                    <p class=""><span class="">Direccion&oacute;n:@if(!empty($dato_usuario['address1']))</span></p>
+                    Direccion&oacute;n:@if(!empty($dato_usuario['address1']))
+                        {{$dato_usuario['address1']}}
                     @endif
                 </td>
             </tr>
@@ -1081,8 +1082,13 @@
     </tr>
     
       <tr class="c4">
+        <td class="c15" colspan="1" rowspan="1">
+            Direccion&oacute;n:@if(!empty($dato_usuario['address1']))
+                {{$dato_usuario['address1']}}
+            @endif
+        </td>
     	
-    	<td class="c15" colspan="4" rowspan="1">Correo
+    	<td class="c15" colspan="3" rowspan="1">Correo
 		Electrónico:{{$dato_usuario['email']}}
         </td>
         
@@ -1149,14 +1155,14 @@
              </td>
             
             <td class="c15" colspan="1" rowspan="1">
-                Precio: {{$dato_usuario[0]['subtotal']}}</
+                Precio: {{$dato_usuario[0]['subtotal']}}$
             </td>
             
 
             {!!$TotalCuotasInicial =  ($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100!!}
             
             <td class="c15" colspan="2" rowspan="1">
-                Total - inicial:{{!$TotalCuotasInicial == "0" ?$TotalCuotasInicial:$dato_usuario[0]['subtotal']}}
+                Monto Total a Pagar:{{$TotalCuotasInicial == "0.00" ?$dato_usuario[0]['subtotal']:$TotalCuotasInicial}}$
             </td>
             
         </tr>
