@@ -666,6 +666,17 @@ function abrir_modal(){
 
   gen_table(false)
 }
+
+function formatoFecha(fecha, formato) {
+    const map = {
+        dd: fecha.getDate(),
+        mm: fecha.getMonth() + 1,
+        yy: fecha.getFullYear().toString().slice(-2),
+        yyyy: fecha.getFullYear()
+    }
+
+    return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
+}
 function gen_table(fecha_p=false){
     
 
@@ -681,6 +692,7 @@ function gen_table(fecha_p=false){
                 $('#loading').show();
             },
             success: function(returnedData){
+              console.log(returnedData)
               $("#modal_convenio").modal('show')
               $('#loading').hide();
               $("#c_monto").val(returnedData.subtotal)
@@ -689,8 +701,28 @@ function gen_table(fecha_p=false){
               $("#c_inicial").val(returnedData.details[0].abono_inicial)
             
               if(fecha_p==false){
-                $("#c_fecha_inicial").val(returnedData.details[0].fecha_primer_pago)
+                if(returnedData.fecha_primer_pago ==null){
+                  const hoy = new Date();
+
+                 var fecha = new Date(); //Fecha actual
+            var mes = fecha.getMonth()+1; //obteniendo mes
+            var dia = fecha.getDate(); //obteniendo dia
+            var ano = fecha.getFullYear(); //obteniendo año
+            if(dia<10)
+              dia='0'+dia; //agrega cero si el menor de 10
+            if(mes<10)
+              mes='0'+mes //agrega cero si el menor de 10
+        
+             
+                  $("#c_fecha_inicial").val(ano+"-"+mes+"-"+dia)
+                  fechaInicio = new Date(fechaInicio)
+
+                }else{
+                  $("#c_fecha_inicial").val(returnedData.details[0].fecha_primer_pago)
                 fechaInicio = new Date(returnedData.details[0].fecha_primer_pago)
+
+                }
+               
                   }else{
                     fechaInicio = new Date($("#c_fecha_inicial").val())
                   }
@@ -702,7 +734,11 @@ function gen_table(fecha_p=false){
           let n2=Number(returnedData.details[0].nro_coutas);
           let n3=Number(returnedData.details[0].abono_inicial);
           let inicial = parseInt(n3);
-
+          if(inicial>0){
+            totalinicial=(inicial*monto)/100;
+            monto = monto -totalinicial;
+          }
+          var total_inicial= (returnedData.details[0].abono_inicial)
           var selected =returnedData.details[0].id_modalidad_pago;
           var selectd2 =returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal';
        
@@ -720,7 +756,7 @@ function gen_table(fecha_p=false){
           let periodo = selected;
       
           let totalPagos ,  plazo ,fechaPago;
-          var primerFechaPago = true
+          var primerFechaPago = true;
 
           if(monto>0){ 
             document.getElementById("cuotass").innerHTML= `CUOTAS $/${selectd2}`;
@@ -756,9 +792,9 @@ function gen_table(fecha_p=false){
             var cuotaTotal = monto / n2
             let Inicial = montoTotal/inicial
             Inicial == Infinity ? Inicial = 0 : Inicial
-
+           
              
-            let texto
+            var texto=0;
             for(i=1;i<=n2;i++){  
               texto = (i + 1)
 
@@ -774,7 +810,16 @@ function gen_table(fecha_p=false){
                     fechaPago.setMonth(fechaPago.getMonth() + 1)
                   }
                 }
-                texto = fechaPago.toLocaleDateString()
+
+            var mesf = fechaPago.getMonth()+1; //obteniendo mes
+            var diaf = fechaPago.getDate(); //obteniendo dia
+            var anof = fechaPago.getFullYear(); //obteniendo año
+            if(diaf<10)
+            diaf='0'+diaf; //agrega cero si el menor de 10
+            if(mesf<10)
+            mesf='0'+mesf; //agrega cero si el menor de 10
+
+            
 
                   monto -= cuotaTotal
                   ca=monto;
@@ -795,7 +840,7 @@ function gen_table(fecha_p=false){
                             
                               <td> <input readonly class="form-control" name="coutas_calculo[]" type="text" value="${d2}"> </td>
                               <td> ${d3} </td>
-                              <td> <input  readonly class="form-control"  name="fechas_pago_cuotas[]" type="text" value="${texto}"> </td>
+                              <td> <input   class="form-control"  name="fechas_pago_cuotas[]" type="date" value="${ anof+"-"+mesf+"-"+diaf}"> </td>
                           </tr>`;
               }
               n1= monto/n2;
@@ -804,9 +849,9 @@ function gen_table(fecha_p=false){
               t_p=r*n2;
               d5=t_p.toFixed(2);
               document.getElementById("t1").innerHTML=d4;
-   ;
+   
               document.getElementById("t3").innerHTML= "$"+montoTotal ;        
-              document.getElementById("t4").innerHTML= texto ;       
+       //       document.getElementById("t4").innerHTML= texto ;       
                 
               
               
