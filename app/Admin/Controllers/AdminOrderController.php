@@ -274,6 +274,9 @@ class  AdminOrderController extends RootAdminController
      */
     public function create()
     {
+
+        $users = AdminCustomer::getListAll();
+       
         $data = [
             'title'             => sc_language_render('order.admin.add_new_title'),
             'subTitle'          => '',
@@ -294,7 +297,7 @@ class  AdminOrderController extends RootAdminController
         $currencies             = $this->currency;
         $countries              = $this->country;
         $currenciesRate         = json_encode(ShopCurrency::getListRate());
-        $users                  = AdminCustomer::getListAll();
+        $users                  = $users;
         $data['users']          = $users;
         $data['currencies']     = $currencies;
         $data['countries']      = $countries;
@@ -315,6 +318,8 @@ class  AdminOrderController extends RootAdminController
     public function postCreate()
     {
         $data = request()->all();
+
+       
     
         $validate = [
             'first_name'      => 'required|max:100',
@@ -406,6 +411,9 @@ class  AdminOrderController extends RootAdminController
         ];
         $dataCreate = sc_clean($dataCreate, [], true);
         $order = AdminOrder::create($dataCreate);
+
+
+        
     
        
         AdminOrder::insertOrderTotal([
@@ -418,7 +426,7 @@ class  AdminOrderController extends RootAdminController
             ['id' => sc_uuid(),'code' => 'received', 'value' => 0, 'title' => sc_language_render('order.totals.received'), 'sort' => ShopOrderTotal::POSITION_RECEIVED, 'order_id' => $order->id],
         ]);
         //
-        return redirect()->route('admin_order.index')->with('success', sc_language_render('action.create_success'));
+        return redirect()->route('admin_order.detail', ['id' => $order->id ? $order->id : 'not-found-id'])->with('success', sc_language_render('action.create_success'));
     }
 
     /**
