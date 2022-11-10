@@ -329,7 +329,8 @@ class ShopAccountController extends RootFrontController
         }
 
 
-    $historial_pagos =   HistorialPago::where('order_id', $id)
+    $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status',' <>',1)
+
         ->orderByDesc('id')->get();
         
 
