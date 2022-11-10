@@ -9,6 +9,7 @@ use App\Models\ModalidadPago;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\SC__documento;
+use App\Models\SC_shop_customer;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -58,10 +59,10 @@ class AdminCustomerController extends RootAdminController
             'name'       => sc_language_render('customer.name'),
             'phone'      => sc_language_render('customer.phone'),
             'address1'   => sc_language_render('customer.address1'),
-            'address2'   => sc_language_render('customer.address2'),
-            'address3'   => sc_language_render('customer.address3'),
-            'country'    => sc_language_render('customer.country'),
-            'status'     => sc_language_render('customer.status'),
+            'Estado'   => 'Estado',
+            'Municipio'   => 'Municipio',
+            'Parroquia'    => 'Parroquia',
+            'status'     => 'Status',
             'created_at' => sc_language_render('admin.created_at'),
             'action'     => sc_language_render('action.title'),
         ];
@@ -82,18 +83,39 @@ class AdminCustomerController extends RootAdminController
             'arrSort'    => $arrSort,
         ];
         $dataTmp = (new AdminCustomer)->getCustomerListAdmin($dataSearch);
-
-
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
+        $nombreEstado=[];
+        $nombreparroquias =[];
+        $nombremunicipos =[];
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
+                foreach($estado as $estados){
+                    if($estados->codigoestado == $row['cod_estado']){$nombreEstado = $estados->nombre;}
+                         foreach($municipio as $municipos){
+                             if($municipos->codigomunicipio ==$row['cod_municipio']){
+                                 $nombremunicipos = $municipos->nombre;
+                             }
+                         }
+                         foreach($parroquia as $parroquias){
+                             if($parroquias->codigomunicipio == $row['cod_municipio']){
+                                 $nombreparroquias = $parroquias->nombre;
+                                 
+                             }
+                            
+                         }
+                       
+                     }
+
             $dataTr[$row['id']] = [
                 'email' => $row['email'],
                 'name' => $row['name'],
                 'phone' => $row['phone'],
                 'address1' => $row['address1'],
-                'address2' => $row['address2'],
-                'address3' => $row['address3'],
-                'country' =>  '' ,
+                'Estado' => $nombreEstado,
+                'Municipio' => $nombremunicipos,
+                'Parroquia' =>  $nombreparroquias ,
                 'status' => $row['status'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
                 'created_at' => $row['created_at'],
                 'action' => '

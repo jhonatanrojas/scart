@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Controllers\AdminOrderController;
+use App\Admin\Controllers\HistorialPagosController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\Municipio;
 use App\Http\Controllers\Parroquia;
@@ -25,6 +26,7 @@ Route::controller(Productos_cuota::class)->group(function(){
 
 Route::post('/reportar-pago', 'ShopAccountController@postReportarPago')->name('post_reporte_pago');
 Route::get('convenio', 'ShopAccountController@convenio')->name('convenio');
+Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
 
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 
