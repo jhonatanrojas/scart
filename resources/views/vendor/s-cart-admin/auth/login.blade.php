@@ -6,7 +6,7 @@
       <div class="wrap-login100 main-login">
         <form action="{{ sc_route_admin('admin.login') }}" method="post">
           <div class="col-md-12 text-center">
-            <img width="250px" src="{{ sc_file(sc_store('logo')) }}" alt="logo" class="logo rounded img-fluid">
+            <img width="250px" src="{{ sc_file(sc_store('logo')) }}" alt="logo" class="logo rounded-4 img-fluid">
           </div>
           <div class="login-title-des col-md-12 p-b-41">
             <a><b>{{sc_config_admin('ADMIN_NAME')}}</b></a>
