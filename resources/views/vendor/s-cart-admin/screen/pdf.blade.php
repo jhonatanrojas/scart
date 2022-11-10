@@ -1159,7 +1159,7 @@
             </td>
             
 
-            {!!$TotalCuotasInicial =  ($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100!!}
+            {!!$TotalCuotasInicial =  $dato_usuario[0]['subtotal'] -$dato_usuario[0]['abono_inicial']!!}
             
             <td class="c15" colspan="2" rowspan="1">
                 Monto Total a Pagar:{{$TotalCuotasInicial == "0.00" ?$dato_usuario[0]['subtotal']:$TotalCuotasInicial}}$
