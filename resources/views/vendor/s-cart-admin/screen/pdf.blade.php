@@ -786,7 +786,7 @@
             <img  class="img12" alt="logo" src="{{public_path('images/image1.jpg');}}" >
            
             <div  class="convenio">
-                Nr CONVENIO:{{$convenio->nro_convenio}} 
+                N° CONVENIO:{{ str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT) }} 
             </div>
         </div>
         <p class="c30"><span class="c14">CONVENIO DE PAGO</span></p>

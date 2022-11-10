@@ -603,7 +603,7 @@ class  AdminOrderController extends RootAdminController
         //Add history
         $dataHistory = [
             'order_id' => $orderId,
-            'content' => 'Change <b>' . $code . '</b> from <span style="color:blue">\'' . $oldValue . '\'</span> to <span style="color:red">\'' . $value . '\'</span>',
+            'content' => 'Cambios <b>' . $code . '</b> de <span style="color:blue">\'' . $oldValue . '\'</span> a <span style="color:red">\'' . $value . '\'</span>',
             'admin_id' => Admin::user()->id,
             'order_status_id' => $order->status,
         ];
@@ -690,7 +690,7 @@ class  AdminOrderController extends RootAdminController
                 //Add history
                 $dataHistory = [
                     'order_id' => $orderId,
-                    'content' => "Add product: <br>" . implode("<br>", array_column($items, 'name')),
+                    'content' => "Producto agregado: <br>" . implode("<br>", array_column($items, 'name')),
                     'admin_id' => Admin::user()->id,
                     'order_status_id' => $order->status,
                 ];
@@ -736,7 +736,7 @@ class  AdminOrderController extends RootAdminController
             //Add history
             $dataHistory = [
                 'order_id' => $orderId,
-                'content' => sc_language_render('product.edit_product') . ' #' . $id . ': ' . $field . ' from ' . $fieldOrg . ' -> ' . $value,
+                'content' => sc_language_render('product.edit_product') . ' #' . $id . ': ' . $field . ' de ' . $fieldOrg . ' -> ' . $value,
                 'admin_id' => Admin::user()->id,
                 'order_status_id' => $order->status,
             ];
@@ -813,7 +813,7 @@ class  AdminOrderController extends RootAdminController
             //Add history
             $dataHistory = [
                 'order_id' => $orderId,
-                'content' => 'Remove item pID#' . $pId,
+                'content' => ' item eliminado pID#' . $pId,
                 'admin_id' => Admin::user()->id,
                 'order_status_id' => $order->status,
             ];
