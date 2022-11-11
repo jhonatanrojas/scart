@@ -531,6 +531,19 @@ class AdminCustomerController extends RootAdminController
             'carta_trabajo' => 'required',
             'rif' => 'required',
         ]);
+
+        $saveFile = time().'.'.$datos['cedula']->extension();  
+        $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
+        $datos['cedula']->move(public_path('data/clientes/cedula'), $saveFile);
+
+
+        $saveFile = time().'.'.$datos['rif']->extension();  
+        $rifs= 'data/clientes/rif'.'/'. $saveFile;
+        $datos['rif']->move(public_path('data/clientes/rif'), $saveFile);
+
+        $saveFile = time().'.'.$datos['carta_trabajo']->extension();  
+        $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
+        $datos['carta_trabajo']->move(public_path('data/clientes/carta_trabajo'), $saveFile);
        
         
   
@@ -540,9 +553,9 @@ class AdminCustomerController extends RootAdminController
             $saveFile->email =$datos['email'];
             $saveFile->telefono =$datos['phone'];
             $saveFile->id_usuario = $datos['id_usuario'];
-            $saveFile->cedula = $datos['cedula'];
-            $saveFile->rif = $datos['rif'];
-            $saveFile->carta_trabajo = $datos['carta_trabajo'];
+            $saveFile->cedula = $cedulas;
+            $saveFile->rif =  $rifs;
+            $saveFile->carta_trabajo = $path_archivo;
 
             $documento = SC__documento::where('id_usuario', $id)->get();
          

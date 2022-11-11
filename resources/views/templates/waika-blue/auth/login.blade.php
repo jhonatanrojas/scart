@@ -78,7 +78,7 @@
                 
                
             </form>
-            {{-- <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
                 
                     <div class="col">
                         <a class="btn btn-link" href="{{ sc_route('forgot') }}">
@@ -95,7 +95,7 @@
                         </a>
                     </div>
                 
-            </div> --}}
+            </div>
         </div>
     </div>
 </div>

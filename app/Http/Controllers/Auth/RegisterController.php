@@ -18,6 +18,7 @@ use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use SCart\Core\Library\ShoppingCart\Facades\Cart;
 
 class RegisterController extends RootFrontController
 {
@@ -106,7 +107,7 @@ class RegisterController extends RootFrontController
 
     protected function registered(Request $request, $user)
     {
-        redirect()->route('home')->with(['message' => sc_language_render('customer.register_success')]);
+        // redirect()->route('home')->with(['message' => sc_language_render('customer.register_success')]);
     }
 
 
@@ -186,20 +187,19 @@ class RegisterController extends RootFrontController
     public function register(Request $request)
     {
         $data = $request->all();
-       
         $this->validator($data)->validate();
         $user = $this->create($data);
-    
-        
+        $Daotschekckout = Cart::instance('default')->count();
 
+        //If cart info empty
+        if ($Daotschekckout >= 1) {
+            $this->guard()->login($user);
+            sc_customer_created_by_client($user, $data);
+            return redirect(sc_route('cart'));
+        }
         
-
-       
-        
-
 
         if ($user) {  
-
             sc_customer_created_by_client($user, $data);
 
             //Login
