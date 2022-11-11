@@ -75,7 +75,8 @@ class AdminOrder extends ShopOrder
 
         if ($email) {
             $orderList = $orderList->where(function ($sql) use ($email) {
-                $sql->Where('email', 'like', '%'.$email.'%');
+                $sql->Where('cedula', 'like', '%'.$email.'%')
+                ->orWhere('last_name', 'like','%'.$email.'%');;
             });
         }
 
