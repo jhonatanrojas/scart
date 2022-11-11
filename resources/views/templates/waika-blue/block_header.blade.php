@@ -138,7 +138,7 @@
                     </a> --}}
 
                     <a class="rd-navbar-basket fas fa-heart"  href="{{ sc_route('wishlist') }}">
-                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
+                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
                      
                     </a>
                   </div>

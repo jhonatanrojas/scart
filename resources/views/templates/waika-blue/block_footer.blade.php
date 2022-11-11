@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="footer-classic-panel">
+        {{-- <div class="footer-classic-panel">
           <div class="container">
             <div class="row row-10 align-items-center justify-content-sm-between">
               <div class="col-md-auto">
@@ -104,5 +104,5 @@
               @endif
             </div>
           </div>
-        </div>
+        </div> --}}
       </footer>

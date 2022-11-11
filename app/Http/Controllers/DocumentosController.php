@@ -59,41 +59,52 @@ class DocumentosController extends Controller
      */
     public function enviar_document(Request $request)
     {
+
+        $customer = auth()->user();
+            $id = $customer['id'];
+
+
         $request->validate([
             'cedula' => 'required',
             'carta_trabajo' => 'required',
             'rif' => 'required',
         ]);
-       
-        $validator = Validator::make($request->all(), [
-    
-            'cedula' => 'required',
-            'carta_trabajo' => 'required',
-            'rif' => 'required',
-            
-        ]);
-  
-        // if ($validator->fails()) {
-        //     return redirect('/adjuntar_document')->with('error', 'Adjuntar Cedula  Rif y Contancia de trabajo');
-        // }
+        $documento = SC__documento::where('id_usuario', $id)->get();
 
-            $customer = auth()->user();
-            $id = $customer['id'];
+
+        if(isset($documento[0]['id_usuario'])  == $id){
+            return redirect('/adjuntar_document')->with('error', 'Disculpa ya se Adjunto los documentos');
+        }
+
+        $saveFile = time().'.'.$request->cedula->extension();  
+        $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
+        $request->cedula->move(public_path('data/clientes/cedula'), $saveFile);
+
+
+        $saveFile = time().'.'.$request->rif->extension();  
+        $rifs= 'data/clientes/rif'.'/'. $saveFile;
+        $request->rif->move(public_path('data/clientes/rif'), $saveFile);
+
+        $saveFile = time().'.'.$request->carta_trabajo->extension();  
+        $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
+        $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
+       
+
+
+            
 
             $saveFile = new SC__documento;
             $saveFile->first_name =$request->first_name;
             $saveFile->email =$request->email;
             $saveFile->telefono =$request->phone;
             $saveFile->id_usuario = $id;
-            $saveFile->cedula = $request->cedula;
-            $saveFile->rif = $request->rif;
-            $saveFile->carta_trabajo = $request->carta_trabajo;
+            $saveFile->cedula = $cedulas;
+            $saveFile->rif = $rifs;
+            $saveFile->carta_trabajo = $path_archivo;
 
-            $documento = SC__documento::where('id_usuario', $id)->get();
+          
          
-            if(isset($documento[0]['id_usuario'])  == $id){
-                return redirect('/adjuntar_document')->with('error', 'Disculpa ya se Adjunto los documentos');
-            }else $saveFile->save();
+            $saveFile->save();
 
             if($saveFile){
                 return redirect('/adjuntar_document')->with('success', 'Datos enviado con exito');

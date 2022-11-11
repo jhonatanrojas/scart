@@ -14,6 +14,7 @@ use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ShopProduct;
+use SCart\Core\Admin\Models\AdminCustomer;
 
 class ShopCartController extends RootFrontController
 {
@@ -133,7 +134,7 @@ class ShopCartController extends RootFrontController
         session(['storeCheckout' => $storeId]);
 
         //End check minimum
-        return redirect(sc_route('checkout'));
+        return redirect(sc_route('checkout.confirm'));
     }
 
 
@@ -460,22 +461,18 @@ class ShopCartController extends RootFrontController
     private function _getCheckoutConfirm()
     {
         //Check shipping address
-       
-        if (
-            !session('shippingAddress')
-        ) {
-            return redirect(sc_route('cart'));
-        }
-        $shippingAddress = session('shippingAddress');
+
+        // $shippingAddress = session('shippingAddress');
+        $shippingAddress = auth()->user();
 
 
         //Shipping method
         if (sc_config('shipping_off')) {
             $shippingMethodData = null;
         } else {
-            if (!session('shippingMethod')) {
-                return redirect(sc_route('cart'));
-            }
+            // if (!session('shippingMethod')) {
+            //     return redirect(sc_route('cart'));
+            // }
             $shippingMethod = session('shippingMethod');
             $classShippingMethod = sc_get_class_plugin_config('Shipping', $shippingMethod);
             $shippingMethodData = (new $classShippingMethod)->getData();
@@ -485,9 +482,9 @@ class ShopCartController extends RootFrontController
         if (sc_config('payment_off')) {
             $paymentMethodData = null;
         } else {
-            if (!session('paymentMethod')) {
-                return redirect(sc_route('cart'));
-            }
+            // if (!session('paymentMethod')) {
+            //     return redirect(sc_route('cart'));
+            // }
             $paymentMethod = session('paymentMethod');
             $classPaymentMethod = sc_get_class_plugin_config('Payment', $paymentMethod);
             $paymentMethodData = (new $classPaymentMethod)->getData();
@@ -495,16 +492,16 @@ class ShopCartController extends RootFrontController
 
         //Check plugin invalid
         if (!sc_config(session('shippingMethod'))) {
-            return redirect(sc_route('cart'))->with(['error' => 'Plugin shipping invalid!']);
+            // return redirect(sc_route('cart'))->with(['error' => 'Plugin shipping invalid!']);
         }
         if (!sc_config(session('paymentMethod'))) {
-            return redirect(sc_route('cart'))->with(['error' => 'Plugin payment invalid!']);
+            // return redirect(sc_route('cart'))->with(['error' => 'Plugin payment invalid!']);
         }
         //End check plugin invalid
         
         //Screen confirm only active if submit from screen checkout
         if (session('step', '') != 'checkout.confirm') {
-            return redirect(sc_route('checkout'));
+            // return redirect(sc_route('checkout'));
         }
 
         $objects = ShopOrderTotal::getObjectOrderTotal();
@@ -522,7 +519,11 @@ class ShopCartController extends RootFrontController
                 'dataTotal'          => $dataTotal,
                 'paymentMethodData'  => $paymentMethodData,
                 'shippingMethodData' => $shippingMethodData,
-                'shippingAddress'    => $shippingAddress,
+                'shippingAddress'    => $shippingAddress ?? [
+                    "first_name" => "hola",
+                    "last_name" => "hola",
+                    "phone" => "hola"
+                ],
                 'attributesGroup'    => ShopAttributeGroup::getListAll(),
                 'layout_page'        => 'shop_checkout_confirm',
                 'breadcrumbs'        => [
@@ -546,6 +547,10 @@ class ShopCartController extends RootFrontController
         $customer = auth()->user();
         $uID = $customer->id ?? 0;
 
+    
+
+     
+
         
 
         //if cart empty
@@ -558,6 +563,8 @@ class ShopCartController extends RootFrontController
         } //
 
         $data = request()->all();
+
+        
         
 
        
@@ -565,16 +572,19 @@ class ShopCartController extends RootFrontController
             return redirect(sc_route('cart'));
         } else {
             $dataTotal       = session('dataTotal') ?? [];
-            $shippingAddress = session('shippingAddress') ?? [];
+            $shippingAddress = session('shippingAddress') ?? $shippingAddress = auth()->user();;
             $paymentMethod   = session('paymentMethod') ?? '';
             $shippingMethod  = session('shippingMethod') ?? '';
             $address_process = session('address_process') ?? '';
             $storeCheckout   = session('storeCheckout') ?? '';
             $dataCheckout    = session('dataCheckout') ?? '';
             
+            
         }
+       
 
         foreach($dataCheckout as $card_detalle){
+            
             
            $datos = [
             'modalidad_de_compra' => $card_detalle->financiamiento,
@@ -600,6 +610,7 @@ class ShopCartController extends RootFrontController
         $dataOrder['modalidad_de_compra']        = $datos['modalidad_de_compra'];
         $dataOrder['fecha_primer_pago']        = $datos['fecha_primer_pago'];
         $dataOrder['customer_id']     = $uID;
+        $dataOrder['cedula']     = $customer->cedula;
         $dataOrder['subtotal']        = $subtotal;
         $dataOrder['shipping']        = $shipping;
         $dataOrder['discount']        = $discount;
@@ -654,6 +665,9 @@ class ShopCartController extends RootFrontController
         }
         if (!empty($shippingAddress['comment'])) {
             $dataOrder['comment']       = $shippingAddress['comment'];
+        }
+        if (!empty($shippingAddress['cedula'])) {
+            $dataOrder['cedula']       = $shippingAddress['cedula'];
         }
       
         

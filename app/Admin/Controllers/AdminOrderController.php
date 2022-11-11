@@ -78,8 +78,10 @@ class  AdminOrderController extends RootAdminController
         $listTh = [
             'email'          => '<i class="fas fa-envelope" aria-hidden="true" title="'.sc_language_render('order.email').'"></i>',
             'Cedula'          => 'Cedula',
-            'Estado'          => 'Estado',
             'Telefono'          => 'Telefono',
+            'Estado'          => 'Estado',
+            'Municipio'          => 'Municipio',
+            'Parroquia'          => 'Parroquia',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
             'status'         =>"Estatus",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
@@ -109,8 +111,8 @@ class  AdminOrderController extends RootAdminController
             'keyword'      => $keyword,
             'email'        => $email,
             'Cedula'        => $email,
-            'Estado'        => $email,
             'Telefono'        => $email,
+            'Estado'        => $email,
             'from_to'      => $from_to,
             'end_to'       => $end_to,
             'sort_order'   => $sort_order,
@@ -129,6 +131,8 @@ class  AdminOrderController extends RootAdminController
         }
 
         $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
      
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
@@ -143,12 +147,28 @@ class  AdminOrderController extends RootAdminController
 
             $cedula =[];
             $phone =[];
+            $nombremunicipos =[];
+            $nombreparroquias =[];
             $nombreEstado =[];
             foreach($colection as $key => $usu){
                 $cedula = $usu['cedula'];
                 $phone = $usu['phone'];
                 foreach($estado as $estados){
-                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}}
+                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}
+                         foreach($municipio as $municipos){
+                             if($municipos->codigomunicipio ==  $usu['cod_municipio']){
+                                 $nombremunicipos = $municipos->nombre;
+                             }
+                         }
+                         foreach($parroquia as $parroquias){
+                             if($parroquias->codigomunicipio == $usu['cod_municipio']){
+                                 $nombreparroquias = $parroquias->nombre;
+                                 
+                             }
+                            
+                         }
+                       
+                     }
 
 
             }
@@ -156,8 +176,10 @@ class  AdminOrderController extends RootAdminController
             $dataMap = [
                 'email'          => $row['email'] ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
-                'Estado'          => $nombreEstado ?? 'N/A',
-                'Telefono'          =>$phone ?? 'N/A',
+                'Telefono'          => $phone ?? 'N/A',
+                'Estado'          =>$nombreEstado ?? 'N/A',
+                'Municipio'          =>$nombremunicipos ?? 'N/A',
+                'Parroquia'          =>$nombreparroquias ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
             ];

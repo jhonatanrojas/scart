@@ -1,4 +1,34 @@
+<style>
+    .estilos_card{
+       /* border: solid  salmon 1px ; */
 
+        
+    }
+    .estilos_card img{
+
+    }
+
+    input[type=file]{
+    padding:10px;
+    background:#000d144b;
+    color: rgb(8, 5, 5);
+    border-radius: 10px;
+    }
+
+
+.cedula::after {
+  content: " <- Cedula";
+  color: rgb(10, 1, 1);
+}
+    .rif::after {
+  content: " <- Rif";
+  color: rgb(10, 1, 1);
+}
+    .carta::after {
+  content: " <- Contancia";
+  color: rgb(10, 1, 1);
+}
+</style>
 
 
 @extends($sc_templatePath.'.layout')
@@ -25,77 +55,50 @@
 
         <div class="col-12 col-md-8">
         
-            <div class="row m-auto">
+            <div class="row estilos_card p-3 m-auto text-center align-items-center justify-content-center">
             <form action="{{route('enviar_document')}}"  method="post" enctype="multipart/form-data">
            
                 @csrf
            
-                <div class="col-md-12">
-                    <div class="input-group">
-                        <label for="cedula" class="col-sm-12 col-form-label fa fa-list-alt ">Cedula</label>
-                        <input readonly type="text" id="cedula" name="cedula" value="{{ old('cedula',$documentos[0]['cedula'] ??'') }}" class="form-control image" placeholder="Adjuntar Cedula"  />
-                        <div class="input-group-append">
-                         <a data-input="cedula" data-preview="cedula"dat-working_dir="asadsada"    data-type="{{$id_cliente}}"  data-id="{{$id_cliente}}" class="btn btn-primary lfm">
-                           <i class="fa fa-image"></i>
-                         </a>
-                        </div>
-                    </div>
+                <div class="form-group col-md-12">
+               
+                    <label class="h6 text-primary"  for="forma_pago">Adjunta Cedula </label>
+                    <input value="" type="file" class="form-control-file cedula" id="cedula" name="cedula" required="">
                     @error('cedula')
                     <small style="color: red">{{$message}}</small>
                 @enderror
-                <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="cedula" class="img_holder">
-                    @if (old('cedula',$documentos[0]['cedula']??''))
-                    <img  src="{{ sc_file(old('cedula',$documentos[0]['cedula']??'')) }}">
-                    @endif
-                </div> 
-                </div>
+                      </div>
+                     
                    
-                       
-                <div class="col-md-12">
-                    <div class="input-group">
-                        <label for="rif" class="col-sm-12 col-form-label fa fa-list-alt ">Rif</label>
-                        <input readonly type="text" id="rif" name="rif" value="{{ old('rif',$documentos[0]['rif'] ??'') }}" class="form-control image" placeholder="Adjuntar Rif"  />
-                        <div class="input-group-append">
-                         <a data-input="rif" data-preview="rif" data-type="{{$id_cliente}}" class="btn btn-primary lfm">
-                           <i class="fa fa-image"></i>
-                         </a>
-                        </div>
-                    </div>
-                    @error('rif')
-                    <small style="color: red">{{$message}}</small>
-                @enderror
-                <div style="border: solid 1px rgba(78, 78, 78, 0.466" id="rif" class="img_holder">
-                    @if (old('rif',$documentos[0]['rif']??''))
-                    <img  src="{{ sc_file(old('rif',$documentos[0]['rif']??'')) }}">
-                    @endif
-                </div> 
-                </div>
+                  
+                    <div class="form-group col-md-12">
+               
+                        <label class="h6 text-primary" for="forma_pago">Adjunta  Rif</label>
+                        <input  value="" type="file" class="form-control-file rif" id="rif" name="rif" required="">
+                        @error('rif')
+                        <small style="color: red">{{$message}}</small>
+                    @enderror
+                          </div>
+       
+                     
+                          
                    
                   
     
          
-         
+                          <div class="form-group col-12  col-md-12  ">
+               
+                            <label class="h6 text-primary" for="forma_pago text-info">Constancia de  trabajo</label>
+                            <input value="" type="file" class="form-control-file carta" id="carta_trabajo" name="carta_trabajo" required="">
+                            @error('Constancia trabajo')
+                            <small style="color: red">{{$message}}</small>
+                        @enderror
+                              </div>
+
+                             
                    
-                       
-                <div class="col-md-12 ">
-                    <div class="input-group">
-                        <label for="image" class="col-sm-12  fa fa-list-alt   ">Constancia trabajo</label>
-                        <input readonly type="text" id="carta_trabajo" name="carta_trabajo" value="{{ old('carta_trabajo',$documentos[0]['carta_trabajo'] ??'') }}" class="form-control image" placeholder="adjuntar Constancia trabajo "  />
-                        <div class="input-group-append">
-                         <a data-input="carta_trabajo" data-preview="carta_trabajo" data-type="{{$id_cliente}}" class="btn btn-primary lfm">
-                           <i class="fa fa-image"></i> 
-                         </a>
-                        </div>
-                    </div>
-                    @error('carta_trabajo')
-                    <small style="color: red">{{$message}}</small>
-                @enderror
-                    <div style="border: solid 1px rgba(78, 78, 78, 0.466)" id="carta_trabajo" class="img_holder">
-                        @if (old('carta_trabajo',$documentos[0]['carta_trabajo']??''))
-                        <img src="{{ sc_file(old('carta_trabajo',$documentos[0]['carta_trabajo']??'')) }}">
-                        @endif
-                    </div>
-                </div>
+                          
+               
                   
     
 
