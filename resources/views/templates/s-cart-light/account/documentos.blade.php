@@ -73,7 +73,7 @@
                   
                     <div class="form-group col-md-12">
                
-                        <label class="h6 te" for="forma_pago">Adjunta  Rif</label>
+                        <label class="h6 text-primary" for="forma_pago">Adjunta  Rif</label>
                         <input  value="" type="file" class="form-control-file rif" id="rif" name="rif" required="">
                         @error('rif')
                         <small style="color: red">{{$message}}</small>
