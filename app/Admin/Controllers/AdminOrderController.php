@@ -347,7 +347,7 @@ class  AdminOrderController extends RootAdminController
             'first_name'      => 'required|max:100',
             'email'   => 'required',
             'status'          => 'required',
-     
+            'customer_id' => 'required'
     
         ];
         if (sc_config_admin('customer_lastname')) {
@@ -400,7 +400,7 @@ class  AdminOrderController extends RootAdminController
             'payment_method.required'  => sc_language_render('cart.validation.paymentMethod_required'),
         ];
 
-
+      $cliente=   AdminCustomer::getCustomerAdmin($data['customer_id']);
         $validator = Validator::make($data, $validate, $messages);
 
         if ($validator->fails()) {
@@ -412,6 +412,7 @@ class  AdminOrderController extends RootAdminController
         }
         //Create new order
         $dataCreate = [
+            'cedula' =>  $cliente->cedula,
             'customer_id'     => $data['customer_id'] ?? "",
             'first_name'      => $data['first_name'],
             'last_name'       => $data['last_name'] ?? '',
