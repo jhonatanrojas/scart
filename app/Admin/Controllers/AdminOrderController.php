@@ -221,7 +221,7 @@ class  AdminOrderController extends RootAdminController
 
 
         //menuRight
-        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_order.create') . '" class="btn  btn-success  btn-flat" title="New" id="button_create_new">
+        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_order.create') . '" class="btn  btn-success  btn-flat" title="Crear pedido" id="button_create_new">
                            <i class="fa fa-plus" title="'.sc_language_render('action.add').'"></i>
                            </a>';
         //=menuRight
@@ -272,7 +272,7 @@ class  AdminOrderController extends RootAdminController
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>'.sc_language_render('order.admin.search_email').':</label>
+                                <label>Buscar por Nombre/Cedula:</label>
                                 <div class="input-group">
                                     <input type="text" name="email" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('order.admin.search_email') . '" value="' . $email . '">
                                     <div class="input-group-append">

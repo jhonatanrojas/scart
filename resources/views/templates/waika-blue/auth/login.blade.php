@@ -37,10 +37,28 @@
                         {{ $errors->first('password') }}
                     </span>
                     @endif
+                    
             
                 </div>
+                <button type="submit" name="SubmitLogin" class=" button button-lg button-secondary w-100">{{ sc_language_render('front.login') }}</button>
 
-                <button type="submit" name="SubmitLogin" class="button button-lg button-secondary w-100">{{ sc_language_render('front.login') }}</button>
+               
+                {{-- <div class="mt-3">
+                    <ul class="list-inline list-social list-inline-sm d-flex">
+                     <li class="col">
+                        <a class="icon mdi mdi-facebook" href="https://www.facebook.com/SCart.Ecommerce/"></a>
+                    </li>
+                    <li class="col">
+                        <a class="icon mdi mdi-twitter" href="https://twitter.com/ecommercescart"></a></li>
+                    <li class="col">
+                        <a class="icon mdi mdi-instagram" href="#"></a>
+                    </li>
+                    <li class="col">
+                        <a class="icon mdi mdi-youtube-play" href="https://www.youtube.com/channel/UCR8kitefby3N6KvvawQVqdg/videos">
+                        </a>
+                    </li>
+                                            </ul>
+                  </div> --}}
                 @if (!empty(sc_config('LoginSocialite')))
                     <ul>
                     <li class="rd-dropdown-item">
