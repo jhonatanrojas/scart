@@ -424,10 +424,10 @@
                       <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.discount') }}">{{$element['value'] }}</a></td></tr>
                     @endif
                     @if ($element['code'] =='other_fee')
-                      <tr><td>{!! $element['title'] !!}:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ config('cart.process.other_fee.title') }}">{{$element['value'] }}</a></td></tr>
+                      <tr><td>Otra tarifa:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ config('cart.process.other_fee.title') }}">{{$element['value'] }}</a></td></tr>
                     @endif
                      @if ($element['code'] =='total')
-                      <tr style="background:#f5f3f3;font-weight: bold;"><td>{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
+                      <tr style="background:#f5f3f3;font-weight: bold;"><td>Total:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
                     @endif
 
                     @if ($element['code'] =='received')
