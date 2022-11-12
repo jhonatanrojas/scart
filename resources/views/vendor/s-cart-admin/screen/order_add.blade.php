@@ -416,37 +416,7 @@ function addInfo(){
 }
 
 
-function selectProduct(element){
-    console.log(element)
-        node = element.closest('tr');
-        var id = node.find('option:selected').eq(0).val();
-        if(!id){
-            node.find('.add_sku').val('');
-            node.find('.add_qty').eq(0).val('');
-            node.find('.add_price').eq(0).val('');
-            node.find('.add_attr').html('');
-            node.find('.add_tax').html('');
-        }else{
-            $.ajax({
-                url : '{{ sc_route_admin('admin_order.product_info') }}',
-                type : "get",
-                dateType:"application/json; charset=utf-8",
-                data : {
-                     id : id,
-                     order_id : '',
-                },
-            beforeSend: function(){
-                $('#loading').show();
-            },
-            success: function(returnedData){
-                console.log(returnedData)
-               
-                $('#loading').hide();
-                }
-            });
-        }
 
-    }
 
 </script>
 @endpush
