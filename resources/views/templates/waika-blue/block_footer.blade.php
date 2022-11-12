@@ -1,5 +1,6 @@
       <!-- Page Footer-->
       <footer class="section footer-classic">
+        
         <div class="footer-classic-body section-lg bg-brown-2">
           <div class="container">
             <div class="row row-40 row-md-50 justify-content-xl-between">

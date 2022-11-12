@@ -12,7 +12,7 @@
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
                     <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="/images/logo3.png" alt="" width="150" height="60"/>
-                      <img class="brand-logo-light" src="/images/logo3.png" alt="" width="105" height="44"/></a>
+                      <img class="brand-logo-light" src="/images/logo1.jpg" alt="" width="105" height="44"/></a>
                   </div>
                 </div>
                 <div class="rd-navbar-nav-wrap">
