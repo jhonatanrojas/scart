@@ -31,12 +31,14 @@
                             <div class="form-group row {{ $errors->has('customer_id') ? ' text-red' : '' }}">
                                 <label for="customer_id" class="col-sm-2 asterisk col-form-label">{{ sc_language_render('order.admin.select_customer') }}</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control customer_id " style="width: 100%;" name="customer_id">
-                                        <option value="">{{ sc_language_render('order.admin.select_customer') }}</option>
+                                    <select class="form-control customer_id select2" style="width: 100%;" name="customer_id">
+                                        <option value="">Buscar por nombre o cedula </option>
                                         @foreach ($users as $k => $v)
-                                            <option value="{{ $k }}" {{ (old('customer_id') ==$k) ? 'selected':'' }}>{{ $v->name.'<'.$v->email.'>' }}</option>
+                                            <option value="{{ $k }}" {{ (old('customer_id') ==$k) ? 'selected':'' }}>{{ $v->name . $v->cedula}}</option>
                                         @endforeach
                                     </select>
+
+                                    
                                         @if ($errors->has('customer_id'))
                                             <span class="text-sm">
                                                 {{ $errors->first('customer_id') }}
@@ -58,7 +60,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                                 </div>
-                                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control first_name" placeholder="" />
+                                                <input readonly type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="form-control first_name" placeholder="" />
                                             </div>
                                                 @if ($errors->has('first_name'))
                                                     <span class="text-sm">
@@ -79,7 +81,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                                 </div>
-                                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control last_name" placeholder="" />
+                                                <input readonly type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="form-control last_name" placeholder="" />
                                             </div>
                                                 @if ($errors->has('last_name'))
                                                     <span class="text-sm">
@@ -123,7 +125,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-phone fa-fw"></i></span>
                                                 </div>
-                                                <input style="width: 150px" type="text" id="phone" name="phone" value="{{ old('phone') }}" class="form-control phone" placeholder="Input Phone" />
+                                                <input readonly style="width: 150px" type="text" id="phone" name="phone" value="{{ old('phone') }}" class="form-control phone" placeholder="Input Phone" />
                                             </div>
                                                 @if ($errors->has('phone'))
                                                     <span class="text-sm">
@@ -412,6 +414,39 @@ function addInfo(){
        }
 
 }
+
+
+function selectProduct(element){
+    console.log(element)
+        node = element.closest('tr');
+        var id = node.find('option:selected').eq(0).val();
+        if(!id){
+            node.find('.add_sku').val('');
+            node.find('.add_qty').eq(0).val('');
+            node.find('.add_price').eq(0).val('');
+            node.find('.add_attr').html('');
+            node.find('.add_tax').html('');
+        }else{
+            $.ajax({
+                url : '{{ sc_route_admin('admin_order.product_info') }}',
+                type : "get",
+                dateType:"application/json; charset=utf-8",
+                data : {
+                     id : id,
+                     order_id : '',
+                },
+            beforeSend: function(){
+                $('#loading').show();
+            },
+            success: function(returnedData){
+                console.log(returnedData)
+               
+                $('#loading').hide();
+                }
+            });
+        }
+
+    }
 
 </script>
 @endpush

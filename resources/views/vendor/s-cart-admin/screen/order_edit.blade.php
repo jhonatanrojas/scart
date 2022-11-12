@@ -495,7 +495,7 @@
             </div>
 
 
-            <div class="card collapsed-card"">
+            <div class="card collapsed-card">
               <div class="card-header border-transparent">
                 <h3 class="card-title">{{ sc_language_render('order.admin.order_history') }}</h3>
                 <div class="order-info">
