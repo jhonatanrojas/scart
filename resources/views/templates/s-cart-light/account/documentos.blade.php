@@ -1,32 +1,55 @@
 <style>
-    .estilos_card{
-       /* border: solid  salmon 1px ; */
+.estilos_card{
+  background-image: url('/images/fondo_documentos.png');
+  background-repeat: no-repeat;
+  background-origin: border-box
+ border: solid 1px red;
 
-        
-    }
-    .estilos_card img{
+   
+}
 
-    }
+@media only screen and (max-width: 600px) {
+  .estilos_card{
 
-    input[type=file]{
-    padding:10px;
-    background:#000d144b;
-    color: rgb(8, 5, 5);
-    border-radius: 10px;
-    }
+    background-image: none;
+
+}
+}
+@media only screen and (max-width: 820px) {
+  .estilos_card{
+
+    background-image: none;
+
+}
+}
+@media only screen and (max-width: 1024px) {
+  .estilos_card{
+    background-image: none;
+
+
+}
+}
+
+
+input[type=file]{
+  padding:10px;
+  background:#000d144b;
+  color: rgb(8, 5, 5);
+  border-radius: 10px;
+  }
 
 
 .cedula::after {
-  content: " <- Cedula";
-  color: rgb(10, 1, 1);
+content: " <- Cedula";
+color: rgb(10, 1, 1);
 }
-    .rif::after {
-  content: " <- Rif";
-  color: rgb(10, 1, 1);
+  .rif::after {
+content: " <- Rif";
+color: rgb(10, 1, 1);
 }
-    .carta::after {
-  content: " <- Contancia";
-  color: rgb(10, 1, 1);
+  .carta::after {
+content: " <- Contancia";
+color: rgb(10, 1, 1);
 }
 </style>
 
@@ -39,15 +62,7 @@
        
 
       <div class="row ">
-        <div class="col-12 col-md-12">
-            <div class=" text-center ">
-                @if (isset($mensaje) && $mensaje != "")
-                <div class="alert alert-danger">
-                   <span class="h6"> {{ $mensaje }} </span>
-                </div>
-                @endif
-            </div>
-        </div>
+        
     
         <div class="col-12  col-md-4">
           @include($sc_templatePath.'.account.nav_customer')
@@ -116,6 +131,16 @@
            
             </form>
         </div>
+
+        <div class="col-12 col-md-12">
+          <div class=" text-center ">
+              @if (isset($mensaje) && $mensaje != "")
+              <div class="alert alert-danger">
+                 <span class="h6"> {{ $mensaje }} </span>
+              </div>
+              @endif
+          </div>
+      </div>
           
         </div>
        

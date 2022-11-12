@@ -107,7 +107,7 @@ class DocumentosController extends Controller
             $saveFile->save();
 
             if($saveFile){
-                return redirect('/adjuntar_document')->with('success', 'Datos enviado con exito');
+                return redirect('/')->with('success', 'Datos enviado con exito');
              }
             
 
