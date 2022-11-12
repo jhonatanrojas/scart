@@ -27,7 +27,8 @@
 
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/fonts.css')}}">
-    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}">
+    {{-- <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}"> --}}
+    <link rel="stylesheet" href="/css/style.css">
     <style>
         {!! sc_store_css() !!}
     </style>

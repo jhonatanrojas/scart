@@ -10,7 +10,7 @@ $layout_page = shop_profile
 @extends($sc_templatePath.'.account.layout')
 
 @section('block_main_profile')
-<h class="title-store text-center"></h4>
+<h4 class="title-store text-center"></h4>
   <div class="row">
     <div class="col-sm-12">
       <div class="box collapsed-box">
