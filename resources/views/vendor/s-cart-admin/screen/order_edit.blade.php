@@ -739,6 +739,8 @@ function gen_table(fecha_p=false){
                   fechaInicio = new Date(fechaInicio)
 
                 }else{
+
+                  alert(returnedData.details[0].fecha_primer_pago)
                   $("#c_fecha_inicial").val(returnedData.details[0].fecha_primer_pago)
                 fechaInicio = new Date(returnedData.details[0].fecha_primer_pago)
 
