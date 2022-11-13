@@ -11,8 +11,8 @@
                   <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
-                    <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="/images/logo3.png" alt="" width="150" height="60"/>
-                      <img class="brand-logo-light" src="/images/logo1.jpg" alt="" width="105" height="44"/></a>
+                    <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="{{ sc_route('home') }}"><img class="brand-logo-dark rounded-circle" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="150" height="60"/>
+                      <img class="brand-logo-light" src="/{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="105" height="44"/></a>
                   </div>
                 </div>
                 <div class="rd-navbar-nav-wrap">
