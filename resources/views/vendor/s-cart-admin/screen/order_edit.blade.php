@@ -146,7 +146,7 @@
                       <td><a href="#" class="updateStatus" data-name="fecha_primer_pago" data-type="date" data-source ="{{ json_encode($fecha_primer_pago) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($convenio->fecha_pagos))
                         {{$convenio->fecha_pagos}}
                           
-                      @endif" data-url="{{ route("convenio") }}" data-title="fecha de pago">@if (!empty($convenio->fecha_pagos))
+                      @endif" data-url="{{ route("admin_order.update") }}" data-title="fecha de pago">@if (!empty($convenio->fecha_pagos))
                         {{$convenio->fecha_pagos}}
                           
                       @endif</a> </td>
