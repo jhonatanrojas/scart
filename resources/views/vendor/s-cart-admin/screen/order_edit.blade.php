@@ -143,11 +143,11 @@
                     <tr>
                       @if (!$order->modalidad_de_compra == 0)
                       <td>Fecha  primer pago</td>
-                      <td><a href="#" class="updateStatus" data-name="fecha_primer_pago" data-type="date" data-source ="{{ json_encode($fecha_primer_pago) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($convenio->fecha_pagos))
-                        {{$convenio->fecha_pagos}}
+                      <td><a href="#" class="updateStatus" data-name="fecha_primer_pago" data-type="date" data-source ="{{ json_encode($order->fecha_primer_pago) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_primer_pago))
+                        {{$order->fecha_primer_pago}}
                           
-                      @endif" data-url="{{ route("admin_order.update") }}" data-title="fecha de pago">@if (!empty($convenio->fecha_pagos))
-                        {{$convenio->fecha_pagos}}
+                      @endif" data-url="{{ route("admin_order.update") }}" data-title="fecha de pago">@if (!empty($order->fecha_primer_pago))
+                        {{$order->fecha_primer_pago}}
                           
                       @endif</a> </td>
                       @endif
