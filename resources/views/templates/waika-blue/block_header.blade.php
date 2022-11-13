@@ -8,7 +8,7 @@
                 <!-- RD Navbar Panel-->
                 <div class="rd-navbar-panel">
                   <!-- RD Navbar Toggle-->
-                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                  <button value="search" type="button" class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
                     <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="/images/logo3.png" alt="" width="150" height="60"/>
