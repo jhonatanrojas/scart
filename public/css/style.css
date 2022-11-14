@@ -11166,7 +11166,8 @@ html.tablet .ui-to-top {
 
 .rd-navbar-static .rd-menu::after {
 	top: 0;
-	background: #ffffff;
+	background: #7b7b7b;
+	
 }
 
 .rd-navbar-static .rd-navbar-dropdown {
