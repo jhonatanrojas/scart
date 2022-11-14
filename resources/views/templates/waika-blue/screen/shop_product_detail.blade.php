@@ -351,18 +351,18 @@ table tfoot {
                  
                   
 
-                  <div  class="form-check  radioContenedor2 col-12 col-md-5 
+                  <div  class="form-check  radioContenedor2 col-12 col-md-6 
 
                   ">
                   
                     <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label id="finansiamiento" class="btn btn-info" for="danger_outlined">Arquieralo financiado</label>
+                    <label id="finansiamiento" class="btn btn-primary" for="danger_outlined"><small style="font-size: 12px">Adquiéralo Financiado</small></label>
                    
                    
                   </div>
-                  <div class="form-check  radioContenedor2 col-12 col-md-5">
+                  <div class="form-check  radioContenedor2 col-12 col-md-6">
                      <input checked  value="active" type="checkbox" class="btn-check" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
-                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2">De contado</label>
+                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2"><small style="font-size: 12px" >De contado</small></label>
                      
        
                    
@@ -629,7 +629,6 @@ table tfoot {
                         <thead>
                           <tr>
                             <td>NRO</td>
-                            <td>INICIAL</td>
                             <td id="cuotass">CUOTAS</td>
                             <td>DEUDA</td>
                             <td>FECHA</td>
@@ -641,7 +640,6 @@ table tfoot {
                           <tr>
                               <td>TOTAL</td>
                               <td id="t1"></td>
-                              <td id="t2"></td>
                               <td id="t3"></td>
                               <td id="t4"></td>
                               
@@ -773,9 +771,8 @@ table tfoot {
                           
                           <tr>
                               <td>${i}</td>
-                              <td>${i2}$</td>
                               <td>${d2}$</td>
-                              <td>${d3}$</td>
+                              <td>${cuotaTotal}$</td>
                               <td>${texto}</td>
                           </tr>`;
               }
@@ -785,7 +782,6 @@ table tfoot {
               t_p=r*n2;
               d5=t_p.toFixed(2);
               document.getElementById("t1").innerHTML=d4;
-              document.getElementById("t2").innerHTML= "$"+d2  ;
               document.getElementById("t3").innerHTML= "$"+montoTotal ;        
               document.getElementById("t4").innerHTML= texto ;       
                 
@@ -806,7 +802,7 @@ table tfoot {
           const no = document.getElementById("danger_outlined");
           
           var stylies = document.getElementById("descotado")
-          stylies.style.backgroundColor= "#4169e0e6";
+          stylies.style.backgroundColor= "#007bff";
           stylies.style.color = "#fff" ;
           ye.addEventListener("click" ,validachecke1);
           no.addEventListener("click" ,validachecke2);
@@ -821,7 +817,7 @@ table tfoot {
           
               let finansiamiento = document.getElementById("finansiamiento");
               finansiamiento.style.backgroundColor= "";
-              finansiamiento.style.color = "#dc3545";
+              finansiamiento.style.color = "#fff";
           
           }
           };
@@ -833,7 +829,7 @@ table tfoot {
               finansiamiento.style.color = "#fff";
               finansiamiento.style.backgroundColor= "#4169e0e6";
               var stylies = document.getElementById("descotado")
-              stylies.style.backgroundColor= "";
+              stylies.style.backgroundColor= "#014085";
               stylies.style.color = "white" ;
             
           

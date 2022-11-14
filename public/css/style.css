@@ -5282,14 +5282,14 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 
 .btn-primary, .btn-primary:active, .btn-primary:focus {
 	color: #ffffff;
-	background: #038bb4c4;
+	background: #007bffb9;
 	border-color: #038bb4c4;
 }
 
 .btn-primary:hover {
 	color: #ffffff;
-	background: #000000;
-	border-color: #000000;
+	background: #007bffa9;
+	
 }
 
 /*
