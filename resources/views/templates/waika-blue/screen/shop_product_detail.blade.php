@@ -356,7 +356,7 @@ table tfoot {
                   ">
                   
                     <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label id="finansiamiento" class="btn btn-primary" for="danger_outlined"><small style="font-size: 12px">Aquieralo Financiado</small></label>
+                    <label id="finansiamiento" class="btn btn-primary" for="danger_outlined"><small style="font-size: 12px">Adquiéralo Financiado</small></label>
                    
                    
                   </div>
