@@ -15,10 +15,57 @@ $layout_page = shop_product_detail
 
 
   .modal .modal-dialog{
-    width: 80%;
-    /* border: solid 1px red */
+    width: 100%;
+    margin-top: 20px;
+    padding: 5px;
+
   }
-  /* .modal-lg { max-width: 80%; } */
+
+  table{
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  
+}
+.financiando{
+  flex-direction: row-reverse;
+  display: flex;
+  
+}
+  @media screen and (min-width: 375px) {
+    .modal .modal-dialog{
+     margin-top: 5px; 
+
+  }
+
+  table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.financiando{
+  flex-direction: column;
+  text-align: center;
+}
+}
+  @media screen and (min-width: 360px) {
+    .modal .modal-dialog{
+     margin-top: 5px; 
+
+  }
+
+  table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.financiando{
+  flex-direction: column;
+  text-align: center;
+}
+}
 
 
   .radioContenedor2 #descotado:hover{
@@ -116,17 +163,14 @@ $layout_page = shop_product_detail
   width: 100%;
 }
 
-table {
-  border: 2px solid royalblue;
+/* table {
   border-collapse: collapse;
   border-radius: 4px;
   width: 100%;
-  text-align: center;
   font-family: inherit;
   font-size: 0.9em;
-  padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
+} */
 
 table thead tr {
   background: royalblue;
@@ -170,16 +214,16 @@ table tfoot {
   position: relative;
   cursor: pointer;
   user-select: none;
-  padding-left: 30px;
-  margin: 10px;
+  
+ 
 }
 .radioContenedor2 {
   display: inline-block;
   position: relative;
   cursor: pointer;
   user-select: none;
-  padding-left: 30px;
-  margin: 10px;
+  
+ 
 }
 
 .radioContenedor input {
@@ -227,7 +271,7 @@ table tfoot {
      
         <div class="container">
           
-          <div class="row row-30">
+          <div class="row ">
            
             <div class="col-lg-6">
               <div class="slick-vertical slick-product">
@@ -303,20 +347,22 @@ table tfoot {
                 {{--// Show price --}}
 
                 <hr class="hr-gray-100">
-                <div class="d-flex">
+                <div class="row  text-center align-items-center">
                  
                   
 
-                  <div  class="form-check d-flex  radioContenedor2 ">
+                  <div  class="form-check  radioContenedor2 col-12 col-md-5 
+
+                  ">
                   
                     <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label style="font-style: 1em; " id="finansiamiento" class="btn btn-outline-primary" for="danger_outlined">Adquiéralo financiando</label>
+                    <label id="finansiamiento" class="btn btn-info" for="danger_outlined">Arquieralo financiado</label>
                    
                    
                   </div>
-                  <div class="form-check  radioContenedor2 ">
-                     <input checked  value="active" type="checkbox" class="btn-check button-zakaria" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
-                    <label id="descotado" class="  btn btn-outline-primary" for="flexRadioDefault2">De contado</label>
+                  <div class="form-check  radioContenedor2 col-12 col-md-5">
+                     <input checked  value="active" type="checkbox" class="btn-check" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
+                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2">De contado</label>
                      
        
                    
@@ -500,23 +546,23 @@ table tfoot {
         </div>
       </section>
       @endif
-      <div class="modal fade mt-3" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+      <div class="modal  mt-5" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog   modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
              
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-0">
               <form action="{{ sc_route('cart.add') }}" method="POST">
                 <div id="w-100">
                    {{ csrf_field() }}
                   <div class="header">
-                    <h5 class="text-center">Calcular financiamiento</h5>
+                    <h5 class="text-center p-0">Calcular financiamiento</h5>
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
-                    <div class="">
+                    <div class="p-0 mt-0 m-0">
                       <label for="monto">Monto: </label>
                       <input  readonly value="{{$product->price}}" class="form-control   " type="text" name="monto" id="monto" placeholder="monto" 
                        >
@@ -575,40 +621,45 @@ table tfoot {
                 
                     <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
+
+                  <div style="overflow-x:auto;" class="table-1">
+                    <table class=" table"  >
+                    
+                      <tbody id="tab">
+                        <thead>
+                          <tr>
+                            <td>NRO</td>
+                            <td>INICIAL</td>
+                            <td id="cuotass">CUOTAS</td>
+                            <td>DEUDA</td>
+                            <td>FECHA</td>
+                        </tr>
+                          
+                      </thead>
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <td>TOTAL</td>
+                              <td id="t1"></td>
+                              <td id="t2"></td>
+                              <td id="t3"></td>
+                              <td id="t4"></td>
+                              
+                          </tr>
+                      </tfoot>
+                  </table>
+                 
+                  </div>
                 </div>
              
               
-              <table class="tab">
-                
-                <tbody id="tab">
-                  <thead>
-                    <tr>
-                      <td>NRO</td>
-                      <td>INICIAL</td>
-                      <td id="cuotass">CUOTAS</td>
-                      <td>DEUDA</td>
-                      <td>FECHA</td>
-                  </tr>
-                    
-                </thead>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>TOTAL</td>
-                        <td id="t1"></td>
-                        <td id="t2"></td>
-                        <td id="t3"></td>
-                        <td id="t4"></td>
-                        
-                    </tr>
-                </tfoot>
-            </table>
+             
                     </div>
-                    <div class="modal-footer">
+                    
+                    <div class="modal-footer mb-4">
                       <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                       <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">continuar</button>
                     </div>
-               
             </div>
             
           </div><!-- /.modal-content -->
@@ -783,7 +834,7 @@ table tfoot {
               finansiamiento.style.backgroundColor= "#4169e0e6";
               var stylies = document.getElementById("descotado")
               stylies.style.backgroundColor= "";
-              stylies.style.color = "#dc3545" ;
+              stylies.style.color = "white" ;
             
           
           }
