@@ -11135,7 +11135,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-static .rd-nav-link:hover {
-	color: red;
+	color: black;
 }
 
 .rd-navbar-static .rd-menu {
@@ -11218,7 +11218,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-static .rd-dropdown-link {
-	color: #151515;
+	color: #ffffff;
 }
 
 .rd-navbar-static .rd-dropdown-link:hover {
@@ -11233,7 +11233,7 @@ html.tablet .ui-to-top {
 	letter-spacing: .1em;
 	text-transform: uppercase;
 	font-family: "Roboto Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	color: #151515;
+	color: #ffffff;
 	transition: all .25s ease-in-out;
 }
 
@@ -12391,7 +12391,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-fixed .rd-navbar-nav-wrap {
-	color: red;
+	color: #038bb4c4;
 	background: #777777;
 	border: 1px solid #d7d7d7;
 	box-shadow: 0 0 5px 0 rgba(1, 3, 4, 0.19);
@@ -12625,7 +12625,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .contacts-modern a:hover {
-	color: red;
+	color: #038bb4c4;
 }
 
 .contacts-modern li + li {
@@ -13151,7 +13151,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-corporate.rd-navbar-static .rd-nav-link:hover {
-	color: red;
+	color: #038bb4c4;
 }
 
 .rd-navbar-corporate.rd-navbar-static.rd-navbar--is-stuck .rd-navbar-main-outer, .rd-navbar-corporate.rd-navbar-static.rd-navbar--is-clone .rd-navbar-main-outer {
