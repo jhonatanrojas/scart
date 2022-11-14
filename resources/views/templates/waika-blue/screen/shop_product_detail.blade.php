@@ -36,14 +36,14 @@ $layout_page = shop_product_detail
   display: flex;
   
 }
-  @media screen and (min-width: 375px) {
+  @media screen and (max-width: 375px) {
     .modal .modal-dialog{
      margin-top: 5px; 
 
   }
 
   .table-1{
-  width: 340px;
+  width: 100%;
  
 }
 
@@ -58,14 +58,14 @@ $layout_page = shop_product_detail
   text-align: center;
 }
 }
-  @media screen and (min-width: 360px) {
+  @media screen and (max-width: 360px) {
     .modal .modal-dialog{
      margin-top: 5px; 
 
   }
 
   .table-1{
-  width: auto;
+    width: 100%;
  
 }
 
@@ -79,6 +79,15 @@ $layout_page = shop_product_detail
   flex-direction: column;
   text-align: center;
 }
+}
+  @media screen and (min-width: 314px) {
+  .table-1{
+    width:80%;
+ 
+}
+
+
+
 }
 
 
