@@ -16,6 +16,15 @@
     <meta property="og:title" content="{{ $title??sc_store('title') }}" />
     <meta property="og:description" content="{{ $description??sc_store('description') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RHXF116X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-21RHXF116X');
+</script>
 
     <!-- css default for item s-cart -->
     @include($sc_templatePath.'.common.css')
