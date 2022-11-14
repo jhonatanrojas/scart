@@ -27,6 +27,10 @@ $layout_page = shop_product_detail
   width: 100%;
   
 }
+.table-1{
+  width: 707px;
+  margin: auto;
+}
 .financiando{
   flex-direction: row-reverse;
   display: flex;
@@ -37,6 +41,11 @@ $layout_page = shop_product_detail
      margin-top: 5px; 
 
   }
+
+  .table-1{
+  width: 340px;
+ 
+}
 
   table {
   border-collapse: collapse;
@@ -54,6 +63,11 @@ $layout_page = shop_product_detail
      margin-top: 5px; 
 
   }
+
+  .table-1{
+  width: auto;
+ 
+}
 
   table {
   border-collapse: collapse;
