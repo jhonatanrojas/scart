@@ -12406,12 +12406,12 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-fixed .rd-nav-link {
-	color:white;
+	color:black;
 }
 
 .rd-navbar-fixed .rd-megamenu-list > li > a,
 .rd-navbar-fixed .rd-navbar-dropdown > li > a {
-	color: white;
+	color: black;
 }
 
 .rd-navbar-fixed .rd-megamenu-list > li:hover > a,
