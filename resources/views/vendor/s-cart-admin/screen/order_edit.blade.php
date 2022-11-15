@@ -580,10 +580,10 @@
 
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
-              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
+              <td><input readonly onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value=""></td>
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
 
-              <td><input type="number" disabled class="add_total form-control" value="0"></td>
+              <td><input  type="number" disabled class="add_total form-control" value="0"></td>
               <td><button onClick="$(this).parent().parent().remove();" class="btn btn-danger btn-md btn-flat" data-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></button></td>
             </tr>
           <tr>
@@ -605,7 +605,7 @@
             <form action="{{route('post_status_pago')}}"  method="post">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Modificar el estatus</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -713,6 +713,7 @@ function gen_table(fecha_p=false){
                 $('#loading').show();
             },
             success: function(returnedData){
+
               console.log(returnedData)
               $("#modal_convenio").modal('show')
               $('#loading').hide();
@@ -882,7 +883,7 @@ function gen_table(fecha_p=false){
           }else{
               alert("Falta ingresar un Número");
           }
-    console.log(returnedData)
+
 
                 $('#loading').hide();
                 }
@@ -892,11 +893,17 @@ function gen_table(fecha_p=false){
         
 
       }
+
+
+  var presioProducto = ""
 function update_total(e){
     node = e.closest('tr');
     var qty = node.find('.add_qty').eq(0).val();
-    var price = node.find('.add_price').eq(0).val();
-    node.find('.add_total').eq(0).val(qty*price);
+    var price = node.find('.add_price').eq(0).val(presioProducto);
+    node.find('.add_total').eq(0).val((qty*presioProducto));
+
+   
+    
 }
 
 
@@ -906,8 +913,9 @@ function update_total(e){
         var id = node.find('option:selected').eq(0).val();
         if(!id){
             node.find('.add_sku').val('');
-            node.find('.add_qty').eq(0).val('');
-            node.find('.add_price').eq(0).val('');
+            node.find('.add_qty').eq(0).val(1);
+            node.find('.add_price').eq(0).val('')
+            
             node.find('.add_attr').html('');
             node.find('.add_tax').html('');
         }else{
@@ -923,13 +931,18 @@ function update_total(e){
                 $('#loading').show();
             },
             success: function(returnedData){
+  
+
+                console.log(returnedData)
+                 
                 node.find('.add_sku').val(returnedData.sku);
-                node.find('.add_qty').eq(0).val(1);
+                node.find('.add_qty').eq(0).val(0);
                 node.find('.add_price').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                 node.find('.add_tax').eq(0).html(returnedData.tax);
                 $('#loading').hide();
+                presioProducto =returnedData.price
                 }
             });
         }
