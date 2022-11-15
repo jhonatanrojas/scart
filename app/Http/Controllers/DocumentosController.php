@@ -22,10 +22,13 @@ class DocumentosController extends Controller
   
         if (Auth::check()) {
             $customer = auth()->user();
-            $id = $customer['id'];
 
-        $documento = SC__documento::where('id_usuario',$id)->get();
-        if(!isset($documento[0]['id_usuario']) == $id){
+            
+
+            $id = $customer['id']; 
+            $documento = SC__documento::where('id_usuario',$id)->get();
+
+            if(!isset($documento[0]['id_usuario']) == $id){
            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
            
         }else $dato = "";
@@ -36,6 +39,7 @@ class DocumentosController extends Controller
                     'title'       => 'adjuntar documento',
                     'documentos'       => $documento,
                     'id_cliente' => $id,
+                    'cart'               => session('dataCheckout'),
                     'customer'    => $customer,
                     'mensaje' => $dato,
                     'countries'   => ShopCountry::getCodeAll(),
@@ -62,7 +66,7 @@ class DocumentosController extends Controller
 
         $customer = auth()->user();
             $id = $customer['id'];
-
+            $Financiamiento  = session('dataCheckout');
 
         $request->validate([
             'cedula' => 'required',
@@ -102,12 +106,18 @@ class DocumentosController extends Controller
             $saveFile->rif = $rifs;
             $saveFile->carta_trabajo = $path_archivo;
 
-          
-         
-            $saveFile->save();
-
-            if($saveFile){
+            if($saveFile->save()){
+               
+            if($Financiamiento[0]->financiamiento == "1"){
+                return redirect(sc_route('checkout.confirm'))->with('success', 'Datos enviado con exito..  Continuar con la evaluación y poder darle respuesta en 48 horas');
+            }else{
                 return redirect('/')->with('success', 'Datos enviado con exito');
+
+            }
+                
+             }else{
+                return redirect('/')->with('error', 'error a enviar los datos');
+
              }
             
 

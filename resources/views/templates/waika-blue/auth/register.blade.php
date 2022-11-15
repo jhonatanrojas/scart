@@ -469,6 +469,30 @@
 {{-- //Custom fields --}}
 
 
+                    @if (sc_config('customer_nos_conocio'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('nos_conocio') ? ' has-error' : '' }}">
+                            <select required  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('nos_conocio'))?"input-error":"" }}"
+                            name="nos_conocio" id="nos_conocio">
+
+                            <option value="">Por donde no Conoció</option>
+                            <option value="Facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
+                            <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
+                            <option value="Twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
+                            <option value="Amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
+                            
+                        
+                            </select>
+                            @if ($errors->has('nos_conocio'))
+                            <span class="help-block">
+                                {{ $errors->first('nos_conocio') }}
+                            </span>
+                            @endif
+                        </div>
+                    
+                    </div>
+                    @endif
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <input type="password"

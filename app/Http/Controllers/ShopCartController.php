@@ -510,6 +510,18 @@ class ShopCartController extends RootFrontController
         //Set session dataTotal
         session(['dataTotal' => $dataTotal]);
 
+        $id = $shippingAddress['id'];
+        
+        $documento = SC__documento::where('id_usuario', $id)->get();
+
+    if(!isset($documento[0]['id_usuario']) == $id){
+       $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
+    }else{
+        $dato = "";
+    }
+
+    
+
         sc_check_view($this->templatePath . '.screen.shop_checkout_confirm');
         return view(
             $this->templatePath . '.screen.shop_checkout_confirm',
@@ -517,6 +529,7 @@ class ShopCartController extends RootFrontController
                 'title'              => sc_language_render('checkout.page_title'),
                 'cart'               => session('dataCheckout'),
                 'dataTotal'          => $dataTotal,
+                'mensaje'          => $dato,
                 'paymentMethodData'  => $paymentMethodData,
                 'shippingMethodData' => $shippingMethodData,
                 'shippingAddress'    => $shippingAddress ?? [
