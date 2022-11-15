@@ -9,6 +9,7 @@ use App\Models\ModalidadPago;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\SC__documento;
+use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -236,6 +237,9 @@ class AdminCustomerController extends RootAdminController
         if (!$customer) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
+
+        $respuesta = SC_referencia_personal::where('id_usuario' , $id)->get();
+         
         $estado = Estado::get();
         $municipio = Municipio::get();
         $parroquia = Parroquia::get();
@@ -246,6 +250,7 @@ class AdminCustomerController extends RootAdminController
             'estado' => $estado,
             'municipio' => $municipio,
             'parroquia' => $parroquia,
+            'referencia' => $respuesta,
             'icon' => 'fa fa-edit',
             'customer' => $customer,
             'countries' => (new ShopCountry)->getCodeAll(),
@@ -253,9 +258,51 @@ class AdminCustomerController extends RootAdminController
             'url_action' => sc_route_admin('admin_customer.edit', ['id' => $customer['id']]),
             'customFields'         => (new ShopCustomField)->getCustomField($type = 'customer'),
         ];
+
+       
+
         return view($this->templatePathAdmin.'screen.customer_edit')
             ->with($data);
     }
+
+    public function ref_personales(Request $request){
+        $datos = $request->all();
+        $referencia = new SC_referencia_personal(); 
+        $referencia->nombre_ref = $datos['nombre_ref'];
+        $referencia->apellido_ref = $datos['apellido_ref'];
+        $referencia->telefono = $datos['telefono_ref'];
+        $referencia->id_usuario = $datos['id_usuario'];
+        $referencia->parentesco = $datos['parentesco'];
+
+        if($referencia->save()){
+            return json_encode(['respuesta' => $referencia]);
+
+        }else{
+            return json_encode(['error' => 'erro en la consulta']);
+
+        }
+
+
+
+       
+
+    }
+
+    public function delete_ref(Request $request){
+
+
+        $itemDetail = (new SC_referencia_personal)->where('id', $request->id)->first();
+
+        $itemDetail->delete();
+
+        
+
+         return json_encode(['error' => 'erro en la consulta']);
+
+    }
+
+
+
     public function document($id)
     {
         $customer = (new AdminCustomer)->getCustomerAdmin($id);
