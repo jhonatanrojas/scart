@@ -266,13 +266,13 @@ class AdminCustomerController extends RootAdminController
     }
 
     public function ref_personales(Request $request){
-
         $datos = $request->all();
         $referencia = new SC_referencia_personal(); 
         $referencia->nombre_ref = $datos['nombre_ref'];
         $referencia->apellido_ref = $datos['apellido_ref'];
         $referencia->telefono = $datos['telefono_ref'];
         $referencia->id_usuario = $datos['id_usuario'];
+        $referencia->parentesco = $datos['parentesco'];
 
         if($referencia->save()){
             return json_encode(['respuesta' => $referencia]);
@@ -285,6 +285,19 @@ class AdminCustomerController extends RootAdminController
 
 
        
+
+    }
+
+    public function delete_ref(Request $request){
+
+
+        $itemDetail = (new SC_referencia_personal)->where('id', $request->id)->first();
+
+        $itemDetail->delete();
+
+        
+
+         return json_encode(['error' => 'erro en la consulta']);
 
     }
 
