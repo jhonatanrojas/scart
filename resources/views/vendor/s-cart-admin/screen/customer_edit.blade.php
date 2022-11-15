@@ -1,5 +1,4 @@
 @extends($templatePathAdmin.'layout')
-{{-- <?=dd($parroquia[0]->codigoparroquia)?> --}}
 @section('main')
    <div class="row">
       <div class="col-sm-12">
@@ -776,9 +775,112 @@
                     @endforeach
                 @endif
             </div>
+           @if (!empty($referencia))
+           <div class="card">
+              
+            <div class="card-header with-border">
+                <h2 class="card-title">Referencia personales </h2>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row ">
+                    <div class="form-group   col-12 col-md-6 mt-3">
+                  
+                        <div class=" col-12 col-md-12 mb-3">
+                            <div class="input-group">
+                                <input  type="text" id="nombre_ref" name="nombre_ref"
+                                    value="" class="form-control" 
+                                    placeholder="Nombre" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 mb-3">
+                            <div class="input-group">
+                                <input  type="text" id="apellido_ref" name="apellido_ref"
+                                    value="" class="form-control "
+                                    placeholder="apellido" />
+                            </div>
+                        </div>
+                        <div class="col-md-12 ">
+                            <div class="input-group">
+                                <input  type="number" id="telefono_ref" name="telefono_ref"
+                                    value="" class="form-control"
+                                    placeholder="Telefono" />
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="id_usuario" name="id_usuario" value="{{$customer['id']}}">
+                    </div>
 
 
-        </div>
+                    <div class="col-12 col-md-6 ">
+               
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                  <th>Nombre</th>
+                                  <th>Apellido</th>
+                                  <th>Telefono</th>
+                                  <th>aciones</th>
+                                </tr>
+                              </thead>
+                       
+                              @foreach ($referencia as $ref)
+                          
+                            <tbody>
+
+                                   
+
+                                <td>{{$ref->nombre_ref}}</td>
+                                <td>{{$ref->apellido_ref}}</td>
+                                <td>{{$ref->telefono}}</td>      
+                                <td><span onclick="deleteItem('{!!$ref->id!!}');" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
+                                </td>      
+                                       
+                                        
+                                 
+                                    
+
+                            </tbody>
+                            @endforeach
+            
+            
+                       
+                    </table>
+                    
+                    
+                </div>
+
+                <div class="col">
+                    <button type="button"
+            class="btn  btn-success add_attributes"
+            >
+            <i class="fa fa-plus " aria-hidden="true"></i>
+            Agregar 
+            </button>
+    
+
+            
+
+            </div>
+            </div>
+
+
+            
+                
+
+
+
+
+           
+          
+           
+           
+    </div>
+
+
+</div>
+               
+           @endif
     </div>
 <script src="/js/cliente1.js"></script>
 @vite('resources/js/estado.js')
@@ -818,6 +920,71 @@
               }
           });
     });
+
+
+
+$('.add_attributes').click(function(event) {
+ let nombre_ref = $('#nombre_ref').val()
+ let apellido_ref = $('#apellido_ref').val()
+ let telefono_ref = $('#telefono_ref').val()
+ let id = $('#id_usuario').val()
+if(nombre_ref){
+    $.ajax({
+          dataType: "json",
+          data: {
+            id_usuario:id ,
+            "_token": "{{ csrf_token() }}",
+            nombre_ref:nombre_ref,
+            apellido_ref:apellido_ref,
+            telefono_ref: telefono_ref
+        },
+          url: '{{ route("ref_personales") }}',
+          type: "post",
+  
+            success: function (respuestas) {
+            const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                
+            }
+            
+            })
+
+Toast.fire({
+  icon: 'success',
+  title: 'Registro integrado con exito '
+})
+                location.reload();
+          },
+          error: function (xhr, err) {
+            alert(
+              "readyState =" +
+                xhr.readyState +
+                " estado =" +
+                xhr.status +
+                "respuesta =" +
+                xhr.responseText
+            );
+            alert("ocurrio un error intente de nuevo");
+          },
+        });
+
+
+}else{
+    alert("numero de cuota vasio")
+}
+})
+
+
+function deleteItem(id){
+    alert(id)
+}
   </script>
 
 @endpush
