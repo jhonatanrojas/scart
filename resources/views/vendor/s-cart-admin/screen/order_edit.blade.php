@@ -565,6 +565,7 @@
               </select>
               <span class="add_attr"></span>
             </td>
+            
 
             <td>
                 <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
