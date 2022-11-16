@@ -2,9 +2,6 @@
   
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Validator;
-use App\Models\Post;
 use App\Models\SC__documento;
 use Illuminate\Notifications\Messages\MailMessage;
 use SCart\Core\Front\Models\ShopCountry;
@@ -22,8 +19,8 @@ class DocumentosController extends Controller
   
         if (Auth::check()) {
             $customer = auth()->user();
+       
 
-            
 
             $id = $customer['id']; 
             $documento = SC__documento::where('id_usuario',$id)->get();
