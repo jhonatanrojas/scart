@@ -174,10 +174,16 @@
           </div>
           <hr>
             <div class="card">
-              <form action="{{route('post_reporte_pago')}}"  method="post" enctype="multipart/form-data">
+              <form action="{{route('historial_pagos.postreportar')}}"  method="post" enctype="multipart/form-data">
                @csrf
                 <h5 class="card-header">{{ $title }}</h5>
                 <div class="card-body">
+                  <div class="form-group col-md-12">
+                    @if($historial_pago)
+                    <h5 class="text-center">   Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
+                    @endif
+                  </div>
+              
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="forma_pago">Forma de pago</label>
@@ -216,8 +222,8 @@
                         <div class="form-group col-md-6">
                           <label for="forma_pago">Divisa</label>
                           <select id="forma_pago" class="form-control" required name="moneda">
-                            <option selected>Bs</option>
-                            <option>USD</option>
+                            <option >Bs</option>
+                            <option selected>USD</option>
                           </select>      
                          
                         </div>
@@ -239,7 +245,7 @@
                       </div>
         
             <input type="hidden" name="order_id" value="{{ $order->id}}">
-        
+            <input type="hidden" name="id_pago" value="{{ $id_pago}}">
         <input type="hidden" name="id_detalle_orden" value="{{ isset($order->details[0]) ? $order->details[0]->id  : 0}}">
         <input type="hidden" name="product_id" value="{{ isset($order->details[0]) ? $order->details[0]->product_id  : 0}}">
         
