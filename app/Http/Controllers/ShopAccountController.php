@@ -755,4 +755,8 @@ class ShopAccountController extends RootFrontController
             return redirect(sc_route('customer.index'))->with(['message' => sc_language_render('customer.verify_email.verify_success')]);
         }
     }
+
+    public function agregar_referencia(){
+        return view($this->templatePath.'.account.agregar_referencia');
+    }
 }
