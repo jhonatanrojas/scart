@@ -18,8 +18,13 @@
                   
                  
                
-           @if(count($order->details)>0 && $order->status==3 && empty($convenio) && $order->modalidad_de_compra == 1)
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                                  
+               
+                  @php  $dblockconvenio="display:none;";   @endphp
+                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==3 )
+                  @php  $dblockconvenio="display:block;";   @endphp
+                  @endif
+                  <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;                   @php echo $dblockconvenio  @endphp">
                     <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
                      
                     
@@ -28,7 +33,7 @@
                
                
                 
-                  @endif
+             
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -355,12 +360,12 @@
                 <input   value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="date" name="c_fecha_inicial" id="c_fecha_inicial" placeholder="_nro_cuotas">
               </div>
               <div class="form-group col-md-6">
-                <label for="monto">Inicial: </label>
+                <label for="monto">Inicial $: </label>
                 <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
               </div>
               <div class="form-group col-md-6">
                 <label for="nro_convenio">Numero de convenio: </label>
-                <input class="form-control   " type="text" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
+                <input class="form-control   " type="text"  value="{{$nro_convenio}}" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
               </div>
               <div class="form-group col-md-6">
                 <label for="lote">Lote: </label>
@@ -565,7 +570,6 @@
               </select>
               <span class="add_attr"></span>
             </td>
-            
 
             <td>
                 <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
@@ -581,10 +585,10 @@
 
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
-              <td><input readonly onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value=""></td>
+              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
 
-              <td><input  type="number" disabled class="add_total form-control" value="0"></td>
+              <td><input type="number" disabled class="add_total form-control" value="0"></td>
               <td><button onClick="$(this).parent().parent().remove();" class="btn btn-danger btn-md btn-flat" data-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></button></td>
             </tr>
           <tr>
@@ -606,7 +610,7 @@
             <form action="{{route('post_status_pago')}}"  method="post">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Modificar el estatus</h5>
-              <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -714,14 +718,13 @@ function gen_table(fecha_p=false){
                 $('#loading').show();
             },
             success: function(returnedData){
-
               console.log(returnedData)
               $("#modal_convenio").modal('show')
               $('#loading').hide();
               $("#c_monto").val(returnedData.subtotal)
               $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
               $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
-              $("#c_inicial").val(returnedData.details[0].abono_inicial)
+              $("#c_inicial").val(returnedData.subtotal * returnedData.details[0].abono_inicial/100)
             
               if(fecha_p==false){
                 if(returnedData.fecha_primer_pago ==null){
@@ -884,7 +887,7 @@ function gen_table(fecha_p=false){
           }else{
               alert("Falta ingresar un Número");
           }
-
+    console.log(returnedData)
 
                 $('#loading').hide();
                 }
@@ -894,17 +897,11 @@ function gen_table(fecha_p=false){
         
 
       }
-
-
-  var presioProducto = ""
 function update_total(e){
     node = e.closest('tr');
     var qty = node.find('.add_qty').eq(0).val();
-    var price = node.find('.add_price').eq(0).val(presioProducto);
-    node.find('.add_total').eq(0).val((qty*presioProducto));
-
-   
-    
+    var price = node.find('.add_price').eq(0).val();
+    node.find('.add_total').eq(0).val(qty*price);
 }
 
 
@@ -914,9 +911,8 @@ function update_total(e){
         var id = node.find('option:selected').eq(0).val();
         if(!id){
             node.find('.add_sku').val('');
-            node.find('.add_qty').eq(0).val(1);
-            node.find('.add_price').eq(0).val('')
-            
+            node.find('.add_qty').eq(0).val('');
+            node.find('.add_price').eq(0).val('');
             node.find('.add_attr').html('');
             node.find('.add_tax').html('');
         }else{
@@ -932,18 +928,13 @@ function update_total(e){
                 $('#loading').show();
             },
             success: function(returnedData){
-  
-
-                console.log(returnedData)
-                 
                 node.find('.add_sku').val(returnedData.sku);
-                node.find('.add_qty').eq(0).val(0);
+                node.find('.add_qty').eq(0).val(1);
                 node.find('.add_price').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                 node.find('.add_tax').eq(0).html(returnedData.tax);
                 $('#loading').hide();
-                presioProducto =returnedData.price
                 }
             });
         }
@@ -1006,15 +997,22 @@ function all_editable(){
       editable.input.$input.val(parseInt(value));
     });
 
+    var valor_estatus='';
     $('.updateStatus').editable({
         validate: function(value) {
+          valor_estatus=value;
             if (value == '') {
                 return '{{  sc_language_render('admin.not_empty') }}';
             }
         },
         success: function(response) {
+ 
           if(response.error ==0){
             alertJs('success', response.msg);
+            if(valor_estatus==3 && response.detail.total>0){
+              $(".btn-generar-convenio").css("display","block");
+
+            }
           } else {
             alertJs('error', response.msg);
           }
