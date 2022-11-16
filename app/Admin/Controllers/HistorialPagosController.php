@@ -88,7 +88,7 @@ class HistorialPagosController extends RootAdminController
             'arrSort'    => $arrSort,
         ];
      
-        $dataTmp = $this->getOrderListAdmin($dataSearch);
+        $dataTmp = $this->getPagosListAdmin($dataSearch);
 
 
 
@@ -99,7 +99,7 @@ class HistorialPagosController extends RootAdminController
         foreach ($dataTmp as $key => $row) {
 
             $order = AdminOrder::getOrderAdmin($row->order_id);
-            
+
             $dataTr[$row->id ] = [
                 
                 'Nro orden' =>  $row->order_id .'<br>'.$order->first_name.'  '.$order->last_name,
@@ -134,10 +134,7 @@ class HistorialPagosController extends RootAdminController
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
 
-        //menuRight
-        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_customer.create') . '" class="btn  btn-success  btn-flat" title="New" id="button_create_new">
-                           <i class="fa fa-plus" title="'.sc_language_render('admin.add_new').'"></i>
-                           </a>';
+
         //=menuRight
 
         //menuSort
@@ -333,12 +330,16 @@ class HistorialPagosController extends RootAdminController
     
          
             $id_orden=request('id');
-      
-
+            $id_pago=request('id_pago');
+            $data['id_pago']=$id_pago;
+     
+            $historial_pago = HistorialPago::where('id',$id_pago)->first();
     
             $order = ShopOrder::where('id', $id_orden)->first();
 
             $data['order']=$order;
+            $data['historial_pago']= $historial_pago;
+           
             $data['metodos_pagos']= MetodoPago::all();
     
            
@@ -355,7 +356,55 @@ class HistorialPagosController extends RootAdminController
         
     }
 
-    public static function getOrderListAdmin(array $dataSearch)
+
+    public function postReportarPago(Request $request){
+       
+     
+        $request->validate([
+            'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
+            'monto' => 'required',
+            'referencia' => 'required',
+            'order_id'=>'required'
+        ]);
+        $fileName = time().'.'.$request->capture->extension();  
+        $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
+        $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+        
+
+        $id_pago = $request->id_pago;
+
+
+        $data_pago =[
+         'order_id' =>$request->order_id,
+         
+         'customer_id' => 0,
+        'referencia' =>$request->referencia,
+         'order_detail_id' =>0,
+         'producto_id' =>$request->product_id,
+         'metodo_pago_id' =>$request->forma_pago,
+         'fecha_pago' =>$request->fecha,
+         'importe_pagado' =>$request->monto,
+         'comment' =>$request->observacion,
+         'moneda' =>$request->moneda,
+         'comprobante'=>   $path_archivo,
+         'payment_status' => 2
+
+        ];
+        if( $id_pago==null){
+          HistorialPago::create($data_pago);
+        }else{
+            HistorialPago::where('id',$id_pago)
+        ->update($data_pago);
+            
+        
+        }
+ 
+
+        return redirect(sc_route_admin('admin_order.detail', ['id' => $request->order_id ]) )
+        ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
+       
+    }
+    public static function getPagosListAdmin(array $dataSearch)
     {
         $keyword      = $dataSearch['keyword'] ?? '';
         $email        = $dataSearch['email'] ?? '';
@@ -366,10 +415,12 @@ class HistorialPagosController extends RootAdminController
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId      = $dataSearch['storeId'] ?? '';
 
-        $orderList = (new HistorialPago);
-        
+        $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+     
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
         if ($storeId) {
-            $orderList = $orderList->where('store_id', $storeId);
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status','<>', 1)
+            ->orderBy('fecha_pago', 'desc');
         }
 
         if ($order_status) {
@@ -403,9 +454,12 @@ class HistorialPagosController extends RootAdminController
 
 
 
-            $orderList = $orderList->Where('payment_status',  $sort_order);
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
         } else {
-            $orderList = $orderList->orderBy('created_at', 'desc');
+
+   
+            $orderList->where('sc_historial_pagos.payment_status','<>' ,1)
+            ->orderBy('fecha_pago', 'desc');
         }
         $orderList = $orderList->paginate(20);
 
@@ -436,7 +490,7 @@ class HistorialPagosController extends RootAdminController
         if(!$tiene_convenio ){
          $r_convenio=   Convenio::create([
                 'order_id'=> request()->c_order_id,
-                'nro_convenio' => str_pad($countConvenio+1, 0, 6, ),
+                'nro_convenio' => request()->nro_convenio,
                 'lote' =>  request()->lote,
                 'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
                 'nro_coutas'=> request()->c_nro_coutas,
@@ -446,12 +500,6 @@ class HistorialPagosController extends RootAdminController
 
             ]);
    
-
-      
-            
-           
-          
-       
 
             //generar pagos
                 $ncouta=1;

@@ -450,13 +450,14 @@
                 <tr>
                   <th style="width: 50px;">No.</th>
      
-                  <th>Cuota</th>
+                  <th>Cuota </th>
 
                   <th>Monto pagado</th>
+                  <th>Divisa</th>
                   <th>estatus </th>
                   
                   <th>Fecha de vencimiento</th>
-                  <th></th>
+                  <th>Acciones</th>
           
                 </tr>
               </thead>
@@ -469,12 +470,19 @@
                 @endphp
               <td><span class="item_21_id">{{ $n }}</span></td>
  
-              <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
+              <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
               <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-
-              <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
+              <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
+              <td><span class="item_21_sku">{{ $historial->estatus->name }}
+              
+              <br>
+             <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
+              </span></td>
               <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
-            <td>                    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+            <td>                    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
+
+              <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
+
             </td>
             </tr>
       @endforeach
