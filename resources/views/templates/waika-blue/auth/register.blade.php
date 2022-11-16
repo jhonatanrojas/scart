@@ -476,7 +476,7 @@
                             class="is_required validate account_input form-control {{ ($errors->has('nos_conocio'))?"input-error":"" }}"
                             name="nos_conocio" id="nos_conocio">
 
-                            <option value="">Por donde no Conoció</option>
+                            <option value="">¿COMO NOS CONOCISTE?</option>
                             <option value="Facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
                             <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
                             <option value="Twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>

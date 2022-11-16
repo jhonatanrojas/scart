@@ -40,47 +40,31 @@
                     
             
                 </div>
-                <button type="submit" name="SubmitLogin" class=" button button-lg button-secondary w-100">{{ sc_language_render('front.login') }}</button>
+                <button type="submit " name="SubmitLogin" class=" button  button-secondary w-100 m-0">{{ sc_language_render('front.login') }}</button>
 
-               
-                {{-- <div class="mt-3">
-                    <ul class="list-inline list-social list-inline-sm d-flex">
-                     <li class="col">
-                        <a class="icon mdi mdi-facebook" href="https://www.facebook.com/SCart.Ecommerce/"></a>
+           
+                @if (empty(sc_config('LoginSocialite')))
+                    <ul class="row">
+                    <li class="rd-dropdown-item col-12 col-md-4">
+                      <a class="btn btn-link" href="{{ sc_route('login_socialite.index', ['provider' => 'facebook']) }}"><i class="fab fa-facebook"></i>
+                          facebook</a>
                     </li>
-                    <li class="col">
-                        <a class="icon mdi mdi-twitter" href="https://twitter.com/ecommercescart"></a></li>
-                    <li class="col">
-                        <a class="icon mdi mdi-instagram" href="#"></a>
+                    <li class="rd-dropdown-itemcol-12 col-md-4">
+                      <a class="btn btn-link" target="blanck" href="https://www.instagram.com/waikaimport/"><i class="icon mdi mdi-instagram"></i>
+                          instagram</a>
                     </li>
-                    <li class="col">
-                        <a class="icon mdi mdi-youtube-play" href="https://www.youtube.com/channel/UCR8kitefby3N6KvvawQVqdg/videos">
-                        </a>
-                    </li>
-                                            </ul>
-                  </div> --}}
-                @if (!empty(sc_config('LoginSocialite')))
-                    <ul>
-                    <li class="rd-dropdown-item">
-                      <a class="rd-dropdown-link" href="{{ sc_route('login_socialite.index', ['provider' => 'facebook']) }}"><i class="fab fa-facebook"></i>
-                         {{ sc_language_render('front.login') }} facebook</a>
-                    </li>
-                    <li class="rd-dropdown-item">
-                      <a class="rd-dropdown-link" href="{{ sc_route('login_socialite.index', ['provider' => 'google']) }}"><i class="fab fa-google-plus"></i>
-                         {{ sc_language_render('front.login') }} google</a>
-                    </li>
-                    <li class="rd-dropdown-item">
-                      <a class="rd-dropdown-link" href="{{ sc_route('login_socialite.index', ['provider' => 'github']) }}"><i class="fab fa-github"></i>
-                         {{ sc_language_render('front.login') }} github</a>
+                    <li class="btn btn-link col-12 col-md-4">
+                      <a class="rd-dropdown-link" target="blanck" href="https://l.instagram.com/?u=https%3A%2F%2Fwa.link%2Fyhz51u&e=ATPzNMZbjg4XZlDLpIlk0xL17fvTKx6-P_Lm6o8upk1GLRhsj1LvFWLwuPw_iyvpz3OREpBiMbif5NdY1ViRry4&s=1"><i class="fab fa-whatsapp"></i>
+                          whatsapp</a>
                     </li>
                     </ul>
                 @endif
                 
                
             </form>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mt-2">
                 
-                    <div class="col">
+                    <div class="col-12 col-md-6">
                         <a class="btn btn-link" href="{{ sc_route('forgot') }}">
                             {{ sc_language_render('customer.password_forgot') }}
                         </a>
@@ -89,7 +73,7 @@
                    
                 
                 
-                    <div class="col">
+                    <div class="col-12 col-md-6">
                         <a class="btn btn-link" href="{{ sc_route('register') }}">
                             {{ sc_language_render('customer.title_register') }}
                         </a>
