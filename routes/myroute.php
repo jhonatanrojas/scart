@@ -84,10 +84,15 @@ Route::group(
 
             $router->get('/reportar-pago/{id}', $nameSpaceFrontCustomer.'\ShopAccountController@reportarPago')
             ->name('customer.reportar_pago');
+
+            $router->get('/agregar_referencia', $nameSpaceFrontCustomer.'\ShopAccountController@agregar_referencia')
+            ->name('customer.agregar referencia');
        
 
     }
 );
+
+
 
 
 

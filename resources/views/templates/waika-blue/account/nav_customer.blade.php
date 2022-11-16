@@ -22,5 +22,10 @@
         </a>
     </li>
     <li class="list-group-item">
+        <a style="color: black;" href="{{ sc_route('customer.agregar referencia') }}"><i class="fa fa-list" aria-hidden="true"></i> 
+            Agregar referencia
+        </a>
+    </li>
+    <li class="list-group-item">
         <a  style="color: black;"href="{{ sc_route('customer.change_password') }}"><i class="fa fa-key" aria-hidden="true"></i> {{ sc_language_render('customer.change_password') }}</a></li>
 </ul>
