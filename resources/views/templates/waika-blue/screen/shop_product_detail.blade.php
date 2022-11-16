@@ -782,6 +782,7 @@ table tfoot {
                   ca=monto;
                   d1=ca.toFixed(2) ;
                   i2= Inicial.toFixed(2);
+                  i3= monto.toFixed(1);
                   d2=cuotaTotal.toFixed(2);
                   r=ca;
                   deudas = ((n2 + i2 - ca ) ) ;
@@ -794,7 +795,7 @@ table tfoot {
                           
                           <tr>
                               <td>${i}</td>
-                              <td>${d2}$</td>
+                              <td>${i3}$</td>
                               <td>${cuotaTotal}$</td>
                               <td>${texto}</td>
                           </tr>`;
@@ -804,7 +805,7 @@ table tfoot {
               d4=t_i.toFixed(2);
               t_p=r*n2;
               d5=t_p.toFixed(2);
-              document.getElementById("t1").innerHTML=d4;
+              document.getElementById("t1").innerHTML=i3;
               document.getElementById("t3").innerHTML= "$"+montoTotal ;        
               document.getElementById("t4").innerHTML= texto ;       
                 

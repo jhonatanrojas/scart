@@ -46,7 +46,7 @@
                 @if (empty(sc_config('LoginSocialite')))
                     <ul class="row">
                     <li class="rd-dropdown-item col-12 col-md-4">
-                      <a class="btn btn-link" href="{{ sc_route('login_socialite.index', ['provider' => 'facebook']) }}"><i class="fab fa-facebook"></i>
+                      <a class="btn btn-link" href="https://www.facebook.com/people/Waikaimport-CA/100080342899840/"><i class="fab fa-facebook"></i>
                           facebook</a>
                     </li>
                     <li class="rd-dropdown-itemcol-12 col-md-4">
