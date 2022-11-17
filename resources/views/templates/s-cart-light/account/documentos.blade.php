@@ -1,58 +1,6 @@
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
-<style>
-.estilos_card{
-  background-image: url('/images/fondo_documentos.png');
-  background-repeat: no-repeat;
-  background-origin: border-box
- border: solid 1px red;
-
-   
-}
-
-@media only screen and (max-width: 600px) {
-  .estilos_card{
-
-    background-image: none;
-
-}
-}
-@media only screen and (max-width: 820px) {
-  .estilos_card{
-
-    background-image: none;
-
-}
-}
-@media only screen and (max-width: 1024px) {
-  .estilos_card{
-    background-image: none;
-
-
-}
-}
-
-
-input[type=file]{
-  padding:10px;
-  background:#000d144b;
-  color: rgb(8, 5, 5);
-  border-radius: 10px;
-  }
-
-
-.cedula::after {
-content: " <- Cedula";
-color: rgb(10, 1, 1);
-}
-  .rif::after {
-content: " <- Rif";
-color: rgb(10, 1, 1);
-}
-  .carta::after {
-content: " <- Contancia";
-color: rgb(10, 1, 1);
-}
-</style>
 
 
 @extends($sc_templatePath.'.layout')
@@ -76,21 +24,28 @@ color: rgb(10, 1, 1);
            
                 @csrf
            
-                <div class="form-group col-md-12">
-               
-                    <label class="h6 text-primary"  for="forma_pago">Adjunta Cedula </label>
-                    <input value="" type="file" class="form-control-file cedula" id="cedula" name="cedula" required="">
-                    @error('cedula')
+                <div class=" col-md-12">
+                  <div class="input-group mb-4">
+                    <input name="cedula" type="file" class="form-control" id="Cedula">
+                    <label class="input-group-text" for="cedula">adjuntar Cedula</label>
+                  </div>
+
+                  
+              
+                     @error('cedula')
                     <small style="color: red">{{$message}}</small>
                 @enderror
                       </div>
                      
                    
                   
-                    <div class="form-group col-md-12">
+                    <div class=" col-md-12">
+                      <div class="input-group mb-4">
+                        <input name="rif" type="file" class="form-control" id="rif">
+                        <label class="input-group-text" for="rif"> adjuntar Rif</label>
+                      </div>
                
-                        <label class="h6 text-primary" for="forma_pago">Adjunta  Rif</label>
-                        <input  value="" type="file" class="form-control-file rif" id="rif" name="rif" required="">
+                        
                         @error('rif')
                         <small style="color: red">{{$message}}</small>
                     @enderror
@@ -102,11 +57,17 @@ color: rgb(10, 1, 1);
                   
     
          
-                          <div class="form-group col-12  col-md-12  ">
+                          <div class=" col-12  col-md-12  ">
+                            
+                       
+
+                        <div class="input-group mb-4">
+                          <input name="carta_trabajo" type="file" class="form-control" id="carta_trabajo">
+                          <label class="input-group-text" for="carta_trabajo">Constancia de  trabajo</label>
+                        </div>
                
-                            <label class="h6 text-primary" for="forma_pago text-info">Constancia de  trabajo</label>
-                            <input value="" type="file" class="form-control-file carta" id="carta_trabajo" name="carta_trabajo" required="">
-                            @error('Constancia trabajo')
+                           
+                            @error('carta_trabajo')
                             <small style="color: red">{{$message}}</small>
                         @enderror
                               </div>
