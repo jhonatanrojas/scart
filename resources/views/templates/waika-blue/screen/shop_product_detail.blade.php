@@ -82,7 +82,7 @@ $layout_page = shop_product_detail
 }
   @media screen and (min-width: 314px) {
   .table-1{
-    width:80%;
+    width:90%;
  
 }
 
@@ -659,7 +659,7 @@ table tfoot {
                           
                       </thead>
                       </tbody>
-                      <tfoot>
+                      {{-- <tfoot>
                           <tr>
                               <td>TOTAL</td>
                               <td id="t1"></td>
@@ -667,7 +667,7 @@ table tfoot {
                               <td id="t4"></td>
                               
                           </tr>
-                      </tfoot>
+                      </tfoot> --}}
                   </table>
                  
                   </div>
@@ -689,9 +689,9 @@ table tfoot {
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
               <input  name="qty" type="hidden"  value="1" min="1" max="100">
               <input  name="financiamiento" type="hidden"  value="1"  max="100">
-      </form><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-<!--/product-details-->
+      </form>
+      </div>
+
 <h4 id="error"></h4>
 
 
@@ -705,11 +705,16 @@ table tfoot {
           document.getElementById("butto_modal").disabled = false;
           let monto=Number(document.getElementById("monto").value);
           let n2=Number(document.getElementById("Cuotas").value);
-          let n3=Number(document.getElementById("inicial").value);
+          var n3=Number(document.getElementById("inicial").value);
           let inicial = parseInt(n3);
           const plazoMensual = document.getElementById('modalidad')
           var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
           var selectd2 = plazoMensual.options[plazoMensual.selectedIndex].text;
+
+          if(inicial>0){
+            totalinicial=(inicial*monto)/100;
+            monto = monto -totalinicial;
+          }
        
       
           fechaInicio = new Date(document.getElementById('fecha').value)
@@ -753,14 +758,13 @@ table tfoot {
                 alert('No seleccionaste ningún periodo de pagos')
                 break
             }
-
-            let  montoTotal = monto
             var cuotaTotal = monto / n2
-            let Inicial = montoTotal/inicial
+            let  montoTotal = monto
+            let Inicial = inicial * monto / 100
             Inicial == Infinity ? Inicial = 0 : Inicial
 
              
-            let texto
+            let texto = 0;
             for(i=1;i<=n2;i++){  
               texto = (i + 1)
 
@@ -777,12 +781,10 @@ table tfoot {
                   }
                 }
                 texto = fechaPago.toLocaleDateString()
-
-                  monto -= cuotaTotal
+                monto -= cuotaTotal
                   ca=monto;
                   d1=ca.toFixed(2) ;
                   i2= Inicial.toFixed(2);
-                  i3= monto.toFixed(1);
                   d2=cuotaTotal.toFixed(2);
                   r=ca;
                   deudas = ((n2 + i2 - ca ) ) ;
@@ -795,8 +797,8 @@ table tfoot {
                           
                           <tr>
                               <td>${i}</td>
-                              <td>${i3}$</td>
-                              <td>${cuotaTotal}$</td>
+                              <td>${d2}$</td>
+                              <td>${d3}$</td>
                               <td>${texto}</td>
                           </tr>`;
               }
