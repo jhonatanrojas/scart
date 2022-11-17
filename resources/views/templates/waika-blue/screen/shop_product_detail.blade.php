@@ -379,13 +379,13 @@ table tfoot {
                   ">
                   
                     <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label id="finansiamiento" class="btn btn-primary" for="danger_outlined"><small style="font-size: 11px">Adquiéralo Financiado</small></label>
+                    <label  id="finansiamiento" class="btn btn-primary fs-12" for="danger_outlined"><small style="font-size: 11px">ADQUIRIR FINANCIADO</small></label>
                    
                    
                   </div>
                   <div class="form-check  radioContenedor2 col-12 col-md-6">
                      <input checked  value="active" type="checkbox" class="btn-check" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
-                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2"><small style="font-size: 12px" >De contado</small></label>
+                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2"><small style="font-size: 12px" >PAGAR AL CONTADO</small></label>
                      
        
                    
@@ -643,7 +643,7 @@ table tfoot {
                     </div>
 
                     <div class="p-0 mt-0 mt-2">
-                      <label for="monto">Inicial $:</label>
+                      <label for="monto">Monto Inicial $:</label>
                       <input  readonly value="0" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
                        >
                     </div>

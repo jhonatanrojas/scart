@@ -1496,7 +1496,7 @@ location.reload();
 
 
 }else{
-    alert("numero de cuota vasio")
+    alert("el campo numero de cuota vacio")
 }
 
 
