@@ -1108,7 +1108,9 @@
     <a id="t.2"></a>
 
  <table class="c12">
-    {!!$TotalCuotas =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']!!}
+    @php $TotalCuotasInicial =  $dato_usuario[0]['subtotal'] - ($dato_usuario[0]['subtotal'] *$dato_usuario[0]['abono_inicial'] /100) @endphp
+
+    {!!$TotalCuotas = $TotalCuotasInicial /$dato_usuario[0]['cuotas']!!}
         <tr class="c4">
             <td class="c15" colspan="1" rowspan="1">
                 Cantidad:{{$dato_usuario[0]['cantidaProduc']}} 
@@ -1137,7 +1139,7 @@
                N&deg; de Lote:{{$convenio->lote}} 
             </td>
             {{-- (30 * 900) / 100 --}}
-            
+
             <td class="c15" colspan="1" rowspan="1">
                 Monto de Cuotas:{!!round($TotalCuotas)!!}$
              </td>
@@ -1150,7 +1152,7 @@
             
             
             <td class="c15" colspan="1" rowspan="1">
-                Monto de Inicial:{{$dato_usuario[0]['abono_inicial']}}
+                Monto de Inicial:{{($dato_usuario[0]['subtotal'] *$dato_usuario[0]['abono_inicial'] /100)}}
                         
              </td>
             
@@ -1159,7 +1161,7 @@
             </td>
             
 
-            {!!$TotalCuotasInicial =  $dato_usuario[0]['subtotal'] -$dato_usuario[0]['abono_inicial']!!}
+            {!!$TotalCuotasInicial !!}
             
             <td class="c15" colspan="2" rowspan="1">
                 Monto Total a Pagar:{{$TotalCuotasInicial == "0.00" ?$dato_usuario[0]['subtotal']:$TotalCuotasInicial}}$
@@ -1171,7 +1173,7 @@
         
         <tr class="c4">
             <td class="c15" colspan="4" rowspan="1">
-                D&iacute;as de Pago:{{$convenio->fecha_pagos}}
+                D&iacute;as de Pago:{!!  date("d",strtotime($convenio->fecha_pagos));    !!} de cada mes
             </td>
             
         </tr>

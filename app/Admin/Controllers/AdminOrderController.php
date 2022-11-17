@@ -476,6 +476,7 @@ class  AdminOrderController extends RootAdminController
            
         $convenio = Convenio::where('order_id',$id)->first();
 
+        $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
@@ -511,6 +512,7 @@ class  AdminOrderController extends RootAdminController
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
                 'icon' => 'fa fa-file-text-o',
+                'nro_convenio' =>$nro_convenio,
                 'convenio'=>$convenio,
                 "order" => $order,
                 'historial_pagos'=>$historialPagos,
