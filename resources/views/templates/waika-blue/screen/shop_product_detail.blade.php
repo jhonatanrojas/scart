@@ -378,13 +378,13 @@ table tfoot {
 
                   ">
                   
-                    <button id="finansiamiento" onclick="validachecke2()"  data-toggle="modal" data-target="#myModal" type="button" class="btn btn-success p-2" name="Financiamiento"  ><small>ADQUIRIR FINANCIADO</small></button>
+                    <button id="finansiamiento" onclick="validachecke2()"  data-toggle="modal" data-target="#myModal" type="button" class="btn btn-primary p-2 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
                     
                    
                    
                   </div>
                   <div class="  col-12 col-md-6">
-                     <button onclick="validachecke1()" id="descotado" class="btn btn-primary p-2"  type="button"  name="Des_contado"   ><small>PAGAR AL CONTADO</small></button>
+                     <button onclick="validachecke1()" id="descotado" class="btn btn-success p-2"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
                    
                      
        
