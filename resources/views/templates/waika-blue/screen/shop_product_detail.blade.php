@@ -641,6 +641,12 @@ table tfoot {
                          
                          </select>
                     </div>
+
+                    <div class="p-0 mt-0 mt-2">
+                      <label for="monto">Inicial $:</label>
+                      <input  readonly value="0" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
+                       >
+                    </div>
                 
                     <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
@@ -690,7 +696,8 @@ table tfoot {
               <input  name="qty" type="hidden"  value="1" min="1" max="100">
               <input  name="financiamiento" type="hidden"  value="1"  max="100">
       </form>
-      </div>
+
+  
 
 <h4 id="error"></h4>
 
@@ -702,6 +709,7 @@ table tfoot {
         // simulador de creditos 
         function gen_table(){
           document.getElementById("tab").innerHTML="";
+          let monto_Inicial = document.getElementById("monto_Inicial");
           document.getElementById("butto_modal").disabled = false;
           let monto=Number(document.getElementById("monto").value);
           let n2=Number(document.getElementById("Cuotas").value);
@@ -714,6 +722,8 @@ table tfoot {
           if(inicial>0){
             totalinicial=(inicial*monto)/100;
             monto = monto -totalinicial;
+
+            monto_Inicial.value = totalinicial.toFixed(2)
           }
        
       

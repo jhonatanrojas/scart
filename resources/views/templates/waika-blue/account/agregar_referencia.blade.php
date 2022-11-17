@@ -5,6 +5,8 @@ $layout_page = shop_profile
 - $customer
 */ 
 @endphp
+
+
 <style>
     .imagen_svg{
         background-image: url('/images/asset 0.svg');
@@ -21,50 +23,8 @@ $layout_page = shop_profile
 
 @section('block_main_profile')
 
-   <div class="container">
-    <div class="row">
-        <div class="col-12 col-md-12 imagen_svg">
-            
-            
-            <div class="m-auto w-50">
-                <div class="mb-4 mt-4  ">
-                    <h4 class="text-center">Referencia personal</h4>
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">@</span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-                <div class="mb-4  ">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">@</span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-                <div class="mb-4  ">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">@</span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-                <div class="mb-4  ">
-                    <div class="input-group flex-nowrap">
-                        <span class="input-group-text" id="addon-wrapping">@</span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                      </div>
-                </div>
-            </div>
+ 
 
-            <div class=" col-6 mt-3 p-2 text-center m-auto">
-                <button id="guarda"  class="btn btn-primary w-100">guardar</button>
 
-            </div>
-           
-             
-        </div>
-
-        
-    </div>
-
-   </div>
    
 @endsection
