@@ -643,7 +643,7 @@ table tfoot {
                     </div>
 
                     <div class="p-0 mt-0 mt-2">
-                      <label for="monto">Inicial $:</label>
+                      <label for="monto">Monto Inicial $:</label>
                       <input  readonly value="0" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
                        >
                     </div>
