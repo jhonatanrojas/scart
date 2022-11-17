@@ -374,18 +374,18 @@ table tfoot {
                  
                   
 
-                  <div  class="form-check  radioContenedor2 col-12 col-md-6 
+                  <div  class="   col-12 col-md-6 
 
                   ">
                   
-                    <input  data-toggle="modal" data-target="#myModal" type="radio" class="btn-check" name="Financiamiento" id="danger_outlined" autocomplete="off">
-                    <label  id="finansiamiento" class="btn btn-primary fs-12" for="danger_outlined"><small style="font-size: 11px">ADQUIRIR FINANCIADO</small></label>
+                    <button id="finansiamiento" onclick="validachecke2()"  data-toggle="modal" data-target="#myModal" type="button" class="btn btn-success p-2" name="Financiamiento"  ><small>ADQUIRIR FINANCIADO</small></button>
+                    
                    
                    
                   </div>
-                  <div class="form-check  radioContenedor2 col-12 col-md-6">
-                     <input checked  value="active" type="checkbox" class="btn-check" name="Des_contado" id="flexRadioDefault2" autocomplete="off" >
-                    <label id="descotado" class="  btn btn-primary" for="flexRadioDefault2"><small style="font-size: 12px" >PAGAR AL CONTADO</small></label>
+                  <div class="  col-12 col-md-6">
+                     <button onclick="validachecke1()" id="descotado" class="btn btn-primary p-2"  type="button"  name="Des_contado"   ><small>PAGAR AL CONTADO</small></button>
+                   
                      
        
                    
@@ -834,55 +834,50 @@ table tfoot {
 
           var msg = document.getElementById('msg');
           const  Buyblock = document.getElementById("buy_block");
-          const ye = document.getElementById("flexRadioDefault2");
-          const no = document.getElementById("danger_outlined");
           
-          var stylies = document.getElementById("descotado")
-          stylies.style.backgroundColor= "#007bff";
-          stylies.style.color = "#fff" ;
-          ye.addEventListener("click" ,validachecke1);
-          no.addEventListener("click" ,validachecke2);
+
           function validachecke1(){
-            if(ye.checked) { 
+            
               let msg = document.getElementById('msg').style.display = "none";
               const group = document.getElementById("group").style.display = "block"
               var stylies = document.getElementById("descotado")
-              stylies.style.backgroundColor= "#4169e0e6";
-              stylies.style.color = "#fff" ;
+              
+              stylies.classList.replace("btn-primary", "btn-success")
+
+              var finansiamiento = document.getElementById("finansiamiento");
+
+              finansiamiento.classList.replace("btn-success", "btn-primary")
               
           
-              let finansiamiento = document.getElementById("finansiamiento");
-              finansiamiento.style.backgroundColor= "";
-              finansiamiento.style.color = "#fff";
           
-          }
           };
+          
           function validachecke2(){
-            if(no.checked) { 
+           
               let msg = document.getElementById('msg').style.display = "none";
               const group = document.getElementById("group").style.display = "none";
               let finansiamiento = document.getElementById("finansiamiento");
-              finansiamiento.style.color = "#fff";
-              finansiamiento.style.backgroundColor= "#4169e0e6";
+              finansiamiento.classList.replace("btn-primary", "btn-success")
+
               var stylies = document.getElementById("descotado")
-              stylies.style.backgroundColor= "#014085";
-              stylies.style.color = "white" ;
+              
+              stylies.classList.replace("btn-success", "btn-primary")
+             
             
-          
-          }
+        
           };
 
 
 
       Buyblock.addEventListener("submit" ,function(e){
         e.preventDefault()
-        const no = document.getElementById("danger_outlined")
-        const ye = document.getElementById("flexRadioDefault2")
-        console.log(ye.checked)
-        if(ye.checked) {
+
+    
+        if(true) {
           Buyblock.submit()
+          
         }
-          else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';
+          
 
           
       });
