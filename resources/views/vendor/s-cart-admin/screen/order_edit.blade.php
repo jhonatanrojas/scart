@@ -537,7 +537,7 @@
               {{-- nota_evaluacion_financiera --}}
 
               <tr>
-                <td  class="td-title"><span >Evaluacion financiera</span></td>
+                <td  class="td-title"><span >Evaluación financiera</span></td>
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                   
@@ -562,7 +562,7 @@
               {{-- nota_evaluacion_financiera --}}
 
               <tr>
-                <td  class="td-title"><span >Evaluacion legal</span></td>
+                <td  class="td-title"><span >Evaluación legal</span></td>
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     
@@ -590,7 +590,7 @@
 
 
               <tr>
-                <td  class="td-title"><span >Decision_final</span></td>
+                <td  class="td-title"><span >Decisión final</span></td>
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     @if (empty($order->nota_decision_final ))
