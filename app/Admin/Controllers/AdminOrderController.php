@@ -583,19 +583,49 @@ class  AdminOrderController extends RootAdminController
         $code = request('name');
         $value = request('value');
         $fecha_primer_pago = request('fecha_primer_pago');
-       
-        
+        $ordert = AdminOrder::getOrderAdmin($id);
 
+
+        if($code == "status" && $value == 3){
+            $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
+            $valorFinal = 0;
+            foreach ($numeros as $numero) {
+                $valorFinal += $numero;
+            }
+            if($valorFinal < 400){
+                 return response()->json(['error' => 1, 'msg' => "las evaluaciones no estan al 100%", 'detail' => '']);
+            }
+            
+        }
+        $datavalor = [];
         $Evaluacion = request()->all();
         foreach($Evaluacion as $key => $valor){
             $datavalor = $valor;
         }
         if(isset($Evaluacion['nombre'])){
+            
             $user = AdminOrder::find($Evaluacion['id']);
             $user->$datavalor = $Evaluacion['value'];
             $user->save();
 
+            $dataHistory = [
+                'order_id' => $Evaluacion['id'],
+                'content' => 'Cambios <b>' . $Evaluacion['nombre'] . '</b> de <span style="color:blue">\'' . $user->$datavalor . '\'</span> ',
+                'admin_id' => Admin::user()->id,
+                'order_status_id' => $user->status,
+            ];
+            (new AdminOrder)->addOrderHistory($dataHistory);
+
+            
+
         }
+
+        
+      
+
+
+
+
     
 
     
