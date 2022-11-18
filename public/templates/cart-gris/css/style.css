@@ -1125,7 +1125,7 @@ html [class*='section-'].section-top-0 {
 }
 
 .bg-gray-600 {
-	background-color: #00396e;
+	background-color: #777777;
 }
 
 .bg-gray-800 {
@@ -1420,7 +1420,7 @@ html [class*='section-'].section-top-0 {
 
 p.rights {
 	letter-spacing: 0;
-	color: #00396e;
+	color: #777777;
 	font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -1815,7 +1815,7 @@ body {
 	line-height: 1.6;
 	font-weight: 400;
 	font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	color: #00396e;
+	color: #777777;
 	background-color: #ffffff;
 	-webkit-text-size-adjust: none;
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -2197,7 +2197,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .link-classic:hover {
-	color: #2587e2;
+	color: #1122c2;
 }
 
 .link-classic::after {
@@ -2825,7 +2825,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .contacts-classic a, .contacts-classic a:focus, .contacts-classic a:active {
-	color: #00396e;
+	color: #777777;
 }
 
 .contacts-classic a:hover {
@@ -2890,7 +2890,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .box-comment-time {
-	color: #00396e;
+	color: #777777;
 }
 
 .box-comment-reply {
@@ -3028,7 +3028,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .box-info-classic-text {
-	color: #00396e;
+	color: #777777;
 }
 
 .box-info-classic-year {
@@ -3059,7 +3059,7 @@ a[href*='tel'], a[href*='mailto'] {
 }
 
 .context-dark .box-info-classic-text, .bg-gray-700 .box-info-classic-text, .bg-gray-3 .box-info-classic-text, .bg-brown-1 .box-info-classic-text, .bg-brown-2 .box-info-classic-text, .bg-primary .box-info-classic-text {
-	color: #00396e;
+	color: #777777;
 }
 
 .context-dark .box-info-classic-year, .bg-gray-700 .box-info-classic-year, .bg-gray-3 .box-info-classic-year, .bg-brown-1 .box-info-classic-year, .bg-brown-2 .box-info-classic-year, .bg-primary .box-info-classic-year {
@@ -4017,7 +4017,7 @@ p + .list-marked {
 }
 
 .list-categories-number {
-	color: #00396e;
+	color: #777777;
 }
 
 * + .list-categories {
@@ -4265,7 +4265,7 @@ img {
 	letter-spacing: .05em;
 	background: #ffffff;
 	font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	color: #00396e;
+	color: #777777;
 	min-width: 170px;
 }
 
@@ -4391,7 +4391,7 @@ h5 + .table-custom-responsive {
 	padding-bottom: 14px;
 	font-size: 16px;
 	font-weight: 500;
-	color: #00396e;
+	color: #777777;
 	background: #ffffff;
 }
 
@@ -5280,42 +5280,17 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 	transition: .33s;
 }
 
-.btn-success {
-	border-radius: 3px;
-	font-family: "Roboto Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	font-weight: 400;
-	letter-spacing: .05em;
-	text-transform: uppercase;
-	transition: .33s;
-}
 .btn-primary, .btn-primary:active, .btn-primary:focus {
 	color: #ffffff;
-	background: #00396E;
+	background: #007bffb9;
 	border-color: #038bb4c4;
 }
 
 .btn-primary:hover {
 	color: #ffffff;
-	background: #00396E;
+	background: #007bffa9;
 	
 }
-
-.btn-success, .btn-primary:active, .btn-primary:focus {
-	color: #ffffff;
-	background: #56daff;
-	border-color: #038bb4c4;
-}
-
-.btn-success:hover {
-	color: #ffffff;
-	background: #56daff;
-	
-}
-
-
-
-
-
 
 /*
 * Form styles
@@ -5591,7 +5566,7 @@ textarea.textarea-lg {
 }
 
 .form-output.success {
-	color: #00e4ff;
+	color: #98bf44;
 }
 
 .radio .radio-custom,
@@ -7427,7 +7402,7 @@ textarea.textarea-lg {
 }
 
 .breadcrumbs-custom-path a, .breadcrumbs-custom-path a:active, .breadcrumbs-custom-path a:focus {
-	color: #00396e;
+	color: #777777;
 }
 
 .breadcrumbs-custom-path li {
@@ -8068,7 +8043,7 @@ textarea.textarea-lg {
 	font-size: 12px;
 	letter-spacing: .05em;
 	text-transform: uppercase;
-	color: #00396e;
+	color: #777777;
 }
 
 * + .contacts-holly-text {
@@ -9110,7 +9085,7 @@ textarea.textarea-lg {
 }
 
 .list-description li span:last-child {
-	color: #00396e;
+	color: #777777;
 }
 
 .list-description li + li {
@@ -9940,7 +9915,7 @@ textarea.textarea-lg {
 .team-navy-status {
 	letter-spacing: .025em;
 	font-style: italic;
-	color: #00396e;
+	color: #777777;
 }
 
 .team-info {
@@ -10196,7 +10171,7 @@ html:not(.ie-10):not(.ie-11):not(.ie-edge) .team-karen-header svg {
 }
 
 .context-dark .event-classic, .bg-gray-700 .event-classic, .bg-gray-3 .event-classic, .bg-brown-1 .event-classic, .bg-brown-2 .event-classic, .bg-primary .event-classic {
-	color: #00396e;
+	color: #777777;
 }
 
 .context-dark .event-classic-title, .bg-gray-700 .event-classic-title, .bg-gray-3 .event-classic-title, .bg-brown-1 .event-classic-title, .bg-brown-2 .event-classic-title, .bg-primary .event-classic-title {
@@ -11096,7 +11071,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-static .rd-nav-item.focus .rd-nav-link, .rd-navbar-static .rd-nav-item.opened .rd-nav-link {
-	color: #2bf4ff;
+	color: #1c1e21;
 	background: transparent;
 }
 
@@ -11160,7 +11135,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-static .rd-nav-link:hover {
-	color: #2bf4ff;
+	color: black;
 }
 
 .rd-navbar-static .rd-menu {
@@ -12412,12 +12387,12 @@ html.tablet .ui-to-top {
 .rd-navbar-fixed .rd-navbar-panel {
 	color: #151515;
 	box-shadow: 0 0 5px 0 rgba(1, 3, 4, 0.19);
-	background: #00396e;
+	background: #777777;
 }
 
 .rd-navbar-fixed .rd-navbar-nav-wrap {
 	color: #038bb4c4;
-	background: #00396e;
+	background: #777777;
 	border: 1px solid #d7d7d7;
 	box-shadow: 0 0 5px 0 rgba(1, 3, 4, 0.19);
 }
@@ -12473,7 +12448,7 @@ html.tablet .ui-to-top {
 }
 
 .rd-navbar-fixed .rd-navbar-collapse {
-	background-color: #00396e;
+	background-color: #777777;
 	box-shadow: 0 0 5px 0 rgba(1, 3, 4, 0.19);
 }
 
@@ -12510,7 +12485,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .context-dark .rd-navbar-fixed .contacts-classic a, .bg-gray-700 .rd-navbar-fixed .contacts-classic a, .bg-gray-3 .rd-navbar-fixed .contacts-classic a, .bg-brown-1 .rd-navbar-fixed .contacts-classic a, .bg-brown-2 .rd-navbar-fixed .contacts-classic a, .bg-primary .rd-navbar-fixed .contacts-classic a, .context-dark .rd-navbar-fixed .contacts-classic a:focus, .bg-gray-700 .rd-navbar-fixed .contacts-classic a:focus, .bg-gray-3 .rd-navbar-fixed .contacts-classic a:focus, .bg-brown-1 .rd-navbar-fixed .contacts-classic a:focus, .bg-brown-2 .rd-navbar-fixed .contacts-classic a:focus, .bg-primary .rd-navbar-fixed .contacts-classic a:focus, .context-dark .rd-navbar-fixed .contacts-classic a:active, .bg-gray-700 .rd-navbar-fixed .contacts-classic a:active, .bg-gray-3 .rd-navbar-fixed .contacts-classic a:active, .bg-brown-1 .rd-navbar-fixed .contacts-classic a:active, .bg-brown-2 .rd-navbar-fixed .contacts-classic a:active, .bg-primary .rd-navbar-fixed .contacts-classic a:active {
-	color: #00396e;
+	color: #777777;
 }
 
 .context-dark .rd-navbar-fixed .contacts-classic a:hover, .bg-gray-700 .rd-navbar-fixed .contacts-classic a:hover, .bg-gray-3 .rd-navbar-fixed .contacts-classic a:hover, .bg-brown-1 .rd-navbar-fixed .contacts-classic a:hover, .bg-brown-2 .rd-navbar-fixed .contacts-classic a:hover, .bg-primary .rd-navbar-fixed .contacts-classic a:hover {
@@ -12535,7 +12510,7 @@ html.rd-navbar-fixed-linked .page {
 .rd-navbar-classic.rd-navbar-static .rd-navbar-main-outer {
 	padding-left: 15px;
 	padding-right: 15px;
-	background-color: #00396e;
+	background-color: #777777;
 }
 
 .rd-navbar-classic.rd-navbar-static .rd-navbar-main {
@@ -14731,7 +14706,7 @@ html.rd-navbar-fixed-linked .page {
 .google-map {
 	height: 250px;
 	width: 100%;
-	color: #00396e;
+	color: #777777;
 }
 
 @media (min-width: 576px) {
@@ -15108,7 +15083,7 @@ html.rd-navbar-fixed-linked .page {
 	padding-right: 56px;
 	letter-spacing: .05em;
 	font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	color: #00396e;
+	color: #777777;
 }
 
 .form-search .form-input {
@@ -16108,7 +16083,7 @@ h3 + .card-group-corporate {
 
 .card-corporate .collapse {
 	position: relative;
-	color: #00396e;
+	color: #777777;
 	border-radius: 0 0 6px 6px;
 	z-index: 1;
 }
@@ -16409,7 +16384,7 @@ h3 + .card-group-corporate {
 	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: .1em;
-	color: #00396e;
+	color: #777777;
 }
 
 .progress-linear-counter::after {
