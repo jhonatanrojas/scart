@@ -578,11 +578,25 @@ class  AdminOrderController extends RootAdminController
      */
     public function postOrderUpdate()
     {
-        
+       
         $id = request('pk');
         $code = request('name');
         $value = request('value');
         $fecha_primer_pago = request('fecha_primer_pago');
+       
+        
+
+        $Evaluacion = request()->all();
+        foreach($Evaluacion as $key => $valor){
+            $datavalor = $valor;
+        }
+        if(isset($Evaluacion['nombre'])){
+            $user = AdminOrder::find($Evaluacion['id']);
+            $user->$datavalor = $Evaluacion['value'];
+            $user->save();
+
+        }
+    
 
     
        
@@ -601,6 +615,8 @@ class  AdminOrderController extends RootAdminController
            
             $dataRowTotal = [
                 'id' => $id,
+                'nota_evaluacion_comercial' => $code,
+                'nota_evaluacion_financiera' => $code,
                 'fecha_primer_pago' => $fecha_primer_pago,
                 'code' => $code,
                 'value' => $value,
@@ -635,6 +651,8 @@ class  AdminOrderController extends RootAdminController
                 //Process finish order
             }
         }
+
+        
 
         //Add history
         $dataHistory = [
