@@ -9,8 +9,8 @@
  */
 /** @group Base */
 .box-icon-modern-svg [id*='SVGID'] {
-	--color-stop-1: #4f87ff;
-	--color-stop-2: #76aa6f;
+	--color-stop-1: #00396E;
+	--color-stop-2: #56daff;
 }
 
 .fa-list-alt{
@@ -5298,6 +5298,12 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 	color: #ffffff;
 	background: #00396E;
 	
+}
+
+.btn-outline-primary, .btn-primary:active, .btn-primary:focus{
+	color: #ffffff;
+	background: #00396E;
+	border-color: #038bb4c4;
 }
 
 .btn-success, .btn-primary:active, .btn-primary:focus {
