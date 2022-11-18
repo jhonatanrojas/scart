@@ -114,12 +114,13 @@
                     </tr>
                 </table>
             </div>
+
             <div class="col-sm-6">
                 <table  class="table table-bordered">
                     <tr>
                       <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                       <td>
-                      <a href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
+                      <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
                     </td>
                   </tr>
                     
@@ -509,12 +510,10 @@
              <table class="table table-hover box-body text-wrap table-bordered">
              
               <tr>
-                <td  class="td-title"><span >Evaluacion comercial</span></td>
+                <td  class="td-title"><span >Evaluación comercial</span></td>
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                      @if (empty($order->nota_evaluacion_comercial ))
-                          Nota
-                          @else
+                      @if (!empty($order->nota_evaluacion_comercial ))
                           {{$order->nota_evaluacion_comercial }} 
                       @endif
                   </a>
@@ -541,9 +540,8 @@
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                   
-                    @if (empty($order->nota_evaluacion_financiera ))
-                          Nota
-                          @else
+                    @if (!empty($order->nota_evaluacion_financiera ))
+                     
                           {{$order->nota_evaluacion_financiera }} 
                       @endif
                   </a>
@@ -566,9 +564,8 @@
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     
-                    @if (empty($order->nota_evaluacion_legal ))
-                          Nota
-                          @else
+                    @if (!empty($order->nota_evaluacion_legal ))
+                         
                           {{$order->nota_evaluacion_legal }} 
                       @endif
                   </a>
@@ -593,9 +590,7 @@
                 <td  class="td-title"><span >Decisión final</span></td>
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                    @if (empty($order->nota_decision_final ))
-                    Nota
-                    @else
+                    @if (!empty($order->nota_decision_final ))
                     {{$order->nota_decision_final }} 
                 @endif
                   </a>
@@ -1033,7 +1028,12 @@ function update_total(e){
     node.find('.add_total').eq(0).val(qty*price);
 }
 
+ function  validar(element){
 
+  console.log(element)
+  node = element.closest('tr');
+  var id = node.find('option:selected').eq(0).val();
+ }
 //Add item
     function selectProduct(element){
         node = element.closest('tr');
@@ -1213,6 +1213,8 @@ function all_editable(){
             }
           } else {
             alertJs('error', response.msg);
+            location.reload()
+            
           }
       }
     });
