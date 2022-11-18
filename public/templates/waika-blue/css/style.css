@@ -5301,9 +5301,9 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 }
 
 .btn-outline-primary, .btn-primary:active, .btn-primary:focus{
-	color: #ffffff;
-	background: #00396E;
-	border-color: #038bb4c4;
+	color: #00396E;
+
+	border-color: #00396E;
 }
 
 .btn-success, .btn-primary:active, .btn-primary:focus {
@@ -5311,7 +5311,11 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 	background: #56daff;
 	border-color: #038bb4c4;
 }
-
+.btn-outline-primary:hover {
+	color: #ffffff;
+	background: #00396E;
+	
+}
 .btn-success:hover {
 	color: #ffffff;
 	background: #56daff;
