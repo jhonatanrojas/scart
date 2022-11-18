@@ -494,6 +494,8 @@
       @endforeach
               </tbody>
             </table>
+
+            
       
           </div>
           {{-- //End total --}}
@@ -501,6 +503,119 @@
           {{-- History --}}
           <div class="col-sm-6">
             <div class="card">
+         
+
+             @if ($order->modalidad_de_compra == 1)
+             <table class="table table-hover box-body text-wrap table-bordered">
+             
+              <tr>
+                <td  class="td-title"><span >Evaluacion comercial</span></td>
+                <td>
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                      @if (empty($order->nota_evaluacion_comercial ))
+                          Nota
+                          @else
+                          {{$order->nota_evaluacion_comercial }} 
+                      @endif
+                  </a>
+              </td>
+                <td>
+                  
+                 
+                  <select data-name="evaluacion_comercial"     id="evaluacion_comercial"  onChange="selectProduct2();"  class="evaluacion_comercial form-control select2 " name="evaluacion_comercial" >
+                    <option value="">Porsentaje </option>
+                    @foreach (range(0, 100) as $numero)
+                        <option value="{{$numero}}%" {{ $order['evaluacion_comercial'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
+                    @endforeach
+                </select>
+              </td>
+              </tr>
+
+              {{-- Evaluacion_comercial --}}
+
+
+              {{-- nota_evaluacion_financiera --}}
+
+              <tr>
+                <td  class="td-title"><span >Evaluación financiera</span></td>
+                <td>
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  
+                    @if (empty($order->nota_evaluacion_financiera ))
+                          Nota
+                          @else
+                          {{$order->nota_evaluacion_financiera }} 
+                      @endif
+                  </a>
+              </td>
+                <td>
+                  
+                 
+                  <select  data-token="evaluacion_financiera"  id="evaluacion_financiera"  onChange="selectProduct2($(this));"  class="nota_evaluacion_financiera form-control select2 " name="evaluacion_financiera" >
+                    <option value="">Porsentaje </option>
+                    @foreach (range(0, 100) as $numero)
+                        <option value="{{$numero}}%" {{ $order['evaluacion_financiera'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
+                    @endforeach
+                </select>
+              </td>
+              </tr>
+              {{-- nota_evaluacion_financiera --}}
+
+              <tr>
+                <td  class="td-title"><span >Evaluación legal</span></td>
+                <td>
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                    
+                    @if (empty($order->nota_evaluacion_legal ))
+                          Nota
+                          @else
+                          {{$order->nota_evaluacion_legal }} 
+                      @endif
+                  </a>
+              </td>
+                <td>
+                  
+                 
+                  <select   id="evaluacion_legal"  onChange="selectProduct2($(this));"  class="evaluacion_legal form-control select2 " name="evaluacion_legal" >
+                    <option value="0">Porsentaje </option>
+                    @foreach (range(0, 100) as $numero)
+                        <option value="{{$numero}}%" {{ $order['evaluacion_legal'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
+                    @endforeach
+                </select>
+              </td>
+              </tr>
+
+
+              
+
+
+              <tr>
+                <td  class="td-title"><span >Decisión final</span></td>
+                <td>
+                  <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                    @if (empty($order->nota_decision_final ))
+                    Nota
+                    @else
+                    {{$order->nota_decision_final }} 
+                @endif
+                  </a>
+              </td>
+                <td>
+                  
+                 
+                  <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
+                    <option value="0">Porsentaje </option>
+                    @foreach (range(0, 100) as $numero)
+                        <option value="{{$numero}}%" {{ $order['decision_final'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
+                    @endforeach
+                </select>
+              </td>
+              </tr>
+            </table>
+                 
+             @endif
+
+             
               <table class="table table-hover box-body text-wrap table-bordered">
                 <tr>
                   <td  class="td-title">{{ sc_language_render('order.order_note') }}:</td>
@@ -514,7 +629,7 @@
             </div>
 
 
-            <div class="card collapsed-card">
+            <div class="card collapsed-card w-50%">
               <div class="card-header border-transparent">
                 <h3 class="card-title">{{ sc_language_render('order.admin.order_history') }}</h3>
                 <div class="order-info">
@@ -732,7 +847,7 @@ function gen_table(fecha_p=false){
                 $('#loading').show();
             },
             success: function(returnedData){
-              console.log(returnedData)
+              
               $("#modal_convenio").modal('show')
               $('#loading').hide();
               $("#c_monto").val(returnedData.subtotal)
@@ -901,7 +1016,7 @@ function gen_table(fecha_p=false){
           }else{
               alert("Falta ingresar un Número");
           }
-    console.log(returnedData)
+
 
                 $('#loading').hide();
                 }
@@ -954,6 +1069,75 @@ function update_total(e){
         }
 
     }
+
+$( "#evaluacion_comercial" ).change(function(e) {
+  let name = "evaluacion_comercial"
+  let valor = $('#evaluacion_comercial').val()
+  selectProduct2(name , valor)
+
+});
+$( "#evaluacion_financiera" ).change(function(e) {
+  let name = "evaluacion_financiera"
+  let valor = $('#evaluacion_financiera').val()
+  selectProduct2(name , valor)
+
+});
+$( "#evaluacion_legal" ).change(function(e) {
+  let name = "evaluacion_legal"
+  let valor = $('#evaluacion_legal').val()
+  selectProduct2(name , valor)
+
+});
+$( "#decision_final" ).change(function(e) {
+  let name = "decision_final"
+  let valor = $('#decision_final').val()
+  selectProduct2(name , valor)
+
+});
+
+
+    function selectProduct2(name , valor){
+         $.ajax({
+          dataType: "json",
+          data: { 
+            id : '{{ $order->id }}',
+            _token: '{{ csrf_token() }}',
+            value:valor,
+            nombre:name
+          }, 
+          url: `{{ route("admin_order.update") }}`,
+          type: "post",
+          beforeSend: function(){
+                $('#loading').show();
+            },
+  
+            success: function (respuestas) {
+               
+              $('#loading').hide();
+
+                 
+          },
+          error: function (xhr, err) {
+            alert(
+              "readyState =" +
+                xhr.readyState +
+                " estado =" +
+                xhr.status +
+                "respuesta =" +
+                xhr.responseText
+            );
+            alert("ocurrio un error intente de nuevo");
+          },
+        });
+
+       
+        
+
+    }
+
+
+
+
 $('#add-item-button').click(function() {
   var html = '{!! $htmlSelectProduct !!}';
   $('#add-item').before(html);
