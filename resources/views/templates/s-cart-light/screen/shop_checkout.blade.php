@@ -56,11 +56,12 @@ $layout_page = shop_checkout
                                 <select class="form-control" name="address_process" style="width: 100%;" id="addressList">
                                     <option value="">{{ sc_language_render('cart.change_address') }}</option>
                                     @foreach ($addressList as $k => $address)
-                                    <option value="{{ $address->id }}" {{ (old('address_process') ==  $address->id) ? 'selected':''}} >- {{ $address->first_name. ' '.$address->last_name.', '.$address->address1.' '.$address->address2.' '.$address->address3 }}</option>
+                                    <option value="{{ $address->id }}" {{ (old('address_process') ==  $address->id) ? 'selected':''}}>- {{ $address->first_name. ' '.$address->last_name.', '.$address->address1.' '.$address->address2.' '.$address->address3 }}</option>
                                     @endforeach
                                     <option value="new" {{ (old('address_process') ==  'new') ? 'selected':''}}>{{ sc_language_render('cart.add_new_address') }}</option>
                                 </select>
                             </div>
+                            
                         @endif
                         {{--// Select address if customer login --}}
                         
@@ -272,6 +273,7 @@ $layout_page = shop_checkout
                     <div class="col-md-6">
                         {{-- Total --}}
                         <div class="row">
+                  
                             <div class="col-md-12">
                                 {{-- Data total --}}
                                 @include($sc_templatePath.'.common.render_total')

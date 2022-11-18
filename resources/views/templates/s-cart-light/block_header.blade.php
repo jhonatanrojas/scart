@@ -8,11 +8,11 @@
                 <!-- RD Navbar Panel-->
                 <div class="rd-navbar-panel">
                   <!-- RD Navbar Toggle-->
-                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                  <button type="button" class="rd-navbar-toggle text-white" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
-                    <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="105" height="44"/>
-                      <img class="brand-logo-light" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="106" height="44"/></a>
+                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="150" height="60"/>
+                  <img class="brand-logo-light" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="106" height="44"/></a>
                   </div>
                 </div>
                 <div class="rd-navbar-nav-wrap">
@@ -21,7 +21,7 @@
                     @if (!empty($sc_layoutsUrl['menu']))
                     @foreach ($sc_layoutsUrl['menu'] as $url)
                     <li class="rd-nav-item">
-                        <a class="rd-nav-link" {{ ($url->target =='_blank')?'target=_blank':''  }}
+                        <a class="rd-nav-link " {{ ($url->target =='_blank')?'target=_blank':''  }}
                             href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
                     </li>
                     @endforeach
@@ -29,8 +29,8 @@
 
                     @if (sc_config('link_account', null, 1))
                     @guest
-                    <li class="rd-nav-item"><a class="rd-nav-link" href="#"><i class="fa fa-lock"></i> {{ sc_language_render('front.account') }}</a>
-                        <ul class="rd-menu rd-navbar-dropdown">
+                    <li class="rd-nav-item"><a class="rd-nav-link " href="#"><i class="fa fa-lock"></i> {{ sc_language_render('front.account') }}</a>
+                        <ul class="rd-menu rd-navbar-dropdown ">
                             <li class="rd-dropdown-item">
                                 <a class="rd-dropdown-link" href="{{ sc_route('login') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.login') }}</a>
                             </li>
@@ -51,19 +51,19 @@
                     </li>
 
                     @else
-                    <li class="rd-nav-item"><a class="rd-nav-link" href="#"><i class="fa fa-lock"></i> My perfil</a>
+                    <li class="rd-nav-item"><a class="rd-nav-link text-white" href="#"><i class="fa fa-lock"></i> MI CUENTA</a>
                         <ul class="rd-menu rd-navbar-dropdown">
-                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="{{ sc_route('customer.index') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.my_profile') }}</a></li>
-                            <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="{{ sc_route('logout') }}" rel="nofollow" onclick="event.preventDefault();
+                            <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('customer.index') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.my_profile') }}</a></li>
+                            <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('logout') }}" rel="nofollow" onclick="event.preventDefault();
                                document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ sc_language_render('front.logout') }}</a></li>
                             <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('wishlist') }}"><i class="fas fa-heart"></i> {{ sc_language_render('front.wishlist') }} 
+                                <a class="rd-dropdown-link text-white" href="{{ sc_route('wishlist') }}"><i class="fas fa-heart"></i> {{ sc_language_render('front.wishlist') }} 
                                     <span class="count sc-wishlist"
                                     id="shopping-wishlist">{{ Cart::instance('wishlist')->count() }}</span>
                                 </a>
                             </li>
                             <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('compare') }}"><i class="fa fa-exchange"></i> {{ sc_language_render('front.compare') }} 
+                                <a class="rd-dropdown-link text-white" href="{{ sc_route('compare') }}"><i class="fa fa-exchange"></i> {{ sc_language_render('front.compare') }} 
                                     <span class="count sc-compare"
                                     id="shopping-compare">{{ Cart::instance('compare')->count() }}</span>
                                 </a>
@@ -80,13 +80,13 @@
                     @if (count($sc_languages)>1)
                     <li class="rd-nav-item">
                         <a class="rd-nav-link" href="#">
-                            <img src="{{ sc_file($sc_languages[app()->getLocale()]['icon']) }}" style="height: 25px;"> <i class="fas fa-caret-down"></i>
+                            <img src="{{ sc_file($sc_languages[app()->getLocale()]['icon']) }}" style="height: 25px;" alt="icon"> <i class="fas fa-caret-down"></i>
                         </a>
                         <ul class="rd-menu rd-navbar-dropdown">
                             @foreach ($sc_languages as $key => $language)
                             <li class="rd-dropdown-item">
                                 <a class="rd-dropdown-link" href="{{ sc_route('locale', ['code' => $key]) }}">
-                                    <img src="{{ sc_file($language['icon']) }}" style="height: 25px;"> {{ $language['name'] }}
+                                    <img alt="icon" src="{{ sc_file($language['icon']) }}" style="height: 25px;"> {{ $language['name'] }}
                                 </a>
                             </li>
                             @endforeach
@@ -120,7 +120,7 @@
                 <div class="rd-navbar-main-element">
                   <!-- RD Navbar Search-->
                   <div class="rd-navbar-search rd-navbar-search-2">
-                    <button class="rd-navbar-search-toggle rd-navbar-fixed-element-3" data-rd-navbar-toggle=".rd-navbar-search"><span></span></button>
+                    <button class="text-white rd-navbar-search-toggle rd-navbar-fixed-element-3" data-rd-navbar-toggle=".rd-navbar-search"><span></span></button>
                     <form class="rd-search" action="{{ sc_route('search') }}"  method="GET">
                       <div class="form-wrap">
                         <input class="rd-navbar-search-form-input form-input"  type="text" name="keyword"  placeholder="{{ sc_language_render('search.placeholder') }}"/>
@@ -131,15 +131,20 @@
                   @if (sc_config('link_cart', null, 1))
                   <!-- RD Navbar Basket-->
                   <div class="rd-navbar-basket-wrap">
-                    <a href="{{ sc_route('cart') }}">
+                    {{-- <a href="{{ sc_route('cart') }}">
                     <button class="rd-navbar-basket fl-bigmug-line-shopping202">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
                     </button>
+                    </a> --}}
+
+                    <a class="rd-navbar-basket fas fa-heart"  href="{{ sc_route('wishlist') }}">
+                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
+                     
                     </a>
                   </div>
-                  <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
+                  {{-- <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
                     <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
-                 </a>
+                 </a> --}}
                 @endif
                 </div>
               </div>

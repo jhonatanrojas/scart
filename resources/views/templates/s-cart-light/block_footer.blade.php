@@ -1,11 +1,13 @@
       <!-- Page Footer-->
       <footer class="section footer-classic">
+        
         <div class="footer-classic-body section-lg bg-brown-2">
           <div class="container">
             <div class="row row-40 row-md-50 justify-content-xl-between">
               <div class="col-sm-6 col-lg-4 col-xl-3 wow fadeInRight">
                 <a href="{{ sc_route('home') }}">
-                    <img class="logo-footer" src="{{  sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{ sc_store('title', ($storeId ?? null)) }}">
+                  <img class="logo-footer" src="{{  sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{ sc_store('title', ($storeId ?? null)) }}">
+
                 </a>
                 <p>{{ sc_store('title', ($storeId ?? null)) }}</p>
                 <p> {!! sc_store('time_active', ($storeId ?? null))  !!}</p>
@@ -86,7 +88,7 @@
           </div>
         </div>
 
-        <div class="footer-classic-panel">
+        {{-- <div class="footer-classic-panel">
           <div class="container">
             <div class="row row-10 align-items-center justify-content-sm-between">
               <div class="col-md-auto">
@@ -104,5 +106,5 @@
               @endif
             </div>
           </div>
-        </div>
+        </div> --}}
       </footer>

@@ -5,6 +5,8 @@ $layout_page = shop_profile
 - $customer
 */ 
 @endphp
+
+
 <style>
     .imagen_svg{
         background-image: url('/images/asset 0.svg');
@@ -21,13 +23,8 @@ $layout_page = shop_profile
 
 @section('block_main_profile')
 
-   <div class="container">
-    <div class="row">
-        <div class="col-12 col-md-12 imagen_svg">
-            <p class="text-center  h4">Bienvenido  <span> {{ $customer['first_name'] }} {{ $customer['last_name'] }}</span>!</p>
-        </div>
-    </div>
+ 
 
-   </div>
+
    
 @endsection

@@ -13,11 +13,20 @@ Use paginate: $products->appends(request()->except(['page','_token']))->links()
 */
 @endphp
 
+
+
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
 <section class="section section-xl bg-default text-md-left">
     <div class="container">
+        <div class=" text-center ">
+            @if (isset($mensaje) && $mensaje != "" && $cart[0]->financiamiento == "1")
+            <div class="alert alert-danger">
+               <span class="h6"> {{ $mensaje }} <a class="text-info" href="{{route('adjuntar_document')}}">haga click aqui para  Adjuntar</a></span>
+            </div>
+            @endif
+        </div>
         <div class="row">
             @if (count($cart) ==0)
             <div class="col-md-12 text-danger min-height-37vh">

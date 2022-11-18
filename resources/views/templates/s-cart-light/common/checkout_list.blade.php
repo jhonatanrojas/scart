@@ -1,14 +1,32 @@
+
+{!!$financiamiento = $cartItem[0]->financiamiento!!}
+
 <div class="col-md-12">
   <div class="table-responsive">
       <table class="table box table-bordered">
           <thead>
+             @if (!empty($financiamiento))
               <tr style="background: #eaebec">
                   <th style="width: 50px;">No.</th>
                   <th>{{ sc_language_render('product.name') }}</th>
+                  <th > Modalidad de pagos</th>
+                  <th > Cuotas</th>
+                  <th > Pagos de</th>
+                  <th >Inicial</th>
                   <th>{{ sc_language_render('product.price') }}</th>
                   <th>{{ sc_language_render('product.quantity') }}</th>
                   <th>{{ sc_language_render('product.subtotal') }}</th>
               </tr>
+              @else
+                <th style="width: 50px;">No.</th>
+                  <th>{{ sc_language_render('product.name') }}</th>
+                  <th > Cuotas</th>
+                  <th > Pagos de</th>
+                  <th>{{ sc_language_render('product.price') }}</th>
+                  <th>{{ sc_language_render('product.quantity') }}</th>
+                  <th>{{ sc_language_render('product.subtotal') }}</th>
+
+              @endif
           </thead>
           <tbody>
               @foreach($cartItem as $item)
@@ -17,6 +35,7 @@
                       $n++;
                       // Check product in cart
                       $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
+           
                       if(!$product) {
                           continue;
                       }
@@ -44,8 +63,40 @@
                       </a>
                   </td>
 
-                  <td>{!! $product->showPrice() !!}</td>
 
+                  @if (!empty($financiamiento))
+                  <td>{!!$item->modalidad_pago == "2" ? "Quinsenal":"Mensual"!!}</td>
+                  <td>{!!$item->Cuotas!!}</td>
+                  @else
+                  <td>{!! $product->nro_coutas !!} </td>
+                      
+                  @endif
+                  @php
+                  if(!empty($financiamiento)){
+                    $total_cuotas=0;
+                  if($product->nro_coutas>0){
+                    $total_cuotas=  $product->price / $item->Cuotas;  
+
+                  }
+
+                  }else{
+                    $total_cuotas=0;
+                  if($product->nro_coutas>0){
+                    $total_cuotas=  $product->price / $product->nro_coutas;  
+
+                  }
+                  }
+                
+                 @endphp
+                  @if (!empty($financiamiento))
+                  <td>${!! $total_cuotas !!} </td>
+                  <td>{!! $item->inicial !!}%</td>
+                  <td>{!! $product->showPrice() !!}</td>
+                  
+                  @else
+                  <td>${!! $total_cuotas !!} </td>
+                  <td>{!! $product->showPrice() !!}</td>
+                  @endif
                   <td class="cart-col-qty">
                       <div class="cart-qty">
                         {{$item->qty}}

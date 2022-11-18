@@ -14,13 +14,7 @@
           
             @section('block_main_profile')
             @show
-            <div class=" text-center ">
-              @if (isset($mensaje) && $mensaje != "")
-              <div class="alert alert-danger">
-                 <span class="h5"> {{ $mensaje }} <a class="text-info" href="{{route('adjuntar_document')}}">haga click aqui para  Adjuntar</a></span>
-              </div>
-              @endif
-          </div>
+            
         </div>
       </div>
     </div>
