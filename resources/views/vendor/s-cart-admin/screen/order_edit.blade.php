@@ -508,7 +508,11 @@
 
              @if ($order->modalidad_de_compra == 1)
              <table class="table table-hover box-body text-wrap table-bordered">
-             
+             <tr>
+              <td>Evaluación</td>
+              <td>Observación</td>
+              <td>Porcentaje</td>
+             </tr>
               <tr>
                 <td  class="td-title"><span >Evaluación comercial</span></td>
                 <td>
