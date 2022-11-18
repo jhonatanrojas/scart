@@ -584,9 +584,10 @@ class  AdminOrderController extends RootAdminController
         $value = request('value');
         $fecha_primer_pago = request('fecha_primer_pago');
         $ordert = AdminOrder::getOrderAdmin($id);
+    
 
 
-        if($code == "status" && $value == 3){
+        if($code == "status" && $value == 3 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
             $valorFinal = 0;
             foreach ($numeros as $numero) {
