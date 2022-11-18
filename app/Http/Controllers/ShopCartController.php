@@ -782,7 +782,7 @@ class ShopCartController extends RootFrontController
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $Cuotas = $data['Cuotas'] ?? 0;
-            $modalidad_pago = $data['modalidad_pago'];
+            $modalidad_pago = isset($data['modalidad_pago'])? 0:1;
             $storeId   = $data['storeId'] ?? config('app.storeId');
         }
        

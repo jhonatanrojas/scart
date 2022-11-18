@@ -76,6 +76,7 @@ class AdminCmsCategory extends CmsCategory
         $categoriesTitle =  $this->getListTitleAdmin();
         $tree = $tree ?? [];
         $lisCategory = $categories[$parent] ?? [];
+        
         if ($lisCategory) {
             foreach ($lisCategory as $category) {
                 $tree[$category['id']] = $st . $categoriesTitle[$category['id']]??'';

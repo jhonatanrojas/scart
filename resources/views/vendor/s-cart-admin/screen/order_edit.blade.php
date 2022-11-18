@@ -481,8 +481,14 @@
               <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
             <td>                    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
 
-              <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
+              @if($historial->payment_status == 2 || $historial->payment_status ==5)
+              <a href='#' ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+              @endif
+              @if($historial->payment_status != 2 && $historial->payment_status !=5)
+     
 
+              <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+              @endif
             </td>
             </tr>
       @endforeach
@@ -750,7 +756,7 @@
       
               <div class="form-group">
                 <label for="observacion">Observación</label>
-             <input type="text" class="form-control" id="observacion" name="observacion">
+             <input type="text" class="form-control" id="observacion" name="observacion" required>
               </div>
               <input type="hidden" name="id_pago" id="id_pago">
             </div>
