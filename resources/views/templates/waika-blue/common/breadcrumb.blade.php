@@ -37,8 +37,15 @@
         @endphp
 
         @if ($bannerBreadcrumbImage)
-        <div class="parallax-container" data-parallax-img="{{ $bannerBreadcrumbImage }}">
-            <div class="material-parallax parallax">
+        <section id="parallax-vertical" >
+        <div class="ma-parallax text-center jumbotron bg-faded " style="background: url(&quot;{{ $bannerBreadcrumbImage }}&quot;) center -59px no-repeat;" data-paroller-factor="0.3">
+            <h2 class="breadcrumbs-custom-title">{{ $title ?? '' }}</h2>
+      
+        </div>
+        </section>
+   
+        <!--div class="parallax-container" data-parallax-img="{{ $bannerBreadcrumbImage }}">
+            <div class="material-parallax parallax"> 
             <img src="{{ $bannerBreadcrumbImage }}" alt="" style="display: block; transform: translate3d(-50%, 83px, 0px);">
             </div>
             <div class="breadcrumbs-custom-body parallax-content context-dark">
@@ -46,7 +53,7 @@
                 <h2 class="breadcrumbs-custom-title">{{ $title ?? '' }}</h2>
             </div>
             </div>
-        </div>
+        </div -->
         @endif
     @endif
 
