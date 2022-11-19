@@ -1112,4 +1112,88 @@ class  AdminOrderController extends RootAdminController
 
         return $pdf->download('screen.pdf');
     }
+
+    public function borrador_pdf($id){
+
+        $order = AdminOrder::getOrderAdmin($id);
+        if (!$order) {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+
+       
+        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        $result = $usuario->all();
+        $productoDetail = shop_order_detail::where('order_id' , $id)->get();
+        $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
+        $nombreProduct = [];
+        $cuotas = [];
+        $abono_inicial = [];
+        $id_modalidad_pago = [];
+        foreach($productoDetail as $key => $p){
+            $nombreProduct = $p->name;
+            $cuotas = $p->nro_coutas;
+            $abono_inicial = $p->abono_inicial;
+            $id_modalidad_pago = $p->id_modalidad_pago;
+        }
+        
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
+
+        $nombreEstado=[];
+        $nombreparroquias =[];
+        $nombremunicipos =[];
+        foreach($result as $c){
+            foreach($estado as $estados){
+           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
+                foreach($municipio as $municipos){
+                    if($municipos->codigomunicipio ==  $c['cod_municipio']){
+                        $nombremunicipos = $municipos->nombre;
+                    }
+                }
+                foreach($parroquia as $parroquias){
+                    if($parroquias->codigomunicipio == $c['cod_municipio']){
+                        $nombreparroquias = $parroquias->nombre;
+                        
+                    }
+                   
+                }
+              
+            }
+
+            $dato_usuario = [
+                'subtotal' => $c['subtotal'],
+                'natural_jurídica' => $c['natural_jurídica'],
+                'razon_social' => $c['razon_social'],
+                'rif' => $c['rif'],
+                'first_name' => $c['first_name'],
+                'last_name' => $c['last_name'],
+                'phone' => $c['phone'],
+                'email' => $c['email'],
+                'address1' => $c['address1'],
+                'cedula' => $c['cedula'],
+                'cod_estado' => $nombreEstado ,
+                'cod_municipio' => $nombremunicipos,
+                'cod_parroquia' => $nombreparroquias,
+                
+                [
+        
+                    'subtotal'=> $order['subtotal'],
+                    'fecha_primer_pago'=> $order['fecha_primer_pago'],
+                    'cantidaProduc'=> $cantidaProduc,
+                    'nombreProduct'=> $nombreProduct,
+                    'cuotas' => $cuotas,
+                    'abono_inicial' => $abono_inicial,
+                    'id_modalidad_pago' => $id_modalidad_pago
+
+                ]
+
+            ];
+
+
+        }
+
+        return view($this->templatePathAdmin.'screen.borrador_pdf',['dato_usuario'=>$dato_usuario]);
+
+    }
 }
