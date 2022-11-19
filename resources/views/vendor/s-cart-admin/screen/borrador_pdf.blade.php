@@ -920,10 +920,7 @@ margin-left: 70%;
                 Litigio se escoge la ciudad de Caracas, Capital de la Rep&uacute;blica Bolivariana de Venezuela y regulado
                 por las leyes vigentes. </span></p>
         <p class="c28"><span
-                style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 41.87px; height: 29.07px;"><img
-                    alt="" src=""
-                    style="width: 41.87px; height: 29.07px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                    ></span></p>
+                style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 41.87px; height: 29.07px;"></span></p>
         <p class="c28 c24"><span class="c18 c35"></span></p>
         <p class="c40"><span class="c2">&nbsp;&ldquo;WAIKA IMPORT C.A&rdquo;</span><span
                 class="c7">&nbsp;registro de informaci&oacute;n fiscal N&ordm; </span>
