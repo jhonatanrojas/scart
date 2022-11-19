@@ -41,6 +41,12 @@
                 </div>
                       
                   @endif
+                  @if ($order->total > 0 && $order->modalidad_de_compra == 1)
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador</span></a>
+                </div>
+                      
+                  @endif
 
               </div>
           </div>
@@ -106,7 +112,7 @@
                     <tr>
                       <td class="td-title">Ver documentos:</td>
                       <td>
-                        @if (empty($documento))
+                        @if (empty($documento ) )
                         El cliente no ha adjuntado Documentos <br>
                         @endif
                         <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
@@ -123,7 +129,7 @@
                       <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
                     </td>
                   </tr>
-                  
+
                     
 
                     <tr>
