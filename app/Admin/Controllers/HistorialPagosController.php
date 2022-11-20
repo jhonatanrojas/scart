@@ -386,6 +386,7 @@ class HistorialPagosController extends RootAdminController
          'importe_pagado' =>$request->monto,
          'comment' =>$request->observacion,
          'moneda' =>$request->moneda,
+         'tasa_cambio' => $request->tipo_cambio,
          'comprobante'=>   $path_archivo,
          'payment_status' => 2
 
@@ -535,6 +536,7 @@ class HistorialPagosController extends RootAdminController
       
        
     }
+
     public function postUpdate(){
      
  
@@ -551,6 +553,27 @@ class HistorialPagosController extends RootAdminController
         // return redirect()->back()
         // ->with(['success' => 'Accion completada']);
         return response()->json(['error' => 0, 'msg' => sc_language_render('action.update_success')]);
+      
+       
+    }
+    public function obtener_pago(){
+     
+ 
+        $id = request('id');
+        $pago = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->join('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
+        ->join('sc_shop_payment_status', 'sc_historial_pagos.payment_status', '=', 'sc_shop_payment_status.id')
+        ->where('sc_historial_pagos.id',$id)    
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_metodos_pagos.name as metodo', 'sc_shop_payment_status.name as status' ,'sc_shop_order.last_name')->first();
+        
+        $pago->comprobante=  sc_file( $pago->comprobante);
+
+      
+            
+
+        // return redirect()->back()
+        // ->with(['success' => 'Accion completada']);
+        return response()->json(['error' => 0, 'data' =>$pago]);
       
        
     }

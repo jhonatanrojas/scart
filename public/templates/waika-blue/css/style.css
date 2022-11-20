@@ -18443,9 +18443,12 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .iphone .parallax-container {
 	background-attachment: scroll !important;
 }
+.jumbotron {
+    padding: 10rem 2rem;
+}
 
 .material-parallax img {
-	display: none;
+	
 	position: absolute;
 	left: 50%;
 	bottom: 0;

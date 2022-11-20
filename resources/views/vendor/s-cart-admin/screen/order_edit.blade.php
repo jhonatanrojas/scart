@@ -41,6 +41,12 @@
                 </div>
                       
                   @endif
+                  @if ($order->total > 0 && $order->modalidad_de_compra == 1)
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador</span></a>
+                </div>
+                      
+                  @endif
 
               </div>
           </div>
@@ -106,11 +112,21 @@
                     <tr>
                       <td class="td-title">Ver documentos:</td>
                       <td>
-                        @if (empty($documento))
+                        @if (empty($documento ) )
                         El cliente no ha adjuntado Documentos <br>
                         @endif
                         <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
                       </td>
+
+                   
+                    </tr>
+                    <tr>
+                      <td class="td-title">Creado Por:</td>
+                      <td>
+                        {{ $order->usuario}}
+                      </td>
+
+                   
                     </tr>
                 </table>
             </div>
@@ -123,7 +139,7 @@
                       <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? $order->status }}</a>
                     </td>
                   </tr>
-                  
+
                     
 
                     <tr>
@@ -167,10 +183,11 @@
                       <a href="#" class="updateStatus" data-name="shipping_status" data-type="select" data-source ="{{ json_encode($statusShipping) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_status') }}">{{ $statusShipping[$order->shipping_status]??$order->shipping_status }}</a>
                     
                     </td></tr>
-                    <tr><td>{{ sc_language_render('order.payment_status') }}:</td><td><a href="#" class="updateStatus" data-name="payment_status" data-type="select" data-source ="{{ json_encode($statusPayment) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_status') }}">{{ $statusPayment[$order->payment_status]??$order->payment_status }}</a></td></tr>
                     <tr><td>{{ sc_language_render('order.shipping_method') }}:</td><td><a href="#" class="updateStatus" data-name="shipping_method" data-type="select" data-source ="{{ json_encode($shippingMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_method') }}">{{ $order->shipping_method }}</a></td></tr>
                     <tr><td>{{ sc_language_render('order.payment_method') }}:</td><td><a href="#" class="updateStatus" data-name="payment_method" data-type="select" data-source ="{{ json_encode($paymentMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_method') }}">{{ $order->payment_method }}</a></td></tr>
                     @endif
+                    <tr><td> Estatus de pago Global:</td><td><a href="#" class="updateStatus" data-name="payment_status" data-type="select" data-source ="{{ json_encode($statusPayment) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_status') }}">{{ $statusPayment[$order->payment_status]??$order->payment_status }}</a></td></tr>
+
                     <tr><td></i> {{ sc_language_render('admin.created_at') }}:</td><td>{{ $order->created_at }}</td></tr>
                   </table>
                  <table class="table table-hover box-body text-wrap table-bordered">
@@ -450,48 +467,56 @@
             <table class="table box table-bordered" width="100%">
               <thead>
                 <tr>
-                  <th style="width: 50px;">No.</th>
-     
+            
+                  <th>Acciones</th>
+          
                   <th>Cuota </th>
 
-                  <th>Monto pagado</th>
+                  <th>Reportado</th>
                   <th>Divisa</th>
+                  <th>Conversion</th>
+        
                   <th>estatus </th>
                   
                   <th>Fecha de vencimiento</th>
-                  <th>Acciones</th>
           
                 </tr>
               </thead>
               <tbody>
                 @foreach($historial_pagos as $historial)
                 <tr>
-                @php
-                $n = (isset($n)?$n:0);
-                $n++;
-                @endphp
-              <td><span class="item_21_id">{{ $n }}</span></td>
+
+         
+<td>        
+  @if( $historial->payment_status ==2)      
+        <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
+        @endif
+  @if($historial->payment_status == 2 || $historial->payment_status ==5)
+  <a href='#' onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+  @endif
+  @if($historial->payment_status != 2 && $historial->payment_status !=5)
+
+
+  <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+  @endif
+</td>
+         
  
               <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
               <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-              <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
+              @php
+             $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1
+              @endphp
+                  <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
+              <td><span class="item_21_sku">{!! $historial->importe_pagado / $tasa_cambio  !!}$</span></td>
+          
               <td><span class="item_21_sku">{{ $historial->estatus->name }}
               
               <br>
              <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
               </span></td>
               <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
-            <td>                    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
-
-              @if($historial->payment_status == 2 || $historial->payment_status ==5)
-              <a href='#' ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
-              @endif
-              @if($historial->payment_status != 2 && $historial->payment_status !=5)
-     
-
-              <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
-              @endif
-            </td>
+         
             </tr>
       @endforeach
               </tbody>
@@ -527,7 +552,7 @@
                   
                  
                   <select data-name="evaluacion_comercial"     id="evaluacion_comercial"  onChange="selectProduct2();"  class="evaluacion_comercial form-control select2 " name="evaluacion_comercial" >
-                    <option value="">Porsentaje </option>
+                    <option value="">Porcentaje </option>
                     @foreach (range(0, 100) as $numero)
                         <option value="{{$numero}}%" {{ $order['evaluacion_comercial'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
                     @endforeach
@@ -555,7 +580,7 @@
                   
                  
                   <select  data-token="evaluacion_financiera"  id="evaluacion_financiera"  onChange="selectProduct2($(this));"  class="nota_evaluacion_financiera form-control select2 " name="evaluacion_financiera" >
-                    <option value="">Porsentaje </option>
+                    <option value="">Porcentaje </option>
                     @foreach (range(0, 100) as $numero)
                         <option value="{{$numero}}%" {{ $order['evaluacion_financiera'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
                     @endforeach
@@ -579,7 +604,7 @@
                   
                  
                   <select   id="evaluacion_legal"  onChange="selectProduct2($(this));"  class="evaluacion_legal form-control select2 " name="evaluacion_legal" >
-                    <option value="0">Porsentaje </option>
+                    <option value="0">Porcentaje </option>
                     @foreach (range(0, 100) as $numero)
                         <option value="{{$numero}}%" {{ $order['evaluacion_legal'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
                     @endforeach
@@ -604,7 +629,7 @@
                   
                  
                   <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
-                    <option value="0">Porsentaje </option>
+                    <option value="0">Porcentaje </option>
                     @foreach (range(0, 100) as $numero)
                         <option value="{{$numero}}%" {{ $order['decision_final'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
                     @endforeach
@@ -633,8 +658,7 @@
               <div class="card-header border-transparent">
                 <h3 class="card-title">{{ sc_language_render('order.admin.order_history') }}</h3>
                 <div class="order-info">
-                  <span><b>Agent:</b> {{ $order->user_agent }}</span>
-                  <span><b>IP:</b> {{ $order->ip }}</span>
+                    <span><b>IP:</b> {{ $order->ip }}</span>
                 </div>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -731,6 +755,95 @@
   </div>
 </div>
 
+ <!-- Modal detaalle pago -->
+ <div class="modal fade" id="modal_detalle_pago" tabindex="-1" role="dialog" aria-labelledby="modal_detalle_pago" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de pago #<span id="idpago"></span> </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              <label for="forma_pago">Forma de pago</label>
+              <input id="mforma_pago" name="" required class="form-control" readonly>
+   
+              </select>  
+            </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Nro de referencia</label>
+            <input type="text" class="form-control"  required name="" id="mreferencia" placeholder="referencia" readonly>
+          </div>
+
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Fecha de pago</label>
+            <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Fecha de Vencimiento</label>
+            <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="forma_pago">Monto</label>
+            <input type="text" required class="form-control"  id="mmonto" name=""  readonly  placeholder="Monto">
+
+          </div>
+          <div class="form-group col-md-6">
+            <label for="forma_pago">Divisa</label>
+            <input type="text" required  readonly class="form-control readonly"  id="mdivisa" name=""  placeholder="divisa">
+
+           
+          </div>
+        </div>
+
+        <div class="form-row">
+       
+     
+
+          <div class="form-group col-md-6">
+         
+              <label for="forma_pago"> descargar referencia </label>
+              <a href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
+                </div>
+                <div class="form-group col-md-6">
+         
+                  <label for="forma_pago">Estatus</label>
+                  <input type="text"  id="mstatus" class="form-control" name=""  readonly required="">
+    
+                    </div>
+
+                    <div class="form-group col-md-6">
+         
+                      <label for="forma_pago">Tasa de cambio</label>
+                      <input type="text"  id="mtasa" class="form-control" readonly name="" required="" readonly>
+        
+                        </div>
+                <div class="form-group col-md-6">
+         
+                  <label for="forma_pago">Observación</label>
+                  <input type="text"  id="mobservacion" class="form-control" readonly name="" required="">
+    
+                    </div>
+        </div>
+
+
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+        
+    
+      </div>
+    </div>
+  </div>
+</div>
 
       <!-- Modal -->
       <div class="modal fade" id="modal_estatus_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -832,6 +945,50 @@ function formatoFecha(fecha, formato) {
 
     return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
 }
+
+function obtener_detalle_pago(id_pago){
+
+  $.ajax({
+                url : '{{ sc_route_admin('obtener_pago') }}',
+                type : "get",
+                dateType:"application/json; charset=utf-8",
+                data : {
+                     id : id_pago,
+                    
+                },
+            beforeSend: function(){
+                $('#loading').show();
+            },
+            success: function(returnedData){
+           $('#modal_detalle_pago').modal('show')
+
+           var data = returnedData.data;
+
+           $("#idpago").text(data.id)
+            $("#mforma_pago").val(data.metodo)
+            $("#mreferencia").val(data.referencia)
+
+            $("#mfecha").val(data.fecha_pago)
+            $("#mvencimiento").val(data.fecha_venciento)
+            $("#mmonto").val(data.referencia)
+            $("#mreferencia").val(data.referencia)
+            $("#mdivisa").val(data.moneda)
+            $("#mobservacion").val(data.comment)
+            $("#mstatus").val(data.status)
+            $("#mtasa").val(data.mtasa)
+            $("#dcomprobante").attr('href', data.comprobante)
+            
+
+            
+
+            
+                $('#loading').hide();
+                }
+            });
+        
+
+}
+
 function gen_table(fecha_p=false){
     
 
@@ -1205,7 +1362,7 @@ function all_editable(){
         validate: function(value) {
           valor_estatus=value;
             if (value == '') {
-                return '{{  sc_language_render('admin.not_empty') }}';
+                return 'vacio';
             }
         },
         success: function(response) {
@@ -1227,7 +1384,7 @@ function all_editable(){
     $('.updateInfoRequired').editable({
         validate: function(value) {
             if (value == '') {
-                return '{{  sc_language_render('admin.not_empty') }}';
+                return 'vacio';
             }
         },
         success: function(response,newValue) {
@@ -1248,7 +1405,7 @@ function all_editable(){
         },
         validate: function(value) {
           if (value == '') {
-              return '{{  sc_language_render('admin.not_empty') }}';
+              return 'vacio';
           }
           if (!$.isNumeric(value)) {
               return '{{  sc_language_render('admin.only_numeric') }}';
