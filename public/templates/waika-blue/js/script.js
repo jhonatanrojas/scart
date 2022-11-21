@@ -255,8 +255,11 @@
 			}
 		}
 
+		$('.ma-parallax').paroller();
+
+		
 		// Material Parallax
-		if ( plugins.materialParallax.length ) {
+		/*if ( plugins.materialParallax.length ) {
 			if ( !isNoviBuilder && !isIE && !isMobile) {
 				plugins.materialParallax.parallax();
 			} else {
@@ -267,7 +270,7 @@
 					$parallax.css({ "background-image": 'url('+ $parallax.data("parallax-img") +')' });
 				}
 			}
-		}
+		}*/
 	});
 
 	// Initialize scripts that require a finished document

@@ -372,7 +372,13 @@ class ShopAccountController extends RootFrontController
         }
 
 
-    $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status','<>',1)->groupBy('payment_status')->get();
+    if($order->modalidad_de_compra==0){
+        $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status','<>',1)->groupBy('payment_status')->get();
+
+    }{
+        $historial_pagos =   HistorialPago::where('order_id', $id)->orderBy('fecha_venciento')->get();
+
+    }
 
    
         
@@ -438,19 +444,20 @@ class ShopAccountController extends RootFrontController
         
         $order = ShopOrder::where('id', $id) ->where('customer_id', $customer->id)->first();
 
-        
-        $id1 = $customer['id'];
-        
-        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
-       
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+        $id_pago=request('id_pago');
+      
+     
+            $historial_pago = HistorialPago::where('id',$id_pago)->first();
            $metodos_pagos= MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')
         ->with(
             [
             'title'           =>'Reportar pago',
+            'id_pago' => $id_pago,
 
-     
+            'historial_pago' => $historial_pago,
             'customer'        => $customer,
             'referencia'        => $referencia,
              'metodos_pagos'  => $metodos_pagos,
@@ -474,21 +481,25 @@ class ShopAccountController extends RootFrontController
         $cId = $user->id;
         $data = request()->all();
 
+       
         $request->validate([
             'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
             'monto' => 'required',
             'referencia' => 'required',
-            'order_id'=>'required'
+            'order_id'=>'required',
+            'tipo_cambio'=>'required'
         ]);
         $fileName = time().'.'.$request->capture->extension();  
         $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
         $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+        $id_pago = $request->id_pago;
+
 
         $data_pago =[
          'order_id' =>$request->order_id,
          'customer_id' => $cId,
         'referencia' =>$request->referencia,
-
+         'tasa_cambio' => $request->tipo_cambio,
          'order_detail_id' =>$request->id_detalle_orden ,
          'producto_id' =>$request->product_id,
          'metodo_pago_id' =>$request->forma_pago,
@@ -501,7 +512,15 @@ class ShopAccountController extends RootFrontController
 
         ];
 
-        $order = HistorialPago::create($data_pago);
+        if( $id_pago==null){
+            HistorialPago::create($data_pago);
+          }else{
+              HistorialPago::where('id',$id_pago)
+          ->update($data_pago);
+              
+          
+          }
+
 
         return redirect(sc_route('customer.historial_pagos'))
         ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);

@@ -9,7 +9,7 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
-
+use SCart\Core\Front\Models\ShopOrderTotal;
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -386,6 +386,7 @@ class HistorialPagosController extends RootAdminController
          'importe_pagado' =>$request->monto,
          'comment' =>$request->observacion,
          'moneda' =>$request->moneda,
+         'tasa_cambio' => $request->tipo_cambio,
          'comprobante'=>   $path_archivo,
          'payment_status' => 2
 
@@ -535,6 +536,7 @@ class HistorialPagosController extends RootAdminController
       
        
     }
+
     public function postUpdate(){
      
  
@@ -554,6 +556,27 @@ class HistorialPagosController extends RootAdminController
       
        
     }
+    public function obtener_pago(){
+     
+ 
+        $id = request('id');
+        $pago = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->join('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
+        ->join('sc_shop_payment_status', 'sc_historial_pagos.payment_status', '=', 'sc_shop_payment_status.id')
+        ->where('sc_historial_pagos.id',$id)    
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_metodos_pagos.name as metodo', 'sc_shop_payment_status.name as status' ,'sc_shop_order.last_name')->first();
+        
+        $pago->comprobante=  sc_file( $pago->comprobante);
+
+      
+            
+
+        // return redirect()->back()
+        // ->with(['success' => 'Accion completada']);
+        return response()->json(['error' => 0, 'data' =>$pago]);
+      
+       
+    }
 
     public function postEstatusPago(Request $request){
      
@@ -568,17 +591,63 @@ class HistorialPagosController extends RootAdminController
         ]);
       
 
-        $order = HistorialPago::where('id', $request->id_pago)
-        ->update([
+        $balance=0;
+        $pago = HistorialPago::where('id', $request->id_pago)->first();
+  
+        $order = AdminOrder::getOrderAdmin( $pago->order_id);
+            if (!$order) {
+                return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$pago->order_id]), 'detail' => '']);
+            }
+          
+            if ($pago->importe_pagado==0 &&  $request->estatus_pagos==5 ) {
+                return redirect()->back()
+                ->with(['error' => ' El importe pagado debe ser mayor a 0']);
+            }
+          
+    
+
+      
+     
+        $pago->update([
             'payment_status' =>$request->estatus_pagos,
             'observacion' => $request->observacion
             
         
         ]);
-   
+        //actulizar pagos
+       
+        if($request->estatus_pagos==5){
+            $total_pagos= HistorialPago::where('order_id', $pago->order_id)
+            ->where('payment_status',5)
+            ->get();
+            foreach ($total_pagos as $key => $value) {
+                $tasa =  empty($pago->tasa_cambio) ? 1 :$pago->tasa_cambio;
+               
+                $balance += ($pago->importe_pagado *  $tasa);
+            }
+         
+     
+
+            $dataTotal=[];
+            
+           
+
+          $shopOrderTotal=   ShopOrderTotal::where('order_id',$pago->order_id)->where('code','received')
+            ->first();
+            $dataTotal['id'] = $shopOrderTotal->id;
+            $dataTotal['value'] =-$balance;
+            $dataTotal['text'] =sc_currency_render_symbol($balance, $order->currency);
+
+            AdminOrder::updateRowOrderTotal($dataTotal);
+          
+        }
+      
+
+
+      
 
         return redirect()->back()
-        ->with(['success' => 'Accion completada']);
+        ->with(['success' => 'Estatus actualizado']);
       
        
     }

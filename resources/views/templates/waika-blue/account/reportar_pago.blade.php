@@ -58,10 +58,30 @@ $layout_page = shop_profile
 
   </div>
   <hr>
+
+  @if (count($errors) > 0)
+  <div class = "alert alert-danger">
+     <ul>
+        @foreach ($errors->all() as $error)
+           <li>{{ $error }}</li>
+        @endforeach
+     </ul>
+  </div>
+@endif
     <div class="card">
+
+ 
+
       <form action="{{route('post_reporte_pago')}}"  method="post" enctype="multipart/form-data">
        @csrf
-        <h5 class="card-header">{{ $title }}</h5>
+
+
+       <input type="hidden" name="id_pago" value="{{ $id_pago}}">
+        <h5 class="card-header">{{ $title }}
+          @if($historial_pago)
+          <h5 class="text-center">   Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
+          @endif
+        </h5>
         <div class="card-body">
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -72,6 +92,9 @@ $layout_page = shop_profile
                     
                       @endforeach;
                     </select>  
+                    @error('forma_pago')
+                    <small style="color: red">{{$message}}</small>
+                @enderror
                   </div>
                 <div class="form-group col-md-6">
                   <label for="inputEmail4">Nro de referencia</label>
@@ -100,12 +123,26 @@ $layout_page = shop_profile
              
                 <div class="form-group col-md-6">
                   <label for="forma_pago">Divisa</label>
-                  <select id="forma_pago" class="form-control" required name="moneda">
-                    <option selected>Bs</option>
-                    <option>USD</option>
-                  </select>      
-                 
+                          <select id="divisa" class="form-control" required name="moneda">
+                            @foreach(sc_currency_all() as $moneda)
+                            <option  value="{{$moneda->code}}"  {!! $moneda->code =='USD' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
+                            @endforeach
+
+                            
+                          </select>       
+                          @error('divisa')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
                 </div>
+
+                <div class="form-group col-md-6">
+                  <label for="forma_pago">Tasa de cambio</label>
+                  <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="1">     
+                 
+                </div>   @error('tipo_cambio')
+                <small style="color: red">{{$message}}</small>
+            @enderror
+                       
 
                 <div class="form-group col-md-6">
                
@@ -119,7 +156,10 @@ $layout_page = shop_profile
                
                         <label for="forma_pago">Observación</label>
                         <input type="text" class="form-control" id="observacion" name="observacion" required="">
-          
+                        @error('observacion')
+                        <small style="color: red">{{$message}}</small>
+                    @enderror
+                               
                           </div>
               </div>
 
@@ -139,3 +179,15 @@ $layout_page = shop_profile
     
 
 @endsection
+
+
+@push('scripts')
+
+<script type="text/javascript">
+  $("#divisa").change(function(){
+    $("#tipo_cambio").val($(this).find(':selected').attr('data-exchange_rate'))
+  
+  
+  });
+    </script>
+    @endpush

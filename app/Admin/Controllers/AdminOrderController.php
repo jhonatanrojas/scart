@@ -434,6 +434,7 @@ class  AdminOrderController extends RootAdminController
             'email'           => $data['email'],
             'modalidad_de_compra'           => $data['modalidad_compra'],
             'comment'         => $data['comment'],
+            'usuario_id'         =>  Admin::user()->id
         ];
         $dataCreate = sc_clean($dataCreate, [], true);
         $order = AdminOrder::create($dataCreate);

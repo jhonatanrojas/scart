@@ -152,7 +152,7 @@
                                     if($item->attribute && is_array(json_decode($item->attribute,true))){
                                       $array = json_decode($item->attribute,true);
                                           foreach ($array as $key => $element){
-                                            $html .= '<br><b>'.$attributesGroup[$key].'</b> : <i>'.$element.'</i>';
+                                            $html .= '<br><b>0</b> : <i>'.$element.'</i>';
                                           }
                                     }
                                   @endphp
@@ -185,7 +185,7 @@
                   </div>
               
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label for="forma_pago">Forma de pago</label>
                             <select id="forma_pago" name="forma_pago" required class="form-control">
                               @foreach($metodos_pagos as $metodo)
@@ -194,39 +194,58 @@
                               @endforeach;
                             </select>  
                           </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                           <label for="inputEmail4">Nro de referencia</label>
                           <input type="text" class="form-control"  required name="referencia" id="referencia" placeholder="referencia">
                         </div>
                         @error('referencia')
                         <small style="color: red">{{$message}}</small>
-                    @enderror
-                      </div>
-            
-                      <div class="form-row">
-                        <div class="form-group col-md-6">
+                        @enderror
+                        <div class="form-group col-md-4">
                           <label for="inputEmail4">Fecha de pago</label>
                           <input type="date" class="form-control" required value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="referencia">
                         </div>
-                        <div class="form-group col-md-6">
+            
+                      </div>
+            
+                     
+        
+                      <div class="form-row">
+                     
+                        <div class="form-group col-md-3">
                           <label for="forma_pago">Monto</label>
                           <input type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
                           @error('monto')
                           <small style="color: red">{{$message}}</small>
                       @enderror
                         </div>
-                      </div>
-        
-                      <div class="form-row">
-                     
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-3">
                           <label for="forma_pago">Divisa</label>
-                          <select id="forma_pago" class="form-control" required name="moneda">
-                            <option >Bs</option>
-                            <option selected>USD</option>
+                          <select id="divisa" class="form-control" required name="moneda">
+                            @foreach(sc_currency_all() as $moneda)
+                            <option  value="{{$moneda->code}}"  {!! $moneda->code =='USD' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
+                            @endforeach
+
+                            
                           </select>      
-                         
+                          @error('moneda')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
                         </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="forma_pago">Tasa de cambio</label>
+                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio" readonly value="1">
+            
+                          @error('tipo_cambio')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
+                        </div>
+
+
+                     
+
+
         
                         <div class="form-group col-md-6">
                        
@@ -299,6 +318,12 @@
 
   <script type="text/javascript">
 
+ 
+$("#divisa").change(function(){
+  $("#tipo_cambio").val($(this).find(':selected').attr('data-exchange_rate'))
+
+
+});
 $('.mostrar_estatus_pago').click(function(){
   $("#modal_estatus_pago").modal('show');
 
