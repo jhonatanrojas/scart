@@ -30,18 +30,18 @@
     
     
     <li class="menu list-group-item" id="menu">
-      <i class="fa fa-file" aria-hidden="true"></i>
-            Referencia
-      <nav id="navega">
-        <ul>
-          <li><a data-toggle="modal" data-target="#myModal" href="#">Referencia personal</a>   </li>
-          <li><a href="{{sc_route('customer.lista_referencia')}}">Lista de Referencia personal</a></li>
-         
+        <i class="fa fa-file" aria-hidden="true"></i>
+              Referencia
+        <nav id="navega">
+          <ul>
+            <li><a data-toggle="modal" data-target="#myModal" href="#">Referencia personal</a>   </li>
+            <li><a href="{{sc_route('customer.lista_referencia')}}">Lista de Referencia personal</a></li>
+           
+            
+          </ul>
           
-        </ul>
-        
-      </nav>
-    </li>
+        </nav>
+      </li>
 
 
     

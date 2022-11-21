@@ -24,6 +24,7 @@ use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use App\Models\ShopOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
@@ -1116,13 +1117,16 @@ class  AdminOrderController extends RootAdminController
 
     public function borrador_pdf($id){
 
-        $order = AdminOrder::getOrderAdmin($id);
+
+       
+        $order = ShopOrder::where('id',$id)->get();
+      
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
        
-        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
@@ -1179,8 +1183,7 @@ class  AdminOrderController extends RootAdminController
                 
                 [
         
-                    'subtotal'=> $order['subtotal'],
-                    'fecha_primer_pago'=> $order['fecha_primer_pago'],
+                    'subtotal'=> $order[0]['subtotal'],
                     'cantidaProduc'=> $cantidaProduc,
                     'nombreProduct'=> $nombreProduct,
                     'cuotas' => $cuotas,
@@ -1193,6 +1196,8 @@ class  AdminOrderController extends RootAdminController
 
 
         }
+
+        
 
         return view($this->templatePathAdmin.'screen.borrador_pdf',['dato_usuario'=>$dato_usuario]);
 
