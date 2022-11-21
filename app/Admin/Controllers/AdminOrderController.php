@@ -141,6 +141,7 @@ class  AdminOrderController extends RootAdminController
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
         });
         $dataTr = [];
+        $AlContado = [];
         foreach ($dataTmp as $key => $row) {
            
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
