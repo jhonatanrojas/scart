@@ -605,6 +605,34 @@
                                         @endif
                                 </div>
                             </div>
+
+                            @if (sc_config('customer_nos_conocio'))
+                            <div class="form-group  row">
+                                <label for="cod_parroquia" class="col-sm-2  col-form-label">¿COMO NOS CONOCISTE?</label>
+                                <div class="col-sm-8 {{ $errors->has('nos_conocio') ? ' has-error' : '' }}">
+                                    <div class="input-group">
+                                    <select required  type="text"
+                                    class="is_required validate account_input form-control {{ ($errors->has('nos_conocio'))?"input-error":"" }}"
+                                    name="nos_conocio" id="nos_conocio">
+        
+                                    <option value="">¿COMO NOS CONOCISTE?</option>
+                                    <option value="Facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
+                                    <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
+                                    <option value="Twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
+                                    <option value="Amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
+                                    
+                                
+                                    </select>
+                                    @if ($errors->has('nos_conocio'))
+                                    <span class="help-block">
+                                        {{ $errors->first('nos_conocio') }}
+                                    </span>
+                                    @endif
+                                </div>
+                                </div>
+                            
+                            </div>
+                            @endif
                             
                             @if ($customer['provider'])
                             <div class="form-group  row">

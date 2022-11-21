@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\AdminOrder;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
 use SCart\Core\Front\Models\ShopCountry;
@@ -16,9 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use App\Models\Catalogo\MetodoPago;
+use App\Models\Convenio;
 use App\Models\HistorialPago;
-
-
+use App\Models\SC_referencia_personal;
 use Illuminate\Support\Facades\File;
 class ShopAccountController extends RootFrontController
 {
@@ -51,16 +52,30 @@ class ShopAccountController extends RootFrontController
      */
     private function _index()
     {
-       
         $customer = auth()->user();
         $id = $customer['id'];
-        $documento = SC__documento::where('id_usuario', $id)->get();
 
+        
+
+        $documento = SC__documento::where('id_usuario', $id)->get();
+        $order = AdminOrder::where('customer_id',$id)->get();
+        $Combenio = [];
+        $Order_resultado = [];
+        if(!empty($order)){
+            $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+            foreach($order as $odenr){
+                $Order_resultado= $odenr;
+                $convenio = Convenio::where('order_id',$odenr->id)->get();
+                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
+
+               
+            }
+        }
+      
         if(!isset($documento[0]['id_usuario']) == $id){
            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
-        }else{
-            $dato = "";
-        }
+        }else $dato = "";
+        
 
         sc_check_view($this->templatePath . '.account.index');
         return view($this->templatePath . '.account.index')
@@ -68,6 +83,9 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'       => sc_language_render('customer.my_account'),
                     'customer'    => $customer,
+                    'convenio'    => $Combenio,
+                    'order'    => $Order_resultado,
+                    'referencia'    => $referencia,
                     'mensaje'    => $dato,
                     'layout_page' => 'shop_profile',
                     'breadcrumbs' => [
@@ -100,12 +118,15 @@ class ShopAccountController extends RootFrontController
     private function _changePassword()
     {
         $customer = auth()->user();
+        $id = $customer['id'];
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         sc_check_view($this->templatePath . '.account.change_password');
         return view($this->templatePath . '.account.change_password')
         ->with(
             [
                 'title'       => sc_language_render('customer.change_password'),
                 'customer'    => $customer,
+                'referencia'    => $referencia,
                 'layout_page' => 'shop_profile',
                 'breadcrumbs' => [
                     ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
@@ -190,12 +211,15 @@ class ShopAccountController extends RootFrontController
     private function _changeInfomation()
     {
         $customer = auth()->user();
+        $id = $customer['id'];
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         sc_check_view($this->templatePath . '.account.change_infomation');
         return view($this->templatePath . '.account.change_infomation')
             ->with(
                 [
                     'title'       => sc_language_render('customer.change_infomation'),
                     'customer'    => $customer,
+                    'referencia'    => $referencia,
                     'countries'   => ShopCountry::getCodeAll(),
                     'layout_page' => 'shop_profile',
                     'customFields'=> (new ShopCustomField)->getCustomField($type = 'customer'),
@@ -275,6 +299,22 @@ class ShopAccountController extends RootFrontController
     private function _orderList()
     {
         $customer = auth()->user();
+        $id = $customer['id'];
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+        $order = AdminOrder::where('customer_id',$id)->get();
+        $Combenio = [];
+        $Order_resultado = [];
+        if(!empty($order)){
+            $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+            foreach($order as $odenr){
+                $Order_resultado= $odenr;
+                $convenio = Convenio::where('order_id',$odenr->id)->get();
+                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
+
+               
+            }
+        }
+    
         $statusOrder = ShopOrderStatus::getIdAll();
         sc_check_view($this->templatePath . '.account.order_list');
         return view($this->templatePath . '.account.order_list')
@@ -284,6 +324,9 @@ class ShopAccountController extends RootFrontController
                 'statusOrder' => $statusOrder,
                 'orders'      => (new ShopOrder)->profile()->getData(),
                 'customer'    => $customer,
+                'order'    => $Order_resultado,
+                'combenio'    => $Combenio,
+                'referencia'    => $referencia,
                 'layout_page' => 'shop_profile',
                 'breadcrumbs' => [
                     ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
@@ -336,9 +379,7 @@ class ShopAccountController extends RootFrontController
 
         
         $id = $customer['id'];
-
-
- 
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         $documento = SC__documento::where('id_usuario', $id)->get();
 
         if(!isset($documento[0]['id_usuario']) == $id){
@@ -351,6 +392,7 @@ class ShopAccountController extends RootFrontController
         ->with(
             [
             'title'           => $title,
+            'referencia'           => $referencia,
             'statusOrder'     => $statusOrder,
             'mensaje'     => $dato,
             'statusShipping'  => $statusShipping,
@@ -393,10 +435,14 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
+        
         $order = ShopOrder::where('id', $id) ->where('customer_id', $customer->id)->first();
 
-  
-
+        
+        $id1 = $customer['id'];
+        
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
+       
            $metodos_pagos= MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')
@@ -406,6 +452,7 @@ class ShopAccountController extends RootFrontController
 
      
             'customer'        => $customer,
+            'referencia'        => $referencia,
              'metodos_pagos'  => $metodos_pagos,
              'order' => $order,
             'layout_page'     => 'shop_profile',
@@ -470,6 +517,8 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
+        $id1 = $customer['id'];
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
     $historial_pagos=   HistorialPago::where('payment_status','<>', 1)
 
         ->orderByDesc('id')
@@ -482,9 +531,8 @@ class ShopAccountController extends RootFrontController
         ->with(
             [
             'title'           =>'Historial de pagos',
-
-     
             'customer'        => $customer,
+            'referencia'        => $referencia,
             'layout_page'     => 'shop_profile',
             'historial_pagos'=> $historial_pagos,
             'breadcrumbs'     => [
@@ -502,6 +550,9 @@ class ShopAccountController extends RootFrontController
     private function _addressList()
     {
         $customer = auth()->user();
+
+        $id1 = $customer['id'];
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
         sc_check_view($this->templatePath . '.account.address_list');
         return view($this->templatePath . '.account.address_list')
             ->with(
@@ -510,6 +561,7 @@ class ShopAccountController extends RootFrontController
                 'addresses'   => $customer->addresses,
                 'countries'   => ShopCountry::getCodeAll(),
                 'customer'    => $customer,
+                'referencia'    => $referencia,
                 'layout_page' => 'shop_profile',
                 'breadcrumbs' => [
                     ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
@@ -757,6 +809,6 @@ class ShopAccountController extends RootFrontController
     }
 
     public function agregar_referencia(){
-        return view($this->templatePath.'.account.agregar_referencia');
+        return view($this->templatePath.'.account.lista_referencia');
     }
 }

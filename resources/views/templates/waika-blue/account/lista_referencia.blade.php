@@ -23,8 +23,7 @@ $layout_page = shop_profile
 
 @section('block_main_profile')
 
- 
 
 
-   
+
 @endsection

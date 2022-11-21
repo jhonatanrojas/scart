@@ -1,12 +1,9 @@
 @php
-/*
-$layout_page = shop_profile
-** Variables:**
-- $statusOrder
-- $orders
-*/ 
+    if(!empty($convenio)){
+        $inconoAlert = "block";
+    }
+ 
 @endphp
-
 @extends($sc_templatePath.'.account.layout')
 
 @section('block_main_profile')
@@ -44,9 +41,14 @@ $layout_page = shop_profile
             <td>
               <a href="{{ sc_route('customer.order_detail', ['id' => $order->id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
               <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+              <br>
+              @if ($order->status !== 3 && $order->modalidad_de_compra == 1)
+              <a target="_blank" class="d-flex" href="{{route('borrador_pdf', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Ver Convenio</a>
+              @endif
 
 
             </td>
+           
           </tr>
           @endforeach
         </tbody>
