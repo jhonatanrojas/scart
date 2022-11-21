@@ -31,6 +31,8 @@ Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
 
+Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('borrador_cliente');
+
 
 
 
