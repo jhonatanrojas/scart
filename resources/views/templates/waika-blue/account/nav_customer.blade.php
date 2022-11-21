@@ -31,11 +31,11 @@
     
     <li class="menu list-group-item" id="menu">
       <i class="fa fa-file" aria-hidden="true"></i>
-        Referencias
+            Referencia
       <nav id="navega">
         <ul>
-          <li><a href="#">Referencia personales</a>   </li>
-          <li><a href="#">Lista de Referencia perso</a></li>
+          <li><a data-toggle="modal" data-target="#myModal" href="#">Referencia personal</a>   </li>
+          <li><a href="{{sc_route('customer.lista_referencia')}}">Lista de Referencia personal</a></li>
          
           
         </ul>
@@ -74,22 +74,22 @@
                             <div class="col-12 col mb-3">
                                 <div class="input-group flex-nowrap">
                                     <span class="input-group-text" id="addon-wrapping"></span>
-                                    <input value="{{ (old('nombre_ref', $referencia[0]['nombre_ref'] ?? ''))}}" id="nombre_ref" name="nombre_ref" type="text" class="form-control" placeholder="Nombre" aria-label="Nombre" aria-describedby="addon-wrapping">
+                                    <input value="{{ (old('nombre_ref' ?? ''))}}" id="nombre_ref" name="nombre_ref" type="text" class="form-control" placeholder="Nombre" aria-label="Nombre" aria-describedby="addon-wrapping">
                                   </div></div>
                             <div class="col-12 mb-3">
                                 <div class="input-group flex-nowrap">
                                     <span class="input-group-text" id="addon-wrapping"></span>
-                                    <input value="{{ (old('apellido_ref', $referencia[0]['apellido_ref'] ?? ''))}}" id="apellido_ref" name="apellido_ref" type="text" class="form-control" placeholder="Apellido" aria-label="Apellido" aria-describedby="addon-wrapping">
+                                    <input value="{{ (old('apellido_ref' ?? ''))}}" id="apellido_ref" name="apellido_ref" type="text" class="form-control" placeholder="Apellido" aria-label="Apellido" aria-describedby="addon-wrapping">
                                   </div></div>
                             <div class="col-12 mb-3">
                                 <div class="input-group flex-nowrap">
                                     <span class="input-group-text" id="addon-wrapping"></span>
-                                    <input value="{{ (old('telefono', $referencia[0]['telefono'] ?? ''))}}" id="telefono_ref" name="telefono_ref" type="text" class="form-control" placeholder="Telefono" aria-label="Telefono" aria-describedby="addon-wrapping">
+                                    <input value="{{ (old('telefono' ?? ''))}}" id="telefono_ref" name="telefono_ref" type="text" class="form-control" placeholder="Telefono" aria-label="Telefono" aria-describedby="addon-wrapping">
                                   </div></div>
                             <div class="col-12 mb-3">
                                 <div class="input-group flex-nowrap">
                                     <span class="input-group-text" id="addon-wrapping"></span>
-                                    <input value="{{ (old('parentesco', $referencia[0]['parentesco'] ?? ''))}}" id="parentesco" name="parentesco" type="text" class="form-control" placeholder="Parentesco" aria-label="parentesco" aria-describedby="addon-wrapping">
+                                    <input value="{{ (old('parentesco' ?? ''))}}" id="parentesco" name="parentesco" type="text" class="form-control" placeholder="Parentesco" aria-label="parentesco" aria-describedby="addon-wrapping">
                                   </div></div>
                         </div>
                         <input type="hidden" name="">

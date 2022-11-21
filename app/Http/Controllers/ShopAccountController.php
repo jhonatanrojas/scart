@@ -808,7 +808,35 @@ class ShopAccountController extends RootFrontController
         }
     }
 
-    public function agregar_referencia(){
-        return view($this->templatePath.'.account.lista_referencia');
+    public function lista_referencia(){
+
+        $customer = auth()->user();
+        $id = $customer['id'];
+        $order = AdminOrder::where('customer_id',$id)->get();
+        $Combenio = [];
+        $Order_resultado = [];
+        if(!empty($order)){
+            $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+            foreach($order as $odenr){
+                $Order_resultado= $odenr;
+                $convenio = Convenio::where('order_id',$odenr->id)->get();
+                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
+
+               
+            }
+        }
+        return view($this->templatePath.'.account.lista_referencia')->with(
+            [
+                'title'       => "Referencia-personal",
+                'customer'    => $customer,
+                'convenio'    => $Combenio,
+                'order'    => $Order_resultado,
+                'referencia'    => $referencia,
+                'layout_page' => 'shop_profile',
+                'breadcrumbs' => [
+                    ['url'    => '', 'title' => sc_language_render('customer.my_account')],
+                ],
+            ]
+        );;
     }
 }
