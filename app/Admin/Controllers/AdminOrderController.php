@@ -77,7 +77,7 @@ class  AdminOrderController extends RootAdminController
         $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
-            'email'          => '<i class="fas fa-envelope" aria-hidden="true" title="'.sc_language_render('order.email').'"></i>',
+            'Nombre&Apellido'          => 'Nombre&Apellido',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -143,6 +143,8 @@ class  AdminOrderController extends RootAdminController
         $dataTr = [];
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
+
+            
            
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
@@ -179,7 +181,7 @@ class  AdminOrderController extends RootAdminController
             }
 
             $dataMap = [
-                'email'          => $row['email'] ?? 'N/A',
+                'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
