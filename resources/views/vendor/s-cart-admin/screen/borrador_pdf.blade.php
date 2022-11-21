@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <input type="hidden" {!! $TotalCuotasInicial =  $dato_usuario[0]['subtotal'] - ($dato_usuario[0]['subtotal'] *$dato_usuario[0]['abono_inicial'] /100) !!}
-    {!!$TotalCuotas = $TotalCuotasInicial /$dato_usuario[0]['cuotas']!!}>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -1094,7 +1093,9 @@ margin-left: 70%;
     <a id="t.651167b8a01bb649db351289fabd668160c17213"></a>
     <a id="t.2"></a> 
     
+    <input type="hidden" {!! $TotalCuotasInicial =  $dato_usuario[0]['subtotal'] - ($dato_usuario[0]['subtotal'] * $dato_usuario[0]['abono_inicial']  /100) !!}
 
+    {!!$TotalCuotas = $TotalCuotasInicial  /$dato_usuario[0]['cuotas']!!}>
  <table class="c12 " style="width: 100%; ">
         <tr class="">
             <td class="c15" colspan="1" rowspan="1">
