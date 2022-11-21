@@ -45,6 +45,7 @@
               <a href="{{ sc_route('customer.order_detail', ['id' => $order->id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
              @if($order->modalidad_de_compra==0)
               <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+              @endif
               <br>
               @if ($order->status !== 3 && $order->modalidad_de_compra == 1)
               <a target="_blank" class="d-flex" href="{{route('borrador_pdf', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Ver Convenio</a>
@@ -57,5 +58,5 @@
           @endforeach
         </tbody>
       </table>
-      @endif
+      
 @endsection
