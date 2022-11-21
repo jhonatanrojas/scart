@@ -1,0 +1,56 @@
+.hoverAlert {
+  position: relative;
+}
+
+.iconoAlert {
+  position: absolute;
+  top: 0;
+  left: 70%;
+  display: none;
+}
+
+
+.nav2 {
+
+  width: 100%;
+  max-height: 0px;
+  overflow: hidden;
+  transition: 1s all;
+
+}
+
+.mostrar {
+  max-height: 500px;
+
+
+
+}
+
+.nav2 ul {
+
+  list-style: none;
+}
+
+.nav2 ul li a {
+  text-decoration: none;
+  display: block;
+  color: rgb(5, 2, 2);
+  margin-top: 5px;
+  padding: 5px;
+
+
+}
+
+.nav2 ul li a:hover {
+
+
+  background-color: #222;
+  color: #fff;
+}
+
+.menu {
+  color: rgb(8, 2, 2);
+  width: 100%;
+  cursor: pointer;
+
+}

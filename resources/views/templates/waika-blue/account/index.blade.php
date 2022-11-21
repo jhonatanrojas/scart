@@ -1,10 +1,8 @@
 @php
-/*
-$layout_page = shop_profile
-** Variables:**
-- $customer
-*/ 
+//  dd($customer);
 @endphp
+
+
 <style>
     .imagen_svg{
         background-image: url('/images/asset 0.svg');

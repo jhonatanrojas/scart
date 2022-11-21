@@ -35,6 +35,7 @@
     <!--//Module header -->
 
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/iconoAlert.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/fonts.css')}}">
  <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}"> 
 

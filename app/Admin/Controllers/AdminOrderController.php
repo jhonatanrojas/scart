@@ -24,6 +24,7 @@ use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use App\Models\ShopOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
@@ -84,6 +85,7 @@ class  AdminOrderController extends RootAdminController
             'Parroquia'          => 'Parroquia',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
             'status'         =>"Estatus",
+            'Modalidad'         =>"Modalidad",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -139,10 +141,13 @@ class  AdminOrderController extends RootAdminController
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
         });
         $dataTr = [];
+        $AlContado = [];
         foreach ($dataTmp as $key => $row) {
+           
+            if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
+                else $AlContado = "Financiamiento" ;
             
             $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
-
             $colection = $usuario->all();
 
             $cedula =[];
@@ -182,6 +187,7 @@ class  AdminOrderController extends RootAdminController
                 'Parroquia'          =>$nombreparroquias ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
+                'Modalidad'         => $AlContado,
             ];
             if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
                 // Only show store info if store is root
@@ -463,18 +469,16 @@ class  AdminOrderController extends RootAdminController
      */
     public function detail($id)
     {
+
+        
         $order = AdminOrder::getOrderAdmin($id);
+  
       
        
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-        
-
-       
-
-           
         $convenio = Convenio::where('order_id',$id)->first();
 
         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
@@ -1116,13 +1120,16 @@ class  AdminOrderController extends RootAdminController
 
     public function borrador_pdf($id){
 
-        $order = AdminOrder::getOrderAdmin($id);
+
+       
+        $order = ShopOrder::where('id',$id)->get();
+      
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
        
-        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
@@ -1179,8 +1186,7 @@ class  AdminOrderController extends RootAdminController
                 
                 [
         
-                    'subtotal'=> $order['subtotal'],
-                    'fecha_primer_pago'=> $order['fecha_primer_pago'],
+                    'subtotal'=> $order[0]['subtotal'],
                     'cantidaProduc'=> $cantidaProduc,
                     'nombreProduct'=> $nombreProduct,
                     'cuotas' => $cuotas,
@@ -1193,6 +1199,8 @@ class  AdminOrderController extends RootAdminController
 
 
         }
+
+        
 
         return view($this->templatePathAdmin.'screen.borrador_pdf',['dato_usuario'=>$dato_usuario]);
 
