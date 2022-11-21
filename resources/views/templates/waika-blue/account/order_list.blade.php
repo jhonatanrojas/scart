@@ -32,8 +32,11 @@ $layout_page = shop_profile
           @php
           $n = (isset($n)?$n:0);
           $n++;
+
           @endphp
+       
           <tr>
+
             <td><span class="item_21_id">{{ $n }}</span></td>
             <td><span class="item_21_sku">#{{ $order->id }}</span></td>
             <td align="right">
@@ -43,8 +46,9 @@ $layout_page = shop_profile
             <td>{{ $order->created_at }}</td>
             <td>
               <a href="{{ sc_route('customer.order_detail', ['id' => $order->id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
+             @if($order->modalidad_de_compra==0)
               <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
-
+              @endif;
 
             </td>
           </tr>

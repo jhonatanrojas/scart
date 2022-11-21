@@ -172,19 +172,29 @@ $layout_page = shop_profile
 
       @endif
       <div class="d-flex justify-content-end">
-        
+           @if($order->modalidad_de_compra==0)
         <div class=" align-self-end ">        <a  class="btn btn-info" href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
         </div>
+
+        @endif;
+
       </div>
       <table class="table box table-bordered" width="100%">
         <thead>
           <tr>
             <th style="width: 50px;">No.</th>
-            <th style="width: 100px;">Id Orden</th>
+                @if($order->modalidad_de_compra==1)
+            <th><span class="item_21_sku"> Cuota</span></th>
+            @endif
             <th>Pagado</th>
             <th>Forma de pago</th>
             <th>estatus del pago</th>
+             @if($order->modalidad_de_compra==0)
             <th>{{ sc_language_render('common.created_at') }}</th>
+                @endif
+                  @if($order->modalidad_de_compra==1)
+            <th>Fecha de vencimiento</th>
+                @endif
             <th></th>
           </tr>
         </thead>
@@ -194,14 +204,26 @@ $layout_page = shop_profile
           @php
           $n = (isset($n)?$n:0);
           $n++;
+            if($order->modalidad_de_compra==0)
+              $n=$historial->nro_coutas;
           @endphp
         <td><span class="item_21_id">{{ $n }}</span></td>
-        <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
+            @if($order->modalidad_de_compra==1)
+        <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
+            @endif
         <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-        <td><span class="item_21_sku">{{ $historial->metodo_pago->name}}</span></td>
+        <td><span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}</span></td>
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
+                     @if($order->modalidad_de_compra==1)
+            <td>{{ $historial->fecha_venciento}}</td>
+                @endif
+              @if($order->modalidad_de_compra==0)
         <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
-        <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
+                  @endif
+        <td>      
+  @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
+              <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+      @endif
         </td>
       </tr>
 
