@@ -1,7 +1,13 @@
-
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-
+    <input type="hidden" {!! $TotalCuotasInicial =  $dato_usuario[0]['subtotal'] - ($dato_usuario[0]['subtotal'] *$dato_usuario[0]['abono_inicial'] /100) !!}
+    {!!$TotalCuotas = $TotalCuotasInicial /$dato_usuario[0]['cuotas']!!}>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BORRADOR DEL CONVENIO</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
@@ -44,8 +50,6 @@
 
     .c15 {
         border-right-style: solid;
-  
-        border-bottom-color: #4f81bd;
         border-top-width: 1pt;
         border-right-width: 0pt;
         border-left-color: #000000;
@@ -57,7 +61,7 @@
         border-left-style: solid;
         border-bottom-width: 1pt;
         /* width: 168.4pt; */
-        border-top-color: #4f81bd;
+        border-top-color: #a0a0a0;
         border-bottom-style: solid
     }
 
@@ -776,16 +780,20 @@ margin-left: 70%;
 
 </style>
 
-
 </head>
+
+
+
 
 <body class="c51 doc-content m-auto ">
     <div class="container">
-        <div class="logo d-flex align-items-center justify-content-between">
-            <img width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
+        <div class=" d-flex align-items-center justify-content-between">
+           <div class="col-8">
+            <img class="img-fluid" width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
+           </div>
            
-            <div  class="convenio">
-                BORRADOR
+            <div  class="col-6">
+               <h3> BORRADOR DEL CONVENIO</h3>
             </div>
         </div>
         <p class="c30"><span class="c14">CONVENIO DE PAGO</span></p>
@@ -1082,22 +1090,17 @@ margin-left: 70%;
         @endif
         
 
-    <p class="c32 c24"><span class="c18 c44"></span></p>
-    <p class="c24 c54"><span class="c11"></span></p>
     <p class="c37"><span class="c14">Datos del Producto Auto Financiado</span></p>
-    <p class="c40 c24"><span class="c18 c46 c55"></span></p>
     <a id="t.651167b8a01bb649db351289fabd668160c17213"></a>
-    <a id="t.2"></a>
+    <a id="t.2"></a> 
+    
 
  <table class="c12 " style="width: 100%; ">
-    @php $TotalCuotasInicial =  $dato_usuario[0]['subtotal'] - ($dato_usuario[0]['subtotal'] *$dato_usuario[0]['abono_inicial'] /100) @endphp
-
-    {!!$TotalCuotas = $TotalCuotasInicial /$dato_usuario[0]['cuotas']!!}
-        <tr class="c4">
+        <tr class="">
             <td class="c15" colspan="1" rowspan="1">
                 Cantidad:{{$dato_usuario[0]['cantidaProduc']}} 
             </td>
-            <td class="c15" colspan="2" rowspan="1">
+            <td class="c15" colspan="3" rowspan="1">
                 Descripci&oacute;n: {{$dato_usuario[0]['nombreProduct']}}
                        
             </td>
@@ -1109,7 +1112,7 @@ margin-left: 70%;
         </tr>
         <tr>
             <td colspan="1" ></td>
-            <td style=" font-weight: 400;" colspan="4" rowspan="1"><p class="c14">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Cuotas del Convenio
+            <td style=" font-weight: 400;" colspan="3" rowspan="1"><p class="c14">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Cuotas del Convenio
                 </p>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
@@ -1117,7 +1120,7 @@ margin-left: 70%;
             <td colspan="1" ></td>
         </tr>
         <tr class="c4" >
-            <td class="c15" colspan="1" rowspan="1">
+            <td class="c15" colspan="" rowspan="1">
                N&deg; de Lote:@if (!empty($convenio->lote ))
                {{$convenio->lote}} 
                @endif
@@ -1127,7 +1130,7 @@ margin-left: 70%;
             <td class="c15" colspan="1" rowspan="1">
                 Monto de Cuotas:{!!round($TotalCuotas)!!}$
              </td>
-            <td class="c15" colspan="2" rowspan="1">
+            <td class="c15" colspan="3" rowspan="1">
                 Nº de Cuotas:@if (!empty($dato_usuario[0]['cuotas']))
                 {{$dato_usuario[0]['cuotas']}}
                     
@@ -1150,7 +1153,7 @@ margin-left: 70%;
 
             {!!$TotalCuotasInicial !!}
             
-            <td class="c15" colspan="2" rowspan="1">
+            <td class="c15" colspan="3" rowspan="1">
                 Monto Total a Pagar:{{$TotalCuotasInicial == "0.00" ?$dato_usuario[0]['subtotal']:$TotalCuotasInicial}}$
             </td>
             
@@ -1159,7 +1162,7 @@ margin-left: 70%;
         
         
         <tr class="c4">
-            <td class="c15" colspan="4" rowspan="1">
+            <td class="c15" colspan="5" rowspan="1">
                 D&iacute;as de Pago:
                 {{-- {!!  date("d",strtotime($convenio->fecha_pagos));    !!} de cada mes --}}
             </td>
@@ -1199,5 +1202,7 @@ margin-left: 70%;
 
    
 </body>
+
+</html>
 
 
