@@ -10,7 +10,7 @@
 }
 
 
-nav {
+.nav2 {
 
   width: 100%;
   max-height: 0px;
@@ -26,15 +26,14 @@ nav {
 
 }
 
-nav ul {
+.nav2 ul {
 
   list-style: none;
 }
 
-nav ul li a {
+.nav2 ul li a {
   text-decoration: none;
   display: block;
-  border-bottom: 1px solid #222;
   color: rgb(5, 2, 2);
   margin-top: 5px;
   padding: 5px;
@@ -42,7 +41,7 @@ nav ul li a {
 
 }
 
-nav ul li a:hover {
+.nav2 ul li a:hover {
 
 
   background-color: #222;

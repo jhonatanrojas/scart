@@ -85,6 +85,7 @@ class  AdminOrderController extends RootAdminController
             'Parroquia'          => 'Parroquia',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
             'status'         =>"Estatus",
+            'Modalidad'         =>"Modalidad",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -141,9 +142,11 @@ class  AdminOrderController extends RootAdminController
         });
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
+           
+            if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
+                else $AlContado = "Financiamiento" ;
             
             $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
-
             $colection = $usuario->all();
 
             $cedula =[];
@@ -183,6 +186,7 @@ class  AdminOrderController extends RootAdminController
                 'Parroquia'          =>$nombreparroquias ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
+                'Modalidad'         => $AlContado,
             ];
             if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
                 // Only show store info if store is root
@@ -464,18 +468,16 @@ class  AdminOrderController extends RootAdminController
      */
     public function detail($id)
     {
+
+        
         $order = AdminOrder::getOrderAdmin($id);
+  
       
        
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-        
-
-       
-
-           
         $convenio = Convenio::where('order_id',$id)->first();
 
         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
