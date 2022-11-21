@@ -24,7 +24,7 @@
                   @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==3 )
                   @php  $dblockconvenio="display:block;";   @endphp
                   @endif
-                  <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;                   @php echo $dblockconvenio  @endphp">
+                  <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;   @php echo $dblockconvenio  @endphp">
                     <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
                      
                     
@@ -970,7 +970,7 @@ function obtener_detalle_pago(id_pago){
 
             $("#mfecha").val(data.fecha_pago)
             $("#mvencimiento").val(data.fecha_venciento)
-            $("#mmonto").val(data.referencia)
+            $("#mmonto").val(data.importe_pagado)
             $("#mreferencia").val(data.referencia)
             $("#mdivisa").val(data.moneda)
             $("#mobservacion").val(data.comment)

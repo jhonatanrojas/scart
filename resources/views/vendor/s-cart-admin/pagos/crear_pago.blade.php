@@ -152,7 +152,7 @@
                                     if($item->attribute && is_array(json_decode($item->attribute,true))){
                                       $array = json_decode($item->attribute,true);
                                           foreach ($array as $key => $element){
-                                            $html .= '<br><b>'.$attributesGroup[$key].'</b> : <i>'.$element.'</i>';
+                                            $html .= '<br><b>0</b> : <i>'.$element.'</i>';
                                           }
                                     }
                                   @endphp
@@ -228,14 +228,18 @@
 
                             
                           </select>      
-                         
+                          @error('moneda')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
                         </div>
 
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Tasa de cambio</label>
                           <input id="tipo_cambio" class="form-control" required name="tipo_cambio" readonly value="1">
             
-            
+                          @error('tipo_cambio')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
                         </div>
 
 
