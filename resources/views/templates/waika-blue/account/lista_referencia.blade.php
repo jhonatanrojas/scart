@@ -23,6 +23,7 @@ $layout_page = shop_profile
                           <th>Telefono</th>
                           <th>Parentesco</th>
                           <th>Acciones</th>
+                          
                         </tr>
                       </thead>
                
