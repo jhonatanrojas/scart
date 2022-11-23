@@ -1244,9 +1244,11 @@ class  AdminOrderController extends RootAdminController
                 if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
                     else $Nacionalidad = "Extranjer(A)"; 
 
-                    
-                    
+                $number =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
 
+                    
+                    
+                    
                     
 
                 foreach($borrado_html as $replacee){
@@ -1292,7 +1294,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario[0]['cuotas'] ,
                         'cod_entregas'=> date('d-m-y'),
                         
-                        'Cod_CuotasEtreprecioTptal'=> $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'],
+                        'Cod_CuotasEtreprecioTptal'=> number_format($number),
                         'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
                        
                         'cod_mespago' => $cod_diaMes ,
