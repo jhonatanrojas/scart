@@ -1119,16 +1119,16 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function borrador_pdf($id){
-
-
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
         $order = ShopOrder::where('id',$id)->get();
-      
+
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
         $convenio = Convenio::where('order_id',$id)->first();
-
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
@@ -1144,9 +1144,6 @@ class  AdminOrderController extends RootAdminController
             $id_modalidad_pago = $p->id_modalidad_pago;
         }
         
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
 
         $nombreEstado=[];
         $nombreparroquias =[];
@@ -1154,17 +1151,13 @@ class  AdminOrderController extends RootAdminController
         foreach($result as $c){
             foreach($estado as $estados){
            if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
+
                 foreach($municipio as $municipos){
-                    if($municipos->codigomunicipio ==  $c['cod_municipio']){
-                        $nombremunicipos = $municipos->nombre;
-                    }
+                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
                 }
                 foreach($parroquia as $parroquias){
                     if($parroquias->codigomunicipio == $c['cod_municipio']){
-                        $nombreparroquias = $parroquias->nombre;
-                        
-                    }
-                   
+                        $nombreparroquias = $parroquias->nombre;}
                 }
               
             }
@@ -1217,16 +1210,17 @@ class  AdminOrderController extends RootAdminController
                     } else return $decenas[$n - $x].' y '. basico($x);
                     }
 
-
-                if($abono_inicial < 30){
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
+                $borrado_html = [];
+                if($abono_inicial <= "0.00"){
+                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
                     }else{
-                        dd($abono_inicial);
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->get();
+                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
                     }
 
-                if ($dato_usuario[0]['id_modalidad_pago']== 3) $mesualQuinsena0 = "Mensual";
-                    else $mesualQuinsena0 = " Quincenal"; 
+
+
+                if ($dato_usuario[0]['id_modalidad_pago']== 3) $mesualQuinsena = "Mensual";
+                    else $mesualQuinsena = " Quincenal"; 
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
@@ -1255,7 +1249,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['cod_municipio'],
                         $dato_usuario['cod_parroquia'],
                         $dato_usuario['cedula'],
-                        'cod_modalidad_pago' => $mesualQuinsena0,
+                        'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
                         $dato_usuario[0]['cuotas'] ,
                         $dato_usuario[0]['subtotal'] ,
@@ -1267,10 +1261,6 @@ class  AdminOrderController extends RootAdminController
                         
                     ];
             
-            
-            
-                    // $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
-
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
                 }
                 
