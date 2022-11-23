@@ -22,6 +22,7 @@ use App\Models\Municipio;
 use App\Models\Parroquia;
 use Validator;
 use App\Models\SC__documento;
+use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
 use App\Models\ShopOrder;
@@ -1026,9 +1027,6 @@ class  AdminOrderController extends RootAdminController
 
         $order = AdminOrder::getOrderAdmin($id);
         $convenio = Convenio::where('order_id',$id)->first();
-        $historialPagos =  HistorialPago::Where('order_id',$id)
-        ->orderBy('fecha_venciento')->get();
-
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
@@ -1123,14 +1121,14 @@ class  AdminOrderController extends RootAdminController
     public function borrador_pdf($id){
 
 
-       
         $order = ShopOrder::where('id',$id)->get();
       
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-       
+        $convenio = Convenio::where('order_id',$id)->first();
+
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
@@ -1202,9 +1200,86 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-        
+                function basico($numero) {
+                    $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
+                    'nueve','diez','once','doce','trece','catorce','quince','dieciseis','diecisiete','dieciocho','diecinueve','veinte','veintiuno ','vientidos ','veintitrés ', 'veinticuatro','veinticinco',
+                    'veintiséis','veintisiete','veintiocho','veintinueve');
+                    return $valor[$numero - 1];
+                    }
 
-        return view($this->templatePathAdmin.'screen.borrador_pdf',['dato_usuario'=>$dato_usuario]);
+                function decenas($n) {
+                    $decenas = array (30=>'treinta',40=>'cuarenta',50=>'cincuenta',60=>'sesenta',
+                    70=>'setenta',80=>'ochenta',90=>'noventa');
+                    if( $n <= 29) return basico($n);
+                    $x = $n % 10;
+                    if ( $x == 0 ) {
+                    return $decenas[$n];
+                    } else return $decenas[$n - $x].' y '. basico($x);
+                    }
+
+
+                if($abono_inicial < 30){
+                        $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
+                    }else{
+                        dd($abono_inicial);
+                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->get();
+                    }
+
+                if ($dato_usuario[0]['id_modalidad_pago']== 3) $mesualQuinsena0 = "Mensual";
+                    else $mesualQuinsena0 = " Quincenal"; 
+
+                foreach($borrado_html as $replacee){
+                    $dataFind = [
+                        "first_name",
+                        'last_name',
+                        'address1',
+                        'cod_estado',
+                        'cod_municipio',
+                        'cod_parroquia',
+                        'cod_Cedula',
+                        'cod_modalidad_pago',
+                        'cod_dia',
+                        'Cuotas1',
+                        'cod_subtotal',
+                        'nombreProduct',
+                        'cod_phone',
+                        'cod_email',
+                        'cod_doreccion',
+                        'cod_Fecha_De_Hoy',
+                    ];
+                    $dataReplace = [
+                        $dato_usuario['first_name'],
+                        $dato_usuario['last_name'],
+                        $dato_usuario['address1'],
+                        $dato_usuario['cod_estado'],
+                        $dato_usuario['cod_municipio'],
+                        $dato_usuario['cod_parroquia'],
+                        $dato_usuario['cedula'],
+                        'cod_modalidad_pago' => $mesualQuinsena0,
+                        'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
+                        $dato_usuario[0]['cuotas'] ,
+                        $dato_usuario[0]['subtotal'] ,
+                        $dato_usuario[0]['nombreProduct'] ,
+                        $dato_usuario['phone'],
+                        $dato_usuario['email'],
+                        $dato_usuario['address1'],
+                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        
+                    ];
+            
+            
+            
+                    // $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
+
+                    $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
+                }
+                
+                
+
+                return view($this->templatePathAdmin.'screen.borrador_pdf',
+                ['Usuario'=>$dato_usuario],
+                ['borrado_html'=>$resultado],
+            );
 
     }
 }
