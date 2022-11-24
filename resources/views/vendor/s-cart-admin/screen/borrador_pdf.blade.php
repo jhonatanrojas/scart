@@ -1,7 +1,8 @@
 
-<div>
+ <div>
     {!!$borrado_html!!}
-</div>  
+</div>   
+
 
 
 

@@ -1134,6 +1134,7 @@ class  AdminOrderController extends RootAdminController
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
         $nombreProduct = [];
+        $fecha_maxima_entrega = [];
         $cuotas = [];
         $abono_inicial = [];
         $id_modalidad_pago = [];
@@ -1142,6 +1143,7 @@ class  AdminOrderController extends RootAdminController
             $cuotas = $p->nro_coutas;
             $abono_inicial = $p->abono_inicial;
             $id_modalidad_pago = $p->id_modalidad_pago;
+            $fecha_maxima_entrega = $p->fecha_maxima_entrega;
         }
         
 
@@ -1176,6 +1178,7 @@ class  AdminOrderController extends RootAdminController
                 'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $nombreparroquias,
+                'estado_civil' => $c['estado_civil'],
                 
                 [
         
@@ -1192,6 +1195,10 @@ class  AdminOrderController extends RootAdminController
 
 
         }
+
+   
+
+            
 
                 function basico($numero) {
                     $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
@@ -1210,6 +1217,14 @@ class  AdminOrderController extends RootAdminController
                     } else return $decenas[$n - $x].' y '. basico($x);
                     }
 
+                    $Moneda_CAMBIOBS = sc_currency_all();
+                    foreach($Moneda_CAMBIOBS as $cambio){
+                        if($cambio->name == "Bolivares"){
+                           $nombreBS =  decenas($cambio->exchange_rate);
+                           $cod_bolibares =  $cambio->exchange_rate;
+                        }
+                    }
+
                 $borrado_html = [];
                 if($abono_inicial <= "0.00"){
                     $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
@@ -1218,9 +1233,21 @@ class  AdminOrderController extends RootAdminController
                     }
 
 
+                $pieces = explode(" ", $dato_usuario['cedula']);
+                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
+                    $mesualQuinsena = "MENSUAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+                }else {
+                    $mesualQuinsena = " QUINCENAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y 30 DE CADA MES";
+                } 
+                if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
+                    else $Nacionalidad = "Extranjer(A)"; 
 
-                if ($dato_usuario[0]['id_modalidad_pago']== 3) $mesualQuinsena = "Mensual";
-                    else $mesualQuinsena = " Quincenal"; 
+                    
+                    
+
+                    
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
@@ -1231,10 +1258,19 @@ class  AdminOrderController extends RootAdminController
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
+                        'cod_civil',
+                        'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
                         'Cuotas1',
+                        'cod_entregas',
+                        'Cod_CuotasEtreprecioTptal',
+                        'Cod_CuotasEtrepreciotext',
+                        'cod_mespago',
+                        'cod_fechaEntrega',
                         'cod_subtotal',
+                        'cod_nombreBS',
+                        'cod_bolibares',
                         'nombreProduct',
                         'cod_phone',
                         'cod_email',
@@ -1249,10 +1285,21 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['cod_municipio'],
                         $dato_usuario['cod_parroquia'],
                         $dato_usuario['cedula'],
+                        $dato_usuario['estado_civil'],
+                        'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
                         $dato_usuario[0]['cuotas'] ,
+                        'cod_entregas'=> date('d-m-y'),
+                        
+                        'Cod_CuotasEtreprecioTptal'=> $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'],
+                        'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
+                       
+                        'cod_mespago' => $cod_diaMes ,
+                        'cod_fechaEntrega' => $fecha_maxima_entrega ,
                         $dato_usuario[0]['subtotal'] ,
+                        'cod_nombreBS'=> $nombreBS,
+                        'cod_bolibares'=> $cod_bolibares,
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
