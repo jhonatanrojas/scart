@@ -25,6 +25,7 @@ use App\Models\Parroquia;
 use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use Cart;
 use Illuminate\Support\Facades\File;
 class ShopAccountController extends RootFrontController
 {
@@ -88,6 +89,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'       => sc_language_render('customer.my_account'),
                     'customer'    => $customer,
+                    'cart'    =>   Cart::content(),
                     'convenio'    => $Combenio,
                     'order'    => $Order_resultado,
                     'referencia'    => $referencia,

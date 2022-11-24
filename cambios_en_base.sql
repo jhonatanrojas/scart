@@ -47,3 +47,6 @@ ALTER TABLE sc_shop_customer ADD rif VARCHAR(100) NULL DEFAULT NULL AFTER razon_
 
 
   ALTER TABLE sc_shop_customer ADD nos_conocio VARCHAR(100) NULL DEFAULT NULL AFTER last_name_kana;
+ALTER TABLE sc_shop_order ADD COLUMN fecha_maxima_entrega date DEFAULT NULL;
+
+ALTER TABLE sc_shop_product ADD COLUMN precio_de_cuota BOOLEAN NOT NULL DEFAULT 'false';

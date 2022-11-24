@@ -27,7 +27,7 @@
 /*price*/
 .sc-new-price{
   color:#FE980F;
-  font-size: 20px;
+  font-size: 30px;
   padding: 10px 5px;
   font-weight:bold;
   }

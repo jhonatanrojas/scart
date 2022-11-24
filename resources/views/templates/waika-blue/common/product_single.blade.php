@@ -6,7 +6,38 @@
           </a>
       </div>
       <h6 class="product-title"><a href="{{ $product->getUrl() }}">{{ $product->name }}</a></h6>
-      
+
+
+
+ 
+      {!! $product->displayVendor() !!}
+     
+      @if( $product->precio_de_cuota)
+      <div class="product-price-wrap">
+        <div class="product-price">${!!  number_format($product->price/$product->nro_coutas,2) !!} </div>
+      </div>
+
+      @else
+      {!! $product->showPrice() !!} 
+      @endif
+      @php
+   $modalida_pago='Quincenales';
+      if($product->id_modalidad_pagos==3)
+      $modalida_pago='Mensuales';
+
+      @endphp
+      <div class="product-price-wrap">
+        @if( $product->precio_de_cuota)
+        <div class="product-modern-title "> 
+          <a href="{{ $product->getUrl() }}">
+          Obtenlo por  {{ $product->nro_coutas}} cuotas  {!! $modalida_pago !!}  
+        </a>
+        
+        </div>
+        @endif
+
+   
+        </div>
       {{-- @if (empty($hiddenStore))
       {!! $product->displayVendor() !!}
       @endif --}}
@@ -18,14 +49,16 @@
 
       {{-- {!! $product->showPrice() !!} --}}
     </div>
-    
-    @if ($product->price != $product->getFinalPrice() && $product->kind !=SC_PRODUCT_GROUP)
+    @if( $product->precio_de_cuota)
+    <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/etiqueta.png') }}" class="new" alt="" /></span> 
+    @endif
+     {{-- @if ($product->price != $product->getFinalPrice() && $product->kind !=SC_PRODUCT_GROUP)
     <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/sale.png') }}" class="new" alt="" /></span>
     @elseif($product->kind == SC_PRODUCT_BUILD)
     <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/bundle.png') }}" class="new" alt="" /></span>
     @elseif($product->kind == SC_PRODUCT_GROUP)
     <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/group.png') }}" class="new" alt="" /></span>
-    @endif
+    @endif --}}
     <div class="product-button-wrap">
       
       @if (!sc_config('product_wishlist_off'))

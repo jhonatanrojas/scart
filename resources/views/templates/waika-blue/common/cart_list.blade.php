@@ -8,10 +8,10 @@
                     <th>{{ sc_language_render('product.name') }}</th>
                     {{-- <th>{{ sc_language_render('product.price') }}</th> --}}
                     <th>Cuotas</th>
-                    <th>Modalidad de pago</th>
+                    <th>Frecuencia de pago</th>
                     <th>Inicial</th>
                     <th>{{ sc_language_render('product.quantity') }}</th>
-                    <th>{{ sc_language_render('product.subtotal') }}</th>
+                
                     <th></th>
                 </tr>
 
@@ -67,8 +67,16 @@
   
                     {{-- <td>{!! $product->showPrice() !!}</td> --}}
                     <td>${{$item->Cuotas}}</td>
-                    <td>{{$item->modalidad_pago  == "2" ? "Quincenal ":"Mensual"}}</td>
-                    <td>{{$item->inicial}}%</td>
+                    <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
+                 
+                    @php
+                    $inicial="0.00";
+                    if($item->inicial>0){
+                        $inicial= number_format( ($product->price * $item->inicial) /100,2);
+                    }
+
+                    @endphp
+                    <td>${!!$inicial!!}</td>
   
                     <td class="cart-col-qty">
                         <div class="cart-qty">
@@ -84,9 +92,7 @@
                         @endif
                     </td>
   
-                    <td align="right">
-                        {{sc_currency_render($item->subtotal)}}
-                    </td>
+                  
   
                     <td align="center">
                         <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
