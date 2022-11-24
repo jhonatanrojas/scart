@@ -72,6 +72,7 @@
                     @php
                     $inicial="0.00";
                     if($item->inicial>0){
+                   
                         $inicial= number_format( ($product->price * $item->inicial) /100,2);
                     }
 

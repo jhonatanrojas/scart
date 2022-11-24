@@ -11,8 +11,11 @@
 
  
       {!! $product->displayVendor() !!}
-     
+     @php
+     $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
+     @endphp
       @if( $product->precio_de_cuota)
+   
       <div class="product-price-wrap">
         <div class="product-price">${!!  number_format($product->price/$product->nro_coutas,2) !!} </div>
       </div>
