@@ -220,6 +220,8 @@
     }
 @endphp
 
+
+
     <form id="form-add-item" action="" method="">
       @csrf
       <input type="hidden" name="order_id"  value="{{ $order->id }}">
@@ -338,198 +340,113 @@
       </div>
 </form>
 
-<div class="modal fade mt-3" id="modal_convenio" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-       
-      </div>
-      <div class="modal-body">
-        <form action="{{ sc_route('crear_convenio') }}" method="POST">
-          <div id="w-100">
-           
-             {{ csrf_field() }}
-            <div class="header">
-              <h5 class="text-center">{!! count($order->details) ? $order->details[0]->name : 0 !!} </h5>
-            </div>
-            <div name="frmPrestamo" id="frmPrestamo">
-          <input type="hidden" name="c_producto" value="{!! count($order->details) ? $order->details[0]->name : 0 !!} ">
-          <input type="hidden" name="c_order_id" value="{!! $order->id !!} ">
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+      TOTALES
+        </button>
+      </h2>
+    </div>
 
-          <div class="form-group">
-                <label for="monto">Monto: </label>
-                <input  readonly value="{!! count($order->details) ? $order->details[0]->price : 0 !!}" class="form-control   " type="text" name="_monto" id="c_monto" placeholder="monto">
-              </div>
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+      {{-- Total --}}
+      <div class="col-sm-12">
+        <div class="card collapsed-card">
+            <table   class="table table-bordered">
+              @foreach ($dataTotal as $element)
+                @if ($element['code'] =='subtotal')
+                  <tr><td  class="td-title-normal">{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
+                @endif
+                @if ($element['code'] =='tax')
+                <tr><td  class="td-title-normal">{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
+                @endif
 
-              <div class="row">
+                @if ($element['code'] =='shipping')
+                  <tr><td>{!! $element['title'] !!}:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}"  data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.shipping') }}">{{$element['value'] }}</a></td></tr>
+                @endif
+                @if ($element['code'] =='discount')
+                  <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.discount') }}">{{$element['value'] }}</a></td></tr>
+                @endif
+                @if ($element['code'] =='other_fee')
+                  <tr><td>Otra tarifa:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ config('cart.process.other_fee.title') }}">{{$element['value'] }}</a></td></tr>
+                @endif
+                 @if ($element['code'] =='total')
+                  <tr style="background:#f5f3f3;font-weight: bold;"><td>Total:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
+                @endif
 
-                <div class="form-group col-md-6">
-                  <label for="monto">Cuotas: </label>
-                  <input  readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="monto">Modalidad: </label>
-                  <input  readonly value="0" class="form-control   " type="text" name="c_modalidad" id="c_modalidad" placeholder="_nro_cuotas">
-                </div>
-              </div>
+                @if ($element['code'] =='received')
+                  <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.received') }}">{{$element['value'] }}</a></td></tr>
+                @endif
 
-              <div class="row">
-              <div class="form-group col-md-6">
-                <label for="monto">Fecha de primer pago: </label>
-                <input   value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="date" name="c_fecha_inicial" id="c_fecha_inicial" placeholder="_nro_cuotas">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="monto">Inicial $: </label>
-                <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="nro_convenio">Numero de convenio: </label>
-                <input class="form-control   " type="text"  value="{{$nro_convenio}}" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="lote">Lote: </label>
-                <input class="form-control   " type="text" name="lote" id="lote" placeholder="Lote ">
-              </div>
-            </div>
-         
+              @endforeach
 
-              <button type="button"  class=" btn btn-info" id="simular" onclick="gen_table(true)"> CALCULAR</button>
-            </div>
-          </div>
-       
+                <tr  {!! $style !!}  class="data-balance"><td>{{ sc_language_render('order.totals.balance') }}:</td><td style="text-align:right">{{($order->balance === NULL)?sc_currency_format($order->total):sc_currency_format($order->balance) }}</td></tr>
+          </table>
+        </div>
+
+
         
-        <table class="table table-striped ">
-          
-          <tbody id="tab">
-            <thead class="thead-dark">
-              <tr>
-                <td>NRO</td>
-            
-                <td id="cuotass">CUOTAS $</td>
-                <td>DEUDA $</td>
-                <td>FECHA DE PAGO</td>
-            </tr>
-              
-          </thead>
-          </tbody>
-     
-      </table>
-              </div>
-              <div class="modal-footer">
-                <button  type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Crear Convenio</button>
-              </div>
-         
+  
       </div>
-      
-    </div><!-- /.modal-content -->
+      {{-- //End total --}}
+
+      </div>
+    </div>
   </div>
- 
-        <input  name="qty" type="hidden"  value="1" min="1" max="100">
-        <input  name="financiamiento" type="hidden"  value="1"  max="100">
-</form><!-- /.modal-dialog -->
-      <div class="row">
-        {{-- Total --}}
-          <div class="col-sm-6">
-            <div class="card collapsed-card">
-                <table   class="table table-bordered">
-                  @foreach ($dataTotal as $element)
-                    @if ($element['code'] =='subtotal')
-                      <tr><td  class="td-title-normal">{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
-                    @endif
-                    @if ($element['code'] =='tax')
-                    <tr><td  class="td-title-normal">{!! $element['title'] !!}:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
-                    @endif
-
-                    @if ($element['code'] =='shipping')
-                      <tr><td>{!! $element['title'] !!}:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}"  data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.shipping') }}">{{$element['value'] }}</a></td></tr>
-                    @endif
-                    @if ($element['code'] =='discount')
-                      <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.discount') }}">{{$element['value'] }}</a></td></tr>
-                    @endif
-                    @if ($element['code'] =='other_fee')
-                      <tr><td>Otra tarifa:</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ config('cart.process.other_fee.title') }}">{{$element['value'] }}</a></td></tr>
-                    @endif
-                     @if ($element['code'] =='total')
-                      <tr style="background:#f5f3f3;font-weight: bold;"><td>Total:</td><td style="text-align:right" class="data-{{ $element['code'] }}">{{ sc_currency_format($element['value']) }}</td></tr>
-                    @endif
-
-                    @if ($element['code'] =='received')
-                      <tr><td>{!! $element['title'] !!}(-):</td><td style="text-align:right"><a href="#" class="updatePrice data-{{ $element['code'] }}" data-name="{{ $element['code'] }}" data-type="text" data-pk="{{ $element['id'] }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.totals.received') }}">{{$element['value'] }}</a></td></tr>
-                    @endif
-
-                  @endforeach
-
-                    <tr  {!! $style !!}  class="data-balance"><td>{{ sc_language_render('order.totals.balance') }}:</td><td style="text-align:right">{{($order->balance === NULL)?sc_currency_format($order->total):sc_currency_format($order->balance) }}</td></tr>
-              </table>
-            </div>
-
-            <table class="table box table-bordered" width="100%">
-              <thead>
-                <tr>
-            
-                  <th>Acciones</th>
-          
-                  <th>Cuota </th>
-
-                  <th>Reportado</th>
-                  <th>Divisa</th>
-                  <th>Conversion</th>
-        
-                  <th>estatus </th>
-                  
-                  <th>Fecha de vencimiento</th>
-          
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($historial_pagos as $historial)
-                <tr>
-
-         
-<td>        
-  @if( $historial->payment_status ==2)      
-        <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
-        @endif
-  @if($historial->payment_status == 2 || $historial->payment_status ==5)
-  <a href='#' onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
-  @endif
-  @if($historial->payment_status != 2 && $historial->payment_status !=5)
-
-
-  <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
-  @endif
-</td>
-         
- 
-              <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
-              <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-              @php
-             $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1
-              @endphp
-                  <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
-              <td><span class="item_21_sku">{!! $historial->importe_pagado / $tasa_cambio  !!}$</span></td>
-          
-              <td><span class="item_21_sku">{{ $historial->estatus->name }}
-              
-              <br>
-             <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
-              </span></td>
-              <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
-         
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        HISTORIAL DEL PEDIDOS
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+      <!-- /.card-header -->
+      <h3 class="card-title">{{ sc_language_render('order.admin.order_history') }}</h3>
+      <div class="order-info">
+          <span><b>IP:</b> {{ $order->ip }}</span>
+      </div>
+      <div class="card-body p-0 out">
+        <div class="table-responsive">
+          @if (count($order->history))
+          <table  class="table m-0" id="history">
+            <tr>
+              <th>{{ sc_language_render('order.admin.history_staff') }}</th>
+              <th>{{ sc_language_render('order.admin.history_content') }}</th>
+              <th>{{ sc_language_render('order.admin.history_time') }}</th>
             </tr>
-      @endforeach
-              </tbody>
-            </table>
-
-            
-      
-          </div>
-          {{-- //End total --}}
-
-          {{-- History --}}
-          <div class="col-sm-6">
+          @foreach ($order->history->sortKeysDesc()->all() as $history)
+            <tr>
+              <td>{{ \SCart\Core\Admin\Models\AdminUser::find($history['admin_id'])->name??'' }}</td>
+              <td><div class="history">{!! $history['content'] !!}</div></td>
+              <td>{{ $history['add_date'] }}</td>
+            </tr>
+          @endforeach
+          </table>
+        @endif
+        </div>
+        <!-- /.table-responsive -->
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingevaluacion">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+     HISTORIAL DE EVALUACIONES
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingevaluacion" data-parent="#accordionExample">
+      <div class="card-body">
+          {{-- evaluacion --}}
+          <div class="col-sm-12">
             <div class="card">
          
 
@@ -655,44 +572,179 @@
             </div>
 
 
-            <div class="card collapsed-card w-50%">
-              <div class="card-header border-transparent">
-                <h3 class="card-title">{{ sc_language_render('order.admin.order_history') }}</h3>
-                <div class="order-info">
-                    <span><b>IP:</b> {{ $order->ip }}</span>
-                </div>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body p-0 out">
-                <div class="table-responsive">
-                  @if (count($order->history))
-                  <table  class="table m-0" id="history">
-                    <tr>
-                      <th>{{ sc_language_render('order.admin.history_staff') }}</th>
-                      <th>{{ sc_language_render('order.admin.history_content') }}</th>
-                      <th>{{ sc_language_render('order.admin.history_time') }}</th>
-                    </tr>
-                  @foreach ($order->history->sortKeysDesc()->all() as $history)
-                    <tr>
-                      <td>{{ \SCart\Core\Admin\Models\AdminUser::find($history['admin_id'])->name??'' }}</td>
-                      <td><div class="history">{!! $history['content'] !!}</div></td>
-                      <td>{{ $history['add_date'] }}</td>
-                    </tr>
-                  @endforeach
-                  </table>
-                @endif
-                </div>
-                <!-- /.table-responsive -->
-              </div>
-            </div>
 
           </div>
-          {{-- //End history --}}
+          {{-- //End evaluacion --}}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        HISTORIAL DE PAGOS
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+        <table class="table box table-bordered" width="100%">
+          <thead>
+            <tr>
+        
+              <th>Acciones</th>
+      
+              <th>Cuota </th>
+
+              <th>Reportado</th>
+              <th>Divisa</th>
+              <th>Conversion</th>
+    
+              <th>estatus </th>
+              
+              <th>Fecha de vencimiento</th>
+      
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($historial_pagos as $historial)
+            <tr>
+
+     
+<td>        
+@if( $historial->payment_status ==2)      
+    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
+    @endif
+@if($historial->payment_status == 2 || $historial->payment_status ==5)
+<a href='#' onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+@endif
+@if($historial->payment_status != 2 && $historial->payment_status !=5)
+
+
+<a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+@endif
+</td>
+     
+
+          <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
+          <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
+          @php
+         $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1
+          @endphp
+              <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
+          <td><span class="item_21_sku">{!! $historial->importe_pagado / $tasa_cambio  !!}$</span></td>
+      
+          <td><span class="item_21_sku">{{ $historial->estatus->name }}
+          
+          <br>
+         <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
+          </span></td>
+          <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
+     
+        </tr>
+  @endforeach
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal fade mt-3" id="modal_convenio" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+       
+      </div>
+      <div class="modal-body">
+        <form action="{{ sc_route('crear_convenio') }}" method="POST">
+          <div id="w-100">
+           
+             {{ csrf_field() }}
+            <div class="header">
+              <h5 class="text-center">{!! count($order->details) ? $order->details[0]->name : 0 !!} </h5>
+            </div>
+            <div name="frmPrestamo" id="frmPrestamo">
+          <input type="hidden" name="c_producto" value="{!! count($order->details) ? $order->details[0]->name : 0 !!} ">
+          <input type="hidden" name="c_order_id" value="{!! $order->id !!} ">
+
+          <div class="form-group">
+                <label for="monto">Monto: </label>
+                <input  readonly value="{!! count($order->details) ? $order->details[0]->price : 0 !!}" class="form-control   " type="text" name="_monto" id="c_monto" placeholder="monto">
+              </div>
+
+              <div class="row">
+
+                <div class="form-group col-md-6">
+                  <label for="monto">Cuotas: </label>
+                  <input  readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="monto">Modalidad: </label>
+                  <input  readonly value="0" class="form-control   " type="text" name="c_modalidad" id="c_modalidad" placeholder="_nro_cuotas">
+                </div>
+              </div>
+
+              <div class="row">
+              <div class="form-group col-md-6">
+                <label for="monto">Fecha de primer pago: </label>
+                <input   value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="date" name="c_fecha_inicial" id="c_fecha_inicial" placeholder="_nro_cuotas">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="monto">Inicial $: </label>
+                <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="nro_convenio">Numero de convenio: </label>
+                <input class="form-control   " type="text"  value="{{$nro_convenio}}" name="nro_convenio" id="nro_convenio" placeholder="numero de convenio ">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lote">Lote: </label>
+                <input class="form-control   " type="text" name="lote" id="lote" placeholder="Lote ">
+              </div>
+            </div>
+         
+
+              <button type="button"  class=" btn btn-info" id="simular" onclick="gen_table(true)"> CALCULAR</button>
+            </div>
+          </div>
+       
+        
+        <table class="table table-striped ">
+          
+          <tbody id="tab">
+            <thead class="thead-dark">
+              <tr>
+                <td>NRO</td>
+            
+                <td id="cuotass">CUOTAS $</td>
+                <td>DEUDA $</td>
+                <td>FECHA DE PAGO</td>
+            </tr>
+              
+          </thead>
+          </tbody>
+     
+      </table>
+              </div>
+              <div class="modal-footer">
+                <button  type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Crear Convenio</button>
+              </div>
+         
+      </div>
+      
+    </div><!-- /.modal-content -->
+  </div>
+ 
+        <input  name="qty" type="hidden"  value="1" min="1" max="100">
+        <input  name="financiamiento" type="hidden"  value="1"  max="100">
+</form><!-- /.modal-dialog -->
+      <div class="row">
+  
+      
       </div>
 @php
   $htmlSelectProduct = '<tr>
