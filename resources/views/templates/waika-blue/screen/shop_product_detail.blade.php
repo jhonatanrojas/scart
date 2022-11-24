@@ -365,6 +365,8 @@ table tfoot {
                 
                     $total_cuotas=0;
                     if($product->nro_coutas>0){
+                    
+                      $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                     $total_cuotas=  $product->price / $product->nro_coutas;  
                    
 
