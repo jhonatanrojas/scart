@@ -54,6 +54,19 @@ CREATE TABLE `sc_convenios` (
 
 
 
+CREATE TABLE `sc_plantilla_convenio` (
+`id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contenido` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+
+    UNIQUE KEY `id` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 
 
@@ -95,3 +108,5 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
  ALTER TABLE sc_shop_order ADD cedula VARCHAR(100) DEFAULT '';
 
  ALTER TABLE sc_shop_order ADD usuario_id char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT '0';
+
+ ALTER TABLE sc_shop_customer ADD estado_civil VARCHAR(100) DEFAULT 'SOLTERO(A)';

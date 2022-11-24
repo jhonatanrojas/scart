@@ -146,7 +146,7 @@ $layout_page = shop_product_detail
 }
 
 #frmPrestamo {
-  padding: 30px 40px;
+  padding: 10px 15px;
 }
 
 #frmPrestamo .control, #amortizaciones .control, .radios {
@@ -351,11 +351,22 @@ table tfoot {
                 {{-- Show price --}}
                 <div class="">
                   <div class="single-product-price" id="product-detail-price">
+
+                    @if( $product->precio_de_cuota)
+                    <div class="product-price-wrap">
+                      <div class="sc-new-price">${!!  number_format($product->price/$product->nro_coutas,2) !!} </div>
+                    </div>
+              
+                    @else
                     {!! $product->showPriceDetail() !!}
+                    @endif
+            
                     @php
                 
                     $total_cuotas=0;
                     if($product->nro_coutas>0){
+                    
+                      $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                     $total_cuotas=  $product->price / $product->nro_coutas;  
                    
 
@@ -364,7 +375,7 @@ table tfoot {
                    
                   </div>
                   <div>
-                    <small class=" text-info ">adquiera el producto y pagalo en {!! $product->nro_coutas !!} cuotas  {!! $product->modalidad !!} de {!!  round($total_cuotas)!!}$ </small>
+                    <small class=" text-info  " style="font-size:1rem"> {{ $product->description}}</small>
                   </div>
                 </div>
                 {{--// Show price --}}
@@ -374,17 +385,17 @@ table tfoot {
                  
                   
 
-                  <div  class="   col-12 col-md-6 
-
-                  ">
+                  <div  class="   col-12 col-md-6 ">
                   
-                    <button id="finansiamiento" onclick="validachecke2()"  data-toggle="modal" data-target="#myModal" type="button" class="btn btn-primary p-2 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
-                    
+                    <button onclick="validachecke1()" id="descotado" class="btn btn-info btn-lg p-3"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
+
                    
                    
                   </div>
                   <div class="  col-12 col-md-6">
-                     <button onclick="validachecke1()" id="descotado" class="btn btn-success p-2"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
+
+                    <button id="finansiamiento" onclick="validachecke2(); gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
+
                    
                      
        
@@ -586,43 +597,54 @@ table tfoot {
                   <div name="frmPrestamo" id="frmPrestamo">
                 
                     <div class="p-0 mt-0 m-0">
-                      <label for="monto">Monto: </label>
-                      <input  readonly value="{{$product->price}}" class="form-control   " type="text" name="monto" id="monto" placeholder="monto" 
+       
+                      
+                      <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
                        >
                     </div>
-                    <div class="mt-2 mb-2">
-                      <label  for="periodo">forma de pago:
-                        
-                      </label>
-                      <select id="modalidad" class="form-control w-100 modalidad_pago select2"
-                      name="modalidad_pago">
-                      <?php
-                          if(isset($modalida_pago)){
-                              foreach ($modalida_pago as $key => $pagos) {
-                                  if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
-                                      echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
-                                  }else{
-                                      echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label  for="periodo">Forma de pago:
+                            
+                          </label>
+                          <select id="modalidad" class="form-control w-100 modalidad_pago select2"
+                          name="modalidad_pago">
+                          <?php
+                              if(isset($modalida_pago)){
+                                  foreach ($modalida_pago as $key => $pagos) {
+                                      if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
+                                          echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
+                                      }else{
+                                          echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
+                                      }
                                   }
                               }
-                          }
-                      ?>   
-             
-                      
-                  </select>
+                          ?>   
+                                       
+                      </select>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-groud">
+                          <label for="plazo">Cuotas:
+                          </label>
+                                <select class="form-control w-100 select2" name="Cuotas" id="Cuotas">
+                                  @foreach ($cuotas as $cuotas )
+                                  @if ($cuotas)
+                                  <option value="{{$cuotas->numero_cuotas}}">{{$cuotas->numero_cuotas}}</option>
+                                  @endif
+                                  @endforeach
+                                </select>
+                         
+                        </div>
+                      </div>
+
                     </div>
-                    <div class="mt-2 mb-2">
-                      <label for="plazo">Cuotas:
-                      </label>
-                            <select class="form-control w-100 select2" name="Cuotas" id="Cuotas">
-                              @foreach ($cuotas as $cuotas )
-                              @if ($cuotas)
-                              <option value="{{$cuotas->numero_cuotas}}">{{$cuotas->numero_cuotas}}</option>
-                              @endif
-                              @endforeach
-                            </select>
-                     
-                    </div>
+               
+                
 
                     <div class="control">
                       <label for="fecha">Fecha del primer pago:   </label>
@@ -651,7 +673,7 @@ table tfoot {
                     <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
 
-                  <div style="overflow-x:auto;" class="table-1">
+                  <div style="overflow-x:auto;" class="table-1 table-responsive">
                     <table class=" table"  >
                     
                       <tbody id="tab">
@@ -659,8 +681,8 @@ table tfoot {
                           <tr>
                             <td>NRO</td>
                             <td id="cuotass">CUOTAS</td>
-                            <td>DEUDA</td>
-                            <td>FECHA</td>
+                      
+                            <td>FECHA DE PAGO</td>
                         </tr>
                           
                       </thead>
@@ -684,8 +706,8 @@ table tfoot {
                     </div>
                     
                     <div class="modal-footer mb-4">
-                      <button  type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">continuar</button>
+                      <button  type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                      <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Continuar pedido</button>
                     </div>
             </div>
             
@@ -808,7 +830,7 @@ table tfoot {
                           <tr>
                               <td>${i}</td>
                               <td>${d2}$</td>
-                              <td>${d3}$</td>
+                      
                               <td>${texto}</td>
                           </tr>`;
               }
@@ -818,7 +840,7 @@ table tfoot {
               t_p=r*n2;
               d5=t_p.toFixed(2);
               document.getElementById("t1").innerHTML=i3;
-              document.getElementById("t3").innerHTML= "$"+montoTotal ;        
+          
               document.getElementById("t4").innerHTML= texto ;       
                 
               
@@ -840,6 +862,7 @@ table tfoot {
             
               let msg = document.getElementById('msg').style.display = "none";
               const group = document.getElementById("group").style.display = "block"
+              
               var stylies = document.getElementById("descotado")
               
               stylies.classList.replace("btn-primary", "btn-success")
@@ -851,6 +874,10 @@ table tfoot {
           
           
           };
+                 
+         document.getElementById('msg').style.display = "none";
+           document.getElementById("group").style.display = "none";
+
           
           function validachecke2(){
            
