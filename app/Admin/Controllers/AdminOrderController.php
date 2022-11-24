@@ -1253,8 +1253,8 @@ class  AdminOrderController extends RootAdminController
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
-                        "first_name",
-                        'last_name',
+                        "cod_first_name",
+                        'cod_last_name',
                         'address1',
                         'cod_estado',
                         'cod_municipio',
