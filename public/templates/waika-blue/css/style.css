@@ -5306,11 +5306,13 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 	border-color: #00396E;
 }
 
-.btn-success, .btn-primary:active, .btn-primary:focus {
+ .btn-primary:active, .btn-primary:focus {
 	color: #ffffff;
-	background: #56daff;
-	border-color: #038bb4c4;
+	background: #1db6e0;
+	border-color: #28e417c4;
 }
+
+
 .btn-outline-primary:hover {
 	color: #ffffff;
 	background: #00396E;
@@ -5318,10 +5320,15 @@ html:not(.mac-os) .button-zakaria.button-default-outline:after, html:not(.mac-os
 }
 .btn-success:hover {
 	color: #ffffff;
-	background: #56daff;
+	background: #45d440;
 	
 }
 
+.btn-success{
+	color: #ffffff;
+	background: #1e8a08;
+	border-color: #1c5f16c4;
+}
 
 
 
@@ -8374,8 +8381,8 @@ textarea.textarea-lg {
 .product-price {
 	display: inline-block;
 	vertical-align: middle;
-	font-size: 15px;
-	line-height: 1;
+	font-size: 20px;
+	line-height: 2;
 	font-weight: 700;
 	letter-spacing: 0;
 	color: #038bb4c4;

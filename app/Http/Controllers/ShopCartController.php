@@ -762,13 +762,14 @@ class ShopCartController extends RootFrontController
     {
         $data      = request()->all();
      
-        
+        $this->clearCartStore();
+
         //Process escape
         $data      = sc_clean($data);
         
 
 
-        if(!empty($data['financiamiento'])){
+        if(isset($data['financiamiento'])){
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
