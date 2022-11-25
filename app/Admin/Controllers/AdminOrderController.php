@@ -1487,12 +1487,21 @@ class  AdminOrderController extends RootAdminController
                 if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
                     else $Nacionalidad = "Extranjer(A)"; 
 
-                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                $number2 =  $dato_usuario[0]['subtotal']*$cod_bolibares;
-
                
-                   
-                    
+
+                
+                $monto = $dato_usuario[0]['subtotal'];
+                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                $cuotas = $dato_usuario[0]['cuotas'];
+                if($convenio->inicial>0){
+                    $monto = $convenio->total;
+                    $monto = $monto - $convenio->inicial;
+                    $number1 =  $monto/$convenio->nro_coutas;
+                    $cuotas = $number1;
+                  }
+
+                  
+                  $number2 =  $monto*$cod_bolibares;
                     
 
                 foreach($borrado_html as $replacee){
@@ -1533,16 +1542,13 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
-                        $dato_usuario[0]['cuotas'] ,
-                        
-                        
+                        'cod_dia'=> decenas($cuotas),
+                        number_format($cuotas),
                         'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
-                       
+                        'Cod_CuotasEtrepreciotext'=> decenas($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega,
-                        $dato_usuario[0]['subtotal'] ,
+                        $monto ,
                         'cod_nombreBS'=> convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
@@ -2033,8 +2039,22 @@ class  AdminOrderController extends RootAdminController
                 $number2 =  $dato_usuario[0]['subtotal']*$cod_bolibares;
 
                
-                   
+               
+                $monto = $dato_usuario[0]['subtotal'];
+                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                $cuotas = $dato_usuario[0]['cuotas'];
+                if($dato_usuario[0]['abono_inicial']>0){
+                    $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
+                    $monto = $dato_usuario[0]['subtotal'];
+                    $monto = $monto - $totalinicial;
+                    $number1 =  $monto/$dato_usuario[0]['cuotas'];
+                    $cuotas = $number1;
+
                     
+                  }
+
+                  
+                  $number2 =  $monto*$cod_bolibares;
                     
 
                 foreach($borrado_html as $replacee){
@@ -2075,16 +2095,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
-                        $dato_usuario[0]['cuotas'] ,
-                        
-                        
-                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
+                        'cod_dia'=> decenas($number1),
+                        $cuotas ,
+                        $number1,
+                        'Cod_CuotasEtrepreciotext'=> decenas($number1),
                        
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
-                        $dato_usuario[0]['subtotal'] ,
+                            $monto ,
                         'cod_nombreBS'=> convertir($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
