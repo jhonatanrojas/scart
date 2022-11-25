@@ -2039,8 +2039,22 @@ class  AdminOrderController extends RootAdminController
                 $number2 =  $dato_usuario[0]['subtotal']*$cod_bolibares;
 
                
-                   
+               
+                $monto = $dato_usuario[0]['subtotal'];
+                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                $cuotas = $dato_usuario[0]['cuotas'];
+                if($dato_usuario[0]['abono_inicial']>0){
+                    $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
+                    $monto = $dato_usuario[0]['subtotal'];
+                    $monto = $monto - $totalinicial;
+                    $number1 =  $monto/$dato_usuario[0]['cuotas'];
+                    $cuotas = $number1;
+
                     
+                  }
+
+                  
+                  $number2 =  $monto*$cod_bolibares;
                     
 
                 foreach($borrado_html as $replacee){
@@ -2081,16 +2095,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
-                        $dato_usuario[0]['cuotas'] ,
-                        
-                        
-                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
+                        'cod_dia'=> decenas($number1),
+                        $cuotas ,
+                        $number1,
+                        'Cod_CuotasEtrepreciotext'=> decenas($number1),
                        
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
-                        $dato_usuario[0]['subtotal'] ,
+                            $monto ,
                         'cod_nombreBS'=> convertir($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
