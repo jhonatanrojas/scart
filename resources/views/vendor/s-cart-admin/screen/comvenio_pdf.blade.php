@@ -81,6 +81,4 @@
             {!!$borrado_html!!}
        
     </body>
-    
-    
     </html>
