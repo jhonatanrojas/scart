@@ -1037,8 +1037,6 @@ class  AdminOrderController extends RootAdminController
         }
 
         $convenio = Convenio::where('order_id',$id)->first();
-
-       
         
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
@@ -1393,7 +1391,7 @@ class  AdminOrderController extends RootAdminController
                         return $num_letramm;
                     }
                 
-                    function decmillon($numerodm){
+                    function decmillon2($numerodm){
                         if ($numerodm == 10000000)
                             $num_letradmm = "DIEZ MILLONES";
                         if ($numerodm > 10000000 && $numerodm <20000000){
@@ -1408,38 +1406,38 @@ class  AdminOrderController extends RootAdminController
                         return $num_letradmm;
                     }
                 
-                    function cienmillon($numcmeros){
+                    function cienmillon2($numcmeros){
                         if ($numcmeros == 100000000)
                             $num_letracms = "CIEN MILLONES";
                         if ($numcmeros >= 100000000 && $numcmeros <1000000000){
                             $num_letracms = centena(Floor($numcmeros/1000000))." MILLONES ".(millon($numcmeros%1000000));
                         }
                         if ($numcmeros < 100000000)
-                            $num_letracms = decmillon($numcmeros);
+                            $num_letracms = decmillon2($numcmeros);
                         return $num_letracms;
                     }
                 
-                    function milmillon($nummierod){
+                    function milmillon2($nummierod){
                         if ($nummierod >= 1000000000 && $nummierod <2000000000){
-                            $num_letrammd = "MIL ".(cienmillon($nummierod%1000000000));
+                            $num_letrammd = "MIL ".(cienmillon2($nummierod%1000000000));
                         }
                         if ($nummierod >= 2000000000 && $nummierod <10000000000){
-                            $num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon($nummierod%1000000000));
+                            $num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon2($nummierod%1000000000));
                         }
                         if ($nummierod < 1000000000)
-                            $num_letrammd = cienmillon($nummierod);
+                            $num_letrammd = cienmillon2($nummierod);
                 
                         return $num_letrammd;
                     }
                 
                 
-                    function convertir($numero){
+                    function convertir2($numero){
                                 $num = str_replace(",","",$numero);
                                 $num = number_format($num,2,'.','');
                                 $cents = substr($num,strlen($num)-2,strlen($num)-1);
                                 $num = (int)$num;
                     
-                                $numf = milmillon($num);
+                                $numf = milmillon2($num);
                     
                             return $numf . " BOLIVARES "." CON ".$cents;
                     }
@@ -1499,7 +1497,6 @@ class  AdminOrderController extends RootAdminController
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
-                        "cod_borrador",
                         "cod_first_name",
                         'cod_last_name',
                         'address1',
@@ -1526,7 +1523,6 @@ class  AdminOrderController extends RootAdminController
                         'cod_Fecha_De_Hoy',
                     ];
                     $dataReplace = [
-                        "N° CONVENIO :" . $convenio['nro_convenio']  ?? 'BORRADOR DEL CONVENIO',
                         $dato_usuario['first_name'],
                         $dato_usuario['last_name'],
                         $dato_usuario['address1'],
@@ -1545,9 +1541,9 @@ class  AdminOrderController extends RootAdminController
                         'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
                        
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
+                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega,
                         $dato_usuario[0]['subtotal'] ,
-                        'cod_nombreBS'=> convertir($number2),
+                        'cod_nombreBS'=> convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
@@ -1566,9 +1562,9 @@ class  AdminOrderController extends RootAdminController
         ['borrado_html'=> $resultado],
         ['convenio'=> $convenio['nro_convenio'] ],
 
-        )->setOptions(['defaultFont' => 'sans-serif']);
+        );
 
-        return $pdf->download('CONVENIO.pdf');
+        return $pdf->stream();
     }
 
     public function borrador_pdf($id){
@@ -2106,7 +2102,7 @@ class  AdminOrderController extends RootAdminController
 
                 return view($this->templatePathAdmin.'screen.borrador_pdf',
                 ['borrado_html'=>$resultado],
-                ['logos'=> '/images/image1.jpg' ],
+                
             );
 
     }
