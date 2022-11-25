@@ -477,6 +477,8 @@ class HistorialPagosController extends RootAdminController
             '_monto' => 'required',
             'c_fecha_inicial' => 'required' ,
             'nro_convenio' => 'required',
+            'nro_convenio' => 'required',
+            'fecha_maxima_entrega' => 'required',
 
           
         ]);
@@ -498,6 +500,7 @@ class HistorialPagosController extends RootAdminController
                 'total'=> request()->_monto,
                 'inicial'=> request()->c_inicial,
                 'modalidad'=> request()->c_modalidad,
+                'fecha_maxima_entrega'=> request()->fecha_maxima_entrega,
 
             ]);
    

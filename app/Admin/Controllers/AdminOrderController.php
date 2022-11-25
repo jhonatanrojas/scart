@@ -586,7 +586,7 @@ class  AdminOrderController extends RootAdminController
      */
     public function postOrderUpdate()
     {
-       
+      
         $id = request('pk');
         $code = request('name');
         $value = request('value');
@@ -733,6 +733,8 @@ class  AdminOrderController extends RootAdminController
      */
     public function postAddItem()
     {
+
+        
         $addIds = request('add_id');
         $add_price = request('add_price');
         $add_qty = request('add_qty');
@@ -1025,18 +1027,25 @@ class  AdminOrderController extends RootAdminController
     public function downloadPdf($id)
     {
 
-        $order = AdminOrder::getOrderAdmin($id);
-        $convenio = Convenio::where('order_id',$id)->first();
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
+        $order = ShopOrder::where('id',$id)->get();
+
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
+        $convenio = Convenio::where('order_id',$id)->first();
+
        
-        $usuario =  SC_shop_customer::where('email', $order['email'])->get();
+        
+        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
         $nombreProduct = [];
+        $fecha_maxima_entrega = [];
         $cuotas = [];
         $abono_inicial = [];
         $id_modalidad_pago = [];
@@ -1045,14 +1054,9 @@ class  AdminOrderController extends RootAdminController
             $cuotas = $p->nro_coutas;
             $abono_inicial = $p->abono_inicial;
             $id_modalidad_pago = $p->id_modalidad_pago;
+            $fecha_maxima_entrega = $p->fecha_maxima_entrega;
         }
         
-       
-
-
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
 
         $nombreEstado=[];
         $nombreparroquias =[];
@@ -1060,17 +1064,13 @@ class  AdminOrderController extends RootAdminController
         foreach($result as $c){
             foreach($estado as $estados){
            if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
+
                 foreach($municipio as $municipos){
-                    if($municipos->codigomunicipio ==  $c['cod_municipio']){
-                        $nombremunicipos = $municipos->nombre;
-                    }
+                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
                 }
                 foreach($parroquia as $parroquias){
                     if($parroquias->codigomunicipio == $c['cod_municipio']){
-                        $nombreparroquias = $parroquias->nombre;
-                        
-                    }
-                   
+                        $nombreparroquias = $parroquias->nombre;}
                 }
               
             }
@@ -1089,11 +1089,11 @@ class  AdminOrderController extends RootAdminController
                 'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $nombreparroquias,
+                'estado_civil' => $c['estado_civil'],
                 
                 [
-                    'convenio'=> $convenio->nro_convenio,
-                    'subtotal'=> $order['subtotal'],
-                    'fecha_primer_pago'=> $order['fecha_primer_pago'],
+        
+                    'subtotal'=> $order[0]['subtotal'],
                     'cantidaProduc'=> $cantidaProduc,
                     'nombreProduct'=> $nombreProduct,
                     'cuotas' => $cuotas,
@@ -1107,15 +1107,468 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-        $pdf = Pdf::loadView($this->templatePathAdmin.'screen.pdf', 
-        ['dato_usuario'=>$dato_usuario],
-        ['convenio'=>$convenio],
-        
+            
+                function unidad($numuero){
+                    switch ($numuero)
+                    {
+                        case 9:
+                        {
+                            $numu = "NUEVE";
+                            break;
+                        }
+                        case 8:
+                        {
+                            $numu = "OCHO";
+                            break;
+                        }
+                        case 7:
+                        {
+                            $numu = "SIETE";
+                            break;
+                        }
+                        case 6:
+                        {
+                            $numu = "SEIS";
+                            break;
+                        }
+                        case 5:
+                        {
+                            $numu = "CINCO";
+                            break;
+                        }
+                        case 4:
+                        {
+                            $numu = "CUATRO";
+                            break;
+                        }
+                        case 3:
+                        {
+                            $numu = "TRES";
+                            break;
+                        }
+                        case 2:
+                        {
+                            $numu = "DOS";
+                            break;
+                        }
+                        case 1:
+                        {
+                            $numu = "UNO";
+                            break;
+                        }
+                        case 0:
+                        {
+                            $numu = "";
+                            break;
+                        }
+                    }
+                    return $numu;
+                }
+                
+                function decena($numdero){
+                
+                        if ($numdero >= 90 && $numdero <= 99)
+                        {
+                            $numd = "NOVENTA ";
+                            if ($numdero > 90)
+                                $numd = $numd."Y ".(unidad($numdero - 90));
+                        }
+                        else if ($numdero >= 80 && $numdero <= 89)
+                        {
+                            $numd = "OCHENTA ";
+                            if ($numdero > 80)
+                                $numd = $numd."Y ".(unidad($numdero - 80));
+                        }
+                        else if ($numdero >= 70 && $numdero <= 79)
+                        {
+                            $numd = "SETENTA ";
+                            if ($numdero > 70)
+                                $numd = $numd."Y ".(unidad($numdero - 70));
+                        }
+                        else if ($numdero >= 60 && $numdero <= 69)
+                        {
+                            $numd = "SESENTA ";
+                            if ($numdero > 60)
+                                $numd = $numd."Y ".(unidad($numdero - 60));
+                        }
+                        else if ($numdero >= 50 && $numdero <= 59)
+                        {
+                            $numd = "CINCUENTA ";
+                            if ($numdero > 50)
+                                $numd = $numd."Y ".(unidad($numdero - 50));
+                        }
+                        else if ($numdero >= 40 && $numdero <= 49)
+                        {
+                            $numd = "CUARENTA ";
+                            if ($numdero > 40)
+                                $numd = $numd."Y ".(unidad($numdero - 40));
+                        }
+                        else if ($numdero >= 30 && $numdero <= 39)
+                        {
+                            $numd = "TREINTA ";
+                            if ($numdero > 30)
+                                $numd = $numd."Y ".(unidad($numdero - 30));
+                        }
+                        else if ($numdero >= 20 && $numdero <= 29)
+                        {
+                            if ($numdero == 20)
+                                $numd = "VEINTE ";
+                            else
+                                $numd = "VEINTI".(unidad($numdero - 20));
+                        }
+                        else if ($numdero >= 10 && $numdero <= 19)
+                        {
+                            switch ($numdero){
+                            case 10:
+                            {
+                                $numd = "DIEZ ";
+                                break;
+                            }
+                            case 11:
+                            {
+                                $numd = "ONCE ";
+                                break;
+                            }
+                            case 12:
+                            {
+                                $numd = "DOCE ";
+                                break;
+                            }
+                            case 13:
+                            {
+                                $numd = "TRECE ";
+                                break;
+                            }
+                            case 14:
+                            {
+                                $numd = "CATORCE ";
+                                break;
+                            }
+                            case 15:
+                            {
+                                $numd = "QUINCE ";
+                                break;
+                            }
+                            case 16:
+                            {
+                                $numd = "DIECISEIS ";
+                                break;
+                            }
+                            case 17:
+                            {
+                                $numd = "DIECISIETE ";
+                                break;
+                            }
+                            case 18:
+                            {
+                                $numd = "DIECIOCHO ";
+                                break;
+                            }
+                            case 19:
+                            {
+                                $numd = "DIECINUEVE ";
+                                break;
+                            }
+                            }
+                        }
+                        else
+                            $numd = unidad($numdero);
+                    return $numd;
+                }
+                
+                    function centena($numc){
+                        if ($numc >= 100)
+                        {
+                            if ($numc >= 900 && $numc <= 999)
+                            {
+                                $numce = "NOVECIENTOS ";
+                                if ($numc > 900)
+                                    $numce = $numce.(decena($numc - 900));
+                            }
+                            else if ($numc >= 800 && $numc <= 899)
+                            {
+                                $numce = "OCHOCIENTOS ";
+                                if ($numc > 800)
+                                    $numce = $numce.(decena($numc - 800));
+                            }
+                            else if ($numc >= 700 && $numc <= 799)
+                            {
+                                $numce = "SETECIENTOS ";
+                                if ($numc > 700)
+                                    $numce = $numce.(decena($numc - 700));
+                            }
+                            else if ($numc >= 600 && $numc <= 699)
+                            {
+                                $numce = "SEISCIENTOS ";
+                                if ($numc > 600)
+                                    $numce = $numce.(decena($numc - 600));
+                            }
+                            else if ($numc >= 500 && $numc <= 599)
+                            {
+                                $numce = "QUINIENTOS ";
+                                if ($numc > 500)
+                                    $numce = $numce.(decena($numc - 500));
+                            }
+                            else if ($numc >= 400 && $numc <= 499)
+                            {
+                                $numce = "CUATROCIENTOS ";
+                                if ($numc > 400)
+                                    $numce = $numce.(decena($numc - 400));
+                            }
+                            else if ($numc >= 300 && $numc <= 399)
+                            {
+                                $numce = "TRESCIENTOS ";
+                                if ($numc > 300)
+                                    $numce = $numce.(decena($numc - 300));
+                            }
+                            else if ($numc >= 200 && $numc <= 299)
+                            {
+                                $numce = "DOSCIENTOS ";
+                                if ($numc > 200)
+                                    $numce = $numce.(decena($numc - 200));
+                            }
+                            else if ($numc >= 100 && $numc <= 199)
+                            {
+                                if ($numc == 100)
+                                    $numce = "CIEN ";
+                                else
+                                    $numce = "CIENTO ".(decena($numc - 100));
+                            }
+                        }
+                        else
+                            $numce = decena($numc);
+                
+                        return $numce;
+                }
+                
+                    function miles($nummero){
+                        if ($nummero >= 1000 && $nummero < 2000){
+                            $numm = "MIL ".(centena($nummero%1000));
+                        }
+                        if ($nummero >= 2000 && $nummero <10000){
+                            $numm = unidad(Floor($nummero/1000))." MIL ".(centena($nummero%1000));
+                        }
+                        if ($nummero < 1000)
+                            $numm = centena($nummero);
+                
+                        return $numm;
+                    }
+                
+                    function decmiles($numdmero){
+                        if ($numdmero == 10000)
+                            $numde = "DIEZ MIL";
+                        if ($numdmero > 10000 && $numdmero <20000){
+                            $numde = decena(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
+                        }
+                        if ($numdmero >= 20000 && $numdmero <100000){
+                            $numde = decena(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
+                        }
+                        if ($numdmero < 10000)
+                            $numde = miles($numdmero);
+                
+                        return $numde;
+                    }
+                
+                    function cienmiles($numcmero){
+                        if ($numcmero == 100000)
+                            $num_letracm = "CIEN MIL";
+                        if ($numcmero >= 100000 && $numcmero <1000000){
+                            $num_letracm = centena(Floor($numcmero/1000))." MIL ".(centena($numcmero%1000));
+                        }
+                        if ($numcmero < 100000)
+                            $num_letracm = decmiles($numcmero);
+                        return $num_letracm;
+                    }
+                
+                    function millon($nummiero){
+                        if ($nummiero >= 1000000 && $nummiero <2000000){
+                            $num_letramm = "UN MILLON ".(cienmiles($nummiero%1000000));
+                        }
+                        if ($nummiero >= 2000000 && $nummiero <10000000){
+                            $num_letramm = unidad(Floor($nummiero/1000000))." MILLONES ".(cienmiles($nummiero%1000000));
+                        }
+                        if ($nummiero < 1000000)
+                            $num_letramm = cienmiles($nummiero);
+                
+                        return $num_letramm;
+                    }
+                
+                    function decmillon($numerodm){
+                        if ($numerodm == 10000000)
+                            $num_letradmm = "DIEZ MILLONES";
+                        if ($numerodm > 10000000 && $numerodm <20000000){
+                            $num_letradmm = decena(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
+                        }
+                        if ($numerodm >= 20000000 && $numerodm <100000000){
+                            $num_letradmm = decena(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
+                        }
+                        if ($numerodm < 10000000)
+                            $num_letradmm = millon($numerodm);
+                
+                        return $num_letradmm;
+                    }
+                
+                    function cienmillon($numcmeros){
+                        if ($numcmeros == 100000000)
+                            $num_letracms = "CIEN MILLONES";
+                        if ($numcmeros >= 100000000 && $numcmeros <1000000000){
+                            $num_letracms = centena(Floor($numcmeros/1000000))." MILLONES ".(millon($numcmeros%1000000));
+                        }
+                        if ($numcmeros < 100000000)
+                            $num_letracms = decmillon($numcmeros);
+                        return $num_letracms;
+                    }
+                
+                    function milmillon($nummierod){
+                        if ($nummierod >= 1000000000 && $nummierod <2000000000){
+                            $num_letrammd = "MIL ".(cienmillon($nummierod%1000000000));
+                        }
+                        if ($nummierod >= 2000000000 && $nummierod <10000000000){
+                            $num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon($nummierod%1000000000));
+                        }
+                        if ($nummierod < 1000000000)
+                            $num_letrammd = cienmillon($nummierod);
+                
+                        return $num_letrammd;
+                    }
+                
+                
+                    function convertir($numero){
+                                $num = str_replace(",","",$numero);
+                                $num = number_format($num,2,'.','');
+                                $cents = substr($num,strlen($num)-2,strlen($num)-1);
+                                $num = (int)$num;
+                    
+                                $numf = milmillon($num);
+                    
+                            return $numf . " BOLIVARES "." CON ".$cents;
+                    }
 
-        
-    );
+                function basico($numero) {
+                    $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
+                    'nueve','diez','once','doce','trece','catorce','quince','dieciseis','diecisiete','dieciocho','diecinueve','veinte','veintiuno ','vientidos ','veintitrés ', 'veinticuatro','veinticinco',
+                    'veintiséis','veintisiete','veintiocho','veintinueve');
+                    return $valor[$numero - 1];
+                    }
 
-        return $pdf->download('screen.pdf');
+                function decenas($n) {
+                    $decenas = array (30=>'treinta',40=>'cuarenta',50=>'cincuenta',60=>'sesenta',
+                    70=>'setenta',80=>'ochenta',90=>'noventa');
+                    if( $n <= 29) return basico($n);
+                    $x = $n % 10;
+                    if ( $x == 0 ) {
+                    return $decenas[$n];
+                    } else return $decenas[$n - $x].' y '. basico($x);
+                    
+                    }
+
+                    $Moneda_CAMBIOBS = sc_currency_all();
+                    foreach($Moneda_CAMBIOBS as $cambio){
+                        if($cambio->name == "Bolivares"){
+                           $nombreBS =  decenas($cambio->exchange_rate);
+                           $cod_bolibares =  $cambio->exchange_rate;
+                        }
+                    }
+
+                $borrado_html = [];
+                if($abono_inicial <= "0.00"){
+                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+                    }else{
+                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
+                    }
+
+
+                $pieces = explode(" ", $dato_usuario['cedula']);
+                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
+                    $mesualQuinsena = "MENSUAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+                }else {
+                    $mesualQuinsena = " QUINCENAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y 30 DE CADA MES";
+                } 
+                if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
+                    else $Nacionalidad = "Extranjer(A)"; 
+
+                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                $number2 =  $dato_usuario[0]['subtotal']*$cod_bolibares;
+
+               
+                   
+                    
+                    
+
+                foreach($borrado_html as $replacee){
+                    $dataFind = [
+                        "cod_borrador",
+                        "cod_first_name",
+                        'cod_last_name',
+                        'address1',
+                        'cod_estado',
+                        'cod_municipio',
+                        'cod_parroquia',
+                        'cod_Cedula',
+                        'cod_civil',
+                        'cod_Nacionalidad',
+                        'cod_modalidad_pago',
+                        'cod_dia',
+                        'Cuotas1',
+                        'Cod_CuotasEtreprecioTptal',
+                        'Cod_CuotasEtrepreciotext',
+                        'cod_mespago',
+                        'cod_fechaEntrega',
+                        'cod_subtotal',
+                        'cod_nombreBS',
+                        'cod_bolibares',
+                        'nombreProduct',
+                        'cod_phone',
+                        'cod_email',
+                        'cod_doreccion',
+                        'cod_Fecha_De_Hoy',
+                    ];
+                    $dataReplace = [
+                        "N° CONVENIO :" . $convenio['nro_convenio']  ?? 'BORRADOR DEL CONVENIO',
+                        $dato_usuario['first_name'],
+                        $dato_usuario['last_name'],
+                        $dato_usuario['address1'],
+                        $dato_usuario['cod_estado'],
+                        $dato_usuario['cod_municipio'],
+                        $dato_usuario['cod_parroquia'],
+                        $dato_usuario['cedula'],
+                        $dato_usuario['estado_civil'],
+                        'cod_Nacionalidad'=> $Nacionalidad,
+                        'cod_modalidad_pago' => $mesualQuinsena,
+                        'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
+                        $dato_usuario[0]['cuotas'] ,
+                        
+                        
+                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
+                        'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
+                       
+                        'cod_mespago' => $cod_diaMes ,
+                        'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
+                        $dato_usuario[0]['subtotal'] ,
+                        'cod_nombreBS'=> convertir($number2),
+                        'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
+                        $dato_usuario[0]['nombreProduct'] ,
+                        $dato_usuario['phone'],
+                        $dato_usuario['email'],
+                        $dato_usuario['address1'],
+                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        
+                    ];
+            
+                    $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
+                }
+                
+                
+
+        $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+        ['borrado_html'=> $resultado],
+        ['convenio'=> $convenio['nro_convenio'] ],
+
+        )->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->download('CONVENIO.pdf');
     }
 
     public function borrador_pdf($id){
@@ -1127,8 +1580,10 @@ class  AdminOrderController extends RootAdminController
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
+      
+     
 
-        $convenio = Convenio::where('order_id',$id)->first();
+        
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
@@ -1600,7 +2055,6 @@ class  AdminOrderController extends RootAdminController
                         'cod_modalidad_pago',
                         'cod_dia',
                         'Cuotas1',
-                        'cod_entregas',
                         'Cod_CuotasEtreprecioTptal',
                         'Cod_CuotasEtrepreciotext',
                         'cod_mespago',
@@ -1627,13 +2081,13 @@ class  AdminOrderController extends RootAdminController
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> decenas($dato_usuario[0]['cuotas']),
                         $dato_usuario[0]['cuotas'] ,
-                        'cod_entregas'=> $fecha_maxima_entrega,
+                        
                         
                         'Cod_CuotasEtreprecioTptal'=> number_format($number1),
                         'Cod_CuotasEtrepreciotext'=> decenas($dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas']),
                        
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' => $fecha_maxima_entrega ,
+                        'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
                         $dato_usuario[0]['subtotal'] ,
                         'cod_nombreBS'=> convertir($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
@@ -1651,8 +2105,8 @@ class  AdminOrderController extends RootAdminController
                 
 
                 return view($this->templatePathAdmin.'screen.borrador_pdf',
-                ['Usuario'=>$dato_usuario],
                 ['borrado_html'=>$resultado],
+                ['logos'=> '/images/image1.jpg' ],
             );
 
     }
