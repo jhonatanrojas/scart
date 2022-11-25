@@ -50,15 +50,20 @@
 
         .huella_text {
             width: 100%;
-            margin-top: 10px;
+            display: inline-flex;
+            justify-content: space-evenly;
+            align-items: center;
+            
+           
 
         }
         .huella_text .huella{
             width: 50px;
-            height: 70px;
+            height: 60px;
             margin-left: 5px;
             border: solid black 1px;
             float: left;
+            
         }
       </style>
     </head>
