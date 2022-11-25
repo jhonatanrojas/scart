@@ -693,6 +693,10 @@
                 <input   value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="date" name="c_fecha_inicial" id="c_fecha_inicial" placeholder="_nro_cuotas">
               </div>
               <div class="form-group col-md-6">
+                <label for="monto">Fecha de entrega: </label>
+                <input   class="form-control   " type="date" name="fecha_maxima_entrega" id="fecha_maxima_entrega" placeholder="_nro_cuotas">
+              </div>
+              <div class="form-group col-md-6">
                 <label for="monto">Inicial $: </label>
                 <input  readonly value="0" class="form-control   " type="text" name="c_inicial" id="c_inicial" placeholder="_nro_cuotas">
               </div>
@@ -1245,7 +1249,6 @@ function update_total(e){
 
  function  validar(element){
 
-  console.log(element)
   node = element.closest('tr');
   var id = node.find('option:selected').eq(0).val();
  }
