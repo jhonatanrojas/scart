@@ -1,4 +1,4 @@
-@php if(!empty($convenio))$inconoAlert = "block";
+@php if(!empty($convenio))$inconoAlert = "none";
 
 @endphp
 

@@ -1163,7 +1163,7 @@ class  AdminOrderController extends RootAdminController
                     return $numu;
                 }
                 
-                function decena($numdero){
+                function decenas($numdero){
                 
                         if ($numdero >= 90 && $numdero <= 99)
                         {
@@ -1281,60 +1281,60 @@ class  AdminOrderController extends RootAdminController
                             {
                                 $numce = "NOVECIENTOS ";
                                 if ($numc > 900)
-                                    $numce = $numce.(decena($numc - 900));
+                                    $numce = $numce.(decenas($numc - 900));
                             }
                             else if ($numc >= 800 && $numc <= 899)
                             {
                                 $numce = "OCHOCIENTOS ";
                                 if ($numc > 800)
-                                    $numce = $numce.(decena($numc - 800));
+                                    $numce = $numce.(decenas($numc - 800));
                             }
                             else if ($numc >= 700 && $numc <= 799)
                             {
                                 $numce = "SETECIENTOS ";
                                 if ($numc > 700)
-                                    $numce = $numce.(decena($numc - 700));
+                                    $numce = $numce.(decenas($numc - 700));
                             }
                             else if ($numc >= 600 && $numc <= 699)
                             {
                                 $numce = "SEISCIENTOS ";
                                 if ($numc > 600)
-                                    $numce = $numce.(decena($numc - 600));
+                                    $numce = $numce.(decenas($numc - 600));
                             }
                             else if ($numc >= 500 && $numc <= 599)
                             {
                                 $numce = "QUINIENTOS ";
                                 if ($numc > 500)
-                                    $numce = $numce.(decena($numc - 500));
+                                    $numce = $numce.(decenas($numc - 500));
                             }
                             else if ($numc >= 400 && $numc <= 499)
                             {
                                 $numce = "CUATROCIENTOS ";
                                 if ($numc > 400)
-                                    $numce = $numce.(decena($numc - 400));
+                                    $numce = $numce.(decenas($numc - 400));
                             }
                             else if ($numc >= 300 && $numc <= 399)
                             {
                                 $numce = "TRESCIENTOS ";
                                 if ($numc > 300)
-                                    $numce = $numce.(decena($numc - 300));
+                                    $numce = $numce.(decenas($numc - 300));
                             }
                             else if ($numc >= 200 && $numc <= 299)
                             {
                                 $numce = "DOSCIENTOS ";
                                 if ($numc > 200)
-                                    $numce = $numce.(decena($numc - 200));
+                                    $numce = $numce.(decenas($numc - 200));
                             }
                             else if ($numc >= 100 && $numc <= 199)
                             {
                                 if ($numc == 100)
                                     $numce = "CIEN ";
                                 else
-                                    $numce = "CIENTO ".(decena($numc - 100));
+                                    $numce = "CIENTO ".(decenas($numc - 100));
                             }
                         }
                         else
-                            $numce = decena($numc);
+                            $numce = decenas($numc);
                 
                         return $numce;
                 }
@@ -1356,10 +1356,10 @@ class  AdminOrderController extends RootAdminController
                         if ($numdmero == 10000)
                             $numde = "DIEZ MIL";
                         if ($numdmero > 10000 && $numdmero <20000){
-                            $numde = decena(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
+                            $numde = decenas(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
                         }
                         if ($numdmero >= 20000 && $numdmero <100000){
-                            $numde = decena(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
+                            $numde = decenas(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
                         }
                         if ($numdmero < 10000)
                             $numde = miles($numdmero);
@@ -1395,10 +1395,10 @@ class  AdminOrderController extends RootAdminController
                         if ($numerodm == 10000000)
                             $num_letradmm = "DIEZ MILLONES";
                         if ($numerodm > 10000000 && $numerodm <20000000){
-                            $num_letradmm = decena(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
+                            $num_letradmm = decenas(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
                         }
                         if ($numerodm >= 20000000 && $numerodm <100000000){
-                            $num_letradmm = decena(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
+                            $num_letradmm = decenas(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
                         }
                         if ($numerodm < 10000000)
                             $num_letradmm = millon($numerodm);
@@ -1431,7 +1431,7 @@ class  AdminOrderController extends RootAdminController
                     }
                 
                 
-                    function convertir2($numero){
+                    function convertir1($numero){
                                 $num = str_replace(",","",$numero);
                                 $num = number_format($num,2,'.','');
                                 $cents = substr($num,strlen($num)-2,strlen($num)-1);
@@ -1439,8 +1439,18 @@ class  AdminOrderController extends RootAdminController
                     
                                 $numf = milmillon2($num);
                     
-                            return $numf . " BOLIVARES "." CON ".$cents;
+                            return $numf;
                     }
+                    function convertir2($numero){
+                        $num = str_replace(",","",$numero);
+                        $num = number_format($num,2,'.','');
+                        $cents = substr($num,strlen($num)-2,strlen($num)-1);
+                        $num = (int)$num;
+            
+                        $numf = milmillon2($num);
+            
+                    return $numf ." CON " .$cents;
+            }
 
                 function basico($numero) {
                     $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
@@ -1449,7 +1459,7 @@ class  AdminOrderController extends RootAdminController
                     return $valor[$numero - 1];
                     }
 
-                function decenas($n) {
+                function decenass($n) {
                     $decenas = array (30=>'treinta',40=>'cuarenta',50=>'cincuenta',60=>'sesenta',
                     70=>'setenta',80=>'ochenta',90=>'noventa');
                     if( $n <= 29) return basico($n);
@@ -1463,7 +1473,7 @@ class  AdminOrderController extends RootAdminController
                     $Moneda_CAMBIOBS = sc_currency_all();
                     foreach($Moneda_CAMBIOBS as $cambio){
                         if($cambio->name == "Bolivares"){
-                           $nombreBS =  decenas($cambio->exchange_rate);
+                           $nombreBS =  decenass($cambio->exchange_rate);
                            $cod_bolibares =  $cambio->exchange_rate;
                         }
                     }
@@ -1494,10 +1504,13 @@ class  AdminOrderController extends RootAdminController
                 $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
                 $cuotas = $dato_usuario[0]['cuotas'];
                 if($convenio->inicial>0){
-                    $monto = $convenio->total;
-                    $monto = $monto - $convenio->inicial;
-                    $number1 =  $monto/$convenio->nro_coutas;
+                    $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
+                    $monto = $dato_usuario[0]['subtotal'];
+                    $monto = $monto - $totalinicial;
+                    $number1 =  $monto/$dato_usuario[0]['cuotas'];
                     $cuotas = $number1;
+                    $number2 =  $monto*$cod_bolibares;
+                   
                   }
 
                   
@@ -1542,10 +1555,10 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($cuotas),
+                        'cod_dia'=> convertir1($cuotas),
                         number_format($cuotas),
                         'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> decenas($number1),
+                        'Cod_CuotasEtrepreciotext'=> convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega,
                         $monto ,
@@ -1582,9 +1595,8 @@ class  AdminOrderController extends RootAdminController
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
-      
-     
 
+        $convenio = Convenio::where('order_id',$id)->first();
         
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
@@ -1711,7 +1723,7 @@ class  AdminOrderController extends RootAdminController
                     return $numu;
                 }
                 
-                function decena($numdero){
+                function decenas($numdero){
                 
                         if ($numdero >= 90 && $numdero <= 99)
                         {
@@ -1829,60 +1841,60 @@ class  AdminOrderController extends RootAdminController
                             {
                                 $numce = "NOVECIENTOS ";
                                 if ($numc > 900)
-                                    $numce = $numce.(decena($numc - 900));
+                                    $numce = $numce.(decenas($numc - 900));
                             }
                             else if ($numc >= 800 && $numc <= 899)
                             {
                                 $numce = "OCHOCIENTOS ";
                                 if ($numc > 800)
-                                    $numce = $numce.(decena($numc - 800));
+                                    $numce = $numce.(decenas($numc - 800));
                             }
                             else if ($numc >= 700 && $numc <= 799)
                             {
                                 $numce = "SETECIENTOS ";
                                 if ($numc > 700)
-                                    $numce = $numce.(decena($numc - 700));
+                                    $numce = $numce.(decenas($numc - 700));
                             }
                             else if ($numc >= 600 && $numc <= 699)
                             {
                                 $numce = "SEISCIENTOS ";
                                 if ($numc > 600)
-                                    $numce = $numce.(decena($numc - 600));
+                                    $numce = $numce.(decenas($numc - 600));
                             }
                             else if ($numc >= 500 && $numc <= 599)
                             {
                                 $numce = "QUINIENTOS ";
                                 if ($numc > 500)
-                                    $numce = $numce.(decena($numc - 500));
+                                    $numce = $numce.(decenas($numc - 500));
                             }
                             else if ($numc >= 400 && $numc <= 499)
                             {
                                 $numce = "CUATROCIENTOS ";
                                 if ($numc > 400)
-                                    $numce = $numce.(decena($numc - 400));
+                                    $numce = $numce.(decenas($numc - 400));
                             }
                             else if ($numc >= 300 && $numc <= 399)
                             {
                                 $numce = "TRESCIENTOS ";
                                 if ($numc > 300)
-                                    $numce = $numce.(decena($numc - 300));
+                                    $numce = $numce.(decenas($numc - 300));
                             }
                             else if ($numc >= 200 && $numc <= 299)
                             {
                                 $numce = "DOSCIENTOS ";
                                 if ($numc > 200)
-                                    $numce = $numce.(decena($numc - 200));
+                                    $numce = $numce.(decenas($numc - 200));
                             }
                             else if ($numc >= 100 && $numc <= 199)
                             {
                                 if ($numc == 100)
                                     $numce = "CIEN ";
                                 else
-                                    $numce = "CIENTO ".(decena($numc - 100));
+                                    $numce = "CIENTO ".(decenas($numc - 100));
                             }
                         }
                         else
-                            $numce = decena($numc);
+                            $numce = decenas($numc);
                 
                         return $numce;
                 }
@@ -1904,10 +1916,10 @@ class  AdminOrderController extends RootAdminController
                         if ($numdmero == 10000)
                             $numde = "DIEZ MIL";
                         if ($numdmero > 10000 && $numdmero <20000){
-                            $numde = decena(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
+                            $numde = decenas(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
                         }
                         if ($numdmero >= 20000 && $numdmero <100000){
-                            $numde = decena(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
+                            $numde = decenas(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
                         }
                         if ($numdmero < 10000)
                             $numde = miles($numdmero);
@@ -1939,14 +1951,14 @@ class  AdminOrderController extends RootAdminController
                         return $num_letramm;
                     }
                 
-                    function decmillon($numerodm){
+                    function decmillon2($numerodm){
                         if ($numerodm == 10000000)
                             $num_letradmm = "DIEZ MILLONES";
                         if ($numerodm > 10000000 && $numerodm <20000000){
-                            $num_letradmm = decena(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
+                            $num_letradmm = decenas(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
                         }
                         if ($numerodm >= 20000000 && $numerodm <100000000){
-                            $num_letradmm = decena(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
+                            $num_letradmm = decenas(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
                         }
                         if ($numerodm < 10000000)
                             $num_letradmm = millon($numerodm);
@@ -1954,41 +1966,51 @@ class  AdminOrderController extends RootAdminController
                         return $num_letradmm;
                     }
                 
-                    function cienmillon($numcmeros){
+                    function cienmillon2($numcmeros){
                         if ($numcmeros == 100000000)
                             $num_letracms = "CIEN MILLONES";
                         if ($numcmeros >= 100000000 && $numcmeros <1000000000){
                             $num_letracms = centena(Floor($numcmeros/1000000))." MILLONES ".(millon($numcmeros%1000000));
                         }
                         if ($numcmeros < 100000000)
-                            $num_letracms = decmillon($numcmeros);
+                            $num_letracms = decmillon2($numcmeros);
                         return $num_letracms;
                     }
                 
-                    function milmillon($nummierod){
+                    function milmillon2($nummierod){
                         if ($nummierod >= 1000000000 && $nummierod <2000000000){
-                            $num_letrammd = "MIL ".(cienmillon($nummierod%1000000000));
+                            $num_letrammd = "MIL ".(cienmillon2($nummierod%1000000000));
                         }
                         if ($nummierod >= 2000000000 && $nummierod <10000000000){
-                            $num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon($nummierod%1000000000));
+                            $num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon2($nummierod%1000000000));
                         }
                         if ($nummierod < 1000000000)
-                            $num_letrammd = cienmillon($nummierod);
+                            $num_letrammd = cienmillon2($nummierod);
                 
                         return $num_letrammd;
                     }
                 
                 
-                    function convertir($numero){
+                    function convertir1($numero){
                                 $num = str_replace(",","",$numero);
                                 $num = number_format($num,2,'.','');
                                 $cents = substr($num,strlen($num)-2,strlen($num)-1);
                                 $num = (int)$num;
                     
-                                $numf = milmillon($num);
+                                $numf = milmillon2($num);
                     
-                            return $numf . " BOLIVARES "." CON ".$cents;
+                            return $numf;
                     }
+                    function convertir2($numero){
+                        $num = str_replace(",","",$numero);
+                        $num = number_format($num,2,'.','');
+                        $cents = substr($num,strlen($num)-2,strlen($num)-1);
+                        $num = (int)$num;
+            
+                        $numf = milmillon2($num);
+            
+                    return $numf ." CON " .$cents;
+            }
 
                 function basico($numero) {
                     $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
@@ -1997,7 +2019,7 @@ class  AdminOrderController extends RootAdminController
                     return $valor[$numero - 1];
                     }
 
-                function decenas($n) {
+                function decenass($n) {
                     $decenas = array (30=>'treinta',40=>'cuarenta',50=>'cincuenta',60=>'sesenta',
                     70=>'setenta',80=>'ochenta',90=>'noventa');
                     if( $n <= 29) return basico($n);
@@ -2011,7 +2033,7 @@ class  AdminOrderController extends RootAdminController
                     $Moneda_CAMBIOBS = sc_currency_all();
                     foreach($Moneda_CAMBIOBS as $cambio){
                         if($cambio->name == "Bolivares"){
-                           
+                           $nombreBS =  decenass($cambio->exchange_rate);
                            $cod_bolibares =  $cambio->exchange_rate;
                         }
                     }
@@ -2035,11 +2057,9 @@ class  AdminOrderController extends RootAdminController
                 if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
                     else $Nacionalidad = "Extranjer(A)"; 
 
-                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                $number2 =  $dato_usuario[0]['subtotal']*$cod_bolibares;
+               
 
-               
-               
+                
                 $monto = $dato_usuario[0]['subtotal'];
                 $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
                 $cuotas = $dato_usuario[0]['cuotas'];
@@ -2049,12 +2069,11 @@ class  AdminOrderController extends RootAdminController
                     $monto = $monto - $totalinicial;
                     $number1 =  $monto/$dato_usuario[0]['cuotas'];
                     $cuotas = $number1;
-                    
-
-                    
+                    $number2 =  $monto*$cod_bolibares;
+                   
                   }
 
-                 
+                  
                   $number2 =  $monto*$cod_bolibares;
                     
 
@@ -2096,15 +2115,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($cuotas),
-                        number_format($cuotas) ,
-                        number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> decenas(number_format($cuotas)),
-                       
+                        'cod_dia'=> convertir1($cuotas),
+                        number_format($cuotas),
+                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
+                        'Cod_CuotasEtrepreciotext'=> convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
+                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
-                        'cod_nombreBS'=> convertir($number2),
+                        'cod_nombreBS'=> convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
