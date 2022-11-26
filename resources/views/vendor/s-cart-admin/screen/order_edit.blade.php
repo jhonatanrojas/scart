@@ -237,6 +237,7 @@
                     <th>Cuotas</th>
                     <th>Modalidad</th>
                     <th class="product_qty">Inicial</th>
+                    <th class="product_qty">Monto cuota</th>
                     <th class="product_qty">Cant</th>
                     <th class="product_price">{{ sc_language_render('product.price') }}</th>
 
@@ -281,8 +282,13 @@
 
                              </td>
                              <td>
+
+                     
+
+          
+                
                               <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
-                               data-source ='{"0":"Sin inicial","30":"Con inicial 30%"}'  
+                               data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
                                data-pk="{{ $item->id }}"
                                 data-value=" @if  ($item->abono_inicial>0 )
                                 
@@ -294,12 +300,28 @@
                                  data-url="{{ route("admin_order.edit_item") }}" 
                                  data-title="Inicial"> @if  ($item->abono_inicial>0 )
                                 
-                                 Con Inicial 30%
+                                 Con Inicial  {{$item->abono_inicial}}%
                                  @else
                                  Sin inicial    
                                  
                                  @endif"</a>
 
+                             </td>
+                 
+                             <td>
+
+                              @php
+                              if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
+                           
+                              $precio_couta=  $item->price -($item->abono_inicial* $item->price / 100 );
+                           echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
+ 
+                             else:
+                          echo '0'; 
+                              
+                             endif;
+ 
+                              @endphp
                              </td>
                              <td class="product_qty">x <a href="#" class="edit-item-detail" data-value="{{ $item->qty }}" data-name="qty" data-type="number" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.qty') }}"> {{ $item->qty }}</a></td>
 
@@ -751,6 +773,11 @@
       
       </div>
 @php
+
+  $opcion_inicial='  <option value="0"> Sin Inicial</option>
+                <option value="30">  Inicial 30%</option>';
+  
+
   $htmlSelectProduct = '<tr>
     
               <td>
@@ -759,7 +786,8 @@
                 if(count($products)){
                   foreach ($products as $pId => $product){
                     $htmlSelectProduct .='<option  value="'.$pId.'" >'.$product['name'].'('.$product['sku'].')</option>';
-                   }
+              
+                  }
                 }
                 $htmlSelectProduct .='
               </select>
@@ -783,8 +811,7 @@
 
             <td>
                 <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
-                <option value="0"> Sin Inicial</option>
-                <option value="30">  Inicial 30%</option>
+                  '.$opcion_inicial.' 
                 ';
           
          

@@ -13,31 +13,46 @@
       {!! $product->displayVendor() !!}
      @php
      $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
+     if( $product->precio_de_cuota > 0 ):
+     $product->price=  $product->price-$product->monto_inicial;
+    endif;
+
+
      @endphp
       @if( $product->precio_de_cuota)
    
+      @php
+      $modalida_pago='Quincenales';
+         if($product->id_modalidad_pagos==3)
+         $modalida_pago='Mensuales';
+   
+         @endphp
+         <div class="product-price-wrap">
+          @if( $product->monto_inicial > 0 )
+
+          Inicial de  ${!! number_format($product->monto_inicial,0)  !!} <br>
+           @endif
+           <div class="product-modern-title "> 
+          
+             <a href="{{ $product->getUrl() }}">
+            
+          {{ $product->nro_coutas}} cuotas de
+             
+           </a>
+           
+           </div>
+      
       <div class="product-price-wrap">
-        <div class="product-price">${!!  number_format($product->price/$product->nro_coutas,2) !!} </div>
+      
+        <div class="product-price">${!!  number_format($product->price/$product->nro_coutas,2) !!}   </div>
+        <div class="product-cuotas">    <a href="{{ $product->getUrl() }}">{!! $modalida_pago !!}     </a>  </div>
+
       </div>
 
       @else
       {!! $product->showPrice() !!} 
       @endif
-      @php
-   $modalida_pago='Quincenales';
-      if($product->id_modalidad_pagos==3)
-      $modalida_pago='Mensuales';
 
-      @endphp
-      <div class="product-price-wrap">
-        @if( $product->precio_de_cuota)
-        <div class="product-modern-title "> 
-          <a href="{{ $product->getUrl() }}">
-          Obtenlo por  {{ $product->nro_coutas}} cuotas  {!! $modalida_pago !!}  
-        </a>
-        
-        </div>
-        @endif
 
    
         </div>
