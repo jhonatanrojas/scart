@@ -565,6 +565,9 @@ class AdminProductController extends RootAdminController
             'tax_id'         => $data['tax_id'] ?? "",
             'status'         => (!empty($data['status']) ? 1 : 0),
             'approve'         => (!empty($data['approve']) ? 1 : 0),
+            'precio_de_cuota' => (!empty($data['precio_de_cuota']) ? 1 : 0),
+            'monto_inicial'           => $data['monto_inicial'] ?? 0,
+            
             'sort'           => (int) $data['sort'],
             'minimum'        => (int) ($data['minimum'] ?? 0),
         ];
@@ -789,7 +792,7 @@ class AdminProductController extends RootAdminController
         }
         $data = request()->all();
 
-       
+     
         $langFirst = array_key_first(sc_language_all()->toArray()); //get first code language active
         $data['alias'] = !empty($data['alias'])?$data['alias']:$data['descriptions'][$langFirst]['name'];
         $data['alias'] = sc_word_format_url($data['alias']);
@@ -921,6 +924,8 @@ class AdminProductController extends RootAdminController
             'alias'        => $data['alias'],
             'status'       => (!empty($data['status']) ? 1 : 0),
             'approve'       => (!empty($data['approve']) ? 1 : 0),
+            'precio_de_cuota' => (!empty($data['precio_de_cuota']) ? 1 : 0),
+            'monto_inicial'           => $data['monto_inicial'] ?? 0,
             'sort'         => (int) $data['sort'],
             'minimum'      => (int) ($data['minimum'] ?? 0)
         ];

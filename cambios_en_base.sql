@@ -50,3 +50,4 @@ ALTER TABLE sc_shop_customer ADD rif VARCHAR(100) NULL DEFAULT NULL AFTER razon_
 ALTER TABLE sc_shop_order ADD COLUMN fecha_maxima_entrega date DEFAULT NULL;
 
 ALTER TABLE sc_shop_product ADD COLUMN precio_de_cuota BOOLEAN NOT NULL DEFAULT 'false';
+ALTER TABLE sc_shop_product ADD COLUMN monto_inicial  decimal(15,2) DEFAULT '0.00';

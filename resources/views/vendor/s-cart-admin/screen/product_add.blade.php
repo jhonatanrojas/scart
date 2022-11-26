@@ -225,7 +225,7 @@
                                     <input type="text" id="image" name="image" value="{!! old('image') !!}"
                                         class="form-control input-sm image" placeholder="" />
                                     <div class="input-group-append">
-                                        <span class="btn btn-primary lfm" data-input="image" data-preview="preview_image" data-type="product">
+                                 .       <span class="btn btn-primary lfm" data-input="image" data-preview="preview_image" data-type="product">
                                             <i class="fas fa-image"></i> {{sc_language_render('product.admin.choose_image')}}
                                         </span>
                                     </div>
@@ -432,7 +432,27 @@
                         </div>
                         {{-- //price --}}
 @endif
-
+        {{-- monto Inicial --}}
+        <div class="form-group row  {{ $errors->has('monto_inicial') ? ' text-red' : '' }}">
+            <label for="price"
+                class="col-sm-2 col-form-label">Monto de inical</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-cart-alt"></i></span>
+                    </div>
+                    <input type="number" step="0.01" style="width: 100px;" id="monto_inicial"
+                        name="monto_inicial" value="{!! old('monto_inicial') !!}" class="form-control monto_inicial"
+                        placeholder="" />
+                </div>
+                @if ($errors->has('price'))
+                    <span class="form-text">
+                        <i class="fa fa-info-circl e" ></i> {{ $errors->first('monto_inicial') }}
+                    </span>
+                @endif
+            </div>
+        </div>
+                  {{-- monto Inicial --}}
 
 <div class="form-group row kind   {{ $errors->has('nro_coutas') ? ' text-red' : '' }}">
     <label for="nro_coutas" class="col-sm-2 col-form-label">Numero de cuotas</label>
@@ -780,6 +800,7 @@
 @endif
 
 
+
 @if (sc_config_admin('product_available'))
                         {{-- date available --}}
                         <div
@@ -878,6 +899,15 @@
                             </div>
                         </div>
                         {{-- //approve --}}
+                            {{-- precio_de_cuota --}}
+    <div class="form-group row ">
+        <label for="precio_de_cuota" class="col-sm-2 col-form-label">Mostrar precio de cuota</label>
+        <div class="col-sm-8">
+            <input class="checkbox" type="checkbox" name="precio_de_cuota"
+                {{ old('precio_de_cuota') ? 'checked' : '' }}>
+        </div>
+    </div>
+    {{-- //precio_de_cuota --}}
 
 @if (sc_config_admin('product_attribute'))
                         {{-- List product attributes --}}

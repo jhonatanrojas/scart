@@ -351,10 +351,15 @@ table tfoot {
                 {{-- Show price --}}
                 <div class="">
                   <div class="single-product-price" id="product-detail-price">
-
+                    @php
+                    $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
+                    $product->price_con_inicial=  $product->price-$product->monto_inicial;
+               
+               
+                    @endphp
                     @if( $product->precio_de_cuota)
                     <div class="product-price-wrap">
-                      <div class="sc-new-price">${!!  number_format($product->price/$product->nro_coutas,2) !!} </div>
+                      <div class="sc-new-price">${!!  number_format($product->price_con_inicial/$product->nro_coutas,2) !!} </div>
                     </div>
               
                     @else
@@ -375,6 +380,10 @@ table tfoot {
                    
                   </div>
                   <div>
+                    <h5>   @if( $product->monto_inicial > 0 )
+
+                      Inicial de  ${!! number_format($product->monto_inicial,2)  !!} <br>
+                       @endif</h5>
                     <small class=" text-info  " style="font-size:1rem"> {{ $product->description}}</small>
                   </div>
                 </div>
@@ -653,20 +662,31 @@ table tfoot {
                     
                     </div>
 
-                   
+                    @php
+                    $porcentaje_inicial=0;
+                    if( $product->monto_inicial > 0 ):
+                    $porcentaje_inicial=  number_format(($product->monto_inicial *100) /$product->price,2);
+                   endif;
+               
+               
+                    @endphp
                     <div class="mt-0">
                       <label for="inicial">Inicial  </label>
+
                      
                          <select class="form-control w-100 select2"  name="inicial" id="inicial">
+                          @if($product->monto_inicial > 0 )
+                          <option value="{{  $porcentaje_inicial}}">Inicial({{$porcentaje_inicial}}%)</option>
+                          @else
                           <option value="0">sin inicial(0%)</option>
                           <option value="30">con inicial(30%)</option>
-                         
+                          @endif
                          </select>
                     </div>
 
                     <div class="p-0 mt-0 mt-2">
                       <label for="monto">Monto Inicial $:</label>
-                      <input  readonly value="0" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
+                      <input  readonly value="{{ $product->monto_inicial }}" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
                        >
                     </div>
                 
