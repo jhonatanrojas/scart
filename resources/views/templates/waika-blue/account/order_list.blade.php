@@ -102,7 +102,7 @@
               @endif
 
               <br>
-              @if ($order->status !== 3 && $order->modalidad_de_compra == 1)
+              @if ($order->status == 3 )
               <a target="_blank" class="d-flex" href="{{route('borrador_cliente', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Ver Convenio</a>
               @endif
 
