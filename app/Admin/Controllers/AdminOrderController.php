@@ -2011,7 +2011,7 @@ class  AdminOrderController extends RootAdminController
                     $Moneda_CAMBIOBS = sc_currency_all();
                     foreach($Moneda_CAMBIOBS as $cambio){
                         if($cambio->name == "Bolivares"){
-                           $nombreBS =  decenas($cambio->exchange_rate);
+                           
                            $cod_bolibares =  $cambio->exchange_rate;
                         }
                     }
@@ -2049,11 +2049,12 @@ class  AdminOrderController extends RootAdminController
                     $monto = $monto - $totalinicial;
                     $number1 =  $monto/$dato_usuario[0]['cuotas'];
                     $cuotas = $number1;
+                    
 
                     
                   }
 
-                  
+                 
                   $number2 =  $monto*$cod_bolibares;
                     
 
@@ -2095,14 +2096,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> decenas($number1),
-                        $cuotas ,
-                        $number1,
-                        'Cod_CuotasEtrepreciotext'=> decenas($number1),
+                        'cod_dia'=> decenas($cuotas),
+                        number_format($cuotas) ,
+                        number_format($number1),
+                        'Cod_CuotasEtrepreciotext'=> decenas(number_format($cuotas)),
                        
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' => $fecha_maxima_entrega ?? date('d-m-y'),
-                            $monto ,
+                        $monto ,
                         'cod_nombreBS'=> convertir($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
