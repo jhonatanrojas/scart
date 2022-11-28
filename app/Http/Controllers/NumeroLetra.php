@@ -317,7 +317,7 @@ class NumeroLetra extends Controller
             return $num_letracms;
         }
     
-         function milmillon($nummierod){
+        public function milmillon($nummierod){
             if ($nummierod >= 1000000000 && $nummierod <2000000000){
                 $num_letrammd = "MIL ".($this->cienmillon2($nummierod%1000000000));
             }
@@ -331,7 +331,7 @@ class NumeroLetra extends Controller
         }
     
     
-        function convertir1($numero){
+        public function convertir1($numero){
                     $num = str_replace(",","",$numero);
                     $num = number_format($num,2,'.','');
                     $cents = substr($num,strlen($num)-2,strlen($num)-1);
@@ -341,7 +341,7 @@ class NumeroLetra extends Controller
         
                 return $numf;
         }
-        function convertir2($numero){
+        public  function convertir2($numero){
             $num = str_replace(",","",$numero);
             $num = number_format($num,2,'.','');
             $cents = substr($num,strlen($num)-2,strlen($num)-1);
@@ -352,7 +352,7 @@ class NumeroLetra extends Controller
         return $numf ." CON " .$cents;
 }
 
-function basico($numero) {
+public function basico($numero) {
         $valor = array ('uno','dos','tres','cuatro','cinco','seis','siete','ocho',
         'nueve','diez','once','doce','trece','catorce','quince','dieciseis','diecisiete','dieciocho','diecinueve','veinte','veintiuno ','vientidos ','veintitrés ', 'veinticuatro','veinticinco',
         'veintiséis','veintisiete','veintiocho','veintinueve');
