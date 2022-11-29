@@ -554,7 +554,7 @@
             </form>
 
             <div class="text-center m-auto mt-5 p-3 h5">
-                <a class="btn btn-link" href="{{sc_route('login')}}">Ya esta Registrado..? Inicia Secion</a>
+                <a class="btn btn-link" href="{{sc_route('login')}}">¿YA ESTAS REGISTRADO? INICIA SESIÓN AQUI </a>
              </div>
             
           </div>
