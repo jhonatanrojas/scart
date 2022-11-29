@@ -57,18 +57,18 @@
             <div class="col-sm-6">
                  <table class="table table-hover box-body text-wrap table-bordered">
                     <tr>
-                      <td class="td-title">{{ sc_language_render('order.first_name') }}:</td><td><a href="#" class="updateInfoRequired" data-name="first_name" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.first_name') }}" >{!! $order->first_name !!}</a></td>
+                      <td class="td-title">{{ sc_language_render('order.first_name') }}:</td><td><a href="#" class="" data-name="first_name" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.first_name') }}" >{!! $order->first_name !!}</a></td>
                     </tr>
 
                     @if (sc_config_admin('customer_lastname'))
                     <tr>
-                      <td class="td-title">{{ sc_language_render('order.last_name') }}:</td><td><a href="#" class="updateInfoRequired" data-name="last_name" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.last_name') }}" >{!! $order->last_name !!}</a></td>
+                      <td class="td-title">{{ sc_language_render('order.last_name') }}:</td><td><a href="#" class="" data-name="last_name" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.last_name') }}" >{!! $order->last_name !!}</a></td>
                     </tr>
                     @endif
 
                     @if (sc_config_admin('customer_phone'))
                     <tr>
-                      <td class="td-title">{{ sc_language_render('order.phone') }}:</td><td><a href="#" class="updateInfoRequired" data-name="phone" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.phone') }}" >{!! $order->phone !!}</a></td>
+                      <td class="td-title">{{ sc_language_render('order.phone') }}:</td><td><a  href="#" class="" data-name="phone" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.phone') }}" >{!! $order->phone !!}</a></td>
                     </tr>
                     @endif
 
@@ -89,7 +89,7 @@
                     @endif
 
                     <tr>
-                      <td class="td-title">{{ sc_language_render('order.address1') }}:</td><td><a href="#" class="updateInfoRequired" data-name="address1" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.address1') }}" >{!! $order->address1 !!}</a></td>
+                      <td class="td-title">{{ sc_language_render('order.address1') }}:</td><td><a href="#" class="" data-name="address1" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.address1') }}" >{!! $order->address1 !!}</a></td>
                     </tr>
 
                     @if (sc_config_admin('customer_address2'))
@@ -117,6 +117,15 @@
                         El cliente no ha adjuntado Documentos <br>
                         @endif
                         <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
+                      </td>
+
+                   
+                    </tr>
+                    <tr>
+                      <td class="td-title">datos del cliente</td>
+                      <td>
+                       
+                        <a href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
                       </td>
 
                    

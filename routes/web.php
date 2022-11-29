@@ -36,3 +36,11 @@ Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('bo
 
 
 
+Route::get('/edit_convenio', [AdminOrderController::class,'edit_convenio'])->name('edit_convenio');
+
+Route::post('/create_convenio', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
+
+
+
+
+

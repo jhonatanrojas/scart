@@ -22,6 +22,7 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
     Route::get('create', $nameSpaceAdminCustomer.'\AdminCustomerController@create')->name('admin_customer.create');
     Route::post('/create', $nameSpaceAdminCustomer.'\AdminCustomerController@postCreate')->name('admin_customer.create');
     Route::get('/edit/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@edit')->name('admin_customer.edit');
+    
 
     Route::get('/document/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@document')->name('admin_customer.document');
     Route::post('/document_admin', $nameSpaceAdminCustomer.'\AdminCustomerController@documentn')->name('document_admin');
@@ -33,6 +34,8 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
     Route::get('/update-address/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@updateAddress')->name('admin_customer.update_address');
     Route::post('/update-address/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@postUpdateAddress')->name('admin_customer.post_update_address');
     Route::post('/delete-address', $nameSpaceAdminCustomer.'\AdminCustomerController@deleteAddress')->name('admin_customer.delete_address');
+
+   
 
     // Route::get('/downloadpdf',$nameSpaceAdminCustomer.'\AdminCustomerController@downloadPdf' );
 });
@@ -63,6 +66,10 @@ Route::group(['prefix' => 'order'], function () use ($nameSpaceAdminProduct) {
     Route::get('/obtener_orden','App\Admin\Controllers\AdminOrderController@geDetailorder')->name('obtener_orden');
     Route::post('/crear_convenio', 'App\Admin\Controllers\HistorialPagosController@postCrearConvenio')->name('crear_convenio');
     Route::post('/reportar_pago','App\Admin\Controllers\HistorialPagosController@postReportarPago')->name('historial_pagos.postreportar');
+
+   
+
+    
 
 
 });
