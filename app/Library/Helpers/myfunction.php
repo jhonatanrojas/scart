@@ -4,12 +4,26 @@
 // function demoFunction() {
 //     echo "Hello world!";
 // } 
+use App\Events\OrderSuccess;
+use App\Events\OrderCreated;
 use SCart\Core\Front\Models\ShopCustomer;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCountry;
 Use App\Models\Estado;
 Use App\Models\Municipio;
 Use App\Models\Parroquia;
+Use App\Models\ShopOrder;
+
+
+function sc_event_order_created(ShopOrder $order)
+{
+    OrderCreated::dispatch($order);
+}
+
+function sc_event_order_success(ShopOrder $order)
+    {
+        OrderSuccess::dispatch($order);
+    }
 
 if (!function_exists('sc_customer_data_insert_mapping')) {
     function sc_customer_data_insert_mapping(array $dataRaw)
