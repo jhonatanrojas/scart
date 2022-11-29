@@ -1019,7 +1019,7 @@ class ShopAccountController extends RootFrontController
                         'cod_mespago',
                         'cod_fecha_entrega',
                         'cod_subtotal',
-                        'cod_nombreBS',
+                        'cod_bolivar_text',
                         'cod_bolibares',
                         'nombreProduct',
                         'cod_telefono',

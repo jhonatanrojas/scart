@@ -83,8 +83,8 @@
                             <div class="col-sm-8">
                                 <label></label>
                                 <div id="">
-                                    <li>$cod_nombre</li>
-                                    <li>$cod_apellido</li>
+                                    <li>cod_nombre</li>
+                                    <li>cod_apellido</li>
                                     <li>cod_direccion</li>
                                     <li>cod_estado</li>
                                     <li>cod_municipio</li>
@@ -100,7 +100,7 @@
                                     <li>cod_mespago</li>
                                     <li>cod_fecha_entrega</li>
                                     <li>cod_subtotal</li>
-                                    <li>cod_nombreBS</li>
+                                    <li>cod_bolivar_text</li>
                                     <li>cod_bolibares</li>
                                     <li>nombreProduct</li>
                                     <li>cod_telefono</li>
