@@ -30,6 +30,7 @@ use App\Models\ShopOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
+use SCart\Core\Front\Models\ShopLanguage;
 
 class  AdminOrderController extends RootAdminController
 {
@@ -42,6 +43,7 @@ class  AdminOrderController extends RootAdminController
     public $currency;
     public $country;
     public $countryMap;
+    public $languages;
 
     public function __construct()
     {
@@ -51,7 +53,12 @@ class  AdminOrderController extends RootAdminController
         $this->country        = ShopCountry::getCodeAll();
         $this->statusPayment  = ShopPaymentStatus::getIdAll();
         $this->statusShipping = ShopShippingStatus::getIdAll();
+        $this->languages = ShopLanguage::getListActive();
     }
+
+
+
+ 
 
     /**
      * Index interface.
@@ -1158,30 +1165,30 @@ class  AdminOrderController extends RootAdminController
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
-                        "cod_first_name",
-                        'cod_last_name',
-                        'address1',
+                        'cod_nombre',
+                        'cod_apellido',
+                        'cod_direccion',
                         'cod_estado',
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_civil',
+                        'cod_estado_civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
-                        'Cuotas1',
-                        'Cod_CuotasEtreprecioTptal',
-                        'Cod_CuotasEtrepreciotext',
+                        'cod_cuotas',
+                        'Cod_Cuota_total',
+                        'Cod_cuotas_entre_precio_text',
                         'cod_mespago',
-                        'cod_fechaEntrega',
+                        'cod_fecha_entrega',
                         'cod_subtotal',
                         'cod_nombreBS',
                         'cod_bolibares',
                         'nombreProduct',
-                        'cod_phone',
+                        'cod_telefono',
                         'cod_email',
                         'cod_doreccion',
-                        'cod_Fecha_De_Hoy',
+                        'cod_fecha_actual',
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1196,10 +1203,10 @@ class  AdminOrderController extends RootAdminController
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
-                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> $letraconvertir_nuber->convertir1($number1),
+                        'Cod_Cuota_total'=> number_format($number1),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega,
+                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
@@ -1355,30 +1362,30 @@ class  AdminOrderController extends RootAdminController
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
-                        "cod_first_name",
-                        'cod_last_name',
-                        'address1',
+                        'cod_nombre',
+                        'cod_apellido',
+                        'cod_direccion',
                         'cod_estado',
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_civil',
+                        'cod_estado_civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
-                        'Cuotas1',
-                        'Cod_CuotasEtreprecioTptal',
-                        'Cod_CuotasEtrepreciotext',
+                        'cod_cuotas',
+                        'Cod_Cuota_total',
+                        'Cod_cuotas_entre_precio_text',
                         'cod_mespago',
-                        'cod_fechaEntrega',
+                        'cod_fecha_entrega',
                         'cod_subtotal',
                         'cod_nombreBS',
                         'cod_bolibares',
                         'nombreProduct',
-                        'cod_phone',
+                        'cod_telefono',
                         'cod_email',
                         'cod_doreccion',
-                        'cod_Fecha_De_Hoy',
+                        'cod_fecha_actual',
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1393,8 +1400,8 @@ class  AdminOrderController extends RootAdminController
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
-                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> $letraconvertir_nuber->convertir1($number1),
+                        'Cod_Cuota_total'=> number_format($number1),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
@@ -1413,10 +1420,77 @@ class  AdminOrderController extends RootAdminController
                 
                 
 
-                return view($this->templatePathAdmin.'screen.borrador_pdf',
-                ['borrado_html'=>$resultado],
+            //     return view($this->templatePathAdmin.'screen.borrador_pdf',
+            //     ['borrado_html'=>$resultado],
                 
-            );
+            // );
+            $pdf = Pdf::loadView($this->templatePathAdmin.'screen.borrador_pdf', 
+                    ['borrado_html'=> $resultado],
+                
+
+                    )->setOptions(['defaultFont' => 'sans-serif']);
+
+                    return $pdf->stream();
 
     }
+
+    public function edit_convenio(){
+
+        
+
+        $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+
+
+        $news = [];
+        $data = [
+            'title'             => "Editar convenio ",
+            'subTitle'          => '',
+            'borrado_html'          =>$borrado_html,
+            'title_description' => sc_language_render('admin.news.add_new_des'),
+            'icon'              => 'fa fa-plus',
+            'languages'         => $this->languages,
+            'news'              => $news,
+            'url_action'        => sc_route_admin('admin_news.create'),
+        ];
+
+        return view($this->templatePathAdmin.'screen.edit_convenio')
+            ->with($data);
+        // return view($this->templatePathAdmin.'screen.edit_convenio',["obj"=>$borrado_html]);
+
+    }
+
+
+    public function postCreate_convenio()
+    {
+        $data = request()->all();
+
+        $dataDes = [];
+        $languages = $this->languages;
+        foreach ($languages as $code => $value) {
+           
+       
+            $dataDes[] = [
+                'description' => $data['descriptions'][$code]['content'],
+                'content'     => $data['descriptions']['es']['content'],
+            ];
+        }
+
+        $dataDes = sc_clean($dataDes, ['content'], true);
+
+       
+            if($data['inicial'] == "sin_inicial"){
+                Sc_plantilla_convenio::where('id' , 1)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+
+            }else{
+                Sc_plantilla_convenio::where('id' , 2)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+            }
+       
+
+
+    
+        sc_clear_cache('cache_news');
+
+        return redirect()->route('edit_convenio')->with('success', sc_language_render('action.create_success'));
+    }
+
 }

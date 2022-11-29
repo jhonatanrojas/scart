@@ -26,6 +26,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
 class ShopAccountController extends RootFrontController
@@ -873,7 +874,7 @@ class ShopAccountController extends RootFrontController
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
         $order = ShopOrder::where('id',$id)->get();
-        $datos = new NumeroLetra;
+        $letraconvertir_nuber = new NumeroLetra;
 
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
@@ -1001,30 +1002,30 @@ class ShopAccountController extends RootFrontController
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
-                        "cod_first_name",
-                        'cod_last_name',
-                        'address1',
+                        'cod_nombre',
+                        'cod_apellido',
+                        'cod_direccion',
                         'cod_estado',
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_civil',
+                        'cod_estado_civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
-                        'Cuotas1',
-                        'Cod_CuotasEtreprecioTptal',
-                        'Cod_CuotasEtrepreciotext',
+                        'cod_cuotas',
+                        'Cod_Cuota_total',
+                        'Cod_cuotas_entre_precio_text',
                         'cod_mespago',
-                        'cod_fechaEntrega',
+                        'cod_fecha_entrega',
                         'cod_subtotal',
                         'cod_nombreBS',
                         'cod_bolibares',
                         'nombreProduct',
-                        'cod_phone',
+                        'cod_telefono',
                         'cod_email',
                         'cod_doreccion',
-                        'cod_Fecha_De_Hoy',
+                        'cod_fecha_actual',
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1037,14 +1038,14 @@ class ShopAccountController extends RootFrontController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> $datos->convertir1($cuotas),
+                        'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
-                        'Cod_CuotasEtreprecioTptal'=> number_format($number1),
-                        'Cod_CuotasEtrepreciotext'=> $datos->convertir1($number1),
+                        'Cod_Cuota_total'=> number_format($number1),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
-                        'cod_nombreBS'=> $datos->convertir2($number2),
+                        'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
@@ -1058,10 +1059,17 @@ class ShopAccountController extends RootFrontController
                 }
                 
 
-                return view($this->templatePath.'.screen.borrador_pdf',
-                ['borrado_html'=>$resultado],
+            //     return view($this->templatePath.'.screen.borrador_pdf',
+            //     ['borrado_html'=>$resultado],
                 
-            );
+            // );
+            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+                    ['borrado_html'=> $resultado],
+                
+
+                    )->setOptions(['defaultFont' => 'sans-serif']);
+
+                    return $pdf->stream();
 
     }
 
