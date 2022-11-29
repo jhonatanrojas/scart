@@ -6,7 +6,7 @@ namespace App\Models;
 use SCart\Core\Front\Models\ShopOrderDetail;
 use SCart\Core\Front\Models\ShopOrderHistory;
 use SCart\Core\Front\Models\ShopOrderTotal;
-use app\Models\ShopProduct;
+use App\Models\ShopProduct;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ModalidadPago;
@@ -69,9 +69,13 @@ class ShopOrder extends Model
         });
 
         //Uuid
+
+     
+   
+      
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = sc_generate_id($type = 'shop_order');
+                $model->{$model->getKeyName()} =     str_pad(self::count()+1,6,"0",STR_PAD_LEFT).'-'.date("Y") ;
             }
         });
     }
@@ -137,10 +141,11 @@ class ShopOrder extends Model
             $exchange_rate = $dataOrder['exchange_rate'];
 
             //Insert order
+       
             $order = ShopOrder::create($dataOrder);
             $orderID = $order->id;
             //End insert order
-
+        
             //Insert order total
             foreach ($dataTotal as $key => $row) {
                 $row = sc_clean($row);
@@ -191,7 +196,7 @@ class ShopOrder extends Model
             //Add history
             $dataHistory = [
                 'order_id' => $orderID,
-                'content' => 'New order',
+                'content' => 'Nueva orden',
                 'customer_id' => $uID,
                 'admin_id' => $adminID,
                 'order_status_id' => $order->status,
@@ -217,12 +222,12 @@ class ShopOrder extends Model
             DB::connection(SC_CONNECTION)->commit();
 
             // Process event created
-            sc_event_order_created($order);
+          sc_event_order_created($order);
 
          $return = ['error' => 0, 'orderID' => $orderID, 'msg' => "", 'detail' => $order];
         } catch (\Throwable $e) {
             DB::connection(SC_CONNECTION)->rollBack();
-            $return = ['error' => 1, 'msg' => $e->getMessage()];
+            $return = ['error' => 1, 'msg' => $e->getMessage()."aqui"];
         }
         return $return;
     }

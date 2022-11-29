@@ -84,7 +84,9 @@ $layout_page = shop_profile
 
    <div class="col-sm-6">
     <table  class="table table-bordered">
-        <tr><td class="td-title">{{ sc_language_render('order.order_status') }}:</td><td>{{ $statusOrder[$order->status] }}</td></tr>
+        <tr><td class="td-title">{{ sc_language_render('order.order_status') }}:</td>
+          <td>{{ $statusOrder[$order->status] }} - {{ $order->mensaje }}</td>
+        </tr>
 
     </table>
   </div>
