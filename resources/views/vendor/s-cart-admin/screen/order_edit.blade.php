@@ -21,7 +21,7 @@
                                   
                
                   @php  $dblockconvenio="display:none;";   @endphp
-                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==3 )
+                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==5 )
                   @php  $dblockconvenio="display:block;";   @endphp
                   @endif
                   <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;   @php echo $dblockconvenio  @endphp">
@@ -1452,7 +1452,7 @@ function all_editable(){
  
           if(response.error ==0){
             alertJs('success', response.msg);
-            if(valor_estatus==3 && response.detail.total>0){
+            if(valor_estatus==5 && response.detail.total>0){
               $(".btn-generar-convenio").css("display","block");
 
             }

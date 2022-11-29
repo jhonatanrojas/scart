@@ -110,3 +110,22 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
  ALTER TABLE sc_shop_order ADD usuario_id char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT '0';
 
  ALTER TABLE sc_shop_customer ADD estado_civil VARCHAR(100) DEFAULT 'SOLTERO(A)';
+  ALTER TABLE sc_shop_order_status ADD COLUMN mensaje   varchar(255)  DEFAULT '';
+  UPDATE sc_shop_order_status SET name=   'SOLICTUD REALIZADA' WHERE id =1;
+  UPDATE sc_shop_order_status SET name= 'DOCUMENTOS PENDIENTES', mensaje="PENDIENTE CARGA DE DOUMENTOS PARA CONTINUAR EVALUACIÓN"  WHERE id =2;
+  UPDATE sc_shop_order_status SET name= 'DOCUMENTOS CARGADOS', mensaje=""  WHERE id =3;
+  UPDATE sc_shop_order_status SET name= 'REVISIÓN COMERCIAL ', mensaje="EN COMITÉ DE APROBACIONES"  WHERE id =4;
+    UPDATE sc_shop_order_status SET name= 'FINANCIAMIENTO APROBADO', mensaje="FINACIAMIENTO APROBADO CONTACTE AL VENDEDOR"  WHERE id =5;
+    UPDATE sc_shop_order_status SET name= 'FINANCIAMIENTO NO APROBADO', mensaje="CONTACTE AL VENDEDOR"  WHERE id =6;
+    INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('7','EN ESPERA DE FIRMA DE CONVENIO','ESPERANDO PRIMER PAGO PARA
+PROCEDER CON LA FIRMA');
+    INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('8','CONVENIO FIRMADO','ATENTO AL PAGO DE SU
+SIGUIENTE CUOTA');
+
+    INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('9','EN ESPERA DE FECHA DE ENTREGA','ESPERANDO LA FECHA DE
+ENTRGA DE SU PRODUCTO ');
+        INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('10','PRODUCTO ENTREGADO','COMPRA FINALIZADA');
+        
+        INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('11','SOLICITUD DE COMPRA CANCELADA','');
+         INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('12','PAGO PENDIENTE','EN ESPERA DE PAGO');
+          INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('13','PEDIDO ENVIADO','SU PEDIDO A SIDO ENVIADA');

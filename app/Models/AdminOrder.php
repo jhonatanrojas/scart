@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use SCart\Core\Front\Models\ShopOrder;
+use App\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use Cache;
 use App\Models\ModalidadPago;
