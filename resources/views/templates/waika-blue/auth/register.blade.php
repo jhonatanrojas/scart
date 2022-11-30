@@ -125,6 +125,30 @@
                         </div>
                        
                     </div>
+                    @if (sc_config('customer_estado_civil'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
+                            <select  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('estado_civil'))?"input-error":"" }}"
+                            name="estado_civil" id="estado_civil">
+    
+                            <option value="">Estado civil</option>
+                            <option value="SOLTERO" {{ (old('estado_civil')) ? 'selected':'' }}>Soltero(a)</option>
+                            <option value="CASADO" {{ (old('estado_civil')) ? 'selected':'' }}>Casado(a)</option>
+
+                            <option value="CONCUBINATO" {{ (old('estado_civil')) ? 'selected':'' }}>concubinato</option>
+                            
+                        
+                            </select>
+                            @if ($errors->has('estado_civil'))
+                            <span class="help-block">
+                                {{ $errors->first('estado_civil') }}
+                            </span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                    @endif
                     
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">

@@ -36,6 +36,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             'first_name' => $dataRaw['first_name'] ?? '',
             'email' => $dataRaw['email'],
             'cedula' => $dataRaw['cedula'],
+            'estado_civil' => $dataRaw['estado_civil'],
             'natural_jurídica' => $dataRaw['natural_jurídica'],
             'rif' => $dataRaw['rif'] ?? 0,
             'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
@@ -61,6 +62,10 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
         }
         if (!empty($dataRaw['nos_conocio'])) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
+        }
+
+        if (!empty($dataRaw['estado_civil'])) {
+            $dataInsert['estado_civil'] = $dataRaw['estado_civil'];
         }
 
         //Custom fields
@@ -567,6 +572,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
         $dataUpdate = [
             'first_name' => $dataRaw['first_name'],
             'cedula' => $dataRaw['cedula'],
+            'estado_civil' => $dataRaw['estado_civil'],
             'nos_conocio' => $dataRaw['nos_conocio'] ,
             'natural_jurídica' => $dataRaw['natural_jurídica'],
             'rif' => $dataRaw['rif'] ?? 0,
@@ -579,6 +585,10 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (isset($dataRaw['nos_conocio'])) {
             $dataUpdate['nos_conocio'] = $dataRaw['nos_conocio'];
+        }
+
+        if (!empty($dataRaw['estado_civil'])) {
+            $dataUpdate['estado_civil'] = $dataRaw['estado_civil'];
         }
         $validate = [
             'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
