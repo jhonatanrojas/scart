@@ -89,7 +89,7 @@
                     @else
                     <li class="rd-nav-item"><a class="rd-nav-link text-white usuario" href="#">
                        MI CUENTA
-                       <span class="login"></span>
+                       {{-- <span class="login"></span> --}}
                        
                       </a>
                         <ul class="rd-menu rd-navbar-dropdown">
