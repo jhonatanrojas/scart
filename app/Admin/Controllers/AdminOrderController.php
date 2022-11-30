@@ -1461,11 +1461,33 @@ class  AdminOrderController extends RootAdminController
 
     }
 
+    public function editar_convenio($id){
 
-    public function postCreate_convenio()
+        $borrado_html = Sc_plantilla_convenio::where('id' , $id)->get();
+
+        
+
+        $news = [];
+        $data = [
+            'title'             => "Editar convenio ",
+            'id_convenio'          => $id,
+            'borrado_html'          =>$borrado_html,
+            'title_description' => sc_language_render('admin.news.add_new_des'),
+            'icon'              => 'fa fa-plus',
+            'languages'         => $this->languages,
+            'news'              => $news,
+            'url_action'        => sc_route_admin('admin_news.create'),
+        ];
+
+
+        return view($this->templatePathAdmin.'screen.editar_convenio')
+            ->with($data);
+    }
+
+
+    public function postCreate_convenio($id)
     {
         $data = request()->all();
-
         $dataDes = [];
         $languages = $this->languages;
         foreach ($languages as $code => $value) {
@@ -1480,11 +1502,18 @@ class  AdminOrderController extends RootAdminController
         $dataDes = sc_clean($dataDes, ['content'], true);
 
        
-            if($data['inicial'] == "sin_inicial"){
-                Sc_plantilla_convenio::where('id' , 1)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+            if($id == "1"){
 
-            }else{
-                Sc_plantilla_convenio::where('id' , 2)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+                
+                Sc_plantilla_convenio::where('id' ,1)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+
+                
+
+            } 
+            if($id == "2"){
+
+                
+                Sc_plantilla_convenio::where('id' , 2)->where('code', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
             }
        
 

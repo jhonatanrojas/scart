@@ -9,7 +9,7 @@
           
             <div class="row align-items-center flex-column">
                 <div class="col text-center">
-                    <img width="200px" class="img-fluid" src="{{sc_file(sc_store('logo', ($storeId ?? null))) }}"  alt="Logo">
+                    <img width="200px" class="img-fluid" src="/images/logo_loging.jpg"  alt="Logo">
                 </div>
                 <div class="col ">
                     <h4 class="text-center">{{ sc_language_render('customer.title_login') }}</h4>
