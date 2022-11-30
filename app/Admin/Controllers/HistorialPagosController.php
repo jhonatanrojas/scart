@@ -372,12 +372,12 @@ class HistorialPagosController extends RootAdminController
         
 
         $id_pago = $request->id_pago;
-
+        $order = AdminOrder::getOrderAdmin($request->order_id);
 
         $data_pago =[
          'order_id' =>$request->order_id,
          
-         'customer_id' => 0,
+         'customer_id' => $order->customer_id,
         'referencia' =>$request->referencia,
          'order_detail_id' =>0,
          'producto_id' =>$request->product_id,
@@ -504,7 +504,7 @@ class HistorialPagosController extends RootAdminController
 
             ]);
    
-
+            $order = AdminOrder::getOrderAdmin(request()->c_order_id);
             //generar pagos
                 $ncouta=1;
             foreach (request()->coutas_calculo as $key => $value) {
@@ -513,7 +513,7 @@ class HistorialPagosController extends RootAdminController
     
      $data_pago =[
                 'order_id' =>request()->c_order_id,
-                'customer_id' => 0,              
+                'customer_id' =>   $order->customer_id,              
                 'payment_status' => 1,
                 'importe_couta'=>$value,
                 'fecha_venciento' =>fecha_to_sql(request()->fechas_pago_cuotas[$key]),
