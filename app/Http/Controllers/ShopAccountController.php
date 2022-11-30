@@ -27,6 +27,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
