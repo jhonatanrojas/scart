@@ -8,7 +8,7 @@
           <div class="card-body w-100 ">
             <div class="row align-items-center flex-column">
                 <div class="col text-center">
-                    <img width="200px" class="img-fluid" src="/images/logo2.png" alt="">
+                    <img width="200px" class="img-fluid" src="/images/logo_loging.jpg" alt="">
                 </div>
                 <div class="col ">
                     <h4 class="text-center">{{ sc_language_render('customer.title_register') }}</h4>
