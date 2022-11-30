@@ -653,11 +653,10 @@ class ShopAccountController extends RootFrontController
         }
         $customer = auth()->user();
         $id1 = $customer['id'];
-        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
-        $historial_pagos =   HistorialPago::where('payment_status', '<>', 1)
 
-            ->orderByDesc('id')
-            ->get();
+        $order = AdminOrder::where('customer_id',$id1)->get();
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
+        $historial_pagos=   HistorialPago::where('customer_id', $id1)->orderByDesc('id','DESC')->get();
 
 
 
