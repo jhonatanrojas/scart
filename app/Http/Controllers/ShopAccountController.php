@@ -27,8 +27,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
-use App\Events\Biopago;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
 
@@ -1069,13 +1068,76 @@ class ShopAccountController extends RootFrontController
             }
         }
 
-        $borrado_html = [];
-        if ($abono_inicial <= "0.00") {
-            $borrado_html = Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
-        } else {
-            $borrado_html = Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get();
-        }
+                foreach($borrado_html as $replacee){
+                    $dataFind = [
+                        'cod_nombre',
+                        'cod_apellido',
+                        'cod_direccion',
+                        'cod_estado',
+                        'cod_municipio',
+                        'cod_parroquia',
+                        'cod_Cedula',
+                        'cod_estado_civil',
+                        'cod_Nacionalidad',
+                        'cod_modalidad_pago',
+                        'cod_dia',
+                        'cod_cuotas',
+                        'Cod_Cuota_total',
+                        'Cod_cuotas_entre_precio_text',
+                        'cod_mespago',
+                        'cod_fecha_entrega',
+                        'cod_subtotal',
+                        'cod_bolivar_text',
+                        'cod_bolibares',
+                        'nombreProduct',
+                        'cod_telefono',
+                        'cod_email',
+                        'cod_doreccion',
+                        'cod_fecha_actual',
+                    ];
+                    $dataReplace = [
+                        $dato_usuario['first_name'],
+                        $dato_usuario['last_name'],
+                        $dato_usuario['address1'],
+                        $dato_usuario['cod_estado'],
+                        $dato_usuario['cod_municipio'],
+                        $dato_usuario['cod_parroquia'],
+                        $dato_usuario['cedula'],
+                        $dato_usuario['estado_civil'],
+                        'cod_Nacionalidad'=> $Nacionalidad,
+                        'cod_modalidad_pago' => $mesualQuinsena,
+                        'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
+                        number_format($cuotas),
+                        'Cod_Cuota_total'=> number_format($number1),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
+                        'cod_mespago' => $cod_diaMes ,
+                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
+                        $monto ,
+                        'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
+                        'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
+                        $dato_usuario[0]['nombreProduct'] ,
+                        $dato_usuario['phone'],
+                        $dato_usuario['email'],
+                        $dato_usuario['address1'],
+                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        
+                    ];
+            
+                    $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
+                }
+                
 
+            //     return view($this->templatePath.'.screen.borrador_pdf',
+            //     ['borrado_html'=>$resultado],
+                
+            // );
+            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+                    ['borrado_html'=> $resultado],
+                
+
+                    )->setOptions(['defaultFont' => 'sans-serif']);
+
+                    return $pdf->stream();
 
         $pieces = explode(" ", $dato_usuario['cedula']);
         if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
