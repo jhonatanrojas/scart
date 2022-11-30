@@ -1445,7 +1445,7 @@ class  AdminOrderController extends RootAdminController
 
         $news = [];
         $data = [
-            'title'             => "Editar convenio ",
+            'title'             => "Convenio ",
             'subTitle'          => '',
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
