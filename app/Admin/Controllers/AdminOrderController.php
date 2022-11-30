@@ -1438,7 +1438,9 @@ class  AdminOrderController extends RootAdminController
 
         
 
-        $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+        $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
+
+        
 
 
         $news = [];
