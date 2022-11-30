@@ -1,6 +1,17 @@
 @extends($templatePathAdmin.'layout')
 
 @section('main')
+
+ 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
  <div class="row">
     <div class="col-md-12"> 
        <div class="card">
@@ -222,7 +233,7 @@
 
 
 
-    <form id="form-add-item" action="" method="">
+
       @csrf
       <input type="hidden" name="order_id"  value="{{ $order->id }}">
       <div class="row">
@@ -681,7 +692,8 @@
        
       </div>
       <div class="modal-body">
-        <form action="{{ sc_route('crear_convenio') }}" method="POST">
+   
+        <form action="{!! sc_route('crear_convenio') !!}" method="POST">
           <div id="w-100">
            
              {{ csrf_field() }}

@@ -26,10 +26,13 @@ Route::controller(Productos_cuota::class)->group(function(){
 
 Route::post('/reportar-pago', 'ShopAccountController@postReportarPago')->name('post_reporte_pago');
 Route::get('convenio', 'ShopAccountController@convenio')->name('convenio');
+Route::get('pago_exitoso', 'ShopAccountController@pago_exitoso')->name('pago_exitoso');
+Route::get('biopago', 'ShopAccountController@biopago')->name('biopago');
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
 
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
+
 
 Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('borrador_cliente');
 

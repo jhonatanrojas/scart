@@ -477,7 +477,7 @@ class HistorialPagosController extends RootAdminController
             '_monto' => 'required',
             'c_fecha_inicial' => 'required' ,
             'nro_convenio' => 'required',
-            'nro_convenio' => 'required',
+           
             'fecha_maxima_entrega' => 'required',
 
           
