@@ -1436,28 +1436,22 @@ class  AdminOrderController extends RootAdminController
 
     public function edit_convenio(){
 
-        
-
         $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
 
-        
-
-
-        $news = [];
         $data = [
-            'title'             => "Convenio ",
+            'title'             => "Edit Convenio ",
             'subTitle'          => '',
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
             'icon'              => 'fa fa-plus',
-            'languages'         => $this->languages,
-            'news'              => $news,
-            'url_action'        => sc_route_admin('admin_news.create'),
+            
+            
+            
         ];
 
         return view($this->templatePathAdmin.'screen.edit_convenio')
             ->with($data);
-        // return view($this->templatePathAdmin.'screen.edit_convenio',["obj"=>$borrado_html]);
+        
 
     }
 

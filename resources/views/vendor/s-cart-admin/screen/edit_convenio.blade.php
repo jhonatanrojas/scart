@@ -22,8 +22,8 @@
                         
 
 
-                                            <tr>
-                                                <td>{{$n}}</td>
+                                <tr>
+                                    <td>{{$n}}</td>
                                 <td>
                                     @if ($plantilla->name == "sin_inicial")
 
