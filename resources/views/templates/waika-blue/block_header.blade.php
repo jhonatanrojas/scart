@@ -1,4 +1,40 @@
       <!-- Page Header-->
+      <style>
+        .usuario{
+          position: relative;
+          padding-right: 22px;
+      
+        }
+        .login{
+          width: 19px;
+          height: 19px;
+          border-radius: 50%;
+          background-color: greenyellow;
+          border: solid 3px white;
+          position: absolute;
+          opacity: 0;
+          right: auto;
+          
+          animation: animate 1s infinite ease-in-out ;
+        }
+
+        @keyframes animate{
+          0%{
+            border: solid 4px rgb(246, 248, 246);
+            opacity: 1;
+           
+
+          }
+          100%{
+            border: solid 4px greenyellow;
+            opacity: 0;
+           
+            
+
+          }
+        }
+      </style>
+      
       <header class="section page-header">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
@@ -51,7 +87,11 @@
                     </li>
 
                     @else
-                    <li class="rd-nav-item"><a class="rd-nav-link text-white" href="#"><i class="fa fa-lock"></i> MI CUENTA</a>
+                    <li class="rd-nav-item"><a class="rd-nav-link text-white usuario" href="#">
+                       MI CUENTA
+                       <span class="login"></span>
+                       
+                      </a>
                         <ul class="rd-menu rd-navbar-dropdown">
                             <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('customer.index') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.my_profile') }}</a></li>
                             <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('logout') }}" rel="nofollow" onclick="event.preventDefault();

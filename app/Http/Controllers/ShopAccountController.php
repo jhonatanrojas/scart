@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\AdminOrder;
@@ -29,6 +30,7 @@ use App\Models\shop_order_detail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
+
 class ShopAccountController extends RootFrontController
 {
     use AuthTrait;
@@ -44,6 +46,87 @@ class ShopAccountController extends RootFrontController
      * @param [type] ...$params
      * @return void
      */
+
+    public function biopago(Request $request)
+    {
+
+        $request->validate([
+   
+            'id' => 'required',
+                  ]);
+        $dataUser = Auth::user();
+        $id_pedido = $request->get('id');
+        $id_pago= $request->get('id_pago');
+        $order = ShopOrder::where('id', $id_pedido)->first();
+  
+        $monedas = sc_currency_all();
+        $tasa_cambio = $monedas[0]->exchange_rate;
+       
+        //Creación de solicitud de pago
+        $Payment = new \stdClass;
+        $Payment->idLetter = 'V'; //Letra de la cédula - V, E o P
+        $Payment->idNumber = '11994584'; //Número de cédula
+      
+        if( $id_pago==null){
+        $Payment->amount = $order->total * $tasa_cambio; //Monto a combrar, DECIMAL
+        }else{
+           $historial_pago= HistorialPago::where('id',$id_pago)->first();
+
+          
+           $Payment->amount =  $historial_pago->importe_couta  * $tasa_cambio;
+        }
+
+        $Payment->currency = 1; //Moneda del pago, 0 - Bolivar Fuerte, 1 - Dolar
+        $Payment->reference =  $id_pedido; //Código de referecia o factura
+        $Payment->title = $order->details[0]->name; //Titulo para el pago, Ej: Servicio de Cable
+        $Payment->description = 'Pago de cuota '; //Descripción del pago, Ej: Abono mes de marzo 2017
+        $Payment->email =  $order->email;
+        $Payment->cellphone = $order->phone;
+        $Payment->urlToReturn = route('pago_exitoso'); //URL de retrono al finalizar el pago
+
+        $PaymentProcess = new Biopago("72426762", "n3yENa9n"); //Instanciación de la API de pago con usuario y clave
+        $response = $PaymentProcess->createPayment($Payment);
+     //   dd(  $response->paymentId );
+        if ($response->success == true) // Se procesó correctamente y es necesario redirigir a la página de pago
+        {
+
+      $hoy = date("Y-m-d H:i:s");  
+        $data_pago =[
+                       
+            'customer_id' => 0,
+           'referencia' =>$response->paymentId,      
+            'metodo_pago_id' =>3,
+            'fecha_pago' =>  $hoy,
+            'importe_pagado' =>$Payment->amount,
+            'comment' =>'BDV',
+            'moneda' =>'Bs',
+            'tasa_cambio' => $tasa_cambio,
+            'comprobante'=>   '',
+            'payment_status' => 1
+   
+           ];
+           if( $id_pago==null){
+            $data_pago['order_id'] = $id_pedido;
+             HistorialPago::create($data_pago);
+           }else{
+               HistorialPago::where('id',$id_pago)
+           ->update($data_pago);
+               
+           
+           }
+            if (strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest') { //si es ajax
+                // echo $response->urlPayment;
+                header('Content-type: application/json');
+                echo json_encode($response);
+            } else { //si no es ajax
+                header("Location: " . $response->urlPayment); //W
+                die();
+            }
+        } else {
+            return redirect()->back()->with(['error' =>$response->responseMessage ]);
+        }
+    }
+
     public function indexProcessFront(...$params)
     {
         if (config('app.seoLang')) {
@@ -53,37 +136,66 @@ class ShopAccountController extends RootFrontController
         return $this->_index();
     }
 
+
+    public function pago_exitoso(){
+        request()->id_pedido;
+        request()->id;
+        $historial_pago= HistorialPago::where('referencia',request()->id)->first();
+     if( $historial_pago){
+        HistorialPago::where('referencia',request()->id)  ->update([
+                 
+                     
+            'metodo_pago_id' =>3,           
+            'payment_status' => 5,
+            'observacion' => 'Pago realizado a traves de BDV BIOPAGO'
+   
+           ]);
+      
+     }
+      
+     return view(
+            $this->templatePath . '.screen.pago_exitoso',
+            [
+                'title'       => 'PAGO RECIBIDO',
+                'orderInfo'   => '',
+                'layout_page' => 'shop_order_success',
+                'breadcrumbs' => [
+                    ['url'    => '', 'title' => 'PAGO RECIBIDO'],
+                ],
+            ]
+        );
+    }
     /**
      * Index user profile
      *
      * @return  [view]
      */
+
+
     private function _index()
     {
         $customer = auth()->user();
         $id = $customer['id'];
 
-        
+
 
         $documento = SC__documento::where('id_usuario', $id)->get();
-        $order = AdminOrder::where('customer_id',$id)->get();
+        $order = AdminOrder::where('customer_id', $id)->get();
         $Combenio = [];
         $Order_resultado = [];
-        if(!empty($order)){
+        if (!empty($order)) {
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-            foreach($order as $odenr){
-                $Order_resultado= $odenr;
-                $convenio = Convenio::where('order_id',$odenr->id)->get();
-                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
-
-               
+            foreach ($order as $odenr) {
+                $Order_resultado = $odenr;
+                $convenio = Convenio::where('order_id', $odenr->id)->get();
+                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
             }
         }
-      
-        if(!isset($documento[0]['id_usuario']) == $id){
-           $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
-        }else $dato = "";
-        
+
+        if (!isset($documento[0]['id_usuario']) == $id) {
+            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
+        } else $dato = "";
+
 
         sc_check_view($this->templatePath . '.account.index');
         return view($this->templatePath . '.account.index')
@@ -131,18 +243,18 @@ class ShopAccountController extends RootFrontController
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         sc_check_view($this->templatePath . '.account.change_password');
         return view($this->templatePath . '.account.change_password')
-        ->with(
-            [
-                'title'       => sc_language_render('customer.change_password'),
-                'customer'    => $customer,
-                'referencia'    => $referencia,
-                'layout_page' => 'shop_profile',
-                'breadcrumbs' => [
-                    ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                    ['url'    => '', 'title' => sc_language_render('customer.change_password')],
-                ],
-            ]
-        );
+            ->with(
+                [
+                    'title'       => sc_language_render('customer.change_password'),
+                    'customer'    => $customer,
+                    'referencia'    => $referencia,
+                    'layout_page' => 'shop_profile',
+                    'breadcrumbs' => [
+                        ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'    => '', 'title' => sc_language_render('customer.change_password')],
+                    ],
+                ]
+            );
     }
 
     /**
@@ -175,9 +287,9 @@ class ShopAccountController extends RootFrontController
             }
         }
         $messages = [
-            'password.required' => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.password')]),
-            'password.confirmed' => sc_language_render('validation.confirmed', ['attribute'=> sc_language_render('customer.password')]),
-            'password_old.required' => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.password_old')]),
+            'password.required' => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.password')]),
+            'password.confirmed' => sc_language_render('validation.confirmed', ['attribute' => sc_language_render('customer.password')]),
+            'password_old.required' => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.password_old')]),
         ];
         $v = Validator::make(
             $request->all(),
@@ -231,7 +343,7 @@ class ShopAccountController extends RootFrontController
                     'referencia'    => $referencia,
                     'countries'   => ShopCountry::getCodeAll(),
                     'layout_page' => 'shop_profile',
-                    'customFields'=> (new ShopCustomField)->getCustomField($type = 'customer'),
+                    'customFields' => (new ShopCustomField)->getCustomField($type = 'customer'),
                     'breadcrumbs' => [
                         ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
                         ['url'    => '', 'title' => sc_language_render('customer.change_infomation')],
@@ -310,37 +422,35 @@ class ShopAccountController extends RootFrontController
         $customer = auth()->user();
         $id = $customer['id'];
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $order = AdminOrder::where('customer_id',$id)->get();
+        $order = AdminOrder::where('customer_id', $id)->get();
         $Combenio = [];
         $Order_resultado = [];
-        if(!empty($order)){
+        if (!empty($order)) {
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-            foreach($order as $odenr){
-                $Order_resultado= $odenr;
-                $convenio = Convenio::where('order_id',$odenr->id)->get();
-                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
-
-               
+            foreach ($order as $odenr) {
+                $Order_resultado = $odenr;
+                $convenio = Convenio::where('order_id', $odenr->id)->get();
+                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
             }
         }
-    
+
         $statusOrder = ShopOrderStatus::getIdAll();
         sc_check_view($this->templatePath . '.account.order_list');
         return view($this->templatePath . '.account.order_list')
             ->with(
                 [
-                'title'       => sc_language_render('customer.order_history'),
-                'statusOrder' => $statusOrder,
-                'orders'      => (new ShopOrder)->profile()->getData(),
-                'customer'    => $customer,
-                'order'    => $Order_resultado,
-                'combenio'    => $Combenio,
-                'referencia'    => $referencia,
-                'layout_page' => 'shop_profile',
-                'breadcrumbs' => [
-                    ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                    ['url'    => '', 'title' => sc_language_render('customer.order_history')],
-                ],
+                    'title'       => sc_language_render('customer.order_history'),
+                    'statusOrder' => $statusOrder,
+                    'orders'      => (new ShopOrder)->profile()->getData(),
+                    'customer'    => $customer,
+                    'order'    => $Order_resultado,
+                    'combenio'    => $Combenio,
+                    'referencia'    => $referencia,
+                    'layout_page' => 'shop_profile',
+                    'breadcrumbs' => [
+                        ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'    => '', 'title' => sc_language_render('customer.order_history')],
+                    ],
                 ]
             );
     }
@@ -373,56 +483,54 @@ class ShopAccountController extends RootFrontController
         $statusOrder = ShopOrderStatus::getIdAll();
         $statusShipping = ShopShippingStatus::getIdAll();
         $attributesGroup = ShopAttributeGroup::pluck('name', 'id')->all();
-        $order = ShopOrder::where('id', $id) ->where('customer_id', $customer->id)->first();
+        $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
         if ($order) {
-            $title = sc_language_render('customer.order_detail').' #'.$order->id;
+            $title = sc_language_render('customer.order_detail') . ' #' . $order->id;
         } else {
             return $this->pageNotFound();
         }
 
 
-    if($order->modalidad_de_compra==0){
-        $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status','<>',1)->groupBy('payment_status')->get();
+        if ($order->modalidad_de_compra == 0) {
+            $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
+        } {
+            $historial_pagos =   HistorialPago::where('order_id', $id)->orderBy('fecha_venciento')->get();
+        }
 
-    }{
-        $historial_pagos =   HistorialPago::where('order_id', $id)->orderBy('fecha_venciento')->get();
 
-    }
 
-   
-        
 
-        
+
         $id = $customer['id'];
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         $documento = SC__documento::where('id_usuario', $id)->get();
 
-        if(!isset($documento[0]['id_usuario']) == $id){
-           $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
-        }else{
+        if (!isset($documento[0]['id_usuario']) == $id) {
+            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
+        } else {
             $dato = "";
         }
         sc_check_view($this->templatePath . '.account.order_detail');
         return view($this->templatePath . '.account.order_detail')
-        ->with(
-            [
-            'title'           => $title,
-            'referencia'           => $referencia,
-            'statusOrder'     => $statusOrder,
-            'mensaje'     => $dato,
-            'statusShipping'  => $statusShipping,
-            'countries'       => ShopCountry::getCodeAll(),
-            'attributesGroup' => $attributesGroup,
-            'order'           => $order,
-            'customer'        => $customer,
-            'layout_page'     => 'shop_profile',
-            'historial_pagos'   => $historial_pagos,
-            'breadcrumbs'     => [
-                ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                ['url'        => '', 'title' => $title],
-            ],
-            ]
-        );
+            ->with(
+                [
+                    'title'           => $title,
+                    'referencia'           => $referencia,
+                    'statusOrder'     => $statusOrder,
+                    'mensaje'     => $dato,
+                    'statusShipping'  => $statusShipping,
+                    'countries'       => ShopCountry::getCodeAll(),
+                    'attributesGroup' => $attributesGroup,
+                    'order'           => $order,
+                    'customer'        => $customer,
+                    'layout_page'     => 'shop_profile',
+                    'historial_pagos'   => $historial_pagos,
+                    'breadcrumbs'     => [
+                        ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'        => '', 'title' => $title],
+                    ],
+                ]
+            );
     }
 
     /**
@@ -439,7 +547,7 @@ class ShopAccountController extends RootFrontController
         }
         return $this->_addressList();
     }
- 
+
     public function reportarPago(...$params)
     {
         if (config('app.seoLang')) {
@@ -450,90 +558,89 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
-        
-        $order = ShopOrder::where('id', $id) ->where('customer_id', $customer->id)->first();
+
+        $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago=request('id_pago');
-      
-     
-            $historial_pago = HistorialPago::where('id',$id_pago)->first();
-           $metodos_pagos= MetodoPago::all();
+        $id_pago = request('id_pago');
+
+
+        $historial_pago = HistorialPago::where('id', $id_pago)->first();
+        $metodos_pagos = MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')
-        ->with(
-            [
-            'title'           =>'Reportar pago',
-            'id_pago' => $id_pago,
+            ->with(
+                [
+                    'title'           => 'Reportar pago',
+                    'id_pago' => $id_pago,
 
-            'historial_pago' => $historial_pago,
-            'customer'        => $customer,
-            'referencia'        => $referencia,
-             'metodos_pagos'  => $metodos_pagos,
-             'order' => $order,
-            'layout_page'     => 'shop_profile',
-            'breadcrumbs'     => [
-                ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
-                ['url'        => '', 'title' => 'Historial de pagos'],
-            ],
-            ]
-        );
+                    'historial_pago' => $historial_pago,
+                    'customer'        => $customer,
+                    'referencia'        => $referencia,
+                    'metodos_pagos'  => $metodos_pagos,
+                    'order' => $order,
+                    'layout_page'     => 'shop_profile',
+                    'breadcrumbs'     => [
+                        ['url'        => sc_route('customer.reportar_pago'), 'title' => sc_language_render('front.my_account')],
+                        ['url'        => '', 'title' => 'Historial de pagos'],
+                    ],
+                ]
+            );
     }
 
-    public function convenio(){
+    public function convenio()
+    {
 
         return view($this->templatePath . '.convenio');
     }
 
-    public function postReportarPago(Request $request){
+    public function postReportarPago(Request $request)
+    {
         $user = Auth::user();
         $cId = $user->id;
         $data = request()->all();
 
-       
+
         $request->validate([
             'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
             'monto' => 'required',
             'referencia' => 'required',
-            'order_id'=>'required',
-            'tipo_cambio'=>'required'
+            'order_id' => 'required',
+            'tipo_cambio' => 'required'
         ]);
-        $fileName = time().'.'.$request->capture->extension();  
-        $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
+        $fileName = time() . '.' . $request->capture->extension();
+        $path_archivo = 'data/clientes/pagos' . '/' . $fileName;
         $request->capture->move(public_path('data/clientes/pagos'), $fileName);
         $id_pago = $request->id_pago;
 
 
-        $data_pago =[
-         'order_id' =>$request->order_id,
-         'customer_id' => $cId,
-        'referencia' =>$request->referencia,
-         'tasa_cambio' => $request->tipo_cambio,
-         'order_detail_id' =>$request->id_detalle_orden ,
-         'producto_id' =>$request->product_id,
-         'metodo_pago_id' =>$request->forma_pago,
-         'fecha_pago' =>$request->fecha,
-         'importe_pagado' =>$request->monto,
-         'comment' =>$request->observacion,
-         'moneda' =>$request->moneda,
-         'comprobante'=>   $path_archivo,
-         'payment_status' => 2
+        $data_pago = [
+            'order_id' => $request->order_id,
+            'customer_id' => $cId,
+            'referencia' => $request->referencia,
+            'tasa_cambio' => $request->tipo_cambio,
+            'order_detail_id' => $request->id_detalle_orden,
+            'producto_id' => $request->product_id,
+            'metodo_pago_id' => $request->forma_pago,
+            'fecha_pago' => $request->fecha,
+            'importe_pagado' => $request->monto,
+            'comment' => $request->observacion,
+            'moneda' => $request->moneda,
+            'comprobante' =>   $path_archivo,
+            'payment_status' => 2
 
         ];
 
-        if( $id_pago==null){
+        if ($id_pago == null) {
             HistorialPago::create($data_pago);
-          }else{
-              HistorialPago::where('id',$id_pago)
-          ->update($data_pago);
-              
-          
-          }
+        } else {
+            HistorialPago::where('id', $id_pago)
+                ->update($data_pago);
+        }
 
 
         return redirect(sc_route('customer.historial_pagos'))
-        ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
-       
+            ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
     }
     public function historialPagos()
     {
@@ -546,29 +653,28 @@ class ShopAccountController extends RootFrontController
         }
         $customer = auth()->user();
         $id1 = $customer['id'];
-        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
-    $historial_pagos=   HistorialPago::where('payment_status','<>', 1)
 
-        ->orderByDesc('id')
-        ->get();
-     
+        $order = AdminOrder::where('customer_id',$id1)->get();
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
+        $historial_pagos=   HistorialPago::where('customer_id', $id1)->orderByDesc('id','DESC')->get();
+
 
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
         return view($this->templatePath . '.account.historial_pagos')
-        ->with(
-            [
-            'title'           =>'Historial de pagos',
-            'customer'        => $customer,
-            'referencia'        => $referencia,
-            'layout_page'     => 'shop_profile',
-            'historial_pagos'=> $historial_pagos,
-            'breadcrumbs'     => [
-                ['url'        => sc_route('customer.historial_pagos'), 'title' => sc_language_render('front.my_account')],
-                ['url'        => '', 'title' => 'Reportar  pago'],
-            ],
-            ]
-        );
+            ->with(
+                [
+                    'title'           => 'Historial de pagos',
+                    'customer'        => $customer,
+                    'referencia'        => $referencia,
+                    'layout_page'     => 'shop_profile',
+                    'historial_pagos' => $historial_pagos,
+                    'breadcrumbs'     => [
+                        ['url'        => sc_route('customer.historial_pagos'), 'title' => sc_language_render('front.my_account')],
+                        ['url'        => '', 'title' => 'Reportar  pago'],
+                    ],
+                ]
+            );
     }
 
     /**
@@ -585,16 +691,16 @@ class ShopAccountController extends RootFrontController
         return view($this->templatePath . '.account.address_list')
             ->with(
                 [
-                'title'       => sc_language_render('customer.address_list'),
-                'addresses'   => $customer->addresses,
-                'countries'   => ShopCountry::getCodeAll(),
-                'customer'    => $customer,
-                'referencia'    => $referencia,
-                'layout_page' => 'shop_profile',
-                'breadcrumbs' => [
-                    ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                    ['url'    => '', 'title' => sc_language_render('customer.address_list')],
-                ],
+                    'title'       => sc_language_render('customer.address_list'),
+                    'addresses'   => $customer->addresses,
+                    'countries'   => ShopCountry::getCodeAll(),
+                    'customer'    => $customer,
+                    'referencia'    => $referencia,
+                    'layout_page' => 'shop_profile',
+                    'breadcrumbs' => [
+                        ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'    => '', 'title' => sc_language_render('customer.address_list')],
+                    ],
                 ]
             );
     }
@@ -634,19 +740,19 @@ class ShopAccountController extends RootFrontController
         }
         sc_check_view($this->templatePath . '.account.update_address');
         return view($this->templatePath . '.account.update_address')
-        ->with(
-            [
-            'title'       => $title,
-            'address'     => $address,
-            'customer'    => $customer,
-            'countries'   => ShopCountry::getCodeAll(),
-            'layout_page' => 'shop_profile',
-            'breadcrumbs' => [
-                ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                ['url'    => '', 'title' => $title],
-            ],
-            ]
-        );
+            ->with(
+                [
+                    'title'       => $title,
+                    'address'     => $address,
+                    'customer'    => $customer,
+                    'countries'   => ShopCountry::getCodeAll(),
+                    'layout_page' => 'shop_profile',
+                    'breadcrumbs' => [
+                        ['url'    => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'    => '', 'title' => $title],
+                    ],
+                ]
+            );
     }
 
     /**
@@ -682,7 +788,7 @@ class ShopAccountController extends RootFrontController
         $address =  (new ShopCustomerAddress)->where('customer_id', $customer->id)
             ->where('id', $id)
             ->first();
-        
+
         $dataMapp = sc_customer_address_mapping($data);
         $dataUpdate = $dataMapp['dataAddress'];
         $validate = $dataMapp['validate'];
@@ -825,7 +931,7 @@ class ShopAccountController extends RootFrontController
                 'msg' => sc_language_render('customer.verify_email.link_invalid'),
             ];
         }
-        if (! $request->hasValidSignature()) {
+        if (!$request->hasValidSignature()) {
             abort(401);
         }
         if ($arrMsg['error']) {
@@ -836,24 +942,23 @@ class ShopAccountController extends RootFrontController
         }
     }
 
-    public function lista_referencia(){
+    public function lista_referencia()
+    {
 
         $customer = auth()->user();
         $id = $customer['id'];
-        $order = AdminOrder::where('customer_id',$id)->get();
+        $order = AdminOrder::where('customer_id', $id)->get();
         $Combenio = [];
         $Order_resultado = [];
-        if(!empty($order)){
+        if (!empty($order)) {
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-            foreach($order as $odenr){
-                $Order_resultado= $odenr;
-                $convenio = Convenio::where('order_id',$odenr->id)->get();
-                if(!empty($convenio) && $odenr->modalidad_de_compra == 1)$Combenio= $convenio;
-
-               
+            foreach ($order as $odenr) {
+                $Order_resultado = $odenr;
+                $convenio = Convenio::where('order_id', $odenr->id)->get();
+                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
             }
         }
-        return view($this->templatePath.'.account.lista_referencia')->with(
+        return view($this->templatePath . '.account.lista_referencia')->with(
             [
                 'title'       => "Referencia-personal",
                 'customer'    => $customer,
@@ -867,7 +972,6 @@ class ShopAccountController extends RootFrontController
             ]
         );;
     }
-
     public function borrador_pdf($id){
 
         $estado = Estado::all();
@@ -1073,6 +1177,4 @@ class ShopAccountController extends RootFrontController
 
     }
 
-
-    
 }

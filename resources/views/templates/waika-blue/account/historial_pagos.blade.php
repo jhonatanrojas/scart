@@ -27,22 +27,28 @@ $layout_page = shop_profile
         </thead>
         <tbody>
           @foreach($historial_pagos as $historial)
-          <tr>
-          @php
-          $n = (isset($n)?$n:0);
-          $n++;
-          @endphp
-        <td><span class="item_21_id">{{ $n }}</span></td>
-        <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
-        <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-        <td><span class="item_21_sku">
-          {!! isset($historial->metodo_pago->name ) ?$historial->metodo_pago->name  :'';  !!}
-        </span></td>
-        <td><span class="item_21_sku">{!! isset($historial->estatus->name ) ?$historial->estatus->name  :'';  !!}</span></td>
-        <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
-        <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
-        </td>
-      </tr>
+            
+           
+            <tr>
+              @php
+              $n = (isset($n)?$n:0);
+              $n++;
+              @endphp
+            <td><span class="item_21_id">{{ $n }}</span></td>
+            <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
+            <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
+            <td><span class="item_21_sku">
+              {!! isset($historial->metodo_pago->name ) ?$historial->metodo_pago->name  :'';  !!}
+            </span></td>
+            <td><span class="item_21_sku">{!! isset($historial->estatus->name ) ?$historial->estatus->name  :'';  !!}</span></td>
+            <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
+            <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
+            </td>
+          </tr>
+
+          
+           
+          
 @endforeach
         </tbody>
       </table>
