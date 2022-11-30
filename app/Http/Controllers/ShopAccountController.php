@@ -90,11 +90,12 @@ class ShopAccountController extends RootFrontController
      //   dd(  $response->paymentId );
         if ($response->success == true) // Se procesó correctamente y es necesario redirigir a la página de pago
         {
-
+            $user = Auth::user();
+            $cId = $user->id;
       $hoy = date("Y-m-d H:i:s");  
         $data_pago =[
                        
-            'customer_id' => 0,
+            'customer_id' => $cId,
            'referencia' =>$response->paymentId,      
             'metodo_pago_id' =>3,
             'fecha_pago' =>  $hoy,
