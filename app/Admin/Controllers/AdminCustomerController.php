@@ -629,11 +629,3 @@ class AdminCustomerController extends RootAdminController
     {
         return (new AdminCustomer)->getCustomerAdmin($id);
     }
-
-
- 
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> main
