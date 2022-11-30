@@ -140,6 +140,39 @@
                    
                     @endif
 
+
+                    @if (sc_config('customer_estado_civil'))
+                        <div class="form-group row{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
+                            <label for="first_name"
+                                    class="col-sm-2 col-form-label"> Estado civil</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                            <select  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('estado_civil'))?"input-error":"" }}"
+                            name="estado_civil" id="estado_civil">
+    
+                            <option value="SOLTERO(a)" {{ $customer['estado_civil'] == "SOLTERO(a)" ? 'selected':'' }}>Soltero(a)</option>
+                            <option value="CASADO(a)" {{ $customer['estado_civil'] == "CASADO(a)" ? 'selected':'' }}>Casado(a)</option>
+
+                            <option value="CONCUBINATO(a)" {{ $customer['estado_civil'] == "CONCUBINATO(a)" ? 'selected':'' }}>Concubinato(a)</option>
+                            
+                        
+                            </select>
+                        </div>
+                            @if ($errors->has('estado_civil'))
+                            <span class="help-block">
+                                {{ $errors->first('estado_civil') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                       
+                   
+                    @endif
+
                             @if (sc_config_admin('customer_lastname'))
                             <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
                                 <label for="first_name"
@@ -616,10 +649,10 @@
                                     name="nos_conocio" id="nos_conocio">
         
                                     <option value="">¿COMO NOS CONOCISTE?</option>
-                                    <option value="Facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
-                                    <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
-                                    <option value="Twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
-                                    <option value="Amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
+                                    <option value="facebook" {{ $customer['nos_conocio'] == "facebook" ? 'selected':'' }}>Facebook</option>
+                                    <option value="instagram" {{ $customer['nos_conocio'] == "instagram" ? 'selected':'' }}>instagram</option>
+                                    <option value="twitter" {{ $customer['nos_conocio'] == "twitter" ? 'selected':'' }}>Twitter</option>
+                                    <option value="Amigo" {{ $customer['nos_conocio'] == "amigo" ? 'selected':'' }}>Amigo</option>
                                     
                                 
                                     </select>

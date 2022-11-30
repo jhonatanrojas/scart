@@ -546,12 +546,14 @@ class ShopAccountController extends RootFrontController
         }
         $customer = auth()->user();
         $id1 = $customer['id'];
-        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
-    $historial_pagos=   HistorialPago::where('payment_status','<>', 1)
 
-        ->orderByDesc('id')
-        ->get();
-     
+        $order = AdminOrder::where('customer_id',$id1)->get();
+        $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
+        $historial_pagos=   HistorialPago::where('customer_id', $id1)->orderByDesc('id','DESC')->get();
+       
+
+        
+    
 
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
@@ -560,6 +562,7 @@ class ShopAccountController extends RootFrontController
             [
             'title'           =>'Historial de pagos',
             'customer'        => $customer,
+            'order' => $order,
             'referencia'        => $referencia,
             'layout_page'     => 'shop_profile',
             'historial_pagos'=> $historial_pagos,

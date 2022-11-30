@@ -133,10 +133,10 @@
                             name="estado_civil" id="estado_civil">
     
                             <option value="">Estado civil</option>
-                            <option value="SOLTERO" {{ (old('estado_civil')) ? 'selected':'' }}>Soltero(a)</option>
-                            <option value="CASADO" {{ (old('estado_civil')) ? 'selected':'' }}>Casado(a)</option>
+                            <option value="SOLTERO(a)" {{ (old('estado_civil')) ? 'selected':'' }}>Soltero(a)</option>
+                            <option value="CASADO(a)" {{ (old('estado_civil')) ? 'selected':'' }}>Casado(a)</option>
 
-                            <option value="CONCUBINATO" {{ (old('estado_civil')) ? 'selected':'' }}>concubinato</option>
+                            <option value="CONCUBINATO" {{ (old('estado_civil')) ? 'selected':'' }}>Concubinato</option>
                             
                         
                             </select>
@@ -501,10 +501,10 @@
                             name="nos_conocio" id="nos_conocio">
 
                             <option value="">¿COMO NOS CONOCISTE?</option>
-                            <option value="Facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
+                            <option value="facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
                             <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
-                            <option value="Twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
-                            <option value="Amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
+                            <option value="twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
+                            <option value="amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
                             
                         
                             </select>
