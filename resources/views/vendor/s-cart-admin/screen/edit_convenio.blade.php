@@ -5,7 +5,7 @@
     <table class="table table-hover box-body text-wrap table-bordered">
       <thead>
         <tr>
-                            <th>plantilla</th>
+                            <th>No.</th>
                           <th>inicial</th>
                           <th>Estatus</th>
                           <th>Acción</th>
@@ -14,9 +14,33 @@
                     <tbody>
 
                         @foreach ($borrado_html as $plantilla )
+                        @php
+                        $n = (isset($n)?$n:0);
+                        $n++;
+                        @endphp
+
+                        
 
 
-                        {{dd($plantilla)}};
+                                <tr>
+                                    <td>{{$n}}</td>
+                                <td>
+                                    @if ($plantilla->name == "sin_inicial")
+
+                                        Sin iniacial
+
+                                    @else
+                                        Con incial
+                                        
+                                    @endif
+                                </td>
+                                <td><span class="badge badge-success">ON</span></td>
+                                <td>
+                    <a href="{{ route('editar_convenio', ['id' => $plantilla->id]) }}"><span title="action.admin.edit" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+
+                    {{-- <span onclick="deleteItems({{$plantilla->id}});" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span> --}}
+                    </td>
+                        </tr>
                         @endforeach
                     
                   </tbody>
