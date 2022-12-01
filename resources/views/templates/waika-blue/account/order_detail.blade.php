@@ -127,6 +127,7 @@ $layout_page = shop_profile
                     }
                      
                     @endphp
+                    
 
                           <tr>
                             <td>{{ $item->name }}
