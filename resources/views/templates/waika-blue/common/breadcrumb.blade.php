@@ -39,7 +39,7 @@
         @if ($bannerBreadcrumbImage)
         <section id="parallax-vertical" >
         <div class="ma-parallax text-center jumbotron bg-faded " style="background: url(&quot;{{ $bannerBreadcrumbImage }}&quot;) center -59px no-repeat;" data-paroller-factor="0.3">
-            <h2 class="breadcrumbs-custom-title">{{ $title ?? '' }}</h2>
+            <h2 class="breadcrumbs-custom-title text-white">{{ $title ?? '' }}</h2>
       
         </div>
         </section>

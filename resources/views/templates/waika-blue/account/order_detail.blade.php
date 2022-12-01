@@ -102,8 +102,9 @@ $layout_page = shop_profile
                     <th>Producto</th>
                  
                     @if (!empty($order->details[0]->modalidad_de_compra == 1))
-                    <th class="product_price">Cuotas</th>
+                   
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
+                    <th class="product_price">Cuotas</th>
                     <th class="product_total">Modalidad</th>
                         @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>
@@ -140,9 +141,10 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                  
-                            <td class="product_price">{{ $cuotas }}</td>
+                            @if (!empty($order->details[0]->modalidad_de_compra == 1))
+                           
                             <td class="product_qty">x  {{ $item->qty }}</td>
+                            <td class="product_price">{{ $cuotas }}$</td>
                             <td class="product_total item_id_{{ $item->id }}">
                               @if ($item->modalida_pago == 2)
                               Quincen
@@ -150,6 +152,12 @@ $layout_page = shop_profile
                                   Mensual
                               @endif
                             </td>
+                                @else
+                                <td class="product_price">{{ $item->price }}</td>
+                            <td class="product_qty">x  {{ $item->qty }}</td>
+                            <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+                            @endif
+                           
                           
                           </tr>
                     @endforeach
