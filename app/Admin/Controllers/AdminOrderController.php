@@ -638,16 +638,6 @@ class  AdminOrderController extends RootAdminController
         }
 
         
-      
-
-
-
-
-    
-
-    
-       
-
         
         if ($code == 'shipping' || $code == 'discount' || $code == 'received' || $code == 'other_fee') {
             $orderTotalOrigin = AdminOrder::getRowOrderTotal($id);
@@ -1035,6 +1025,11 @@ class  AdminOrderController extends RootAdminController
     public function downloadPdf($id)
     {
 
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -1046,6 +1041,8 @@ class  AdminOrderController extends RootAdminController
         }
 
         $convenio = Convenio::where('order_id',$id)->first();
+
+        
         
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
@@ -1148,19 +1145,26 @@ class  AdminOrderController extends RootAdminController
                 
                 $monto = $dato_usuario[0]['subtotal'];
                 $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                $cuotas = $dato_usuario[0]['cuotas'];
-                if($convenio->inicial>0){
-                    $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
-                    $monto = $dato_usuario[0]['subtotal'];
-                    $monto = $monto - $totalinicial;
+                
+                $cuotas = number_format($dato_usuario[0]['cuotas']);
+                if($convenio->inicial>0 &&  !$abono_inicial <= "0.00"){
+                    $totalinicial=(number_format($dato_usuario[0]['abono_inicial'])*$dato_usuario[0]['subtotal'])/100;
+
+                    $monto = $dato_usuario[0]['subtotal'] - $totalinicial;
+    
                     $number1 =  $monto/$dato_usuario[0]['cuotas'];
-                    $cuotas = $number1;
+
+                    
+                    $cuotas = number_format($number1,2 ,',', ' ') ;
+                    
                     $number2 =  $monto*$cod_bolibares;
                    
                   }
 
-                  
                   $number2 =  $monto*$cod_bolibares;
+
+                  
+                 
                     
 
                 foreach($borrado_html as $replacee){
@@ -1190,6 +1194,8 @@ class  AdminOrderController extends RootAdminController
                         'cod_doreccion',
                         'cod_fecha_actual',
                     ];
+
+                   
                     $dataReplace = [
                         $dato_usuario['first_name'],
                         $dato_usuario['last_name'],
@@ -1201,14 +1207,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
-                        number_format($cuotas),
-                        'Cod_Cuota_total'=> number_format($number1),
-                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
+                        'cod_dia'=> $letraconvertir_nuber->decenass($dato_usuario[0]['cuotas']),
+                        'cod_cuotas' =>$dato_usuario[0]['cuotas'],
+                        'Cod_Cuota_total'=> $cuotas,
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
-                        'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
+                        'cod_bolivar_text'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
@@ -1233,6 +1239,11 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function borrador_pdf($id){
+
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -1435,7 +1446,13 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function edit_convenio(){
+       
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
 
+    
         $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
 
         $data = [
