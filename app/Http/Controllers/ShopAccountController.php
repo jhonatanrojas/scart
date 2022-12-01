@@ -27,6 +27,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_referencia_personal;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
@@ -89,11 +90,12 @@ class ShopAccountController extends RootFrontController
      //   dd(  $response->paymentId );
         if ($response->success == true) // Se procesó correctamente y es necesario redirigir a la página de pago
         {
-
+            $user = Auth::user();
+            $cId = $user->id;
       $hoy = date("Y-m-d H:i:s");  
         $data_pago =[
                        
-            'customer_id' => 0,
+            'customer_id' => $cId,
            'referencia' =>$response->paymentId,      
             'metodo_pago_id' =>3,
             'fecha_pago' =>  $hoy,
@@ -660,7 +662,8 @@ class ShopAccountController extends RootFrontController
 
         $order = AdminOrder::where('customer_id',$id1)->get();
         $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
-        $historial_pagos=   HistorialPago::where('customer_id', $id1)->orderByDesc('id','DESC')->get();
+        $historial_pagos=   HistorialPago::where('customer_id', $id1)->where('payment_status', '<>', 1)
+        ->orderByDesc('id','DESC')->get();
 
 
 
