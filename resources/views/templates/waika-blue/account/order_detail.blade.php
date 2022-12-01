@@ -100,17 +100,23 @@ $layout_page = shop_profile
                 <thead>
                   <tr>
                     <th>Producto</th>
-
-                    
+                 
+                    @if (!empty($order->details[0]->modalidad_de_compra == 1))
                     <th class="product_price">Cuotas</th>
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_total">Modalidad</th>
+                        @else
+                        <th class="product_price">{{ sc_language_render('product.price') }}</th>
+                    <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
+                    <th class="product_total">{{ sc_language_render('order.totals.sub_total') }}</th>
+                    @endif
+                   
                   </tr>
                 </thead>
                 <tbody>
                     @foreach ($order->details as $item)
                     @php
-                     $cuotas = $item->total_price/$item->nro_coutas;
+                     $cuotas = $item->nro_coutas;
                     if($item->abono_inicial > "0.00"){
                       $totalinicial=(number_format($item->abono_inicial)*$item->total_price)/100;
                       $monto = $item->total_price - $totalinicial;
