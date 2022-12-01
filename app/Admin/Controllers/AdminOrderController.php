@@ -1025,6 +1025,11 @@ class  AdminOrderController extends RootAdminController
     public function downloadPdf($id)
     {
 
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -1231,6 +1236,11 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function borrador_pdf($id){
+
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -1433,7 +1443,13 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function edit_convenio(){
+       
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
 
+    
         $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
 
         $data = [

@@ -430,6 +430,9 @@ class ShopAccountController extends RootFrontController
             foreach ($order as $odenr) {
                 $Order_resultado = $odenr;
                 $convenio = Convenio::where('order_id', $odenr->id)->get();
+
+                $productoDetail = shop_order_detail::where('id' , $id)->get();
+                
                 if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
             }
         }
@@ -444,6 +447,7 @@ class ShopAccountController extends RootFrontController
                     'orders'      => (new ShopOrder)->profile()->getData(),
                     'customer'    => $customer,
                     'order'    => $Order_resultado,
+                    'productoDetail' => $productoDetail,
                     'combenio'    => $Combenio,
                     'referencia'    => $referencia,
                     'layout_page' => 'shop_profile',

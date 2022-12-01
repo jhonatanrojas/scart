@@ -101,13 +101,26 @@ $layout_page = shop_profile
                   <tr>
                     <th>Producto</th>
 
-                    <th class="product_price">{{ sc_language_render('product.price') }}</th>
+                    
+                    <th class="product_price">Cuotas</th>
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
-                    <th class="product_total">{{ sc_language_render('order.totals.sub_total') }}</th>
+                    <th class="product_total">Modalidad</th>
                   </tr>
                 </thead>
                 <tbody>
                     @foreach ($order->details as $item)
+                    @php
+                     $cuotas = $item->total_price/$item->nro_coutas;
+                    if($item->abono_inicial > "0.00"){
+                      $totalinicial=(number_format($item->abono_inicial)*$item->total_price)/100;
+                      $monto = $item->total_price - $totalinicial;
+                      $number1 =  $monto/$item->nro_coutas;
+                      $cuotas = number_format($number1,2 ,',', ' ') ;
+
+                    }
+                     
+                    @endphp
+
                           <tr>
                             <td>{{ $item->name }}
                               @php
@@ -122,9 +135,15 @@ $layout_page = shop_profile
                             {!! $html !!}
                             </td>
                   
-                            <td class="product_price">{{ $item->price }}</td>
+                            <td class="product_price">{{ $cuotas }}</td>
                             <td class="product_qty">x  {{ $item->qty }}</td>
-                            <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+                            <td class="product_total item_id_{{ $item->id }}">
+                              @if ($item->modalida_pago == 2)
+                              Quincen
+                                  @else
+                                  Mensual
+                              @endif
+                            </td>
                           
                           </tr>
                     @endforeach
