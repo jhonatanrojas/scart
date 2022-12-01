@@ -1096,6 +1096,8 @@ class ShopAccountController extends RootFrontController
                 
                 $monto = $dato_usuario[0]['subtotal'];
                 $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                $number2 =  $monto*$cod_bolibares;
+
                 $cuotas = $dato_usuario[0]['cuotas'];
                 if($dato_usuario[0]['abono_inicial'] >0){
                     $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
@@ -1108,7 +1110,7 @@ class ShopAccountController extends RootFrontController
                   }
 
                   
-                  $number2 =  $monto*$cod_bolibares;
+                  
                     
 
                 foreach($borrado_html as $replacee){
@@ -1149,14 +1151,14 @@ class ShopAccountController extends RootFrontController
                         $dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
-                        number_format($cuotas),
-                        'Cod_Cuota_total'=> number_format($number1),
+                        'cod_dia'=> $letraconvertir_nuber->decenass($dato_usuario[0]['cuotas']),
+                        'cod_cuotas'=>  $dato_usuario[0]['cuotas'],
+                        'Cod_Cuota_total'=> number_format($cuotas ,2 ,',', ' '),
                         'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
-                        'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
+                        'cod_bolivar_text'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
