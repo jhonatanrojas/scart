@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sc_referencia_personal', function (Blueprint $table) {
+        Schema::create('sc_fecha_de_entrega' , function(Blueprint $table){
+
             $table->id();
-            $table->string('nombre_ref');
-            $table->string('apellido_ref');
-            $table->string('telefono');
-            $table->string('id_usuario');
+            $table->date('fecha_entrega');
+            $table->boolean('activo');
             $table->timestamps();
+
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sc_referencia_personal');
+        Schema::dropIfExists('sc_fecha_de_entrega');
     }
 };

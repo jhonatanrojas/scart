@@ -116,6 +116,8 @@ class ShopAccountController extends RootFrontController
                
            
            }
+
+
             if (strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest') { //si es ajax
                 // echo $response->urlPayment;
                 header('Content-type: application/json');
@@ -140,10 +142,31 @@ class ShopAccountController extends RootFrontController
 
 
     public function pago_exitoso(){
+
         request()->id_pedido;
         request()->id;
         $historial_pago= HistorialPago::where('referencia',request()->id)->first();
+
+    
+
      if( $historial_pago){
+
+        $id_usuario = $historial_pago->customer_id;
+        $datosUsuario = [];
+        $user = ShopCustomer::where('id' , $id_usuario)->get();
+        foreach($user as $key => $usuarios){ 
+        $datosUsuario = [
+                'first_name' =>  $usuarios->first_name,
+                'last_name' =>  $usuarios->last_name,
+                'email' =>  $usuarios->email,
+                'phone' =>  $usuarios->phone,
+                'address1'=>  $usuarios->address1,
+                'cedula' =>  $usuarios->cedula,
+        ];
+
+        }
+
+        
         HistorialPago::where('referencia',request()->id)  ->update([
                  
                      
@@ -152,6 +175,8 @@ class ShopAccountController extends RootFrontController
             'observacion' => 'Pago realizado a traves de BDV BIOPAGO'
    
            ]);
+
+           exito_biopago_email($datosUsuario);
       
      }
       

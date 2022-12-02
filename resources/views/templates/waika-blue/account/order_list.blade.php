@@ -72,7 +72,6 @@
           <tr>
             <th style="width: 50px;">No.</th>
             <th style="width: 100px;">ID</th>
-            <th>{{ sc_language_render('order.total') }}</th>
             <th>{{ sc_language_render('order.order_status') }}</th>
             <th>{{ sc_language_render('common.created_at') }}</th>
             <th></th>
@@ -90,9 +89,6 @@
 
             <td><span class="item_21_id">{{ $n }}</span></td>
             <td><span class="item_21_sku">#{{ $order->id }}</span></td>
-            <td align="right">
-              {{ number_format($order->total) }}
-            </td>
             <td>{{ $statusOrder[$order->status]}}</td>
             <td>{{ $order->created_at }}</td>
             <td>
