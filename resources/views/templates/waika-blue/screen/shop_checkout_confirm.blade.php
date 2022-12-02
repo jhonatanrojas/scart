@@ -29,6 +29,9 @@
                 @endif
             </div>
             <div class="row">
+
+           
+      
                 @if (count($cart) == 0)
                     <div class="col-md-12 text-danger min-height-37vh">
                         {!! sc_language_render('cart.cart_empty') !!}
@@ -43,14 +46,15 @@
 
                                         <th>Articulo</th>
                                         <th>{{ sc_language_render('product.quantity') }}</th>
+                                        <th>{{ sc_language_render('product.price') }}</th>
                                         @if ($cart[0]->financiamiento == '1')
-                                            <th>Cuotas</th>
+                                            <th>Nro de cuotas</th>
                                             <th>Inicial</th>
                                             <th>Frecuencia de pago</th>
                                         @endif
-                                        @if ($cart[0]->financiamiento != '1')
-                                            <th>{{ sc_language_render('product.price') }}</th>
-                                        @endif
+                                      
+                                    
+                                
 
                                         @if ($cart[0]->financiamiento != '1')
                                             <th>{{ sc_language_render('product.subtotal') }}</th>
@@ -60,10 +64,18 @@
                                 <tbody>
 
                                     @foreach ($cart as $item)
-                                        @php
+
+                                    @php
+                                 
+                                     
                                             $n = isset($n) ? $n : 0;
                                             $n++;
                                             $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
+
+                                            $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
+                                    if( $product->precio_de_cuota > 0 ):
+                                    $product->precio=  $product->price-$product->monto_inicial;
+                                   endif;
                                         @endphp
 
                                         {{-- Render product in cart --}}
@@ -85,12 +97,21 @@
                                             </td>
 
 
-                                            @if ($cart[0]->financiamiento != '1')
-                                                <td>{!! $product->showPrice() !!}</td>
-                                            @endif
+                                       
+                                   
                                             <td>{{ $item->qty }}</td>
+                                            <td>
+
+                                                @if( $product->precio_de_cuota )
+                                                ${!!  number_format($product->precio/$product->nro_coutas,2) !!}  
+                                       
+                                                @else
+                                                {!! $product->showPrice() !!}
+                                              
+                                                @endif
+                                            </td>
                                             @if ($cart[0]->financiamiento == '1')
-                                                <td>${{ $item->Cuotas }}</td>
+                                                <td>{{ $item->Cuotas }}</td>
                                                 @php
                                                     $inicial = '0.00';
                                                     if ($item->inicial > 0) {
@@ -101,6 +122,8 @@
                                                 <td>${{ $inicial }} </td>
                                                 <td>{{ $item->modalidad_pago == '3' ? 'Mensual' : 'Quincenal' }}</td>
                                             @endif
+                                            
+                                        
                                             @if ($cart[0]->financiamiento != '1')
                                                 <td align="right">{{ sc_currency_render($item->subtotal) }}</td>
                                             @endif
