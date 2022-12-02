@@ -157,8 +157,17 @@ class ShopProduct extends Model
         if (!sc_config('product_price', config('app.storeId'))) {
             return false;
         }
-        $price = $this->price;
         $priceFinal = $this->getFinalPrice();
+        $price = $this->price;
+        $nro_coutas= $this->nro_coutas == 0 ? 1 : $this->nro_coutas;
+        if( $this->precio_de_cuota){
+            $price=  $price - $this->monto_inicial;
+            $price= number_format($price/  $nro_coutas,2);
+            $priceFinal =  $priceFinal - $this->monto_inicial;
+            $priceFinal= number_format($priceFinal/  $nro_coutas,2);
+        }
+      
+     
         // Process with tax
         return  view(
             'templates.'.sc_store('template').'.common.show_price',
@@ -166,6 +175,8 @@ class ShopProduct extends Model
                 'price' => $price,
                 'priceFinal' => $priceFinal,
                 'kind' => $this->kind,
+                'precio_de_cuota' => $this->precio_de_cuota,
+                'nro_coutas' =>  $nro_coutas,
             ]
         )->render();
     }

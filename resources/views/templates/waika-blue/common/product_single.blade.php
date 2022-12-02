@@ -53,6 +53,7 @@
       {!! $product->showPrice() !!} 
       @endif
 
+   
 
    
         </div>

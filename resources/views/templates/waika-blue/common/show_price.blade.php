@@ -7,8 +7,10 @@
         @if ($price == $priceFinal)
             <div class="product-price">{!! sc_currency_render($price) !!}</div>
         @else
+           
             <div class="product-price product-price-old">{!!  sc_currency_render($price) !!}</div>
+     
             <div class="product-price">{!! sc_currency_render($priceFinal) !!}</div>
         @endif
 @endswitch
-</div>    
+</div>     

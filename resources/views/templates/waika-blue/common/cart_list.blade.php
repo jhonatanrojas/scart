@@ -6,7 +6,7 @@
                 <tr style="background: #eaebec">
                     <th style="width: 50px;">No.</th>
                     <th>{{ sc_language_render('product.name') }}</th>
-                    {{-- <th>{{ sc_language_render('product.price') }}</th> --}}
+             <th>{{ sc_language_render('product.price') }}</th> 
                     <th>Cuotas</th>
                     <th>Frecuencia de pago</th>
                     <th>Inicial</th>
@@ -64,8 +64,15 @@
                             </span>
                         </a>
                     </td>
-  
-                    {{-- <td>{!! $product->showPrice() !!}</td> --}}
+                    @php
+                    $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
+                    if( $product->precio_de_cuota > 0 ):
+                    $product->precio=  $product->price-$product->monto_inicial;
+                   endif;
+               
+               
+                    @endphp
+                    <td>${!!  number_format($product->precio/$product->nro_coutas,2) !!}  </td> 
                     <td>${{$item->Cuotas}}</td>
                     <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  

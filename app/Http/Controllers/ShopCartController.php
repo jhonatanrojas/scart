@@ -767,7 +767,7 @@ class ShopCartController extends RootFrontController
         //Process escape
         $data      = sc_clean($data);
         
-
+     
 
         if(isset($data['financiamiento'])){
             $productId = $data['product_id'];
