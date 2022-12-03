@@ -467,7 +467,57 @@ if (!function_exists('sc_customer_sendmail_welcome') && !in_array('sc_customer_s
         }
     }
 }
+if (!function_exists('sc_customer_sendmail_welcome') && !in_array('sc_customer_sendmail_welcome', config('helper_except', []))) {
+    function sc_customer_sendmail_welcome(array $data)
+    {
+        if (sc_config('welcome_customer')) {
+            $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'welcome_customer')->where('status', 1)->first();
+            if ($checkContent) {
+                $content = $checkContent->text;
+                $dataFind = [
+                    '/\{\{\$title\}\}/',
+                    '/\{\{\$first_name\}\}/',
+                    '/\{\{\$last_name\}\}/',
+                    '/\{\{\$email\}\}/',
+                    '/\{\{\$phone\}\}/',
+                    '/\{\{\$password\}\}/',
+                    '/\{\{\$address1\}\}/',
+                    '/\{\{\$address2\}\}/',
+                    '/\{\{\$address3\}\}/',
+                    '/\{\{\$country\}\}/',
+                    '/\{\{\$cedula\}\}/',
+                ];
+                $dataReplace = [
+                    sc_language_render('email.welcome_customer.title'),
+                    $data['first_name'] ?? '',
+                    $data['last_name'] ?? '',
+                    $data['email'] ?? '',
+                    $data['phone'] ?? '',
+                    $data['password'] ?? '',
+                    $data['address1'] ?? '',
+                    $data['address2'] ?? '',
+                    $data['address3'] ?? '',
+                    $data['country'] ?? '',
+                    $data['cod_estado'] ?? '',
+                    $data['cod_municipio'] ?? '',
+                    $data['cod_parroquia'] ?? '',
+                    $data['cedula'] ?? '',
+                ];
+                $content = preg_replace($dataFind, $dataReplace, $content);
+                $dataView = [
+                    'content' => $content,
+                ];
 
+                $config = [
+                    'to' => $data['email'],
+                    'subject' => sc_language_render('email.welcome_customer.title'),
+                ];
+
+                sc_send_mail('templates.' . sc_store('template') . '.mail.welcome_customer', $dataView, $config, []);
+            }
+        }
+    }
+}
 /**
  * Mapping data address of customer
  *
@@ -1056,6 +1106,48 @@ function sc_order_process_after_success(string $orderID = null):array
     return $dataResponse;
 }
 
+
+function exito_biopago_email(array $data)
+{
+
+    if (sc_config('biopago_customer')) {
+        $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'biopago')->where('status', 1)->first();
+        
+        if ($checkContent) {
+            $content = $checkContent->text;
+            $dataFind = [
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$email\}\}/',
+                '/\{\{\$telefono\}\}/',
+                '/\{\{\$address1\}\}/',
+                '/\{\{\$cedula\}\}/',
+            ];
+            $dataReplace = [
+                sc_language_render('email.welcome_customer.title'),
+                $data['first_name'] ?? '',
+                $data['last_name'] ?? '',
+                $data['email'] ?? '',
+                $data['phone'] ?? '',
+                $data['address1'] ?? '',
+                $data['cedula'] ?? '',
+            ];
+            $content = preg_replace($dataFind, $dataReplace, $content);
+            $dataView = [
+                'content' => $content,
+            ];
+
+            $config = [
+                'to' => $data['email'],
+                'subject' => 'pago realizado con exito ',
+            ];
+
+           
+
+            sc_send_mail('templates.' . sc_store('template') . '.mail.welcome_customer', $dataView, $config, []);
+        }
+    }
+}
 
 
 
