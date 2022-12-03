@@ -198,7 +198,10 @@ $layout_page = shop_profile
                   @endif
 
                 @endforeach
+
+                @if(!$order->modalidad_de_compra==1)
                 <tr class="data-balance"><td>{{ sc_language_render('order.totals.balance') }}:</td><td style="text-align:right">{{ sc_currency_format($order->balance) }}</td></tr>
+                @endif
             </table>
           </div>
 
