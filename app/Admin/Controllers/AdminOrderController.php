@@ -23,6 +23,7 @@ use App\Models\Municipio;
 use App\Models\Parroquia;
 use Validator;
 use App\Models\SC__documento;
+use App\Models\SC_fecha_de_entregas;
 use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
@@ -1533,6 +1534,146 @@ class  AdminOrderController extends RootAdminController
         sc_clear_cache('cache_news');
 
         return redirect()->route('edit_convenio')->with('success', sc_language_render('action.create_success'));
+    }
+
+    public function fecha_entrega(){
+        $data = [
+            'title'         => 'Fecha de entrega',
+            'subTitle'      => '',
+            'icon'          => 'fa fa-indent',
+            'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+            'removeList'    => 1, // 1 - Enable function delete list item
+            'buttonRefresh' => 0, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+        //Process add content
+        $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'fecha de entrega'      => 'fecha de entrega',
+            'status'     => 'Status',
+            'created_at' => sc_language_render('admin.created_at'),
+            'action'     => sc_language_render('action.title'),
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword    = sc_clean(request('keyword') ?? '');
+        $arrSort = [
+            'id__desc' => sc_language_render('filter_sort.id_desc'),
+            'id__asc' => sc_language_render('filter_sort.id_asc'),
+            'first_name__desc' => sc_language_render('filter_sort.first_name_desc'),
+            'first_name__asc' => sc_language_render('filter_sort.first_name_asc'),
+            'last_name__desc' => sc_language_render('filter_sort.last_name_desc'),
+            'last_name__asc' => sc_language_render('filter_sort.last_name_asc'),
+        ];
+
+        $dataSearch = [
+            'keyword'    => $keyword,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+        ];
+        $dataTmp = SC_fecha_de_entregas::get();
+
+          
+       
+        $dataTr = [];
+        foreach ($dataTmp as $key => $row) {
+            $dataTr[$row['id']] = [
+                'fecha_entrega' => $row['fecha_entrega'],
+                'status' => $row['activo'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
+                'created_at' => $row['created_at'],
+                'action' => '
+                    <a onclick="edit_fecha(\'' . $row['id'] . '\' , \'' . $row['activo'] . '\');"  href="#"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+
+                    
+                    <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>'
+                ,
+            ];
+        }
+
+        $data['listTh'] = $listTh;
+
+        
+        $data['dataTr'] = $dataTr;
+
+        //menuRight
+        $data['menuRight'][] = '<a  href="#" class="btn  btn-success  btn-flat" title="New" id="button_create_new" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                           <i class="fa fa-plus" title="'.sc_language_render('admin.add_new').'"></i>
+                           </a>';
+        //=menuRight
+
+        //menuSort
+        $optionSort = '';
+        $data['urlSort'] = sc_route_admin('admin_customer.index', request()->except(['_token', '_pjax', 'sort_order']));
+        $data['optionSort'] = $optionSort;
+        //=menuSort
+
+        //menuSearch
+        $data['topMenuRight'][] = '
+                <form action="' . sc_route_admin('admin_customer.index') . '" id="button_search">
+                <div class="input-group input-group" style="width: 350px;">
+                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('search.placeholder') . '" value="' . $keyword . '">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                </form>';
+        //=menuSearch
+
+      
+
+        return view($this->templatePathAdmin.'screen.fecha_entrega')->with($data);
+
+    }
+
+    public function fecha_create(){
+        $data = request()->all();
+          if($data['modalidad'] == 0){
+
+            $fecha = (new SC_fecha_de_entregas);
+            $fecha-> fecha_entrega = $data['fecha_entrega'];
+            $fecha->activo = $data['stado'] ?? 0;
+
+        if($fecha->save()) return redirect()->route('fecha_entrega')->with('success', sc_language_render('action.create_success'));
+            else return redirect()->route('fecha_entrega')->with('error', 'error al crear la fecha de entrega');
+
+        }else{
+            SC_fecha_de_entregas::where('id', $data['id_fecha'])
+                ->update(
+                    [
+                        'activo' =>$data['stado'] ?? 0,
+                        'fecha_entrega' =>$data['fecha_entrega']
+                    ],
+
+                );
+
+                return redirect()->route('fecha_entrega')->with('success', sc_language_render('action.create_success'));
+                
+
+        }
+
+
+
+       
+
+    }
+
+    public function fecha_edit($id){
+        $editFechaEntrega = SC_fecha_de_entregas::where('id' ,$id)->get();
+        return response()->json(['success' => $editFechaEntrega, 'msg' => sc_language_render('action.update_success')]);
+
+    }
+
+    public function fecha_delete($id){
+
+        SC_fecha_de_entregas::where('id' ,$id)->delete();
+        return response()->json(['success' => 'eliminado', 'msg' => sc_language_render('action.update_success')]);
+
     }
 
 }
