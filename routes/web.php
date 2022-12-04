@@ -46,6 +46,19 @@ Route::get('/editar_convenio/{id}', [AdminOrderController::class,'editar_conveni
 Route::post('/create_convenio/{id}', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
 
 
+Route::controller(AdminOrderController::class)->group(function(){
+Route::get('/fecha_entrega', [AdminOrderController::class,'fecha_entrega'])->name('fecha_entrega');
+Route::get('fecha_create', [AdminOrderController::class,'fecha_create'])->name('fecha_create');
+Route::post('/fecha_edit/{id}', [AdminOrderController::class,'fecha_edit'])->name('fecha_edit');
+
+Route::post('/fecha_delete/{id}', [AdminOrderController::class,'fecha_delete'])->name('fecha_delete');
+
+
+
+});
+
+
+
 
 
 
