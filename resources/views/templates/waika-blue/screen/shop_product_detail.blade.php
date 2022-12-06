@@ -12,7 +12,9 @@ $layout_page = shop_product_detail
   @import url('https://fonts.googleapis.com/css?family=DM+Sans&display=swap');
 
 
-
+.fecha h5{
+  font-size: 2em;
+}
 
   .modal .modal-dialog{
     width: 100%;
@@ -717,6 +719,8 @@ table tfoot {
                           </tr>
                       </tfoot> --}}
                   </table>
+
+                  <div class="fecha" id="FechaEntrega"></div>
                  
                   </div>
                 </div>
@@ -746,7 +750,15 @@ table tfoot {
 
 
 
+
       <script type="text/javascript">
+
+
+
+     const user = {!! json_encode($fecha_entrega) !!};
+ 
+
+    
  
         // simulador de creditos 
         function gen_table(){
@@ -771,12 +783,48 @@ table tfoot {
       
           fechaInicio = new Date(document.getElementById('fecha').value)
           fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
-
+           
           if(fechaInicio == "Invalid Date"){
             var fechaInicio  = new Date();
             var fechaInicio = fechaInicio.toLocaleDateString('en-US');
             // obtener la fecha de hoy en formato `MM/DD/YYYY`
           }
+
+        
+
+          function fecha_cliente(fecha){
+            let fecha_cliente = fecha.replace('/',' ')
+            let result = fecha_cliente.split(" " , 2)
+            user.forEach(element => {
+
+              fecha1 = element.fecha_entrega.replace('-',' ')
+              let fecha2 = fecha1.replace('-',' ')
+              let formafecha = ""
+              fecha3 = fecha2.split(" " , 2)[1]
+              
+              if(fecha3.replace('0','') == result[1]){
+                 const FechaEntrega = document.getElementById("FechaEntrega")
+                  FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${element.fecha_entrega}</h6> `
+
+                  
+                  let revercefecha = element.fecha_entrega.split(" " , 3)
+
+                  console.log(element)
+
+              }
+ 
+            });
+
+
+           
+          
+
+          }
+
+         
+
+
+
          
 
           let periodo = selected;
@@ -814,7 +862,7 @@ table tfoot {
             let  montoTotal = monto
             let Inicial = inicial * monto / 100
             Inicial == Infinity ? Inicial = 0 : Inicial
-
+          
              
             let texto = 0;
             for(i=1;i<=n2;i++){  
@@ -832,7 +880,18 @@ table tfoot {
                     fechaPago.setMonth(fechaPago.getMonth() + 1)
                   }
                 }
+
+
+
+                
                 texto = fechaPago.toLocaleDateString()
+
+                if(!Inicial == 0){
+                  if(i == 4)fecha_cliente(texto.replace('/' ,' '))
+                }else if(i == 6)fecha_cliente(texto.replace('/' ,' '))
+                
+
+
                 monto -= cuotaTotal
                   ca=monto;
                   d1=ca.toFixed(2) ;
