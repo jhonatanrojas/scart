@@ -888,7 +888,7 @@ table tfoot {
 
                 if(!Inicial == 0){
                   if(i == 4)fecha_cliente(texto.replace('/' ,' '))
-                }else if(i == 6)fecha_cliente(texto.replace('/' ,' '))
+                }else if(i == 7)fecha_cliente(texto.replace('/' ,' '))
                 
 
 
