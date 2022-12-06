@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\ModalidadPago;
 use App\Models\Productos_cuotas;
 use App\Models\SC__documento;
+use App\Models\SC_fecha_de_entregas;
 use SCart\Core\Front\Controllers\RootFrontController;
 use App\Models\ShopProduct;
 
@@ -147,6 +148,10 @@ class ShopProductController extends RootFrontController
            }
           $modalida_pago =  ModalidadPago::all();
           $cuotas =  Productos_cuotas::where('id_producto',$product->id)->get();
+
+         $fecha_entrega  = SC_fecha_de_entregas::offset(0)->limit(12)->get();
+
+        
       
 
          
@@ -163,9 +168,10 @@ class ShopProductController extends RootFrontController
                 $this->templatePath . '.screen.shop_product_detail',
                 array(
                     'title'           => $product->name,
-                    'modalida_pago'           =>$modalida_pago,
+                    'fecha_entrega' =>     $fecha_entrega,
+                    'modalida_pago'    =>$modalida_pago,
                     'cuotas'           =>$cuotas,
-                    'mensaje'           =>"",
+                    'mensaje'          =>"",
                     'description'     => $product->description,
                     'keyword'         => $product->keyword,
                     'productId'       => $product->id,
