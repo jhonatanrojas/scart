@@ -803,29 +803,23 @@ table tfoot {
               fecha3 = fecha2.split(" " , 2)[1]
               
               if(fecha3.replace('0','') == result[1]){
-                 const FechaEntrega = document.getElementById("FechaEntrega")
-                  FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${element.fecha_entrega}</h6> `
+                  let revercefecha = element.fecha_entrega.split("" , 11)
+                  let dia , mes ,año ;
+                  dia = revercefecha[8] + revercefecha[9]
+                  mes = revercefecha[5] + revercefecha[6]
+                  año = revercefecha[0] + revercefecha[1] + revercefecha[2] + revercefecha[3]
 
+
+                  const FechaEntrega = document.getElementById("FechaEntrega")
+                  FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dia} ${mes} ${año}</h6> `
                   
-                  let revercefecha = element.fecha_entrega.split(" " , 3)
-
-                  console.log(element)
 
               }
  
             });
 
-
-           
-          
-
           }
 
-         
-
-
-
-         
 
           let periodo = selected;
           let totalPagos ,  plazo ,fechaPago;
