@@ -226,6 +226,95 @@
   </div>
 </div>
 
+ <!-- Modal detaalle pago -->
+ <div class="modal fade" id="modal_detalle_pago" tabindex="-1" role="dialog" aria-labelledby="modal_detalle_pago" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de pago #<span id="idpago"></span> </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+              <label for="forma_pago">Forma de pago</label>
+              <input id="mforma_pago" name="" required class="form-control" readonly>
+   
+              </select>  
+            </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Nro de referencia</label>
+            <input type="text" class="form-control"  required name="" id="mreferencia" placeholder="referencia" readonly>
+          </div>
+
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Fecha de pago</label>
+            <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Fecha de Vencimiento</label>
+            <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="forma_pago">Monto</label>
+            <input type="text" required class="form-control"  id="mmonto" name=""  readonly  placeholder="Monto">
+
+          </div>
+          <div class="form-group col-md-6">
+            <label for="forma_pago">Divisa</label>
+            <input type="text" required  readonly class="form-control readonly"  id="mdivisa" name=""  placeholder="divisa">
+
+           
+          </div>
+        </div>
+
+        <div class="form-row">
+       
+     
+
+          <div class="form-group col-md-6">
+         
+              <label for="forma_pago"> descargar referencia </label>
+              <a href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
+                </div>
+                <div class="form-group col-md-6">
+         
+                  <label for="forma_pago">Estatus</label>
+                  <input type="text"  id="mstatus" class="form-control" name=""  readonly required="">
+    
+                    </div>
+
+                    <div class="form-group col-md-6">
+         
+                      <label for="forma_pago">Tasa de cambio</label>
+                      <input type="text"  id="mtasa" class="form-control" readonly name="" required="" readonly>
+        
+                        </div>
+                <div class="form-group col-md-6">
+         
+                  <label for="forma_pago">Observación</label>
+                  <input type="text"  id="mobservacion" class="form-control" readonly name="" required="">
+    
+                    </div>
+        </div>
+
+
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+        
+    
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 
@@ -239,6 +328,48 @@
 
   <script type="text/javascript">
 
+function obtener_detalle_pago(id_pago){
+
+$.ajax({
+              url : '{{ sc_route_admin('obtener_pago') }}',
+              type : "get",
+              dateType:"application/json; charset=utf-8",
+              data : {
+                   id : id_pago,
+                  
+              },
+          beforeSend: function(){
+              $('#loading').show();
+          },
+          success: function(returnedData){
+         $('#modal_detalle_pago').modal('show')
+
+         var data = returnedData.data;
+
+         $("#idpago").text(data.id)
+          $("#mforma_pago").val(data.metodo)
+          $("#mreferencia").val(data.referencia)
+
+          $("#mfecha").val(data.fecha_pago)
+          $("#mvencimiento").val(data.fecha_venciento)
+          $("#mmonto").val(data.importe_pagado)
+          $("#mreferencia").val(data.referencia)
+          $("#mdivisa").val(data.moneda)
+          $("#mobservacion").val(data.comment)
+          $("#mstatus").val(data.status)
+          $("#mtasa").val(data.mtasa)
+          $("#dcomprobante").attr('href', data.comprobante)
+          
+
+          
+
+          
+              $('#loading').hide();
+              }
+          });
+      
+
+}
 $('.mostrar_estatus_pago').click(function(){
   $("#modal_estatus_pago").modal('show');
 

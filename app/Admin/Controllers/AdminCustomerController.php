@@ -82,6 +82,7 @@ class AdminCustomerController extends RootAdminController
             'keyword'    => $keyword,
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
+            'perfil'    => request('perfil') ?? '',
         ];
         $dataTmp = (new AdminCustomer)->getCustomerListAdmin($dataSearch);
         $estado = Estado::all();
