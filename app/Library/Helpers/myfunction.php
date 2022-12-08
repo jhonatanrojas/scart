@@ -1160,29 +1160,35 @@ function estatus_del_pedido(array $data)
         if ($checkContent) {
             $content = $checkContent->text;
             $dataFind = [
+                '/\{\{\$titulo\}\}/',
                 '/\{\{\$nombre\}\}/',
                 '/\{\{\$apellido\}\}/',
                 '/\{\{\$email\}\}/',
+                '/\{\{\$estatus\}\}/',
+                '/\{\{\$estatus_mensaje\}\}/',
+                '/\{\{\$numero_del_pedido\}\}/',
             ];
             $dataReplace = [
+                $data['titulo'] ?? 'Estatus del pedido',
                 $data['first_name'] ?? '',
                 $data['last_name'] ?? '',
                 $data['email'] ?? '',
-                $data['asunto'] ?? '',
-                $data['mensaje'] ?? '',
+                $data['estatus'] ?? '',
+                $data['estatus_mensaje'] ?? '',
+                $data['numero_del_pedido'] ?? '',
                
                 
             ];
             $content = preg_replace($dataFind, $dataReplace, $content);
             $dataView = [
-                'content' => $content  .  $data['mensaje'] ,
+                'content' => $content,
                
 
             ];
 
             $config = [
-                'to' => $data['email'],
-                'subject' => $data['asunto'],
+                'to' => 'rojas.rojasjohandry89@gmail.com',
+                'subject' => $data['estatus'] ?? 'Evaluación',
             ];
 
            
