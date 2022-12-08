@@ -26,6 +26,7 @@ use App\Models\SC__documento;
 use App\Models\SC_fecha_de_entregas;
 use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_shop_customer;
+use App\Models\SC_shop_order_status;
 use App\Models\shop_order_detail;
 use App\Models\ShopOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -618,6 +619,24 @@ class  AdminOrderController extends RootAdminController
         $value = request('value');
         $fecha_primer_pago = request('fecha_primer_pago');
         $ordert = AdminOrder::getOrderAdmin($id);
+
+        $estatus = SC_shop_order_status::where('id' , $value)->get();
+
+        
+
+        foreach($estatus as $estatu){
+            $Email =[
+                'first_name' =>$ordert->first_name,
+                'last_name' =>$ordert->last_name,
+                'asunto' => $estatu['name'],
+                'mensaje' => $estatu['mensaje'],
+                'email' => $ordert->email
+            ];
+
+        }
+
+       
+        estatus_del_pedido($Email);
     
 
 
