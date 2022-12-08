@@ -51,3 +51,8 @@ ALTER TABLE sc_shop_order ADD COLUMN fecha_maxima_entrega date DEFAULT NULL;
 
 ALTER TABLE sc_shop_product ADD COLUMN precio_de_cuota BOOLEAN NOT NULL DEFAULT 'false';
 ALTER TABLE sc_shop_product ADD COLUMN monto_inicial  decimal(15,2) DEFAULT '0.00';
+    
+     INSERT INTO sc_shop_order_status(id, name,mensaje) VALUES ('14','VERIFICACIÓN LEGAL','EN VERIFICACIÓN LEGAL');
+          INSERT INTO sc_shop_order_status(id, name,mensaje) VALUES ('15','VERIFICACIÓN FINANCIERA','EN VERIFICACIÓN FINANCIERA');
+                    INSERT INTO sc_shop_order_status(id, name,mensaje) VALUES ('16','PAGO RETRASADO','AGRADECEMOS REALIZAR SU PAGO A LA BREVEDAD,SU PAGO TIENE RETRASO ');
+                                        INSERT INTO sc_shop_order_status(id, name,mensaje) VALUES ('17','ENTREGA DE FINIQUITO','HA CANCELADO SU TOTALIDAD DE CUOTAS, SE ENTREGARÁ FINIQUITO PROXIMAMENTE');

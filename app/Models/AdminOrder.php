@@ -60,11 +60,25 @@ class AdminOrder extends ShopOrder
         $arrSort      = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId      = $dataSearch['storeId'] ?? '';
-
+        $perfil      = $dataSearch['perfil'] ?? '';
         $orderList = (new ShopOrder);
         
         if ($storeId) {
             $orderList = $orderList->where('store_id', $storeId);
+        }
+
+        if ($perfil) {
+
+            if($perfil=='ventas'){
+                $id_status=[1,2,3,11,13];
+
+            }else if($perfil=='riesgo'){
+                $id_status=[4,5,14,15];
+            }else if($perfil=='administracion'){
+                $id_status=[6,7,8,9,10,12,16,17];
+            }
+
+            $orderList = $orderList->whereIn('status', $id_status);
         }
 
         if ($order_status) {

@@ -112,6 +112,7 @@ class  AdminOrderController extends RootAdminController
         $from_to      = sc_clean(request('from_to') ?? '');
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
+        $perfil = sc_clean(request('perfil') ?? '');
         $arrSort = [
             'id__desc'         => sc_language_render('filter_sort.id_desc'),
             'id__asc'          => sc_language_render('filter_sort.id_asc'),
@@ -131,6 +132,7 @@ class  AdminOrderController extends RootAdminController
             'sort_order'   => $sort_order,
             'arrSort'      => $arrSort,
             'order_status' => $order_status,
+            'perfil'=> $perfil,
         ];
         $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch);
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -146,7 +148,22 @@ class  AdminOrderController extends RootAdminController
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
-     
+     if(!empty($perfil)){
+        if($perfil=='ventas'){
+            $id_status=[1,2,3,11,13];
+            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        }else if($perfil=='riesgo'){
+            $id_status=[4,5,14,15];
+            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        }else if($perfil=='administracion'){
+            $id_status=[6,7,8,9,10,12,16,17];
+            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        }else{
+            $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
+        }
+        
+       
+     }
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
