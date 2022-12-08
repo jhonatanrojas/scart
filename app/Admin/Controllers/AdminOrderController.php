@@ -622,25 +622,27 @@ class  AdminOrderController extends RootAdminController
 
         $estatus = SC_shop_order_status::where('id' , $value)->get();
 
-        
-
+        $Email = [];
         foreach($estatus as $estatu){
             $Email =[
                 'first_name' =>$ordert->first_name,
                 'last_name' =>$ordert->last_name,
-                'asunto' => $estatu['name'],
-                'mensaje' => $estatu['mensaje'],
-                'email' => $ordert->email
+                'email' => $ordert->email,
+                'estatus' => $estatu['name'],
+                'estatus_mensaje' => $estatu['mensaje'],
+                'numero_del_pedido' => $ordert->id,
+               
+                
             ];
 
         }
 
        
-        estatus_del_pedido($Email);
+        
     
 
 
-        if($code == "status" && $value == 3 && $ordert->modalidad_de_compra == 1){
+        if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
             $valorFinal = 0;
             foreach ($numeros as $numero) {
@@ -651,6 +653,11 @@ class  AdminOrderController extends RootAdminController
             }
             
         }
+
+
+        estatus_del_pedido($Email);
+
+
         $datavalor = [];
         $Evaluacion = request()->all();
         foreach($Evaluacion as $key => $valor){

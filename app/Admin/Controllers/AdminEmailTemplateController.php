@@ -305,9 +305,10 @@ class AdminEmailTemplateController extends RootAdminController
                                 '$nombre',
                                 '$apellido',
                                 '$email',
-                                '$telefono',
-                                '$direccion',
-                                '$cedula',
+                                '$estatus',
+                                '$estatus_mensaje',
+                                '$numero_del_pedido',
+                                
                                 
                             ];
                             break;
