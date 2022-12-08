@@ -1147,6 +1147,50 @@ function exito_biopago_email(array $data)
             sc_send_mail('templates.' . sc_store('template') . '.mail.welcome_customer', $dataView, $config, []);
         }
     }
+   
+}
+
+
+function estatus_del_pedido(array $data)
+
+{
+    if (sc_config('customer_estatus_del_pedido')) {
+        $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_del_pedido')->where('status', 1)->first();
+
+        if ($checkContent) {
+            $content = $checkContent->text;
+            $dataFind = [
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$email\}\}/',
+            ];
+            $dataReplace = [
+                $data['first_name'] ?? '',
+                $data['last_name'] ?? '',
+                $data['email'] ?? '',
+                $data['asunto'] ?? '',
+                $data['mensaje'] ?? '',
+               
+                
+            ];
+            $content = preg_replace($dataFind, $dataReplace, $content);
+            $dataView = [
+                'content' => $content  .  $data['mensaje'] ,
+               
+
+            ];
+
+            $config = [
+                'to' => $data['email'],
+                'subject' => $data['asunto'],
+            ];
+
+           
+
+            sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
+        }
+    }
+   
 }
 
 
