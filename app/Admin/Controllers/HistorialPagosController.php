@@ -99,6 +99,15 @@ class HistorialPagosController extends RootAdminController
         foreach ($dataTmp as $key => $row) {
 
             $order = AdminOrder::getOrderAdmin($row->order_id);
+            $btn_estatus='';
+            $btn_ver_pago_estatus='';
+            if( $row->payment_status ==2):
+                $btn_estatus='<a href="#" data-id="'.$row->id.'"><span  data-id="'.$row->id.'" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;';
+            endif;
+
+                    if($row->payment_status == 2 || $row->payment_status ==5):
+                        $btn_ver_pago_estatus=' <a href="#" onclick="obtener_detalle_pago('.$row->id.')" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>';
+                    endif;
 
             $dataTr[$row->id ] = [
                 
@@ -113,11 +122,12 @@ class HistorialPagosController extends RootAdminController
                 
                 'Creado' =>  $row->created_at->format('d/m/Y'),
          
-            
+    
                 'action' => '
-                    <a href="#" data-id="'.$row->id.'"><span  data-id="'.$row->id.'" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                '.$btn_estatus.$btn_ver_pago_estatus.'
 
                     <a target="_blank" href="'. sc_file( $row->comprobante).'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;
+                    <a href="' . sc_route_admin('admin_order.detail', ['id' =>$row->order_id ?$row->order_id : 'not-found-id']) . '"><span title="Ir al pedido" type="button" class="btn btn-flat btn-sm btn-info"><i class="fas fa-arrow-right"></i></span></a>&nbsp;
 
 
                     
