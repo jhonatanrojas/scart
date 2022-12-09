@@ -176,7 +176,7 @@
             const title = document.getElementById('exampleModalLabel');
             title.innerHTML = "Edit fecha de entrega";
             $.ajax({
-                url :`/fecha_edit/${id}`,
+                url :`{{ sc_route_admin('fecha_edit') }}/${id}`,
                 type : "post",
                 dateType:"application/json; charset=utf-8",
                 data : {
@@ -213,7 +213,7 @@
 
         function deleteItem(id){
             $.ajax({
-                url :`/fecha_delete/${id}`,
+                url :`{{ sc_route_admin('fecha_delete') }}/${id}`,
                 type : "post",
                 dateType:"application/json; charset=utf-8",
                 data : {
