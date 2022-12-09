@@ -14,7 +14,9 @@ if (function_exists('sc_product_flash')) {
         <div class="col-md-12">
             <div class="heading_tab_header">
                 <div class="heading_s2">
-                    <h2 class="wow fadeScale"><a href="{{ sc_route('flash-sale') }}" class="text_default">OFERTAS FLASH</a></h2>
+
+                    <h2 class="wow fadeScale"><a href="{{ sc_route('flash-sale') }}" class="text_default">OFERTAS ESPECIALES</a></h2>
+
                 </div>
             </div>
         </div>
@@ -58,7 +60,7 @@ if (function_exists('sc_product_flash')) {
                                 @endif
                             </div>
                             <div class="deal_progress">
-                                <span class="stock-sold">{{ sc_language_render('front.flash_sold') }}: <strong>{{ $product->pf_sold }}</strong></span>
+                     
                                 <span class="stock-available">{{ sc_language_render('front.flash_stock') }}: <strong>{{ $product->pf_stock }}</strong></span>
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="{{ round($product->pf_sold/$product->pf_stock*100) }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ round($product->pf_sold/$product->pf_stock*100) }}%"> {{ round($product->pf_sold/$product->pf_stock*100) }}% </div>

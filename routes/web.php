@@ -39,19 +39,22 @@ Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('bo
 
 
 
-Route::get('/edit_convenio', [AdminOrderController::class,'edit_convenio'])->name('edit_convenio');
+Route::get('sc_admin/edit_convenio', [AdminOrderController::class,'edit_convenio'])->name('edit_convenio');
 
-Route::get('/editar_convenio/{id}', [AdminOrderController::class,'editar_convenio'])->name('editar_convenio');
+Route::get('sc_admin/editar_convenio/{id}', [AdminOrderController::class,'editar_convenio'])->name('editar_convenio');
 
-Route::post('/create_convenio/{id}', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
+Route::post('sc_admin/create_convenio/{id}', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
 
 
+Route::get('sc_admin/order/ventas',  [AdminOrderController::class,'index'])->name('pedidos_ventas');
+Route::get('sc_admin/order/riesgo',  [AdminOrderController::class,'index'])->name('pedidos_riesgo');
+Route::get('sc_admin/order/administracion',  [AdminOrderController::class,'index'])->name('pedidos_administracion');
 Route::controller(AdminOrderController::class)->group(function(){
-Route::get('/fecha_entrega', [AdminOrderController::class,'fecha_entrega'])->name('fecha_entrega');
-Route::get('fecha_create', [AdminOrderController::class,'fecha_create'])->name('fecha_create');
-Route::post('/fecha_edit/{id}', [AdminOrderController::class,'fecha_edit'])->name('fecha_edit');
+Route::get('/sc_admin/fecha_entrega', [AdminOrderController::class,'fecha_entrega'])->name('fecha_entrega');
+Route::get('/sc_admin/fecha_create', [AdminOrderController::class,'fecha_create'])->name('fecha_create');
+Route::post('/sc_admin/fecha_edit/{id}', [AdminOrderController::class,'fecha_edit'])->name('fecha_edit');
 
-Route::post('/fecha_delete/{id}', [AdminOrderController::class,'fecha_delete'])->name('fecha_delete');
+Route::post('/sc_admin/fecha_delete/{id}', [AdminOrderController::class,'fecha_delete'])->name('fecha_delete');
 
 
 
