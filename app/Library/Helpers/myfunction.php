@@ -1187,7 +1187,7 @@ function estatus_del_pedido(array $data)
             ];
 
             $config = [
-                'to' => 'rojas.rojasjohandry89@gmail.com',
+                'to' => $data['email'] ?? '',
                 'subject' => $data['estatus'] ?? 'Evaluación',
             ];
 
