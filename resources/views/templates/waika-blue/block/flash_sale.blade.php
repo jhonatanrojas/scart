@@ -14,7 +14,9 @@ if (function_exists('sc_product_flash')) {
         <div class="col-md-12">
             <div class="heading_tab_header">
                 <div class="heading_s2">
+
                     <h2 class="wow fadeScale"><a href="{{ sc_route('flash-sale') }}" class="text_default">OFERTAS ESPECIALES</a></h2>
+
                 </div>
             </div>
         </div>
