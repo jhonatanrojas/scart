@@ -63,12 +63,18 @@ class  AdminOrderController extends RootAdminController
  
 
     /**
-     * Index interface.
+     * Index interface.w
      *
      * @return Content
      */
-    public function index()
+    public function index($perfil=false)
     {
+
+
+
+          $arr_pach= explode('/',request()->path());
+          $perfil =$arr_pach[2] ?? false;
+        
         $data = [
             'title'         => sc_language_render('order.admin.list'),
             'subTitle'      => '',
@@ -112,7 +118,7 @@ class  AdminOrderController extends RootAdminController
         $from_to      = sc_clean(request('from_to') ?? '');
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
-        $perfil = sc_clean(request('perfil') ?? '');
+   
         $arrSort = [
             'id__desc'         => sc_language_render('filter_sort.id_desc'),
             'id__asc'          => sc_language_render('filter_sort.id_asc'),
