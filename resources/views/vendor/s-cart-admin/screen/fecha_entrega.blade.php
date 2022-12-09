@@ -176,7 +176,7 @@
             const title = document.getElementById('exampleModalLabel');
             title.innerHTML = "Edit fecha de entrega";
             $.ajax({
-                url :`sc_admin/fecha_edit'${id}`,
+                url :`sc_admin/fecha_edit/${id}`,
                 type : "post",
                 dateType:"application/json; charset=utf-8",
                 data : {
