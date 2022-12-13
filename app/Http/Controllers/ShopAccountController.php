@@ -589,8 +589,21 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
+        $pago = explode("?", request('id_pago'));
+
+      
+
+        
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
+
+        // $convenio = Convenio::where('order_id', $order->id)->first()->pluck('total');
+        // dd($convenio);
+       
+
+
+
+
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         $id_pago = request('id_pago');
@@ -604,6 +617,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'           => 'Reportar pago',
                     'id_pago' => $id_pago,
+                    'lisPago' =>      $pago[1] ?? "",
 
                     'historial_pago' => $historial_pago,
                     'customer'        => $customer,
