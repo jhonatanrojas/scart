@@ -5,6 +5,7 @@ $layout_page = shop_profile
 - $statusOrder
 - $orders
 */ 
+
 @endphp
 
 @extends($sc_templatePath.'.account.layout')
@@ -53,6 +54,10 @@ $layout_page = shop_profile
             </tbody>
           </table>
         </div>
+
+        {{-- <div>
+          <button class="btn btn-primary">pagar</button>
+        </div> --}}
     </div>
     </div>
 
@@ -82,13 +87,26 @@ $layout_page = shop_profile
           <h5 class="text-center">   Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
           @endif
         </h5>
+
+        <div class="text-center">
+          @if (sc_config('customer_Transferencia'))
+          <p>
+            <strong> {{ sc_language_render('customer.Transferencia') }}</strong></p>
+          @endif
+          
+          @if (sc_config('customer_pago_movil'))
+          <p><strong> {{ sc_language_render('customer.pago_movil') }}</strong></p>
+          @endif
+
+        </div>
         <div class="card-body">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="forma_pago">Forma de pago</label>
                     <select id="forma_pago" name="forma_pago" required class="form-control">
                       @foreach($metodos_pagos as $metodo)
-                      <option value="{{ $metodo->id}}" >{{ $metodo->name}}</option>
+                      <option  value="{{ $metodo->id}}" {!! $metodo->name == $lisPago ? 'selected' :'' !!}  >{{ $metodo->name}}</option>
+                      
                     
                       @endforeach;
                     </select>  
@@ -99,6 +117,9 @@ $layout_page = shop_profile
                 <div class="form-group col-md-6">
                   <label for="inputEmail4">Nro de referencia</label>
                   <input type="text" class="form-control"  required name="referencia" id="referencia" placeholder="referencia">
+
+                 
+                
                 </div>
                 @error('referencia')
                 <small style="color: red">{{$message}}</small>
@@ -125,7 +146,9 @@ $layout_page = shop_profile
                   <label for="forma_pago">Divisa</label>
                           <select id="divisa" class="form-control" required name="moneda">
                             @foreach(sc_currency_all() as $moneda)
-                            <option  value="{{$moneda->code}}"  {!! $moneda->code =='USD' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
+                            <option  value="{{$moneda->code}}"  {!! $moneda->code =='Bs' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
+
+
                             @endforeach
 
                             
@@ -137,7 +160,7 @@ $layout_page = shop_profile
 
                 <div class="form-group col-md-6">
                   <label for="forma_pago">Tasa de cambio</label>
-                  <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="1">     
+                  <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="{{sc_currency_all()[0]->exchange_rate}}">     
                  
                 </div>   @error('tipo_cambio')
                 <small style="color: red">{{$message}}</small>
