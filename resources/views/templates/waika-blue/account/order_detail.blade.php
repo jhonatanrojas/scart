@@ -215,10 +215,10 @@ $layout_page = shop_profile
         <div class=" align-self-end ">        <a  class="btn btn-info" href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
         </div>
 
-        @endif;
+        @endif
 
       </div>
-      <table class="table box table-bordered" width="100%">
+      <table class="table w-100 m-auto  table-hover table-responsive table-bordered" width="100" >
         <thead>
           <tr>
             <th style="width: 50px;">No.</th>
@@ -250,22 +250,41 @@ $layout_page = shop_profile
             @if($order->modalidad_de_compra==1)
         <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
             @endif
-        <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-        <td><span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}</span></td>
+        <td>
+          <span class="item_21_sku">{{ $historial->importe_pagado}}</span>
+        </td>
+        <td>
+          <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}
+          </span>
+        </td>
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
-                     @if($order->modalidad_de_compra==1)
-            <td>{{ $historial->fecha_venciento}}</td>
-                @endif
+            @if($order->modalidad_de_compra==1)
+              <td>
+                {{ $historial->fecha_venciento}}
+              </td>
+            @endif
               @if($order->modalidad_de_compra==0)
         <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
                   @endif
+      
+
+        @if($order->modalidad_de_compra==1)
         <td>      
-  @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
-  <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+         
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            PAGAR
+          </button>
+        </td>
+        @else
+        <td>      
+         
+              <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
 
               <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
-      @endif
+     
         </td>
+
+            @endif
       </tr>
 
 @endforeach
@@ -274,4 +293,70 @@ $layout_page = shop_profile
       </table>
 
     </div>
+
+    <!-- Button trigger modal -->
+    <div class="modal  " id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered   " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+           
+          </div>
+
+          @if($order->modalidad_de_compra==1)
+                <div class="modal-body  d-flex justify-content-between">
+                    <div class=" ">
+                      <a href="{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}" id="butto_modal"   class="btn btn-danger">
+                        <span class="d-flex">
+                          <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
+                          Biopago BDV
+                        </span>
+                        
+    
+                      </a>
+                    </div>
+                 
+
+                      <div class=" ">
+                        <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}?Transferencia" id="butto_modal"   class="btn btn-info">
+                          <span class="d-flex">
+                            <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
+                            Tranferencia
+                          </span>
+      
+                        </a>
+                      </div>
+
+                      <div class=" ">
+                        <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}?Pago Movil" id="butto_modal"   class="btn btn-warning">
+                          <span class="d-flex">
+                            <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
+                            Pago movil
+                          </span>
+      
+                        </a>
+                      </div>
+                 
+
+            
+            
+           
+                </div>
+                @endif
+                  
+                  <div class="modal-footer mb-4">
+                    <button  type="button" class="btn btn-danger"        data-dismiss="modal">
+                      Cancelar
+                    </button>
+                    
+                  </div>
+          </div>
+          
+        </div><!-- /.modal-content -->
+      </div>
+
+    
 @endsection
+
+
+
