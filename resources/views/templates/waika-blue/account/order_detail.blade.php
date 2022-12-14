@@ -299,6 +299,7 @@ $layout_page = shop_profile
       <div class="modal-dialog modal-dialog-centered   " role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <h5>Seleccione la forma de pago</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
            
           </div>
@@ -321,7 +322,7 @@ $layout_page = shop_profile
                         <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}?Transferencia" id="butto_modal"   class="btn btn-info">
                           <span class="d-flex">
                             <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
-                            Tranferencia
+                            Transferencia
                           </span>
       
                         </a>
