@@ -218,7 +218,7 @@ $layout_page = shop_profile
         @endif
 
       </div>
-      <table class="table w-100 m-auto  table-hover table-responsive table-bordered" width="100" >
+      <table class="table   table-hover  table-bordered" >
         <thead>
           <tr>
             <th style="width: 50px;">No.</th>
@@ -260,7 +260,7 @@ $layout_page = shop_profile
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
             @if($order->modalidad_de_compra==1)
               <td>
-                {{ $historial->fecha_venciento}}
+                {{$historial->fecha_venciento}}
               </td>
             @endif
               @if($order->modalidad_de_compra==0)
@@ -280,19 +280,7 @@ $layout_page = shop_profile
 
             @endif
 
-            <td>      
-
          
-         
-              @if($order->modalidad_de_compra==0)
-              <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
-            
-                          <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
-                  @endif
-
-         
-     
-        </td>
       </tr>
 
    
