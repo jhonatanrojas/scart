@@ -268,7 +268,7 @@ $layout_page = shop_profile
                   @endif
       
 
-        @if($order->modalidad_de_compra==1)
+        @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>      
          
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
@@ -278,9 +278,9 @@ $layout_page = shop_profile
         @else
         <td>      
          
-              <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+              {{-- <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
 
-              <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
+              <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>  --}}
      
         </td>
 
