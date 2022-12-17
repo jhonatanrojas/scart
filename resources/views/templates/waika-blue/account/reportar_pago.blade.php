@@ -103,12 +103,29 @@ $layout_page = shop_profile
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="forma_pago">Forma de pago</label>
-                    <select id="forma_pago" name="forma_pago" required class="form-control">
+                    <select  id="forma_pago" name="forma_pago" required class="form-control">
+                      @if ($lisPago == 'Transferencia' || $lisPago == 'Pago Movil')
+                     
+                      @if ($lisPago == 'Transferencia')
+                      <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
+                        @else
+                        <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
+
+                      @endif
+                      
+                    
+                     
+
+                      @else
                       @foreach($metodos_pagos as $metodo)
                       <option  value="{{ $metodo->id}}" {!! $metodo->name == $lisPago ? 'selected' :'' !!}  >{{ $metodo->name}}</option>
                       
                     
                       @endforeach;
+
+                          
+                      @endif
+                     
                     </select>  
                     @error('forma_pago')
                     <small style="color: red">{{$message}}</small>

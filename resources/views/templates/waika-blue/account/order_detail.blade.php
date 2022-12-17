@@ -218,7 +218,7 @@ $layout_page = shop_profile
         @endif
 
       </div>
-      <table class="table w-100 m-auto  table-hover table-responsive table-bordered" width="100" >
+      <table class="table   table-hover  table-bordered" >
         <thead>
           <tr>
             <th style="width: 50px;">No.</th>
@@ -260,33 +260,34 @@ $layout_page = shop_profile
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
             @if($order->modalidad_de_compra==1)
               <td>
-                {{ $historial->fecha_venciento}}
+                {{$historial->fecha_venciento}}
               </td>
             @endif
               @if($order->modalidad_de_compra==0)
         <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
-                  @endif
+          @endif
       
 
-        @if($order->modalidad_de_compra==1)
+        @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>      
+        
          
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+          <button onclick="pagar({{$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
+          
         </td>
-        @else
-        <td>      
-         
-              <a href='{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="PAGAR AHORA" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
-
-              <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
-     
-        </td>
+      
+      
 
             @endif
+
+         
       </tr>
 
+      <!-- Button trigger modal -->
+
+    
 @endforeach
 
         </tbody>
@@ -294,7 +295,6 @@ $layout_page = shop_profile
 
     </div>
 
-    <!-- Button trigger modal -->
     <div class="modal  " id="myModal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered   " role="document">
         <div class="modal-content">
@@ -307,7 +307,7 @@ $layout_page = shop_profile
           @if($order->modalidad_de_compra==1)
                 <div class="modal-body  d-flex justify-content-between">
                     <div class=" ">
-                      <a href="{!! sc_route("biopago", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}" id="butto_modal"   class="btn btn-danger">
+                      <a onclick="bioPago()" id="bioPago"    class="btn btn-danger">
                         <span class="d-flex">
                           <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
                           Biopago BDV
@@ -319,7 +319,7 @@ $layout_page = shop_profile
                  
 
                       <div class=" ">
-                        <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}?Transferencia" id="butto_modal"   class="btn btn-info">
+                        <a onclick="transferencia()"  id="tranferencia"   class="btn btn-info">
                           <span class="d-flex">
                             <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
                             Transferencia
@@ -329,7 +329,7 @@ $layout_page = shop_profile
                       </div>
 
                       <div class=" ">
-                        <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ,'id_pago'=>$historial->id]) }}?Pago Movil" id="butto_modal"   class="btn btn-warning">
+                        <a id="pagoMovil" onclick="pagoMovil()"  class="btn btn-warning">
                           <span class="d-flex">
                             <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
                             Pago movil
@@ -355,9 +355,39 @@ $layout_page = shop_profile
           
         </div><!-- /.modal-content -->
       </div>
+    
+
 
     
 @endsection
 
 
+<script type="text/javascript">
+ 
+   function  pagar(id){
+    document.getElementById('tranferencia').value = id
+    document.getElementById('pagoMovil').value = id
+    document.getElementById('bioPago').value = id
+
+    }
+
+
+      function transferencia (){
+           number = document.getElementById('tranferencia').value
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${number}?Transferencia`
+        }
+
+        
+      function pagoMovil (){
+           number = document.getElementById('pagoMovil').value
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${number}?Pago Movil`
+        }
+
+        function bioPago (){
+           number = document.getElementById('bioPago').value
+          location.href=`{!! sc_route("biopago", ['id' => $order->id ,'id_pago'])!!}=${number}" `
+        }
+
+    
+</script>
 
