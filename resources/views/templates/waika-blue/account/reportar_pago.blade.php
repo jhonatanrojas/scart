@@ -84,19 +84,52 @@ $layout_page = shop_profile
        <input type="hidden" name="id_pago" value="{{ $id_pago}}">
         <h5 class="card-header">{{ $title }}
           @if($historial_pago)
-          <h5 class="text-center">   Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
+          <h5 class="text-center"> Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
           @endif
         </h5>
 
         <div class="text-center">
+          @if ($lisPago == 'Transferencia')
           @if (sc_config('customer_Transferencia'))
           <p>
-            <strong> {{ sc_language_render('customer.Transferencia') }}</strong></p>
+             {{ sc_language_render('customer.Transferencia') }}</p>
+            <p>
+               {{ sc_language_render('customer.cuenta') }}
+            </p>
+            <p>{{ sc_language_render('customer.rif') }}</p> 
+          @endif
+          @else
+          
+          <p>
+             {{ sc_language_render('customer.Transferencia') }}</p>
+            <p>
+               {{ sc_language_render('customer.cuenta') }}
+            </p>
+            <p>{{ sc_language_render('customer.rif') }}</p>
+              
           @endif
           
+          
+         @if ($lisPago == 'Pago Movil')
           @if (sc_config('customer_pago_movil'))
-          <p><strong> {{ sc_language_render('customer.pago_movil') }}</strong></p>
-          @endif
+          <p> {{ sc_language_render('customer.pago_movil') }}</p>
+          <p> {{ sc_language_render('customer.telefono') }}</p>
+          <p>
+            {{ sc_language_render('customer.rif') }}
+          </p>
+         
+         
+         @endif
+         @else
+         @if (sc_config('customer_pago_movil'))
+         <p> {{ sc_language_render('customer.pago_movil') }}</p>
+         <p> {{ sc_language_render('customer.telefono') }}</p>
+         <p>
+           {{ sc_language_render('customer.rif') }}
+       </p>
+       @endif
+         @endif
+         
 
         </div>
         <div class="card-body">
