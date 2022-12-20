@@ -111,6 +111,8 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
  ALTER TABLE sc_shop_order ADD usuario_id char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT '0';
 
+ ALTER TABLE sc_shop_customer ADD nivel VARCHAR(100) DEFAULT '';
+
  ALTER TABLE sc_shop_customer ADD estado_civil VARCHAR(100) DEFAULT 'SOLTERO(A)';
   ALTER TABLE sc_shop_order_status ADD COLUMN mensaje   varchar(255)  DEFAULT '';
   UPDATE sc_shop_order_status SET name=   'SOLICTUD REALIZADA' WHERE id =1;

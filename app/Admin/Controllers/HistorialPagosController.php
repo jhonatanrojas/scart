@@ -9,6 +9,9 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
+use App\Models\ClientLevelCalculator;
+use App\Models\SC_shop_customer;
+
 use SCart\Core\Front\Models\ShopOrderTotal;
 class HistorialPagosController extends RootAdminController
 {
@@ -607,7 +610,7 @@ class HistorialPagosController extends RootAdminController
         $balance=0;
         $pago = HistorialPago::where('id', $request->id_pago)->first();
   
-        $order = AdminOrder::getOrderAdmin( $pago->order_id);
+        $order = AdminOrder::getOrderAdmin($pago->order_id);
             if (!$order) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$pago->order_id]), 'detail' => '']);
             }
@@ -633,6 +636,23 @@ class HistorialPagosController extends RootAdminController
             $total_pagos= HistorialPago::where('order_id', $pago->order_id)
             ->where('payment_status',5)
             ->get();
+
+                            // Obtén el ID del cliente
+                    $clientId =  $order->customer_id;
+
+                    // Calcula el nivel del cliente
+                    $calculator = new ClientLevelCalculator();
+                    $level = $calculator->calculate($clientId);
+     
+                    // Obtén el cliente a partir de su ID
+                    $client = SC_shop_customer::find($clientId);
+
+                    // Actualiza el nivel del cliente
+                    $client->nivel = $level;
+
+                    // Guarda los cambios en la base de datos
+                    $client->save();
+
             foreach ($total_pagos as $key => $value) {
                 $tasa =  empty($pago->tasa_cambio) ? 1 :$pago->tasa_cambio;
                
