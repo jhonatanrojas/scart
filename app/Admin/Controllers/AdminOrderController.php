@@ -661,7 +661,9 @@ class  AdminOrderController extends RootAdminController
         }
 
 
-        estatus_del_pedido($Email);
+        if(!empty($Email)){
+            estatus_del_pedido($Email);
+        }
 
 
         $datavalor = [];
