@@ -643,11 +643,6 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-       
-        
-    
-
-
         if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
             $valorFinal = 0;
