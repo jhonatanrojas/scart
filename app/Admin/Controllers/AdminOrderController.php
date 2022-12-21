@@ -631,12 +631,12 @@ class  AdminOrderController extends RootAdminController
         $Email = [];
         foreach($estatus as $estatu){
             $Email =[
-                'first_name' =>$ordert->first_name,
-                'last_name' =>$ordert->last_name,
-                'email' => $ordert->email,
-                'estatus' => $estatu['name'],
-                'estatus_mensaje' => $estatu['mensaje'],
-                'numero_del_pedido' => $ordert->id,
+                'first_name' =>$ordert->first_name ?? '',
+                'last_name' =>$ordert->last_name ?? '',
+                'email' => $ordert->email ?? '',
+                'estatus' => $estatu['name'] ?? '',
+                'estatus_mensaje' => $estatu['mensaje'] ?? '',
+                'numero_del_pedido' => $ordert->id ?? '',
                
                 
             ];
