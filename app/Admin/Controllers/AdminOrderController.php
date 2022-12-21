@@ -631,22 +631,17 @@ class  AdminOrderController extends RootAdminController
         $Email = [];
         foreach($estatus as $estatu){
             $Email =[
-                'first_name' =>$ordert->first_name,
-                'last_name' =>$ordert->last_name,
-                'email' => $ordert->email,
-                'estatus' => $estatu['name'],
-                'estatus_mensaje' => $estatu['mensaje'],
-                'numero_del_pedido' => $ordert->id,
+                'first_name' =>$ordert->first_name ?? '',
+                'last_name' =>$ordert->last_name ?? '',
+                'email' => $ordert->email ?? '',
+                'estatus' => $estatu['name'] ?? '',
+                'estatus_mensaje' => $estatu['mensaje'] ?? '',
+                'numero_del_pedido' => $ordert->id ?? '',
                
                 
             ];
 
         }
-
-       
-        
-    
-
 
         if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
@@ -661,7 +656,9 @@ class  AdminOrderController extends RootAdminController
         }
 
 
-        estatus_del_pedido($Email);
+        if(!empty($Email)){
+            estatus_del_pedido($Email);
+        }
 
 
         $datavalor = [];

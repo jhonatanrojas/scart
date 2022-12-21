@@ -474,7 +474,7 @@ class ShopAccountController extends RootFrontController
                     'orders'      => (new ShopOrder)->profile()->getData(),
                     'customer'    => $customer,
                     'order'    => $Order_resultado,
-                    'productoDetail' => $productoDetail,
+                    'productoDetail' => $productoDetail ?? '',
                     'combenio'    => $Combenio,
                     'referencia'    => $referencia,
                     'layout_page' => 'shop_profile',
