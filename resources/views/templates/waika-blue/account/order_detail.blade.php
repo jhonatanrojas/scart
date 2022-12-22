@@ -121,7 +121,11 @@ $layout_page = shop_profile
                     if($item->abono_inicial > "0.00"){
                       $totalinicial=(number_format($item->abono_inicial)*$item->total_price)/100;
                       $monto = $item->total_price - $totalinicial;
+                      $number1 =$monto;
+                      if($item->nro_coutas>0)
                       $number1 =  $monto/$item->nro_coutas;
+                    
+
                       $cuotas = number_format($number1,2 ,',', ' ') ;
 
                     }
