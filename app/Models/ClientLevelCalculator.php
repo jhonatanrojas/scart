@@ -28,7 +28,7 @@ class ClientLevelCalculator
         } elseif ($payments >= 9) {
             return 'BRONCE';
         } else {
-            return '';
+            return 'CERTIFICADO';
         }
     }
 

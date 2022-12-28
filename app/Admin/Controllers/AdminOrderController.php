@@ -508,9 +508,14 @@ class  AdminOrderController extends RootAdminController
 
         
         $order = AdminOrder::getOrderAdmin($id);
-  
-      
-       
+
+        $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
+
+        if(!empty($clasificacion)){
+            $Clasificacion =  $clasificacion[0]['nivel'];
+        }
+
+
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
@@ -555,6 +560,7 @@ class  AdminOrderController extends RootAdminController
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
                 'convenio'=>$convenio,
+                'clasificacion' => $Clasificacion ?? '',
                 "order" => $order,
                 'historial_pagos'=>$historialPagos,
                 "modalidad_pago" =>  $modalidad_pago,
