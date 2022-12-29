@@ -30,7 +30,7 @@
                  
                
                                   
-               
+                  
                   @php  $dblockconvenio="display:none;";   @endphp
                   @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==5 )
                   @php  $dblockconvenio="display:block;";   @endphp
@@ -86,14 +86,10 @@
                     @if (!$order->modalidad_de_compra == 0)
                     <td> Convenio</td>
                     <td>
-                     
-                       
+
 
                         {{ ($convenio) ? str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT)  :'No se ha parametrizado el convenio'}}
-                     
-                      
-                     
-                     
+
                     </td>
                     @endif
                   </tr>
@@ -219,6 +215,21 @@
                       <td class="td-title">Creado Por:</td>
                       <td>
                         {{ $order->usuario}}
+                      </td>
+
+                   
+                    </tr>
+
+                    <tr>
+                      <td class="td-title">Clasificacion:</td>
+                      <td>
+                        @if (!empty($clasificacion))
+                            {{$clasificacion}}
+                            @else
+                            <span class="text-info">No ah
+                              realizado el primer pago</span>
+                            
+                        @endif
                       </td>
 
                    

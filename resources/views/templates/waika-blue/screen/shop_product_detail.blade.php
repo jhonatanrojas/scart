@@ -392,30 +392,31 @@ table tfoot {
                 {{--// Show price --}}
 
                 <hr class="hr-gray-100">
-                <div class="row  text-center align-items-center">
+                
                  
-                  
+                  <div class="d-flex justify-content-center">
 
-                  <div  class="   col-12 col-md-6 ">
+                    @if (sc_config('customer_pagar_al_contado'))
+                  <div  class="m-2">
                   
                     <button onclick="validachecke1()" id="descotado" class="btn btn-info btn-lg p-3"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
+                        
+                   
 
                    
                    
                   </div>
-                  <div class="  col-12 col-md-6">
+                  @endif
+                  <div class="m-2">
 
                     <button id="finansiamiento" onclick="validachecke2(); gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
 
-                   
-                     
-       
-                   
                   </div>
 
-                 
+                  </div>
+                  
 
-                </div>
+               
                 <div>
                   <p class="text-danger" id="msg"></p>
                 </div>
