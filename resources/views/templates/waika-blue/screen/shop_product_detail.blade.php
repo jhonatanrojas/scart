@@ -392,30 +392,31 @@ table tfoot {
                 {{--// Show price --}}
 
                 <hr class="hr-gray-100">
-                <div class="row  text-center align-items-center">
+                
                  
-                  
+                  <div class="d-flex justify-content-center">
 
-                  <div  class="   col-12 col-md-6 ">
+                    @if (sc_config('customer_pagar_al_contado'))
+                  <div  class="m-2">
                   
                     <button onclick="validachecke1()" id="descotado" class="btn btn-info btn-lg p-3"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
+                        
+                   
 
                    
                    
                   </div>
-                  <div class="  col-12 col-md-6">
+                  @endif
+                  <div class="m-2">
 
                     <button id="finansiamiento" onclick="validachecke2(); gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
 
-                   
-                     
-       
-                   
                   </div>
 
-                 
+                  </div>
+                  
 
-                </div>
+               
                 <div>
                   <p class="text-danger" id="msg"></p>
                 </div>
@@ -709,15 +710,7 @@ table tfoot {
                           
                       </thead>
                       </tbody>
-                      {{-- <tfoot>
-                          <tr>
-                              <td>TOTAL</td>
-                              <td id="t1"></td>
-                              <td id="t3"></td>
-                              <td id="t4"></td>
-                              
-                          </tr>
-                      </tfoot> --}}
+                      
                   </table>
 
                   <div class="fecha" id="FechaEntrega"></div>
@@ -792,33 +785,49 @@ table tfoot {
 
         
 
-          function fecha_cliente(fecha){
-            let fecha_cliente = fecha.replace('/',' ')
-            let result = fecha_cliente.split(" " , 2)
-            user.forEach(element => {
+          // function fecha_cliente(fecha){
+          //   let fecha_cliente = fecha.replace('/',' ')
+          //   let result = fecha_cliente.split(" " , 2)
+          //   user.forEach(element => {
 
-              fecha1 = element.fecha_entrega.replace('-',' ')
-              let fecha2 = fecha1.replace('-',' ')
-              let formafecha = ""
-              fecha3 = fecha2.split(" " , 2)[1]
+          //     fecha1 = element.fecha_entrega.replace('-',' ')
+          //     let fecha2 = fecha1.replace('-',' ')
+          //     let formafecha = ""
+          //     fecha3 = fecha2.split(" " , 2)[1]
               
-              if(fecha3.replace('0','') == result[1]){
-                  let revercefecha = element.fecha_entrega.split("" , 11)
-                  let dia , mes ,año ;
-                  dia = revercefecha[8] + revercefecha[9]
-                  mes = revercefecha[5] + revercefecha[6]
-                  año = revercefecha[0] + revercefecha[1] + revercefecha[2] + revercefecha[3]
+          //     if(fecha3.replace('0','') == result[1]){
+          //         let revercefecha = element.fecha_entrega.split("" , 11)
+          //         let dia , mes ,año ;
+          //         dia = revercefecha[8] + revercefecha[9]
+          //         mes = revercefecha[5] + revercefecha[6]
+          //         año = revercefecha[0] + revercefecha[1] + revercefecha[2] + revercefecha[3]
 
 
-                  const FechaEntrega = document.getElementById("FechaEntrega")
-                  FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dia} ${mes} ${año}</h6> `
+          //         const FechaEntrega = document.getElementById("FechaEntrega")
+          //         FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dia} ${mes} ${año}</h6> `
                   
 
-              }
+          //     }
  
-            });
+          //   });
 
+          // }
+        function fecha_cliente(fecha) {
+          let fecha_cliente = fecha.replace(/[/-]/g, ' ');
+          let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
+
+          user.forEach(element => {
+          let [año, mesEntrega, diaEntrega] = element.fecha_entrega.split('-').map(x => parseInt(x));
+
+            if (mesEntrega === mes) {
+            let date = new Date(año, mesEntrega - 1, diaEntrega);
+            let dateString = date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+
+            const FechaEntrega = document.getElementById("FechaEntrega");
+            FechaEntrega.innerHTML = `<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dateString}</h6> `
           }
+        });
+      }
 
 
           let periodo = selected;

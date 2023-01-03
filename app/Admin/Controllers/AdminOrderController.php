@@ -30,6 +30,7 @@ use App\Models\SC_shop_order_status;
 use App\Models\shop_order_detail;
 use App\Models\ShopOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
@@ -154,15 +155,19 @@ class  AdminOrderController extends RootAdminController
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
+
+        // dd( $user = Admin::user());
+        
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,11,13];
-            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+            $id_status=[1,2,3,4,11,13];
+            $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+            // dd($this->statusOrder);
         }else if($perfil=='riesgo'){
             $id_status=[4,5,14,15];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else if($perfil=='administracion'){
-            $id_status=[6,7,8,9,10,12,16,17];
+            $id_status=[6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else{
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
@@ -508,9 +513,14 @@ class  AdminOrderController extends RootAdminController
 
         
         $order = AdminOrder::getOrderAdmin($id);
-  
-      
-       
+
+        $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
+
+        if(!empty($clasificacion)){
+            $Clasificacion =  $clasificacion[0]['nivel'];
+        }
+
+
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
@@ -555,6 +565,7 @@ class  AdminOrderController extends RootAdminController
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
                 'convenio'=>$convenio,
+                'clasificacion' => $Clasificacion ?? '',
                 "order" => $order,
                 'historial_pagos'=>$historialPagos,
                 "modalidad_pago" =>  $modalidad_pago,
@@ -631,22 +642,17 @@ class  AdminOrderController extends RootAdminController
         $Email = [];
         foreach($estatus as $estatu){
             $Email =[
-                'first_name' =>$ordert->first_name,
-                'last_name' =>$ordert->last_name,
-                'email' => $ordert->email,
-                'estatus' => $estatu['name'],
-                'estatus_mensaje' => $estatu['mensaje'],
-                'numero_del_pedido' => $ordert->id,
+                'first_name' =>$ordert->first_name ?? '',
+                'last_name' =>$ordert->last_name ?? '',
+                'email' => $ordert->email ?? '',
+                'estatus' => $estatu['name'] ?? '',
+                'estatus_mensaje' => $estatu['mensaje'] ?? '',
+                'numero_del_pedido' => $ordert->id ?? '',
                
                 
             ];
 
         }
-
-       
-        
-    
-
 
         if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
@@ -661,7 +667,10 @@ class  AdminOrderController extends RootAdminController
         }
 
 
-        estatus_del_pedido($Email);
+        if(!empty($Email)){
+            estatus_del_pedido($Email);
+            
+        }
 
 
         $datavalor = [];
@@ -1633,7 +1642,7 @@ class  AdminOrderController extends RootAdminController
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
             $dataTr[$row['id']] = [
-                'fecha_entrega' => $row['fecha_entrega'],
+                'fecha_entrega' => Carbon::parse($row['fecha_entrega'])->toFormattedDateString(),
                 'status' => $row['activo'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
                 'created_at' => $row['created_at'],
                 'action' => '

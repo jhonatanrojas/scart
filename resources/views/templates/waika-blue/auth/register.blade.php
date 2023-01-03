@@ -2,7 +2,15 @@
 
 @section('block_main')
 <!--form-->
+
+
+
+
 <section class="p-0 section section-sm section-first bg-default text-md-left">
+
+
+
+
     <div class="container">
         
           <div class="card-body w-100 ">

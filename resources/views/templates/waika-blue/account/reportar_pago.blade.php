@@ -84,31 +84,81 @@ $layout_page = shop_profile
        <input type="hidden" name="id_pago" value="{{ $id_pago}}">
         <h5 class="card-header">{{ $title }}
           @if($historial_pago)
-          <h5 class="text-center">   Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
+          <h5 class="text-center"> Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
           @endif
         </h5>
 
         <div class="text-center">
+          @if ($lisPago == 'Transferencia')
           @if (sc_config('customer_Transferencia'))
           <p>
-            <strong> {{ sc_language_render('customer.Transferencia') }}</strong></p>
+             {{ sc_language_render('customer.Transferencia') }}</p>
+            <p>
+               {{ sc_language_render('customer.cuenta') }}
+            </p>
+            <p>{{ sc_language_render('customer.rif') }}</p> 
+          @endif
+          @else
+          
+          <p>
+             {{ sc_language_render('customer.Transferencia') }}</p>
+            <p>
+               {{ sc_language_render('customer.cuenta') }}
+            </p>
+            <p>{{ sc_language_render('customer.rif') }}</p>
+              
           @endif
           
+          
+         @if ($lisPago == 'Pago Movil')
           @if (sc_config('customer_pago_movil'))
-          <p><strong> {{ sc_language_render('customer.pago_movil') }}</strong></p>
-          @endif
+          <p> {{ sc_language_render('customer.pago_movil') }}</p>
+          <p> {{ sc_language_render('customer.telefono') }}</p>
+          <p>
+            {{ sc_language_render('customer.rif') }}
+          </p>
+         
+         
+         @endif
+         @else
+         @if (sc_config('customer_pago_movil'))
+         <p> {{ sc_language_render('customer.pago_movil') }}</p>
+         <p> {{ sc_language_render('customer.telefono') }}</p>
+         <p>
+           {{ sc_language_render('customer.rif') }}
+       </p>
+       @endif
+         @endif
+         
 
         </div>
         <div class="card-body">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="forma_pago">Forma de pago</label>
-                    <select id="forma_pago" name="forma_pago" required class="form-control">
+                    <select  id="forma_pago" name="forma_pago" required class="form-control">
+                      @if ($lisPago == 'Transferencia' || $lisPago == 'Pago Movil')
+                     
+                      @if ($lisPago == 'Transferencia')
+                      <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
+                        @else
+                        <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
+
+                      @endif
+                      
+                    
+                     
+
+                      @else
                       @foreach($metodos_pagos as $metodo)
                       <option  value="{{ $metodo->id}}" {!! $metodo->name == $lisPago ? 'selected' :'' !!}  >{{ $metodo->name}}</option>
                       
                     
                       @endforeach;
+
+                          
+                      @endif
+                     
                     </select>  
                     @error('forma_pago')
                     <small style="color: red">{{$message}}</small>

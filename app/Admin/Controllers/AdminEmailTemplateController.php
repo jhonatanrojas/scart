@@ -313,6 +313,23 @@ class AdminEmailTemplateController extends RootAdminController
                             ];
                             break;
 
+                            case 'estatus_de_pago':
+                                $list = [
+                                    '$titulo',
+                                    '$nombre',
+                                    '$apellido',
+                                    '$email',
+                                    '$estatus',
+                                    '$estatus_mensaje',
+                                    '$numero_del_pedido',
+                                    '$numero_referencia',
+                                    '$fecha_venciento',
+                                    '$evaluacion',
+                                    
+                                    
+                                ];
+                                break;
+
                         
             default:
                 # code...
@@ -332,7 +349,8 @@ class AdminEmailTemplateController extends RootAdminController
             'contact_to_admin' => sc_language_render('email.admin.contact_to_admin'),
             'other' => sc_language_render('email.admin.other'),
             'biopago' => 'biopago',
-            'estatus_del_pedido' => 'estatus_del_pedido',
+            'estatus_del_pedido' => 'estatus del pedido',
+            'estatus_de_pago' => 'estatus de pago',
             
         ];
     }
