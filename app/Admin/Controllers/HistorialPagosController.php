@@ -614,19 +614,42 @@ class HistorialPagosController extends RootAdminController
 
        
         $estatus_pago = array(
-            '1' => 'No pagado',
-            '2' => 'Pago reportado',
-            '3' => 'Pago Pendiente',
-            '4' => 'Pago en mora',
-            '5' => 'Pagado'
+            '1' => 'NO APAGADO',
+            '2' => 'PAGO REPORTADO',
+            '3' => 'PAGO PENDIENTE',
+            '4' => 'PAGO EN MORA',
+            '5' => 'PAGADO'
           );
-          
-          $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
-            
-       
+
+        //   $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
+
+        //   dd($estatus_pago);
+
+        switch ($data['estatus_pagos']) {
+            case 1:
+                $Estatus = 'NO APAGADO';
+                break;
+
+            case 2:
+                $Estatus = 'PAGO REPORTADO';
+                break;
+
+            case 3:
+                $Estatus = 'PAGO PENDIENTE';
+                break;
+            case 4:
+                $Estatus = 'PAGO EN MORA';
+                break;
+            case 5:
+                $Estatus = 'PAGADO';
+                break;
+
+            default:
+                # code...
+                break;
+        }
 
 
-       
         $historial = [
             'first_name' => $client->first_name,
             'first_name' => $client->last_name,
@@ -635,7 +658,8 @@ class HistorialPagosController extends RootAdminController
             'numero_del_pedido' => $pago->order_id,
             'numero_referencia' => $pago->referencia,
             'fecha_venciento' => $pago->fecha_venciento,
-            'evaluacion' => $pago->comment
+            'observacion' => $pago->comment , 
+            'id_del_pago' =>$pago->customer_id
         ];
         
             estatus_de_pago($historial);
