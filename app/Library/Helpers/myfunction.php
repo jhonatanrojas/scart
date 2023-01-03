@@ -1223,13 +1223,14 @@ function estatus_de_pago(array $data)
                 '/\{\{\$evaluacion\}\}/',
             ];
             $dataReplace = [
-                $data['titulo'] ?? 'estatus de pago',
+                $data['titulo'] ?? 'ESTATUS DE PAGO',
                 $data['first_name'] ?? '',
                 $data['last_name'] ?? '',
                 $data['email'] ?? '',
                 $data['estatus'] ?? '',
-                $data['estatus_mensaje'] ?? '',
+                $data['estatus_mensaje'] ?? '', 
                 $data['numero_del_pedido'] ?? '',
+                $data['numero_referencia'] ?? '',
                 $data['fecha_venciento'] ?? '',
                 $data['evaluacion'] ?? '',
                
@@ -1246,12 +1247,9 @@ function estatus_de_pago(array $data)
 
             $config = [
                 'to' => $data['email'],
-                'subject' => $data['estatus'] ?? 'Estatus de pago',
+                'subject' => $data['estatus'] ?? 'ESTATUS DE PAGO',
             ];
 
-            
-
-           
 
             sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
         }

@@ -1180,11 +1180,14 @@ class  AdminOrderController extends RootAdminController
                         }
                     }
 
+                    // $cod_bolibares = array_column($Moneda_CAMBIOBS, 'exchange_rate', 'name')['Bolivares'];
+
                 $borrado_html = [];
                 if($abono_inicial <= "0.00"){
-                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+                    $borrado_html = Sc_plantilla_convenio::firstWhere('id', 1)->where('name', 'sin_inicial')->get();
                     }else{
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
+                        $borrado_html = Sc_plantilla_convenio::firstWhere('id', 2)->where('name', 'con_inicial')->get();
+                        // $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
                     }
 
 
@@ -1221,10 +1224,7 @@ class  AdminOrderController extends RootAdminController
                   }
 
                   $number2 =  $monto*$cod_bolibares;
-
-                  
                  
-                    
 
                 foreach($borrado_html as $replacee){
                     $dataFind = [
@@ -1252,6 +1252,9 @@ class  AdminOrderController extends RootAdminController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
+                        'cod_logo',
+                        
+                        
                     ];
 
                    
@@ -1280,10 +1283,14 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'cod_logo' => resource_path('img/image1.jpg'),
+                        
+                        
                         
                     ];
             
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
+                    // $plantilla_convenio = str_replace($dataFind, $dataReplace, $borrado_html);
                 }
                 
                 

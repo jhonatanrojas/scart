@@ -9,6 +9,98 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>BORRADOR-DEL-CONVENIO</title>
   <style type="text/css">
+      *{
+        font-weight: 800;
+      }
+      body{
+                position: relative;
+                z-index: 6;
+                box-sizing: border-box;
+                height: 200vh;
+            }
+            .borrador{
+                padding: 15px;
+                max-width: 85%;
+                widows: 100%;
+                margin: auto;
+                border:solid 1px  #00000027;
+            }
+            .borrador p{
+                font-weight: 400;
+            }
+        .imge_fondo1{
+             position: absolute;
+             z-index: 2;
+            widows: 100%;
+            left: 0;
+            right: 0;
+            top: 15%;
+
+
+                }
+            .imge_fondo2{
+             position: absolute;
+             z-index: 2;
+            widows: 100%;
+            left: 0;
+            right: 0;
+            top: 20%;
+
+
+                }
+            .imge_fondo3{
+             position: absolute;
+             z-index: 2;
+            widows: 100%;
+            left: 0;
+            right: 0;
+            top: 25%;
+
+
+                }
+            .imge_fondo4{
+             position: absolute;
+             z-index: 2;
+            widows: 100%;
+            left: 0;
+            right: 0;
+            top: 5%;
+
+
+                }
+        p {
+            z-index: 10;
+        }
+
+        .imge_fondo1 img {
+        opacity: 0.10;
+        text-align: center;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        }
+        .imge_fondo2 img {
+        opacity: 0.10;
+        text-align: center;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        }
+        .imge_fondo3 img {
+        opacity: 0.10;
+        text-align: center;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        }
+
+        .imge_fondo4 img {
+        opacity: 0.10;
+        text-align: center;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        }
   
  @import url('https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLRsouVV5-SL296k9ebaLqDAi3mGSbiyB1G0vnE2IRwro');.lst-kix_gzed8ezbexe9-3>
    li:before{content:"\0025cf  "}.lst-kix_gzed8ezbexe9-1>li:before{content:"o  "}.lst-kix_gzed8ezbexe9-5>li:before{content:"\0025aa  "}.lst-kix_gzed8ezbexe9-0>li:before{content:"-  "}.lst-kix_gzed8ezbexe9-4>li:before{content:"o  "}.lst-kix_gzed8ezbexe9-7>li:before{content:"o  "}ul.lst-kix_gzed8ezbexe9-8{list-style-type:none}ul.lst-kix_gzed8ezbexe9-7{list-style-type:none}ul.lst-kix_gzed8ezbexe9-6{list-style-type:none}ul.lst-kix_gzed8ezbexe9-5{list-style-type:none}ul.lst-kix_gzed8ezbexe9-4{list-style-type:none}.lst-kix_gzed8ezbexe9-6>li:before{content:"\0025cf  "}ul.lst-kix_gzed8ezbexe9-3{list-style-type:none}ul.lst-kix_gzed8ezbexe9-2{list-style-type:none}ul.lst-kix_gzed8ezbexe9-1{list-style-type:none}ul.lst-kix_gzed8ezbexe9-0{list-style-type:none}.lst-kix_gzed8ezbexe9-8>li:before{content:"\0025aa  "}.lst-kix_qh5w1x1aq8c4-8>li:before{content:"\0025aa  "}ul.lst-kix_qh5w1x1aq8c4-0{list-style-type:none}.lst-kix_qh5w1x1aq8c4-7>li:before{content:"o  "}.lst-kix_qh5w1x1aq8c4-6>li:before{content:"\0025cf  "}.lst-kix_qh5w1x1aq8c4-4>li:before{content:"o  "}ul.lst-kix_qh5w1x1aq8c4-7{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-8{list-style-type:none}.lst-kix_qh5w1x1aq8c4-3>li:before{content:"\0025cf  "}.lst-kix_qh5w1x1aq8c4-5>li:before{content:"\0025aa  "}ul.lst-kix_qh5w1x1aq8c4-5{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-6{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-3{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-4{list-style-type:none}li.li-bullet-0:before{margin-left:-18pt;white-space:nowrap;display:inline-block;min-width:18pt}ul.lst-kix_qh5w1x1aq8c4-1{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-2{list-style-type:none}.lst-kix_qh5w1x1aq8c4-0>li:before{content:"-  "}.lst-kix_qh5w1x1aq8c4-1>li:before{content:"o  "}.lst-kix_qh5w1x1aq8c4-2>li:before{content:"\0025aa  "}.lst-kix_gzed8ezbexe9-2>li:before{content:"\0025aa  "}ol{margin:0;padding:0}table td,table th{padding:0}.c1{-webkit-text-decoration-skip:none;color:#000000;font-weight:800;text-decoration:underline;vertical-align:baseline;text-decoration-skip-ink:none;font-size:11pt;font-family:"Euphemia";font-style:normal}.c4{margin-left:212.4pt;padding-top:0pt;text-indent:35.4pt;line-height:1.0791666666666666;orphans:2;widows:2;text-align:left;height:11pt}.c23{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Nanum Gothic";font-style:normal}.c6{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:left;height:11pt}.c5{padding-top:0pt;padding-bottom:0pt;line-height:1.5;orphans:2;widows:2;text-align:justify}.c14{padding-top:0pt;line-height:1.0791666666666666;orphans:2;widows:2;text-align:left}.c22{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left}.c21{padding-top:0pt;padding-bottom:0pt;line-height:1.5;orphans:2;widows:2;text-align:center}.c24{color:#ff0000;text-decoration:none;vertical-align:baseline;font-size:11pt;font-style:normal}.c2{color:#000000;text-decoration:none;vertical-align:baseline;font-size:11pt;font-style:normal}
@@ -33,7 +125,15 @@
                 border-bottom: 1px black solid;
 
             }.c15{padding:0;margin:0}
-            .c20{color:inherit;text-decoration:inherit}.c9{font-weight:400;font-family:"Calibri"}.c17{font-weight:700;font-family:"Calibri"}.c11{margin-left:36pt;padding-left:0pt}.c13{background-color:#ffff00}.c16{color:#0563c1}.c10{background-color:#00ffff}.c12{page-break-after:avoid}.c7{height:11pt}.c19{margin-left:18pt}.c26{margin-left:36pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}
+            .c20{color:inherit;text-decoration:inherit}.c9{font-weight:400;font-family:"Calibri"}.c17{font-weight:700;font-family:"Calibri"}.c11{margin-left:36pt;padding-left:0pt}.c13{background-color:#ffff00}.c16{color:#0563c1}.c10{background-color:#00ffff}.c12{page-break-after:avoid}.c7{height:11pt}.c19{margin-left:18pt}.c26{margin-left:36pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.17;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}
+            p{
+                margin:0;
+                color:#000000;
+                font-size:18px;
+                font-weight: 600;
+                /* color: rebeccapurple; */
+            }
+            h1{padding-top:20pt;color:#000000;font-size:25pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}
 
             .d-flex{
                 display: flex;
@@ -63,17 +163,18 @@
         }
   </style>
 </head>
-<body class="c18 doc-content">
-    <div class=" d-flex align-items-center justify-content-between">
-        <div class="col-8">
-            <img width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
-        </div>
+<body class="container">
+    <div style="text-align: center; margin:auto;" class=" ">
         
-         <div  class="col-6">
-            <h3>BORRADOR DEL CONVENIO</h3>
-         </div>
+            <img width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
+            <h3 style=" text-align: center;"  class="text-center">BORRADOR DEL CONVENIO</h3>
+        
+
+       
+       
      </div>
-    <div>{!!$borrado_html!!}</div>
+     <div  class="borrador">{!!$borrado_html!!}</div>
+    
 </body>
 
 
