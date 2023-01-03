@@ -219,9 +219,13 @@ class ShopAccountController extends RootFrontController
             }
         }
 
-        if (!isset($documento[0]['id_usuario']) == $id) {
+       
+
+        if (!empty($documento[0]['id_usuario']) == $id) {
             $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
         } else $dato = "";
+
+        // dd($dato);
 
 
         sc_check_view($this->templatePath . '.account.index');

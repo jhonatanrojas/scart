@@ -1200,5 +1200,65 @@ function estatus_del_pedido(array $data)
 }
 
 
+function estatus_de_pago(array $data)
+
+{
+
+   
+    if (sc_config('customer_estatus_de_pago')) {
+        $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_de_pago')->where('status', 1)->first();
+
+        if ($checkContent) {
+            $content = $checkContent->text;
+            $dataFind = [
+                '/\{\{\$titulo\}\}/',
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$email\}\}/',
+                '/\{\{\$estatus\}\}/',
+                '/\{\{\$estatus_mensaje\}\}/',
+                '/\{\{\$numero_del_pedido\}\}/',
+                '/\{\{\$numero_referencia\}\}/',
+                '/\{\{\$fecha_venciento\}\}/',
+                '/\{\{\$evaluacion\}\}/',
+            ];
+            $dataReplace = [
+                $data['titulo'] ?? 'estatus de pago',
+                $data['first_name'] ?? '',
+                $data['last_name'] ?? '',
+                $data['email'] ?? '',
+                $data['estatus'] ?? '',
+                $data['estatus_mensaje'] ?? '',
+                $data['numero_del_pedido'] ?? '',
+                $data['fecha_venciento'] ?? '',
+                $data['evaluacion'] ?? '',
+               
+                
+            ];
+            $content = preg_replace($dataFind, $dataReplace, $content);
+            $dataView = [
+                'content' => $content,
+               
+
+            ];
+
+           
+
+            $config = [
+                'to' => $data['email'],
+                'subject' => $data['estatus'] ?? 'Estatus de pago',
+            ];
+
+            
+
+           
+
+            sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
+        }
+    }
+   
+}
+
+
 
 
