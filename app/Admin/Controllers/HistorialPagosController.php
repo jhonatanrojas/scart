@@ -609,6 +609,39 @@ class HistorialPagosController extends RootAdminController
 
         $balance=0;
         $pago = HistorialPago::where('id', $request->id_pago)->first();
+        // Obtén el cliente a partir de su ID
+        $client = SC_shop_customer::find($pago->customer_id);
+
+       
+        $estatus_pago = array(
+            '1' => 'No pagado',
+            '2' => 'Pago reportado',
+            '3' => 'Pago Pendiente',
+            '4' => 'Pago en mora',
+            '5' => 'Pagado'
+          );
+          
+          $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
+            
+       
+
+
+       
+        $historial = [
+            'titulo' => $pago->comment,
+            'first_name' => $client->first_name,
+            'first_name' => $client->last_name,
+            'estatus' => $Estatus,
+            'email' => $client->email,
+            'customer_id' => $pago->customer_id,
+            'numero_del_pedido' => $pago->order_id,
+            'fecha_venciento' => $pago->fecha_venciento,
+            'numero_referencia' => $pago->referencia,
+            'evaluacion' => $pago->comment
+        ];
+        
+            estatus_de_pago($historial);
+        
   
         $order = AdminOrder::getOrderAdmin($pago->order_id);
             if (!$order) {

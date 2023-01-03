@@ -152,7 +152,7 @@ class ShopProductController extends RootFrontController
          $fecha_entrega  = SC_fecha_de_entregas::offset(0)->limit(12)->get();
 
         
-      
+
 
          
 
