@@ -1220,7 +1220,8 @@ function estatus_de_pago(array $data)
                 '/\{\{\$numero_del_pedido\}\}/',
                 '/\{\{\$numero_referencia\}\}/',
                 '/\{\{\$fecha_venciento\}\}/',
-                '/\{\{\$evaluacion\}\}/',
+                '/\{\{\$observacion\}\}/',
+                '/\{\{\$id_del_pago\}\}/',
             ];
             $dataReplace = [
                 $data['titulo'] ?? 'ESTATUS DE PAGO',
@@ -1232,7 +1233,8 @@ function estatus_de_pago(array $data)
                 $data['numero_del_pedido'] ?? '',
                 $data['numero_referencia'] ?? '',
                 $data['fecha_venciento'] ?? '',
-                $data['evaluacion'] ?? '',
+                $data['observacion'] ?? '',
+                $data['id_del_pago'] ?? '',
                
                 
             ];
