@@ -1223,14 +1223,14 @@ function estatus_de_pago(array $data)
                 '/\{\{\$evaluacion\}\}/',
             ];
             $dataReplace = [
-                $data['titulo'] ?? 'estatus de pago',
                 $data['first_name'] ?? '',
                 $data['last_name'] ?? '',
                 $data['email'] ?? '',
                 $data['estatus'] ?? '',
-                $data['estatus_mensaje'] ?? '',
+                $data['estatus_mensaje'] ?? '', 
                 $data['numero_del_pedido'] ?? '',
                 $data['fecha_venciento'] ?? '',
+                $data['numero_referencia'] ?? '',
                 $data['evaluacion'] ?? '',
                
                 
@@ -1246,7 +1246,7 @@ function estatus_de_pago(array $data)
 
             $config = [
                 'to' => $data['email'],
-                'subject' => $data['estatus'] ?? 'Estatus de pago',
+                'subject' => $data['estatus'] ?? 'ESTATUS DE PAGO',
             ];
 
 
