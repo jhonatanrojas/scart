@@ -1229,8 +1229,8 @@ function estatus_de_pago(array $data)
                 $data['estatus'] ?? '',
                 $data['estatus_mensaje'] ?? '', 
                 $data['numero_del_pedido'] ?? '',
-                $data['fecha_venciento'] ?? '',
                 $data['numero_referencia'] ?? '',
+                $data['fecha_venciento'] ?? '',
                 $data['evaluacion'] ?? '',
                
                 

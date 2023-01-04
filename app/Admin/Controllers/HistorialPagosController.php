@@ -633,8 +633,8 @@ class HistorialPagosController extends RootAdminController
             'email' => $client->email,
             'estatus' => $Estatus,
             'numero_del_pedido' => $pago->order_id,
-            'fecha_venciento' => $pago->fecha_venciento,
             'numero_referencia' => $pago->referencia,
+            'fecha_venciento' => $pago->fecha_venciento,
             'evaluacion' => $pago->comment
         ];
         
