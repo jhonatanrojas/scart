@@ -1223,6 +1223,7 @@ function estatus_de_pago(array $data)
                 '/\{\{\$evaluacion\}\}/',
             ];
             $dataReplace = [
+                $data['titulo'] ?? 'ESTATUS DE PAGO',
                 $data['first_name'] ?? '',
                 $data['last_name'] ?? '',
                 $data['email'] ?? '',
