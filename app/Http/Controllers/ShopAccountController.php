@@ -1117,9 +1117,10 @@ class ShopAccountController extends RootFrontController
 
                 $borrado_html = [];
                 if($abono_inicial <= "0.00"){
-                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+                    $borrado_html = Sc_plantilla_convenio::firstWhere('id', 1)->where('name', 'sin_inicial')->get();
                     }else{
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
+                        $borrado_html = Sc_plantilla_convenio::firstWhere('id', 2)->where('name', 'con_inicial')->get();
+                        // $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
                     }
 
 
@@ -1182,6 +1183,7 @@ class ShopAccountController extends RootFrontController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
+                        'cod_logo'
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1208,6 +1210,7 @@ class ShopAccountController extends RootFrontController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        // 'cod_logo' => '/images/image1.jpg',
                         
                     ];
             
@@ -1215,17 +1218,17 @@ class ShopAccountController extends RootFrontController
                 }
                 
 
-            //     return view($this->templatePath.'.screen.borrador_pdf',
-            //     ['borrado_html'=>$resultado],
+                return view($this->templatePath.'.screen.borrador_pdf',
+                ['borrado_html'=>$resultado],
                 
-            // );
-            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
-                    ['borrado_html'=> $resultado],
+            );
+            // $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+            //         ['borrado_html'=> $resultado],
                 
 
-                    )->setOptions(['defaultFont' => 'sans-serif']);
+            //         )->setOptions(['defaultFont' => 'sans-serif']);
 
-                    return $pdf->stream();
+            //         return $pdf->stream();
 
     }
 

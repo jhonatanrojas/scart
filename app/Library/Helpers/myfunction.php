@@ -1249,9 +1249,6 @@ function estatus_de_pago(array $data)
                 'subject' => $data['estatus'] ?? 'Estatus de pago',
             ];
 
-            
-
-           
 
             sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
         }
