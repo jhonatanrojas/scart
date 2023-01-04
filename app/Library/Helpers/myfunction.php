@@ -1188,7 +1188,7 @@ function estatus_del_pedido(array $data)
 
             $config = [
                 'to' => $data['email'],
-                'subject' => $data['estatus'] ?? 'Evaluación',
+                'subject' => 'ESTATUS DEl PAGO',
             ];
 
            
