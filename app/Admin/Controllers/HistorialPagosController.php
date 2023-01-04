@@ -620,13 +620,36 @@ class HistorialPagosController extends RootAdminController
             '4' => 'PAGO EN MORA',
             '5' => 'PAGADO'
           );
-          
-          $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
-            
-       
+
+        //   $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
+
+        //   dd($estatus_pago);
+
+        switch ($data['estatus_pagos']) {
+            case 1:
+                $Estatus = 'NO APAGADO';
+                break;
+
+            case 2:
+                $Estatus = 'PAGO REPORTADO';
+                break;
+
+            case 3:
+                $Estatus = 'PAGO PENDIENTE';
+                break;
+            case 4:
+                $Estatus = 'PAGO EN MORA';
+                break;
+            case 5:
+                $Estatus = 'PAGADO';
+                break;
+
+            default:
+                # code...
+                break;
+        }
 
 
-       
         $historial = [
             'first_name' => $client->first_name,
             'first_name' => $client->last_name,
