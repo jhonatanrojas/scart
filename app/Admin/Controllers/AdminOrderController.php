@@ -1095,13 +1095,13 @@ class  AdminOrderController extends RootAdminController
                 }
 
 
-                $data = [
-                    'borrado_html' => $plantilla->convenio,
-                    'convenio' => $plantilla['nro_convenio'],
-                ];
-                $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
+                // $data = [
+                //     'borrado_html' => $plantilla->convenio,
+                //     'convenio' => $plantilla['nro_convenio'],
+                // ];
+                // $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
                 
-                return $pdf->stream();
+                // return $pdf->stream();
                 
 
                 // return $pdf->download('invoice.pdf');
