@@ -146,14 +146,12 @@
       </style>
     </head>
     <body class="c18 doc-content">
-        
-     
 
 
         <div class=" d-flex align-items-center justify-content-between">
-            <div class="col-8">
+            {{-- <div class="col-8">
                 <img width="100px"  class="img12" alt="logo" src="{!!resource_path('img/image1.jpg')!!}" >
-            </div>
+            </div> --}}
             
              <div  class="col-6">
                 <h3>N° CONVENIO :{{$convenio}}</h3>
@@ -165,4 +163,3 @@
     </body>
     </html>
 
-    
