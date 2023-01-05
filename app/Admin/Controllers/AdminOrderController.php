@@ -1082,7 +1082,7 @@ class  AdminOrderController extends RootAdminController
 
 
     // 
-                public function downloadPdf($id)
+             public function downloadPdf($id)
             {
                 $user = Admin::user();
                 if ($user === null) {
@@ -1296,7 +1296,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        
+
                         
                     ];
             
