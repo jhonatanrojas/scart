@@ -1082,7 +1082,7 @@ class  AdminOrderController extends RootAdminController
 
 
     // 
-                public function downloadPdf($id)
+             public function downloadPdf($id)
             {
                 $user = Admin::user();
                 if ($user === null) {
@@ -1095,16 +1095,25 @@ class  AdminOrderController extends RootAdminController
                 }
 
 
-                $data = [
-                    'borrado_html' => $plantilla->convenio,
-                    'convenio' => $plantilla['nro_convenio'],
-                ];
-                $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
+                // $data = [
+                //     'borrado_html' => $plantilla->convenio,
+                //     'convenio' => $plantilla['nro_convenio'],
+                // ];
+                // $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
                 
-                return $pdf->stream();
+                // return $pdf->stream();
                 
 
                 // return $pdf->download('invoice.pdf');
+
+                
+                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+                    ['borrado_html'=> $plantilla->convenio],
+                    ['convenio'=> $plantilla['nro_convenio'] ],
+
+                    );
+
+                    return $pdf->stream();
             }
 
 
@@ -1296,7 +1305,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        
+
                         
                     ];
             
