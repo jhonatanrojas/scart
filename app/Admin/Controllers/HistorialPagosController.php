@@ -579,16 +579,7 @@ class HistorialPagosController extends RootAdminController
                     }
                     
 
-                // $borrado_html = [];
-                // if($abono_inicial <= "0.00" && $dato_usuario['natural_jurídica'] == 'N'){
-                //     $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
-                //     }else if($abono_inicial > "0.00" && $dato_usuario['natural_jurídica'] == 'N'){
-                //         $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
-                //     }else if($abono_inicial > "0.00" && $dato_usuario['natural_jurídica'] == 'J'){
-                //         $borrado_html = Sc_plantilla_convenio::where('id' , 3)->first()->where('name','persona_juridica')->get();
-                //     }else if($abono_inicial <= "0.00" && $dato_usuario['natural_jurídica'] == 'J'){
-                //         $borrado_html = Sc_plantilla_convenio::where('id' , 3)->first()->where('name','persona_juridica')->get();
-                //     }
+       
                 $borrado_html = [];
 
                 
@@ -666,6 +657,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
+                        'logo_waika'
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -692,6 +684,7 @@ class HistorialPagosController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'logo_waika' => resource_path('img/image1.jpg')
                         
                     ];
             

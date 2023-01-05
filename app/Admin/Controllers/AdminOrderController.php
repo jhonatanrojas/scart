@@ -1297,6 +1297,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         
+                        
                     ];
             
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
