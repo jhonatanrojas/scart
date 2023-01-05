@@ -2,6 +2,8 @@
 
 @section('main')
 
+
+
  
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -49,6 +51,16 @@
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
+                </div>
+                      
+                  @endif
+                  {{-- @php
+                    dd();
+                  @endphp --}}
+
+                  @if ($order->total >0  && !empty($convenio))
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Editar convenio</span></a>
                 </div>
                       
                   @endif
@@ -797,9 +809,12 @@
       
     </div><!-- /.modal-content -->
   </div>
+
+  
  
         <input  name="qty" type="hidden"  value="1" min="1" max="100">
         <input  name="financiamiento" type="hidden"  value="1"  max="100">
+        <input  name="id_usuario" type="hidden"  value="{{$order->customer_id}}" >
 </form><!-- /.modal-dialog -->
       <div class="row">
   

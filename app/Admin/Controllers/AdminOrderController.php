@@ -1081,228 +1081,33 @@ class  AdminOrderController extends RootAdminController
     }
 
 
+    // 
     public function downloadPdf($id)
-    {
-
-        $user = Admin::user();
-        if ($user === null) {
-            return 'inicia secion';
-        }
-
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
-        $order = ShopOrder::where('id',$id)->get();
-        $letraconvertir_nuber = new NumeroLetra;
-
-        if (!$order) {
-            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
-        }
-
-        $convenio = Convenio::where('order_id',$id)->first();
-
-        
-        
-        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
-        $result = $usuario->all();
-        $productoDetail = shop_order_detail::where('order_id' , $id)->get();
-        $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
-        $nombreProduct = [];
-        $fecha_maxima_entrega = [];
-        $cuotas = [];
-        $abono_inicial = [];
-        $id_modalidad_pago = [];
-        foreach($productoDetail as $key => $p){
-            $nombreProduct = $p->name;
-            $cuotas = $p->nro_coutas;
-            $abono_inicial = $p->abono_inicial;
-            $id_modalidad_pago = $p->id_modalidad_pago;
-            $fecha_maxima_entrega = $p->fecha_maxima_entrega;
-        }
-        
-
-        $nombreEstado=[];
-        $nombreparroquias =[];
-        $nombremunicipos =[];
-        foreach($result as $c){
-            foreach($estado as $estados){
-           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
-
-                foreach($municipio as $municipos){
-                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
-                }
-                foreach($parroquia as $parroquias){
-                    if($parroquias->codigomunicipio == $c['cod_municipio']){
-                        $nombreparroquias = $parroquias->nombre;}
-                }
-              
-            }
-
-            $dato_usuario = [
-                'subtotal' => $c['subtotal'],
-                'natural_jurídica' => $c['natural_jurídica'],
-                'razon_social' => $c['razon_social'],
-                'rif' => $c['rif'],
-                'first_name' => $c['first_name'],
-                'last_name' => $c['last_name'],
-                'phone' => $c['phone'],
-                'email' => $c['email'],
-                'address1' => $c['address1'],
-                'cedula' => $c['cedula'],
-                'cod_estado' => $nombreEstado ,
-                'cod_municipio' => $nombremunicipos,
-                'cod_parroquia' => $nombreparroquias,
-                'estado_civil' => $c['estado_civil'],
-                
-                [
-        
-                    'subtotal'=> $order[0]['subtotal'],
-                    'cantidaProduc'=> $cantidaProduc,
-                    'nombreProduct'=> $nombreProduct,
-                    'cuotas' => $cuotas,
-                    'abono_inicial' => $abono_inicial,
-                    'id_modalidad_pago' => $id_modalidad_pago
-
-                ]
-
-            ];
-
-
-        }
-
-            
-            
-
-                    $Moneda_CAMBIOBS = sc_currency_all();
-                    foreach($Moneda_CAMBIOBS as $cambio){
-                        if($cambio->name == "Bolivares"){
-                           $cod_bolibares =  $cambio->exchange_rate;
-                        }
-                    }
-
-                    // $cod_bolibares = array_column($Moneda_CAMBIOBS, 'exchange_rate', 'name')['Bolivares'];
-
-                $borrado_html = [];
-                if($abono_inicial <= "0.00"){
-                    $borrado_html = Sc_plantilla_convenio::firstWhere('id', 1)->where('name', 'sin_inicial')->get();
-                    }else{
-                        $borrado_html = Sc_plantilla_convenio::firstWhere('id', 2)->where('name', 'con_inicial')->get();
-                        // $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
-                    }
-
-
-                $pieces = explode(" ", $dato_usuario['cedula']);
-                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
-                    $mesualQuinsena = "MENSUAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-                }else {
-                    $mesualQuinsena = " QUINCENAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y 30 DE CADA MES";
-                } 
-                if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
-                    else $Nacionalidad = "Extranjer(A)"; 
-
-               
-
-                
-                $monto = $dato_usuario[0]['subtotal'];
-                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                
-                $cuotas = number_format($dato_usuario[0]['cuotas']);
-                if($convenio->inicial>0 &&  !$abono_inicial <= "0.00"){
-                    $totalinicial=(number_format($dato_usuario[0]['abono_inicial'])*$dato_usuario[0]['subtotal'])/100;
-
-                    $monto = $dato_usuario[0]['subtotal'] - $totalinicial;
-    
-                    $number1 =  $monto/$dato_usuario[0]['cuotas'];
-
-                    
-                    $cuotas = number_format($number1,2 ,',', ' ') ;
-                    
-                    $number2 =  $monto*$cod_bolibares;
-                   
-                  }
-
-                  $number2 =  $monto*$cod_bolibares;
-                 
-
-                foreach($borrado_html as $replacee){
-                    $dataFind = [
-                        'cod_nombre',
-                        'cod_apellido',
-                        'cod_direccion',
-                        'cod_estado',
-                        'cod_municipio',
-                        'cod_parroquia',
-                        'cod_Cedula',
-                        'cod_estado_civil',
-                        'cod_Nacionalidad',
-                        'cod_modalidad_pago',
-                        'cod_dia',
-                        'cod_cuotas',
-                        'Cod_Cuota_total',
-                        'Cod_cuotas_entre_precio_text',
-                        'cod_mespago',
-                        'cod_fecha_entrega',
-                        'cod_subtotal',
-                        'cod_bolivar_text',
-                        'cod_bolibares',
-                        'nombreProduct',
-                        'cod_telefono',
-                        'cod_email',
-                        'cod_doreccion',
-                        'cod_fecha_actual',
-                        'cod_logo',
-                        
-                        
-                    ];
-
-                   
-                    $dataReplace = [
-                        $dato_usuario['first_name'],
-                        $dato_usuario['last_name'],
-                        $dato_usuario['address1'],
-                        $dato_usuario['cod_estado'],
-                        $dato_usuario['cod_municipio'],
-                        $dato_usuario['cod_parroquia'],
-                        $dato_usuario['cedula'],
-                        $dato_usuario['estado_civil'],
-                        'cod_Nacionalidad'=> $Nacionalidad,
-                        'cod_modalidad_pago' => $mesualQuinsena,
-                        'cod_dia'=> $letraconvertir_nuber->decenass($dato_usuario[0]['cuotas']),
-                        'cod_cuotas' =>$dato_usuario[0]['cuotas'],
-                        'Cod_Cuota_total'=> $cuotas,
-                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
-                        'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
-                        $monto ,
-                        'cod_bolivar_text'=> $letraconvertir_nuber->convertir2($number2),
-                        'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
-                        $dato_usuario[0]['nombreProduct'] ,
-                        $dato_usuario['phone'],
-                        $dato_usuario['email'],
-                        $dato_usuario['address1'],
-                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'cod_logo' => resource_path('img/image1.jpg'),
-                        
-                        
-                        
-                    ];
-            
-                    $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
-                    // $plantilla_convenio = str_replace($dataFind, $dataReplace, $borrado_html);
-                }
-                
-                
-
-                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
-                    ['borrado_html'=> $resultado],
-                    ['convenio'=> $convenio['nro_convenio'] ],
-
-                    );
-
-                    return $pdf->stream();
+{
+    $user = Admin::user();
+    if ($user === null) {
+        return 'inicia secion';
     }
+
+    $plantilla = Convenio::where('order_id', $id)->first();
+    if (!$plantilla) {
+        return 'No se encontró la plantilla';
+    }
+
+
+    $data = [
+        'borrado_html' => $plantilla->convenio,
+        'convenio' => $plantilla['nro_convenio'],
+    ];
+    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);;
+    
+
+    return $pdf->download('invoice.pdf');
+}
+
+
+
+
 
     public function borrador_pdf($id){
 
@@ -1327,10 +1132,10 @@ class  AdminOrderController extends RootAdminController
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
         $nombreProduct = [];
-        $fecha_maxima_entrega = [];
         $cuotas = [];
         $abono_inicial = [];
         $id_modalidad_pago = [];
+
         foreach($productoDetail as $key => $p){
             $nombreProduct = $p->name;
             $cuotas = $p->nro_coutas;
@@ -1527,14 +1332,11 @@ class  AdminOrderController extends RootAdminController
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
             'icon'              => 'fa fa-plus',
-            
-            
-            
+
         ];
 
         return view($this->templatePathAdmin.'screen.edit_convenio')
             ->with($data);
-        
 
     }
 
@@ -1561,10 +1363,36 @@ class  AdminOrderController extends RootAdminController
             ->with($data);
     }
 
+    public function editar_convenio_cliente($id){
+
+        $borrado_html =  Convenio::where('order_id',$id)->first();
+        // dd($borrado_html->convenio);
+
+
+
+        $news = [];
+        $data = [
+            'title'             => "Editar convenio ",
+            'id_convenio'          => $id,
+            'borrado_html'          =>$borrado_html,
+            'title_description' => sc_language_render('admin.news.add_new_des'),
+            'icon'              => 'fa fa-plus',
+            'languages'         => $this->languages,
+            'news'              => $news,
+            'url_action'        => sc_route_admin('admin_news.create'),
+        ];
+
+
+        return view($this->templatePathAdmin.'screen.editar_convenio')
+            ->with($data);
+    }
+
+
 
     public function postCreate_convenio($id)
     {
         $data = request()->all();
+
         $dataDes = [];
         $languages = $this->languages;
         foreach ($languages as $code => $value) {
@@ -1576,26 +1404,30 @@ class  AdminOrderController extends RootAdminController
             ];
         }
 
-        $dataDes = sc_clean($dataDes, ['content'], true);
+            $dataDes = sc_clean($dataDes, ['content'], true);
 
        
             if($id == "1"){
 
-                
                 Sc_plantilla_convenio::where('id' ,1)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
 
-                
 
-            } 
-            if($id == "2"){
+            } else if($id == "2"){
 
-                
                 Sc_plantilla_convenio::where('id' , 2)->where('code', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+            }else if($id == "3"){
+                Sc_plantilla_convenio::where('id' , 3)->where('code', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+            }else{
+                Convenio::where('order_id',$id)->update(['convenio' => $data['descriptions'][$code]['content']]);
+
+                sc_clear_cache('cache_news');
+                return redirect()->route('admin_order.detail', ['id' => $id ? $id : 'not-found-id'])->with('success', 'convenio editado con exito');
+               
+                
+
             }
-       
 
 
-    
         sc_clear_cache('cache_news');
 
         return redirect()->route('edit_convenio')->with('success', sc_language_render('action.create_success'));

@@ -1,5 +1,6 @@
 @extends($templatePathAdmin.'layout')
 
+
 @section('main')
 <div class="row">
 
@@ -45,7 +46,7 @@
                                 <textarea id="{{ $code }}__content" class="editor"
                                     name="descriptions[{{ $code }}][content]">
 
-                                        {{ old('descriptions.'.$code.'.content',($borrado_html[0]['contenido']??'')) }}
+                                        {{ old('descriptions.'.$code.'.content',($borrado_html[0]['contenido']??$borrado_html->convenio)) }}
 
                                         
 
