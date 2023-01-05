@@ -29,11 +29,22 @@
 
                                         Sin iniacial
 
-                                    @else
-                                        Con incial
                                         
                                     @endif
+                                    @if ($plantilla->name == "con_inicial")
+
+                                    Con iniacial
+
+                                    
+                                @endif
+
+                                    @if ($plantilla->name == "persona_juridica")
+
+                                       Persona juridica
+                                    @endif
                                 </td>
+
+                                
                                 <td><span class="badge badge-success">ON</span></td>
                                 <td>
                     <a href="{{ route('editar_convenio', ['id' => $plantilla->id]) }}"><span title="action.admin.edit" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;

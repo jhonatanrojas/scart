@@ -43,6 +43,8 @@ Route::get('sc_admin/edit_convenio', [AdminOrderController::class,'edit_convenio
 
 Route::get('sc_admin/editar_convenio/{id}', [AdminOrderController::class,'editar_convenio'])->name('editar_convenio');
 
+Route::get('sc_admin/editar_plantilla/{id}', [AdminOrderController::class,'editar_convenio_cliente'])->name('editar_convenio_cliente');
+
 Route::post('sc_admin/create_convenio/{id}', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
 
 
