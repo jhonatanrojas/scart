@@ -1082,28 +1082,28 @@ class  AdminOrderController extends RootAdminController
 
 
     // 
-    public function downloadPdf($id)
-{
-    $user = Admin::user();
-    if ($user === null) {
-        return 'inicia secion';
-    }
+                public function downloadPdf($id)
+            {
+                $user = Admin::user();
+                if ($user === null) {
+                    return 'inicia secion';
+                }
 
-    $plantilla = Convenio::where('order_id', $id)->first();
-    if (!$plantilla) {
-        return 'No se encontró la plantilla';
-    }
+                $plantilla = Convenio::where('order_id', $id)->first();
+                if (!$plantilla) {
+                    return 'No se encontró la plantilla';
+                }
 
 
-    $data = [
-        'borrado_html' => $plantilla->convenio,
-        'convenio' => $plantilla['nro_convenio'],
-    ];
-    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);;
-    
+                $data = [
+                    'borrado_html' => $plantilla->convenio,
+                    'convenio' => $plantilla['nro_convenio'],
+                ];
+                $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
+                
 
-    return $pdf->download('invoice.pdf');
-}
+                return $pdf->download('invoice.pdf');
+            }
 
 
 
