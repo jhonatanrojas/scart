@@ -1101,8 +1101,10 @@ class  AdminOrderController extends RootAdminController
                 ];
                 $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
                 
+                return $pdf->stream();
+                
 
-                return $pdf->download('invoice.pdf');
+                // return $pdf->download('invoice.pdf');
             }
 
 
@@ -1322,12 +1324,14 @@ class  AdminOrderController extends RootAdminController
         if ($user === null) {
             return 'inicia secion';
         }
+        $convenio_cliente = true;
 
     
         $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->get();
 
         $data = [
-            'title'             => "Edit Convenio ",
+            'title'             => "Editar plantilla ",
+            'convenio_cliente' => $convenio_cliente,
             'subTitle'          => '',
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
@@ -1343,13 +1347,16 @@ class  AdminOrderController extends RootAdminController
     public function editar_convenio($id){
 
         $borrado_html = Sc_plantilla_convenio::where('id' , $id)->get();
+        $convenio_cliente = true;
+       
 
         
 
         $news = [];
         $data = [
-            'title'             => "Editar convenio ",
+            'title'             => "Editar plantilla ",
             'id_convenio'          => $id,
+            'convenio_cliente' => $convenio_cliente,
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
             'icon'              => 'fa fa-plus',
@@ -1367,12 +1374,16 @@ class  AdminOrderController extends RootAdminController
 
         $borrado_html =  Convenio::where('order_id',$id)->first();
         // dd($borrado_html->convenio);
+        $convenio_cliente = false;
+
+       
 
 
 
         $news = [];
         $data = [
-            'title'             => "Editar convenio ",
+            'title'             => "convenio del cliente ",
+            'convenio_cliente' => $convenio_cliente,
             'id_convenio'          => $id,
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),

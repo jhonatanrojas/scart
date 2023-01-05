@@ -66,6 +66,7 @@
 
 
 
+                        @if ($convenio_cliente)
                         <div class="form-group row">
                             <div class="col-sm-12">Soporte de variables:</div>
                             <div class="col-sm-8">
@@ -101,6 +102,8 @@
                                 </div>                                   
                             </div>
                         </div>
+                            
+                        @endif
 
                         
 
