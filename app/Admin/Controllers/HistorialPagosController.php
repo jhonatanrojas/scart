@@ -632,6 +632,7 @@ class HistorialPagosController extends RootAdminController
                     
 
                 foreach($borrado_html as $replacee){
+            
                     $dataFind = [
                         'cod_nombre',
                         'cod_apellido',
@@ -657,7 +658,8 @@ class HistorialPagosController extends RootAdminController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
-                        'logo_waika'
+                        'logo_waika',
+                        'logo_global'
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -684,7 +686,8 @@ class HistorialPagosController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'logo_waika' => resource_path('img/image1.jpg')
+                        'logo_waika' => resource_path('img/image1.jpg'),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) 
                         
                     ];
             
