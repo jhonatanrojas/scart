@@ -148,13 +148,7 @@
     <body class="c18 doc-content">
 
 
-        <div class=" d-flex align-items-center justify-content-between">
-           
-            
-             <div  class="col-6">
-                <h3>N° CONVENIO :{{$convenio}}</h3>
-             </div>
-         </div>
+        
        
             {!!$borrado_html!!}
        
