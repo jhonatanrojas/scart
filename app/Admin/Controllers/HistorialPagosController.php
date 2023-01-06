@@ -662,6 +662,9 @@ class HistorialPagosController extends RootAdminController
                         'logo_global',
                         'cod_numero_combenio'
                     ];
+
+                    $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+
                     $dataReplace = [
                         $dato_usuario['first_name'],
                         $dato_usuario['last_name'],
@@ -689,7 +692,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => '123456'
+                        'cod_numero_combenio' => $nro_convenio
                         
                     ];
             
