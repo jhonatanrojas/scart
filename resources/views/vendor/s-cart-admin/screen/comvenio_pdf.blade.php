@@ -143,6 +143,9 @@
             float: left;
             
         }
+        #logo_fondo{
+            display: block;
+        }
       </style>
     </head>
     <body class="c18 doc-content">
