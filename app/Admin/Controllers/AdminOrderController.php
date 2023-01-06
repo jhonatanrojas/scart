@@ -1311,8 +1311,8 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'logo_waika' =>resource_path('img/image1.jpg'),
+                        'logo_global' =>resource_path('img/image1.jpg') ,
                         'cod_numero_combenio' => $nro_convenio = "0000"
 
                         
@@ -1320,6 +1320,7 @@ class  AdminOrderController extends RootAdminController
             
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
                 }
+               
                 
                 
 
@@ -1327,11 +1328,15 @@ class  AdminOrderController extends RootAdminController
             //     ['borrado_html'=>$resultado],
                 
             // );
-            $pdf = Pdf::loadView($this->templatePathAdmin.'screen.borrador_pdf', 
-                    ['borrado_html'=> $resultado],
-                
+            // $pdf = Pdf::loadView($this->templatePathAdmin.'screen.borrador_pdf', 
+            //         ['borrado_html'=> $resultado]);
 
-                    )->setOptions(['defaultFont' => 'sans-serif']);
+            //         return $pdf->stream();
+
+            $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+                    ['borrado_html'=> $resultado]
+
+                    );
 
                     return $pdf->stream();
 
