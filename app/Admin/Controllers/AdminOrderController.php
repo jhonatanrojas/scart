@@ -1105,6 +1105,15 @@ class  AdminOrderController extends RootAdminController
                 
 
                 // return $pdf->download('invoice.pdf');
+
+                
+                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+                    ['borrado_html'=> $plantilla->convenio],
+                    ['convenio'=> $plantilla['nro_convenio'] ],
+
+                    );
+
+                    return $pdf->stream();
             }
 
 
