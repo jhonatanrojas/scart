@@ -1318,7 +1318,7 @@ class  AdminOrderController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>resource_path('img/image1.jpg'),
                         'logo_global' =>resource_path('img/image1.jpg') ,
-                        'cod_numero_combenio' => $nro_convenio = "0000"
+                        'cod_numero_combenio' => $nro_convenio = "no aplica"
 
                         
                     ];
