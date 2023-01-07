@@ -1320,6 +1320,7 @@ class  AdminOrderController extends RootAdminController
             
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
                 }
+               
                 
                 
 
@@ -1327,11 +1328,15 @@ class  AdminOrderController extends RootAdminController
             //     ['borrado_html'=>$resultado],
                 
             // );
-            $pdf = Pdf::loadView($this->templatePathAdmin.'screen.borrador_pdf', 
-                    ['borrado_html'=> $resultado],
-                
+            // $pdf = Pdf::loadView($this->templatePathAdmin.'screen.borrador_pdf', 
+            //         ['borrado_html'=> $resultado]);
 
-                    )->setOptions(['defaultFont' => 'sans-serif']);
+            //         return $pdf->stream();
+
+            $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+                    ['borrado_html'=> $resultado]
+
+                    );
 
                     return $pdf->stream();
 
