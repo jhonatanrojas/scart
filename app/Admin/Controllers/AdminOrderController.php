@@ -1216,11 +1216,16 @@ class  AdminOrderController extends RootAdminController
                     }
 
                 $borrado_html = [];
-                if($abono_inicial <= "0.00"){
-                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
-                    }else{
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
-                    }
+                switch ($dato_usuario['natural_jurídica']) {
+                    case 'N':
+                        $borrado_html = $abono_inicial > 0
+                            ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                            : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                        break;
+                    case 'J':
+                        $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
+                        break;
+                }
 
 
                 $pieces = explode(" ", $dato_usuario['cedula']);
