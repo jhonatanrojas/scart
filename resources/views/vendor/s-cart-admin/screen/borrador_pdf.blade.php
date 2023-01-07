@@ -61,6 +61,9 @@
             border: solid black 1px;
             float: left;
         }
+        * img{
+            display: none;
+        }
   </style>
 </head>
 <body class="c18 doc-content">
