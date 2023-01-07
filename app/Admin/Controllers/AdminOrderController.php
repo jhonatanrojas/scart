@@ -1189,6 +1189,7 @@ class  AdminOrderController extends RootAdminController
                 'cod_parroquia' => $nombreparroquias,
                 'estado_civil' => $c['estado_civil'],
                 
+                
                 [
         
                     'subtotal'=> $order[0]['subtotal'],
@@ -1279,7 +1280,12 @@ class  AdminOrderController extends RootAdminController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
+                        'logo_waika',
+                        'logo_global',
+                        'cod_numero_combenio'
                     ];
+
+                    $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT); 
                     $dataReplace = [
                         $dato_usuario['first_name'],
                         $dato_usuario['last_name'],
@@ -1305,6 +1311,9 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_numero_combenio' => $nro_convenio = "0000"
 
                         
                     ];

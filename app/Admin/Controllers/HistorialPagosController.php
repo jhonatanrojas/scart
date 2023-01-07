@@ -692,7 +692,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio
+                        'cod_numero_combenio' => $nro_convenio 
                         
                     ];
             
