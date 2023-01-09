@@ -265,7 +265,7 @@
 @endphp
 
 
-
+<form id="form-add-item" action="" method="">
 
       @csrf
       <input type="hidden" name="order_id"  value="{{ $order->id }}">

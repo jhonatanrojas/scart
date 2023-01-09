@@ -1183,7 +1183,9 @@ class ShopAccountController extends RootFrontController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
-                        'cod_logo'
+                        'logo_waika',
+                        'logo_global',
+                        'cod_numero_combenio'
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1210,6 +1212,9 @@ class ShopAccountController extends RootFrontController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'logo_waika' =>resource_path('img/image1.jpg'),
+                        'logo_global' =>resource_path('img/image1.jpg') ,
+                        'cod_numero_combenio' => $nro_convenio = "no aplica"
                         // 'cod_logo' => '/images/image1.jpg',
                         
                     ];
