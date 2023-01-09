@@ -509,10 +509,14 @@ class  AdminOrderController extends RootAdminController
      * @return [type]     [description]
      */
     public function detail($id)
+
+    
     {
 
         
         $order = AdminOrder::getOrderAdmin($id);
+
+       
 
         $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
 
@@ -586,6 +590,7 @@ class  AdminOrderController extends RootAdminController
     {
         $id = request('id');
         $order = AdminOrder::getOrderAdmin($id);
+       
       
     
      return  response()->json($order );
@@ -653,6 +658,9 @@ class  AdminOrderController extends RootAdminController
             ];
 
         }
+
+
+        dd($ordert);
 
         if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
             $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
