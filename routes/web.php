@@ -56,6 +56,8 @@ Route::get('/sc_admin/fecha_entrega', [AdminOrderController::class,'fecha_entreg
 Route::get('/sc_admin/fecha_create', [AdminOrderController::class,'fecha_create'])->name('fecha_create');
 Route::post('/sc_admin/fecha_edit/{id}', [AdminOrderController::class,'fecha_edit'])->name('fecha_edit');
 
+Route::get('sc_admin/reporte_de_pedido', [AdminOrderController::class,'reporte_de_pedido'])->name('reporte_de_pedido');
+
 Route::post('/sc_admin/fecha_delete/{id}', [AdminOrderController::class,'fecha_delete'])->name('fecha_delete');
 
 

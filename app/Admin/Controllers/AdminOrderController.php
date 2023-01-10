@@ -1577,6 +1577,10 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function fecha_create(){
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
         $data = request()->all();
           if($data['modalidad'] == 0){
 
@@ -1609,16 +1613,35 @@ class  AdminOrderController extends RootAdminController
     }
 
     public function fecha_edit($id){
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
+
         $editFechaEntrega = SC_fecha_de_entregas::where('id' ,$id)->get();
         return response()->json(['success' => $editFechaEntrega, 'msg' => sc_language_render('action.update_success')]);
 
     }
 
     public function fecha_delete($id){
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
 
         SC_fecha_de_entregas::where('id' ,$id)->delete();
         return response()->json(['success' => 'eliminado', 'msg' => sc_language_render('action.update_success')]);
 
+    }
+
+      public function reporte_de_pedido(){
+
+        $user = Admin::user();
+        if ($user === null) {
+            return 'inicia secion';
+        }
+        return view($this->templatePathAdmin.'screen.reporte_de_pedido');
+       
     }
 
 }
