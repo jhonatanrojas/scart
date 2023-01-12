@@ -571,6 +571,8 @@ class HistorialPagosController extends RootAdminController
 
         }
 
+        
+
                     $Moneda_CAMBIOBS = sc_currency_all();
                     foreach($Moneda_CAMBIOBS as $cambio){
                         if($cambio->name == "Bolivares"){
@@ -580,7 +582,7 @@ class HistorialPagosController extends RootAdminController
                     
 
        
-                $borrado_html = [];
+            $borrado_html = [];
 
                 
 
@@ -622,14 +624,14 @@ class HistorialPagosController extends RootAdminController
                     $monto = $dato_usuario[0]['subtotal'];
                     $monto = $monto - $totalinicial;
                     $number1 =  $monto/$dato_usuario[0]['cuotas'];
-                    $cuotas = $number1;
+                    $cuotas_entre_monto =  $dato_usuario[0]['subtotal']/$cuotas;
                     $number2 =  $monto*$cod_bolibares;
                    
                   }
 
-                  
+
                   $number2 =  $monto*$cod_bolibares;
-                    
+
 
                 foreach($borrado_html as $replacee){
             
@@ -677,9 +679,9 @@ class HistorialPagosController extends RootAdminController
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
-                        number_format($cuotas),
-                        'Cod_Cuota_total'=> number_format($number1),
-                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
+                        'cod_cuotas' =>  number_format($cuotas),
+                        'Cod_Cuota_total'=> number_format($number1, 2 ,',', ' '),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
@@ -698,6 +700,9 @@ class HistorialPagosController extends RootAdminController
             
                     $plantilla = str_replace($dataFind, $dataReplace, $replacee->contenido);
                 }
+
+
+                
 
 
 

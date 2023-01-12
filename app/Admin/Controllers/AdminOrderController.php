@@ -1249,18 +1249,18 @@ class  AdminOrderController extends RootAdminController
                
 
                 
-                $monto = $dato_usuario[0]['subtotal'];
-                $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                $cuotas = $dato_usuario[0]['cuotas'];
-                if($dato_usuario[0]['abono_inicial']>0){
-                    $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
                     $monto = $dato_usuario[0]['subtotal'];
-                    $monto = $monto - $totalinicial;
-                    $number1 =  $monto/$dato_usuario[0]['cuotas'];
-                    $cuotas = $number1;
-                    $number2 =  $monto*$cod_bolibares;
-                   
-                  }
+                    $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                    $cuotas = $dato_usuario[0]['cuotas'];
+                    if($dato_usuario[0]['abono_inicial']>0){
+                        $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
+                        $monto = $dato_usuario[0]['subtotal'];
+                        $monto = $monto - $totalinicial;
+                        $number1 =  $monto/$dato_usuario[0]['cuotas'];
+                        $cuotas_entre_monto =  $dato_usuario[0]['subtotal']/$cuotas;
+                        $number2 =  $monto*$cod_bolibares;
+                       
+                      }
 
                   
                   $number2 =  $monto*$cod_bolibares;
@@ -1310,9 +1310,9 @@ class  AdminOrderController extends RootAdminController
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
-                        number_format($cuotas),
-                        'Cod_Cuota_total'=> number_format($number1),
-                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir1($number1),
+                        'cod_cuotas' =>  number_format($cuotas),
+                        'Cod_Cuota_total'=> number_format($number1, 2 ,',', ' '),
+                        'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
                         'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
                         $monto ,
@@ -1323,10 +1323,9 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'logo_waika' =>resource_path('img/image1.jpg'),
-                        'logo_global' =>resource_path('img/image1.jpg') ,
-                        'cod_numero_combenio' => $nro_convenio = "no aplica"
-
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_numero_combenio' => $nro_convenio 
                         
                     ];
             
