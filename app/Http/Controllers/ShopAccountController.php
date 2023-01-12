@@ -524,16 +524,29 @@ class ShopAccountController extends RootFrontController
         } else {
             return $this->pageNotFound();
         }
+        $fecha_actual = date('Y-m-d');
 
+        
+        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+5 day"));
 
         if ($order->modalidad_de_compra == 0) {
             $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
         } {
-            $historial_pagos =   HistorialPago::where('order_id', $id)->orderBy('fecha_venciento')->get();
+            $historial_pagos =   HistorialPago::where('order_id', $id)
+            ->where('fecha_venciento','<' ,$fech_p)
+            ->orWhere('payment_status', 5)
+            ->orWhere('payment_status', 2)
+            ->orderBy('fecha_venciento')->get();
         }
 
 
 
+        $fecha_de_hoy = date('d-m-y');
+        $parse_fecha_hoy  = date_parse($fecha_de_hoy );
+        //dia de la fecha actual
+        $dia_hoy = $parse_fecha_hoy['day'];
+        //mes de la fecha actual
+        $mes_hoy = $parse_fecha_hoy['month'];
 
 
         $id = $customer['id'];
@@ -601,9 +614,6 @@ class ShopAccountController extends RootFrontController
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
-        // $convenio = Convenio::where('order_id', $order->id)->first()->pluck('total');
-        // dd($convenio);
-       
 
 
 
