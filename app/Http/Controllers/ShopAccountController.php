@@ -534,8 +534,8 @@ class ShopAccountController extends RootFrontController
         } {
             $historial_pagos =   HistorialPago::where('order_id', $id)
             ->where('fecha_venciento','<' ,$fech_p)
-            ->orWhere('payment_status', 5)
-            ->orWhere('payment_status', 2)
+            ->orWhere('payment_status', 5)->where('order_id', $id)
+            ->orWhere('payment_status', 1)->where('order_id', $id)
             ->orderBy('fecha_venciento')->get();
         }
 
