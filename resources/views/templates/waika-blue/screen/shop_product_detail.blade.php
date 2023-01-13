@@ -848,7 +848,7 @@ table tfoot {
         }
           else msg.innerText = 'Deve seleccionar una opcion para validar el pedido';
 
-          
+
       });
 
 
