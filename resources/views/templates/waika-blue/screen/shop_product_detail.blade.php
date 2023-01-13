@@ -772,7 +772,7 @@ table tfoot {
 
             monto_Inicial.value = totalinicial.toFixed(2)
           }else{
-            monto_Inicial.value =  0 
+            monto_Inicial.value =  0.00
           }
        
       
@@ -816,15 +816,14 @@ table tfoot {
           // }
         function fecha_cliente(fecha) {
           let fecha_cliente = fecha.replace(/[/-]/g, ' ');
-          let [mes, dia] = fecha_cliente.split(' ').map(x => parseInt(x));
-
-         
-          
+          let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
 
           user.forEach(element => {
           let [año, mesEntrega, diaEntrega] = element.fecha_entrega.split('-').map(x => parseInt(x));
           
+         
             if (mesEntrega === mes) {
+             
             let date = new Date(año, mesEntrega - 1, diaEntrega);
             let dateString = date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 
