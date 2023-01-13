@@ -67,8 +67,6 @@ class DocumentosController extends Controller
             $Financiamiento  = session('dataCheckout');
 
 
-            dd($Financiamiento);
-
         $request->validate([
             'cedula' => 'required',
             'carta_trabajo' => 'required',
@@ -93,10 +91,6 @@ class DocumentosController extends Controller
         $saveFile = time().'.'.$request->carta_trabajo->extension();  
         $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
         $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
-       
-
-
-            
 
             $saveFile = new SC__documento;
             $saveFile->first_name =$request->first_name;
