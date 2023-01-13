@@ -104,8 +104,6 @@ class DocumentosController extends Controller
             if($saveFile->save()){
                 return redirect('/')->with('success', 'Datos enviado con exito');
 
-          
-                
              }else{
                 return redirect('/')->with('error', 'error a enviar los datos');
 
