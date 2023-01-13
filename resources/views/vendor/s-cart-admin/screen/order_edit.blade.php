@@ -310,8 +310,8 @@
                             {!! $html !!}
                             </td>
                             <td>
-                              <a href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
-                                data-title="Cuotas">{{  $item->nro_coutas }}</a>
+                              <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
                         
@@ -350,17 +350,21 @@
                                  @endif"</a>
 
                              </td>
+
+                        
                  
                              <td>
 
                               @php
+                              
                               if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
                            
-                              $precio_couta=  $item->price -($item->abono_inicial* $item->price / 100 );
-                           echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
+                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
+                              echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
                              else:
-                          echo '0'; 
+                              $precio_couta=  $item->total_price ;
+                              echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
                               
                              endif;
  
@@ -1114,6 +1118,7 @@ function obtener_detalle_pago(id_pago){
 
             
                 $('#loading').hide();
+                location.reload();
                 }
             });
         
@@ -1305,8 +1310,9 @@ function gen_table(fecha_p=false){
               alert("Falta ingresar un Número");
           }
 
-
+                location.reload();
                 $('#loading').hide();
+                  
                 }
             });
         
@@ -1355,7 +1361,9 @@ function update_total(e){
                 node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                 node.find('.add_tax').eq(0).html(returnedData.tax);
+                
                 $('#loading').hide();
+                
                 }
             });
         }
@@ -1404,8 +1412,10 @@ $( "#decision_final" ).change(function(e) {
             },
   
             success: function (respuestas) {
+              location.reload();
                
               $('#loading').hide();
+              
 
                  
           },
@@ -1451,7 +1461,7 @@ $('#add-item-button-save').click(function(event) {
         success: function(result){
           $('#loading').hide();
             if(parseInt(result.error) ==0){
-                location.reload();
+              location.reload();
             }else{
               alertJs('error', result.msg);
             }
@@ -1476,6 +1486,7 @@ function all_editable(){
       success: function(response) {
         if(response.error ==0){
           alertJs('success', response.msg);
+          location.reload();
         } else {
           alertJs('error', response.msg);
         }
@@ -1499,6 +1510,7 @@ function all_editable(){
  
           if(response.error ==0){
             alertJs('success', response.msg);
+           
             if(valor_estatus==5 && response.detail.total>0){
               $(".btn-generar-convenio").css("display","block");
 
@@ -1521,6 +1533,7 @@ function all_editable(){
           console.log(response.msg);
           if(response.error == 0){
             alertJs('success', response.msg);
+            location.reload();
           } else {
             alertJs('error', response.msg);
           }
@@ -1555,6 +1568,7 @@ function all_editable(){
                 objblance.before(response.detail.balance);
                 objblance.remove();
                 alertJs('success', response.msg);
+                location.reload();
             } else {
               alertJs('error', response.msg);
             }
@@ -1589,6 +1603,7 @@ function all_editable(){
                   objblance.before(response.detail.balance);
                   objblance.remove();
                   alertJs('success', response.msg);
+                  location.reload();
               } else {
                 alertJs('error', response.msg);
               }
@@ -1626,8 +1641,9 @@ function deleteItem(id){
                 },
                 success: function (response) {
                   if(response.error ==0){
-                    location.reload();
+                   
                     alertJs('success', response.msg);
+                    location.reload();
                 } else {
                   alertJs('error', response.msg);
                 }
@@ -1668,6 +1684,14 @@ function deleteItem(id){
     window.print();
     $('.not-print').show();
   }
+
+
+
+
+
+
+
+
 </script>
 
 @endpush
