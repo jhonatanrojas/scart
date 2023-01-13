@@ -235,7 +235,7 @@
 
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Tasa de cambio</label>
-                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio" readonly value="1">
+                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio"  value="1">
             
                           @error('tipo_cambio')
                           <small style="color: red">{{$message}}</small>

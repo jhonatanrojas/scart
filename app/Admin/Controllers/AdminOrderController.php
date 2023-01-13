@@ -391,18 +391,28 @@ class  AdminOrderController extends RootAdminController
     {
         $data = request()->all();
 
+        
+
        
     
         $validate = [
             'first_name'      => 'required|max:100',
             'email'   => 'required',
             'status'          => 'required',
-            'customer_id' => 'required'
+            'customer_id' => 'required',
+            'fecha_de_pedido' => 'required'
+            
     
         ];
         if (sc_config_admin('customer_lastname')) {
             $validate['last_name'] = 'required|max:100';
         }
+
+        if (sc_config_admin('customer_lastname')) {
+            $validate['fecha_de_pedido'] = 'required|max:100';
+        }
+
+        
         if (sc_config_admin('customer_address2')) {
             $validate['address2'] = 'required|max:100';
         }
@@ -481,7 +491,8 @@ class  AdminOrderController extends RootAdminController
             'email'           => $data['email'],
             'modalidad_de_compra'           => $data['modalidad_compra'],
             'comment'         => $data['comment'],
-            'usuario_id'         =>  Admin::user()->id
+            'usuario_id'         =>  Admin::user()->id,
+            'created_at'         =>  $data['fecha_de_pedido']
         ];
         $dataCreate = sc_clean($dataCreate, [], true);
         $order = AdminOrder::create($dataCreate);
