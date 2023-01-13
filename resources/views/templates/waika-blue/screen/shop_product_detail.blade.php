@@ -818,17 +818,22 @@ table tfoot {
           let fecha_cliente = fecha.replace(/[/-]/g, ' ');
           let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
 
+          
+
           user.forEach(element => {
           let [año, mesEntrega, diaEntrega] = element.fecha_entrega.split('-').map(x => parseInt(x));
           
          
-            if (mesEntrega === mes) {
-             
+            if (mes === mesEntrega) {
+
             let date = new Date(año, mesEntrega - 1, diaEntrega);
             let dateString = date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 
             const FechaEntrega = document.getElementById("FechaEntrega");
             FechaEntrega.innerHTML = `<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dateString}</h6> `
+          }else{
+            
+
           }
         });
       }
@@ -895,7 +900,10 @@ table tfoot {
 
                 if(Inicial > 0){
                   if(i == 4)fecha_cliente(texto.replace('/' ,' '))
-                }else if(i == 7)fecha_cliente(texto.replace('/' ,' '))
+                }else if(!Inicial > 0){
+                  if(i == 7)fecha_cliente(texto.replace('/' ,' '))
+                }
+                
                   
                 
 
