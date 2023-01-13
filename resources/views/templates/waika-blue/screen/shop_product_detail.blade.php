@@ -679,7 +679,7 @@ table tfoot {
                      
                          <select class="form-control w-100 select2"  name="inicial" id="inicial">
                           @if($product->monto_inicial > 0 )
-                          <option value="{{  $porcentaje_inicial}}">Inicial({{$porcentaje_inicial}}%)</option>
+                          <option value="{{ $porcentaje_inicial}}">Inicial({{$porcentaje_inicial}}%)</option>
                           @else
                           <option value="0">sin inicial(0%)</option>
                           <option value="30">con inicial(30%)</option>
@@ -771,6 +771,8 @@ table tfoot {
             monto = monto -totalinicial;
 
             monto_Inicial.value = totalinicial.toFixed(2)
+          }else{
+            monto_Inicial.value =  0 
           }
        
       
@@ -814,11 +816,14 @@ table tfoot {
           // }
         function fecha_cliente(fecha) {
           let fecha_cliente = fecha.replace(/[/-]/g, ' ');
-          let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
+          let [mes, dia] = fecha_cliente.split(' ').map(x => parseInt(x));
+
+         
+          
 
           user.forEach(element => {
           let [año, mesEntrega, diaEntrega] = element.fecha_entrega.split('-').map(x => parseInt(x));
-
+          
             if (mesEntrega === mes) {
             let date = new Date(año, mesEntrega - 1, diaEntrega);
             let dateString = date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
@@ -889,9 +894,10 @@ table tfoot {
                 
                 texto = fechaPago.toLocaleDateString()
 
-                if(!Inicial == 0){
+                if(Inicial > 0){
                   if(i == 4)fecha_cliente(texto.replace('/' ,' '))
                 }else if(i == 7)fecha_cliente(texto.replace('/' ,' '))
+                  
                 
 
 

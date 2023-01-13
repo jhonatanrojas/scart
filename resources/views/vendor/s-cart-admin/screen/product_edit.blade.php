@@ -1235,7 +1235,7 @@
             <label for="date_available" class="col-sm-2 col-form-label">modalidad de pago</label>
             <div class="col-md-8">
                 <div class=" input-group">
-                    <select id="modalidad" class="form-control w-100 modalidad_pago select2" name="modalidad_pago">
+                    <select required id="modalidad" class="form-control w-100 modalidad_pago select2" name="modalidad_pago">
                         <?php
                         if (isset($modalidad_pago)) {
                             foreach ($modalidad_pago as $key => $pagos) {
