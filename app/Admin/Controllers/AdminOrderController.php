@@ -546,12 +546,13 @@ class  AdminOrderController extends RootAdminController
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
-        $documento = SC__documento::where('id_usuario', $id)->get();
+        $documento = SC__documento::where('id_usuario', $order->customer_id)->get();
+
+
+       
  
-        if(!$documento->isNotEmpty()){
-             $documento= [];
- 
-        }
+        
+       
         $products = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE, SC_PRODUCT_BUILD]]);
         $paymentMethod = [];
         $shippingMethod = [];
@@ -580,6 +581,7 @@ class  AdminOrderController extends RootAdminController
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
                 'convenio'=>$convenio,
+                'documento'=>$documento,
                 'clasificacion' => $Clasificacion ?? '',
                 "order" => $order,
                 'historial_pagos'=>$historialPagos,

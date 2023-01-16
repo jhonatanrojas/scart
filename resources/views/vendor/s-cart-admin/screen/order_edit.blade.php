@@ -205,7 +205,8 @@
                     <tr>
                       <td class="td-title">Ver documentos:</td>
                       <td>
-                        @if (empty($documento ) )
+                       
+                        @if (empty($documento) )
                         El cliente no ha adjuntado Documentos <br>
                         @endif
                         <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
