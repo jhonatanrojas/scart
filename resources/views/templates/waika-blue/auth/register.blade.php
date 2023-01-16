@@ -123,36 +123,38 @@
                     </div>
 
                     @if (sc_config('customer_estado_civil'))
-                        <div class="form-group row{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
-                            <label for="first_name"
-                                    class="col-sm-2 col-form-label"> Estado civil</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                            <select  type="text"
-                            class="is_required validate account_input form-control "
-                            name="estado_civil" id="estado_civil">
-    
-                            <option value="SOLTERO(a)" >Soltero(a)</option>
-                            <option value="CASADO(a)" >Casado(a)</option>
-
-                            <option value="CONCUBINATO(a)" >Concubinato(a)</option>
-                            
+                    <div class=" col-md-6 ">
                         
-                            </select>
-                        </div>
-                            @if ($errors->has('estado_civil'))
-                            <span class="help-block">
-                                {{ $errors->first('estado_civil') }}
-                            </span>
-                            @endif
-                        </div>
+                        <div class="form-group{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    
+                                    </div>
+                        <select required  type="text"
+                        class="is_required validate account_input form-control "
+                        name="estado_civil" id="estado_civil">
+                        <option value="" >Estado civil</option>
+
+                        <option value="SOLTERO(a)" >Soltero(a)</option>
+                        <option value="CASADO(a)" >Casado(a)</option>
+
+                        <option value="CONCUBINATO(a)" >Concubinato(a)</option>
+                        
+                    
+                        </select>
                     </div>
-                       
+                        @if ($errors->has('estado_civil'))
+                        <span class="help-block">
+                            {{ $errors->first('estado_civil') }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
                    
-                    @endif
+               
+                @endif
+
+                  
                     
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
@@ -495,6 +497,31 @@
                     @endforeach
 @endif
 {{-- //Custom fields --}}
+
+@if (sc_config('customer_nos_conocio'))
+                    <div class="col-md-6">
+                        <div class="form-group{{ $errors->has('nos_conocio') ? ' has-error' : '' }}">
+                            <select required  type="text"
+                            class="is_required validate account_input form-control {{ ($errors->has('nos_conocio'))?"input-error":"" }}"
+                            name="nos_conocio" id="nos_conocio">
+
+                            <option value="">¿COMO NOS CONOCISTE?</option>
+                            <option value="facebook" {{ (old('Facebook')) ? 'selected':'' }}>Facebook</option>
+                            <option value="instagram" {{ (old('instagram')) ? 'selected':'' }}>instagram</option>
+                            <option value="twitter" {{ (old('Twitter')) ? 'selected':'' }}>Twitter</option>
+                            <option value="amigo" {{ (old('Amigo')) ? 'selected':'' }}>Amigo</option>
+                            
+                        
+                            </select>
+                            @if ($errors->has('nos_conocio'))
+                            <span class="help-block">
+                                {{ $errors->first('nos_conocio') }}
+                            </span>
+                            @endif
+                        </div>
+                    
+                    </div>
+                    @endif
 
 
                     <div class="col-md-6">
