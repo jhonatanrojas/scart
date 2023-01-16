@@ -26,6 +26,8 @@
   gtag('config', 'G-21RHXF116X');
 </script>
 
+
+
     <!-- css default for item s-cart -->
     @include($sc_templatePath.'.common.css')
     <!--//end css defaut -->
@@ -147,11 +149,16 @@
     <script src="{{ sc_file($sc_templateFile.'/js/core.min.js')}}"></script>
     <script src="{{ sc_file($sc_templateFile.'/js/script.js')}}"></script>
     <script src="{{ sc_file($sc_templateFile.'/js/jquery.paroller.js')}}"></script>
+
+
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')
     <!--//end js defaut -->
     @stack('scripts')
+
+    <script src="/js/cliente1.js"></script>
+    <script src="/js/estado.js"></script>
 
 </body>
 </html>
