@@ -12,7 +12,7 @@ natural_Jurídica.addEventListener("change", function (e) {
 
   if (e.target.value == "J") {
     document.getElementById("razon_social").disabled = false;
-    document.getElementById("rif").disabled = false;
+    if(!document.getElementById("rif") == "null")document.getElementById("rif").disabled = false;
     document.querySelector('.title') ?document.querySelector('.title').style.display='block' : "";
     valor = "";
     ocutaInput(valor);
@@ -30,7 +30,7 @@ natural_Jurídica.addEventListener("change", function (e) {
 
 if(natural_Jurídica.value == "J"){
   document.getElementById("razon_social").disabled = false;
-    document.getElementById("rif").disabled = false;
+  if(!document.getElementById("rif") == "null")document.getElementById("rif").disabled = false;
     valor = "";
     ocutaInput(valor);
 }
