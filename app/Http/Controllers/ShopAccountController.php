@@ -524,16 +524,29 @@ class ShopAccountController extends RootFrontController
         } else {
             return $this->pageNotFound();
         }
+        $fecha_actual = date('Y-m-d');
 
+        
+        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+5 day"));
 
         if ($order->modalidad_de_compra == 0) {
             $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
         } {
-            $historial_pagos =   HistorialPago::where('order_id', $id)->orderBy('fecha_venciento')->get();
+            $historial_pagos =   HistorialPago::where('order_id', $id)
+            ->where('fecha_venciento','<' ,$fech_p)
+            ->orWhere('payment_status', 5)->where('order_id', $id)
+            ->orWhere('payment_status', 2)->where('order_id', $id)
+            ->orderBy('fecha_venciento')->get();
         }
 
 
 
+        $fecha_de_hoy = date('d-m-y');
+        $parse_fecha_hoy  = date_parse($fecha_de_hoy );
+        //dia de la fecha actual
+        $dia_hoy = $parse_fecha_hoy['day'];
+        //mes de la fecha actual
+        $mes_hoy = $parse_fecha_hoy['month'];
 
 
         $id = $customer['id'];
@@ -601,9 +614,6 @@ class ShopAccountController extends RootFrontController
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
-        // $convenio = Convenio::where('order_id', $order->id)->first()->pluck('total');
-        // dd($convenio);
-       
 
 
 
@@ -1117,9 +1127,10 @@ class ShopAccountController extends RootFrontController
 
                 $borrado_html = [];
                 if($abono_inicial <= "0.00"){
-                    $borrado_html = Sc_plantilla_convenio::where('id' , 1)->first()->where('name','sin_inicial')->get();
+                    $borrado_html = Sc_plantilla_convenio::firstWhere('id', 1)->where('name', 'sin_inicial')->get();
                     }else{
-                        $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
+                        $borrado_html = Sc_plantilla_convenio::firstWhere('id', 2)->where('name', 'con_inicial')->get();
+                        // $borrado_html = Sc_plantilla_convenio::where('id' , 2)->first()->where('name','con_inicial')->get();
                     }
 
 
@@ -1182,6 +1193,9 @@ class ShopAccountController extends RootFrontController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
+                        'logo_waika',
+                        'logo_global',
+                        'cod_numero_combenio'
                     ];
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -1208,6 +1222,10 @@ class ShopAccountController extends RootFrontController
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'logo_waika' =>resource_path('img/image1.jpg'),
+                        'logo_global' =>resource_path('img/image1.jpg') ,
+                        'cod_numero_combenio' => $nro_convenio = "no aplica"
+                        // 'cod_logo' => '/images/image1.jpg',
                         
                     ];
             
@@ -1215,17 +1233,17 @@ class ShopAccountController extends RootFrontController
                 }
                 
 
-            //     return view($this->templatePath.'.screen.borrador_pdf',
-            //     ['borrado_html'=>$resultado],
+                return view($this->templatePath.'.screen.borrador_pdf',
+                ['borrado_html'=>$resultado],
                 
-            // );
-            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
-                    ['borrado_html'=> $resultado],
+            );
+            // $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+            //         ['borrado_html'=> $resultado],
                 
 
-                    )->setOptions(['defaultFont' => 'sans-serif']);
+            //         )->setOptions(['defaultFont' => 'sans-serif']);
 
-                    return $pdf->stream();
+            //         return $pdf->stream();
 
     }
 

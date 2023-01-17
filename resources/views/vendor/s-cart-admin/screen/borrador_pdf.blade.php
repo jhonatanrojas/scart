@@ -61,19 +61,18 @@
             border: solid black 1px;
             float: left;
         }
+        * img{
+            display: none;
+        }
   </style>
 </head>
 <body class="c18 doc-content">
-    <div class=" d-flex align-items-center justify-content-between">
-        <div class="col-8">
-            <img width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
-        </div>
-        
-         <div  class="col-6">
-            <h3>BORRADOR DEL CONVENIO</h3>
-         </div>
-     </div>
-    <div>{!!$borrado_html!!}</div>
+    
+    
+    <div>
+        <h2>BORRADOR DEL CONVENIO</h2>
+        {!!$borrado_html!!}
+    </div>
 </body>
 
 

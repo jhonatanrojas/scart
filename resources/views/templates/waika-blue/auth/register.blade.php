@@ -1,28 +1,15 @@
+
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
 <!--form-->
-
-
-
-
-<section class="p-0 section section-sm section-first bg-default text-md-left">
-
-
-
-
+<section class="section section-sm section-first bg-default text-md-left">
     <div class="container">
-        
-          <div class="card-body w-100 ">
-            <div class="row align-items-center flex-column">
-                <div class="col text-center">
-                    <img width="200px" class="img-fluid" src="/images/logo_loging.jpg" alt="">
-                </div>
-                <div class="col ">
-                    <h4 class="text-center">{{ sc_language_render('customer.title_register') }}</h4>
-                </div>
 
-            </div>
+        
+        
+          <div class="card-body w-70 ">
+            <h2 class="text-center">{{ sc_language_render('customer.title_register') }}</h2>
             <form action="{{sc_route('postRegister')}}" method="post" class="box  " id="form-process">
                 <div class="row justify-content-space-around">
 
@@ -34,13 +21,14 @@
                     <div class="form-group {{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
                        
                      
-                        <select required  type="text"
+                        <select required  
                         class="is_required validate account_input form-control {{ ($errors->has('natural_jurídica'))?"input-error":"" }}"
                         name="natural_jurídica" id="natural_jurídica">
-                        <option value="">Tipo de Persona </option>
+                        <option value="1">Tipo de Persona </option>
 
-                        <option value="N" {{ (old('natural_jurídica')) ? 'selected':'' }}>Natural</option>
-                        <option value="J" {{ (old('natural_jurídica')) ? 'selected':'' }}>Juridica</option>
+                        <option value="N">Natural</option>
+
+                        <option value="J" >Juridica</option>
                         
                     
                         </select>
@@ -96,7 +84,7 @@
                     </div>
                     @endif
 
-                    @if (sc_config('customer_rif'))
+                    @if (sc_config('customer_razon_social'))
                     <div class="col-md-6 oculta_rif">
                         <div class="form-group{{ $errors->has('rif') ? ' has-error' : '' }}">
                             <input required disabled="true" type="text"
@@ -133,30 +121,40 @@
                         </div>
                        
                     </div>
-                    @if (sc_config('customer_estado_civil'))
-                    <div class="col-md-6">
-                        <div class="form-group{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
-                            <select  type="text"
-                            class="is_required validate account_input form-control {{ ($errors->has('estado_civil'))?"input-error":"" }}"
-                            name="estado_civil" id="estado_civil">
-    
-                            <option value="">Estado civil</option>
-                            <option value="SOLTERO(a)" {{ (old('estado_civil')) ? 'selected':'' }}>Soltero(a)</option>
-                            <option value="CASADO(a)" {{ (old('estado_civil')) ? 'selected':'' }}>Casado(a)</option>
 
-                            <option value="CONCUBINATO" {{ (old('estado_civil')) ? 'selected':'' }}>Concubinato</option>
-                            
+                    @if (sc_config('customer_estado_civil'))
+                    <div class=" col-md-6 ">
                         
-                            </select>
-                            @if ($errors->has('estado_civil'))
-                            <span class="help-block">
-                                {{ $errors->first('estado_civil') }}
-                            </span>
-                            @endif
-                        </div>
-                       
+                        <div class="form-group{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    
+                                    </div>
+                        <select required  type="text"
+                        class="is_required validate account_input form-control "
+                        name="estado_civil" id="estado_civil">
+                        <option value="" >Estado civil</option>
+
+                        <option value="SOLTERO(a)" >Soltero(a)</option>
+                        <option value="CASADO(a)" >Casado(a)</option>
+
+                        <option value="CONCUBINATO(a)" >Concubinato(a)</option>
+                        
+                    
+                        </select>
                     </div>
-                    @endif
+                        @if ($errors->has('estado_civil'))
+                        <span class="help-block">
+                            {{ $errors->first('estado_civil') }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
+                   
+               
+                @endif
+
+                  
                     
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
@@ -500,8 +498,7 @@
 @endif
 {{-- //Custom fields --}}
 
-
-                    @if (sc_config('customer_nos_conocio'))
+@if (sc_config('customer_nos_conocio'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('nos_conocio') ? ' has-error' : '' }}">
                             <select required  type="text"
@@ -525,6 +522,8 @@
                     
                     </div>
                     @endif
+
+
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <input type="password"
@@ -575,26 +574,18 @@
                         <button type="submit" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
                    </div>
-
-                  
                 </div>
-               
             
 
                 
              
             </form>
-
-            <div class="text-center m-auto mt-5 p-3 h5">
-                <a class="btn btn-link" href="{{sc_route('login')}}">¿YA ESTAS REGISTRADO? INICIA SESIÓN AQUI </a>
-             </div>
             
           </div>
 
 </div>
 </section>
-<script src="/js/cliente1.js"></script>
-@vite('resources/js/estado.js')
+
 
 <!--/form-->
 @endsection

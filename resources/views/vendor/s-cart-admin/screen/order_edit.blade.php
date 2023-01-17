@@ -2,6 +2,7 @@
 
 @section('main')
 
+
  
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -49,6 +50,16 @@
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
+                </div>
+                      
+                  @endif
+                  {{-- @php
+                    dd();
+                  @endphp --}}
+
+                  @if ($order->total >0  && !empty($convenio))
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Editar convenio</span></a>
                 </div>
                       
                   @endif
@@ -194,10 +205,11 @@
                     <tr>
                       <td class="td-title">Ver documentos:</td>
                       <td>
-                        @if (empty($documento ) )
-                        El cliente no ha adjuntado Documentos <br>
+                       
+                        @if (empty($documento))
+                          El cliente no ha adjuntado Documentos <br>
                         @endif
-                        <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
+                          <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
                       </td>
 
                    
@@ -253,7 +265,7 @@
 @endphp
 
 
-
+<form id="form-add-item" action="" method="">
 
       @csrf
       <input type="hidden" name="order_id"  value="{{ $order->id }}">
@@ -285,9 +297,13 @@
                 <tbody>
           
                     @foreach ($order->details as $item)
+
+                
                           <tr>
                             <td>{{ $item->name }}
                               @php
+
+
                               $html = '';
                                 if($item->attribute && is_array(json_decode($item->attribute,true))){
                                   $array = json_decode($item->attribute,true);
@@ -299,8 +315,8 @@
                             {!! $html !!}
                             </td>
                             <td>
-                              <a href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
-                                data-title="Cuotas">{{  $item->nro_coutas }}</a>
+                              <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
                         
@@ -315,10 +331,6 @@
                              </td>
                              <td>
 
-                     
-
-          
-                
                               <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
                                data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
                                data-pk="{{ $item->id }}"
@@ -339,22 +351,28 @@
                                  @endif"</a>
 
                              </td>
+
+                        
                  
                              <td>
 
                               @php
+                              
                               if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
                            
-                              $precio_couta=  $item->price -($item->abono_inicial* $item->price / 100 );
-                           echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
+                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
+                              echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
-                             else:
-                          echo '0'; 
+                             else :
+                                $precio_couta=  $item->total_price ;
+                                echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
                               
                              endif;
  
                               @endphp
                              </td>
+
+
                              <td class="product_qty">x <a href="#" class="edit-item-detail" data-value="{{ $item->qty }}" data-name="qty" data-type="number" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.qty') }}"> {{ $item->qty }}</a></td>
 
                             <td class="product_price">
@@ -364,7 +382,8 @@
                             <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
-                            @if (!$order->modalidad_de_compra == 1)
+
+                            @if ($order->modalidad_de_compra == 1)
                             <td>
                               <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
@@ -374,7 +393,7 @@
                     @endforeach
 
                     <tr  id="add-item" class="not-print">
-                      <td colspan="7">
+                      <td colspan="9">
                         @if ($order->total <= 0  && empty($convenio)  &&  $order->modalidad_de_compra == 1 )
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>  
                         @endif
@@ -797,9 +816,12 @@
       
     </div><!-- /.modal-content -->
   </div>
+
+  
  
         <input  name="qty" type="hidden"  value="1" min="1" max="100">
         <input  name="financiamiento" type="hidden"  value="1"  max="100">
+        <input  name="id_usuario" type="hidden"  value="{{$order->customer_id}}" >
 </form><!-- /.modal-dialog -->
       <div class="row">
   
@@ -852,10 +874,16 @@
               </select>
               <span class="add_attr"></span>
             </td>
+            
+            
+              <td></td>
 
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
+             
+
               <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
+
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
 
               <td><input type="number" disabled class="add_total form-control" value="0"></td>
@@ -1100,6 +1128,7 @@ function obtener_detalle_pago(id_pago){
 
             
                 $('#loading').hide();
+                location.reload();
                 }
             });
         
@@ -1262,13 +1291,9 @@ function gen_table(fecha_p=false){
                   d3=r.toFixed(2);
                   deuda=deudas.toFixed(1);
                   document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
-                          `
-                          
-                          
-                          
+                  `
                           <tr>
                               <td>${i}</td>
-                            
                               <td> <input readonly class="form-control" name="coutas_calculo[]" type="text" value="${d2}"> </td>
                               <td> ${d3} </td>
                               <td> <input   class="form-control"  name="fechas_pago_cuotas[]" type="date" value="${ anof+"-"+mesf+"-"+diaf}"> </td>
@@ -1291,8 +1316,9 @@ function gen_table(fecha_p=false){
               alert("Falta ingresar un Número");
           }
 
-
+                location.reload();
                 $('#loading').hide();
+                  
                 }
             });
         
@@ -1341,7 +1367,9 @@ function update_total(e){
                 node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
                 node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
                 node.find('.add_tax').eq(0).html(returnedData.tax);
+                
                 $('#loading').hide();
+                
                 }
             });
         }
@@ -1390,8 +1418,10 @@ $( "#decision_final" ).change(function(e) {
             },
   
             success: function (respuestas) {
+              location.reload();
                
               $('#loading').hide();
+              
 
                  
           },
@@ -1437,7 +1467,7 @@ $('#add-item-button-save').click(function(event) {
         success: function(result){
           $('#loading').hide();
             if(parseInt(result.error) ==0){
-                location.reload();
+              location.reload();
             }else{
               alertJs('error', result.msg);
             }
@@ -1462,6 +1492,7 @@ function all_editable(){
       success: function(response) {
         if(response.error ==0){
           alertJs('success', response.msg);
+          location.reload();
         } else {
           alertJs('error', response.msg);
         }
@@ -1485,6 +1516,7 @@ function all_editable(){
  
           if(response.error ==0){
             alertJs('success', response.msg);
+           
             if(valor_estatus==5 && response.detail.total>0){
               $(".btn-generar-convenio").css("display","block");
 
@@ -1507,6 +1539,7 @@ function all_editable(){
           console.log(response.msg);
           if(response.error == 0){
             alertJs('success', response.msg);
+            location.reload();
           } else {
             alertJs('error', response.msg);
           }
@@ -1541,6 +1574,7 @@ function all_editable(){
                 objblance.before(response.detail.balance);
                 objblance.remove();
                 alertJs('success', response.msg);
+                location.reload();
             } else {
               alertJs('error', response.msg);
             }
@@ -1575,6 +1609,7 @@ function all_editable(){
                   objblance.before(response.detail.balance);
                   objblance.remove();
                   alertJs('success', response.msg);
+                  location.reload();
               } else {
                 alertJs('error', response.msg);
               }
@@ -1612,8 +1647,9 @@ function deleteItem(id){
                 },
                 success: function (response) {
                   if(response.error ==0){
-                    location.reload();
+                   
                     alertJs('success', response.msg);
+                    location.reload();
                 } else {
                   alertJs('error', response.msg);
                 }
@@ -1654,6 +1690,14 @@ function deleteItem(id){
     window.print();
     $('.not-print').show();
   }
+
+
+
+
+
+
+
+
 </script>
 
 @endpush

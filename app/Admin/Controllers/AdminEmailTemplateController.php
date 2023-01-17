@@ -324,7 +324,8 @@ class AdminEmailTemplateController extends RootAdminController
                                     '$numero_del_pedido',
                                     '$numero_referencia',
                                     '$fecha_venciento',
-                                    '$evaluacion',
+                                    '$observacion',
+                                    '$id_del_pago',
                                     
                                     
                                 ];

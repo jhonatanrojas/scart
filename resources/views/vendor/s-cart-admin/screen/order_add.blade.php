@@ -288,6 +288,13 @@
                             </div>
                             <hr>
 
+                            <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
+                                <label for="status" class="col-sm-2 col-form-label">Fecha de pedido</label>
+                                <div class="col-sm-8">
+                                   <input value="@php echo date("Y-m-d")  @endphp" class="form-control fecha" name="fecha_de_pedido" type="date">
+                                </div>
+                            </div>
+
 
 
                             <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
@@ -330,20 +337,20 @@
                     <!-- /.card-body -->
 
                     <div class="card-footer row">
-                            @csrf
-                            <div class="col-md-2">
+                        @csrf
+                        <div class="col-md-2">
+                        </div>
+    
+                        <div class="col-md-8">
+                            <div class="btn-group float-right">
+                                <button type="submit" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
                             </div>
-        
-                            <div class="col-md-8">
-                                <div class="btn-group float-right">
-                                    <button type="submit" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
-                                </div>
-        
-                                <div class="btn-group float-left">
-                                    <button type="reset" class="btn btn-warning">{{ sc_language_render('action.reset') }}</button>
-                                </div>
+    
+                            <div class="btn-group float-left">
+                                <button type="reset" class="btn btn-warning">{{ sc_language_render('action.reset') }}</button>
                             </div>
-                    </div>
+                        </div>
+                </div>
 
                     <!-- /.card-footer -->
                 </form>
@@ -405,6 +412,7 @@ function addInfo(){
                 $('[name="phone"]').val(returnedData.phone);
                 $('[name="company"]').val(returnedData.company);
                 $('[name="postcode"]').val(returnedData.postcode);
+                $('[name="fecha"]').val(returnedData.fecha);
                 $('[name="country"]').val(returnedData.country).change();
                 $('#loading').hide();
             }

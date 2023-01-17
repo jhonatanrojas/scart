@@ -1,16 +1,18 @@
-
-// mostra campo del cliente si es persona juridica 
 const natural_Jurídica = document.getElementById("natural_jurídica");
 const oculta_razon_social = document.querySelector(".oculta_razon_social");
-const oculta_rif = document.querySelector(".oculta_rif");
-let valor = "none";
+const rif = document.querySelector(".oculta_rif");
 
-oculta_razon_social.style.display = valor;
-oculta_rif.style.display = valor;
+oculta_razon_social.style.display = "none";
+rif.style.display = "none";
+
+
+
+
 natural_Jurídica.addEventListener("change", function (e) {
+
   if (e.target.value == "J") {
     document.getElementById("razon_social").disabled = false;
-    document.getElementById("rif").disabled = false;
+    if(!document.getElementById("rif") == "null")document.getElementById("rif").disabled = false;
     document.querySelector('.title') ?document.querySelector('.title').style.display='block' : "";
     valor = "";
     ocutaInput(valor);
@@ -22,18 +24,18 @@ natural_Jurídica.addEventListener("change", function (e) {
     valor = "none";
     ocutaInput(valor);
   }
+ 
 });
+
 
 if(natural_Jurídica.value == "J"){
   document.getElementById("razon_social").disabled = false;
-    document.getElementById("rif").disabled = false;
+  if(!document.getElementById("rif") == "null")document.getElementById("rif").disabled = false;
     valor = "";
     ocutaInput(valor);
 }
 
 function ocutaInput(valor) {
   oculta_razon_social.style.display = valor;
-  oculta_rif.style.display = valor;
-}
-
-
+  rif.style.display = valor;
+}P

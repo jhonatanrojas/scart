@@ -62,8 +62,10 @@ class DocumentosController extends Controller
     {
 
         $customer = auth()->user();
-            $id = $customer['id'];
+        $id = $customer['id'];
+      
             $Financiamiento  = session('dataCheckout');
+
 
         $request->validate([
             'cedula' => 'required',
@@ -89,10 +91,6 @@ class DocumentosController extends Controller
         $saveFile = time().'.'.$request->carta_trabajo->extension();  
         $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
         $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
-       
-
-
-            
 
             $saveFile = new SC__documento;
             $saveFile->first_name =$request->first_name;
@@ -104,20 +102,13 @@ class DocumentosController extends Controller
             $saveFile->carta_trabajo = $path_archivo;
 
             if($saveFile->save()){
-               
-            if($Financiamiento[0]->financiamiento == "1"){
-                return redirect(sc_route('checkout.confirm'))->with('success', 'Datos enviado con exito..  Continuar con la evaluación y poder darle respuesta en 48 horas');
-            }else{
                 return redirect('/')->with('success', 'Datos enviado con exito');
 
-            }
-                
              }else{
                 return redirect('/')->with('error', 'error a enviar los datos');
 
              }
             
 
-       
     }
 }
