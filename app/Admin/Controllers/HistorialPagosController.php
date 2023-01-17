@@ -17,6 +17,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
 use SCart\Core\Front\Models\ShopOrderTotal;
+use Carbon\Carbon;
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -665,7 +666,15 @@ class HistorialPagosController extends RootAdminController
                         'cod_numero_combenio'
                     ];
 
+           
+
+      
+
+                  
+
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+
+                   
 
                     $dataReplace = [
                         $dato_usuario['first_name'],
@@ -683,8 +692,8 @@ class HistorialPagosController extends RootAdminController
                         'Cod_Cuota_total'=> number_format($number1, 2 ,',', ' '),
                         'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
-                        $monto ,
+                        'cod_fechaEntrega' =>request()->fecha_maxima_entrega ?? '',
+                        'cod_subtotal' => $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,

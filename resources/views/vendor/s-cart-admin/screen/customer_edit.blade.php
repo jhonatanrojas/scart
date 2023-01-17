@@ -863,6 +863,13 @@
                                     placeholder="apellido" />
                             </div>
                         </div>
+                        <div class="col-12 col-md-12 mb-3">
+                            <div class="input-group">
+                                <input  required type="text" id="cedula_ref" name="cedula_ref"
+                                    value="" class="form-control "
+                                    placeholder="Cedula" />
+                            </div>
+                        </div>
                         <div class="col-md-12 mb-3">
                             <div class="input-group">
                                 <input required type="number" id="telefono_ref" name="telefono_ref"
@@ -899,6 +906,7 @@
                                 <tr>
                                   <th>Nombre</th>
                                   <th>Apellido</th>
+                                  <th>Cedula</th>
                                   <th>Telefono</th>
                                   <th>Parentesco</th>
                                   <th>Acciones</th>
@@ -913,6 +921,7 @@
 
                                 <td>{{$ref->nombre_ref}}</td>
                                 <td>{{$ref->apellido_ref}}</td>
+                                <td>{{$ref->cedula_ref}}</td>
                                 <td>{{$ref->telefono}}</td>      
                                 <td>{{$ref->parentesco}}</td>      
                                 <td><span onclick="deleteItem('{!!$ref->id!!}');" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
@@ -998,6 +1007,7 @@ $('.add_attributes').click(function(event) {
  let nombre_ref = $('#nombre_ref').val()
  let apellido_ref = $('#apellido_ref').val()
  let telefono_ref = $('#telefono_ref').val()
+ let Cedula_ref = $('#cedula_ref').val()
  let parentesco = $('#parentesco').val()
  let id = $('#id_usuario').val()
 if(nombre_ref !== "" && apellido_ref !== "" && telefono_ref !== "" && parentesco !== ""){
@@ -1008,6 +1018,7 @@ if(nombre_ref !== "" && apellido_ref !== "" && telefono_ref !== "" && parentesco
             "_token": "{{ csrf_token() }}",
             nombre_ref:nombre_ref,
             apellido_ref:apellido_ref,
+            cedula_ref:Cedula_ref,
             telefono_ref: telefono_ref,
             parentesco: parentesco
         },

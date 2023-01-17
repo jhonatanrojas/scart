@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Carbon\Carbon;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             config(['app.debug' => false]);
         }
+
+        Carbon::setUTF8(true);
+        Carbon::setLocale(config('app.locale'));
+        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
     }
 
     /**
