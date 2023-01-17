@@ -7,7 +7,8 @@
  
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header with-border">
+            <div class="card-header with-border text-center">
+                <a class="h4" href="{{ sc_route_admin('admin_order.detail', ['id' => $order ? $order : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
                
 
             </div>
@@ -62,6 +63,8 @@
                             </div>
                         </div>
                         @endforeach
+
+                        
 
 
 
@@ -124,7 +127,7 @@
                         </div>
 
                         <div class="btn-group float-left">
-                            <button type="reset" class="btn btn-warning">{{ sc_language_render('action.reset') }}</button>
+                            <a class="btn btn-primary float-left" href="{{ sc_route_admin('admin_order.detail', ['id' => $order ? $order : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
                         </div>
                     </div>
                 </div>

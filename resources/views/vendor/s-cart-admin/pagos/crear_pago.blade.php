@@ -1,10 +1,14 @@
 @extends($templatePathAdmin.'layout')
 
+
+
+
 @section('main')
 <div class="row">
   <div class="col-12">
     <div class="card" >
       <div class="card-header with-border">
+       
         <div class="card-tools">
           @if (!empty($topMenuRight) && count($topMenuRight))
             @foreach ($topMenuRight as $item)
@@ -272,6 +276,8 @@
         
         
                   <button type="submit" class="btn btn-primary">Reportar</button>
+
+                  <a class=" btn btn-primary" href="{{ sc_route_admin('admin_order.detail', ['id' => $order->id ? $order->id : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
                 </div>
               </form>
               </div>

@@ -274,7 +274,7 @@
      
           <div class="card collapsed-card">
           <div class="table-responsive">
-            <table class="table table-hover box-body text-wrap table-bordered">
+            <table class="table table-hover  box-body text-wrap table-bordered ">
                 <thead>
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
@@ -733,7 +733,7 @@
       </div>
       <div class="modal-body">
    
-        <form action="{!! sc_route('crear_convenio') !!}" method="POST">
+        <form action="{!!sc_route('crear_convenio') !!}" method="POST">
           <div id="w-100">
            
              {{ csrf_field() }}
@@ -768,7 +768,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="monto">Fecha de entrega: </label>
-                <input   class="form-control   " type="date" name="fecha_maxima_entrega" id="fecha_maxima_entrega" placeholder="_nro_cuotas">
+                <input   class="form-control   " type="date" name="fecha_maxima_entrega" id="fecha_maxima_entrega" >
               </div>
               <div class="form-group col-md-6">
                 <label for="monto">Inicial $: </label>
@@ -823,10 +823,7 @@
         <input  name="financiamiento" type="hidden"  value="1"  max="100">
         <input  name="id_usuario" type="hidden"  value="{{$order->customer_id}}" >
 </form><!-- /.modal-dialog -->
-      <div class="row">
-  
       
-      </div>
 @php
 
   $opcion_inicial='  <option value="0"> Sin Inicial</option>
@@ -844,6 +841,8 @@
               
                   }
                 }
+
+                
                 $htmlSelectProduct .='
               </select>
               <span class="add_attr"></span>
@@ -870,10 +869,10 @@
                 ';
           
          
-  $htmlSelectProduct .='
-              </select>
-              <span class="add_attr"></span>
-            </td>
+            $htmlSelectProduct .='
+                </select>
+                <span class="add_attr"></span>
+              </td>
             
             
               <td></td>
@@ -882,7 +881,7 @@
 
              
 
-              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
+              <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" id="preci" value="0"></td>
 
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
 
@@ -1361,11 +1360,22 @@ function update_total(e){
                 $('#loading').show();
             },
             success: function(returnedData){
+
+
                 node.find('.add_sku').val(returnedData.sku);
                 node.find('.add_qty').eq(0).val(1);
-                node.find('.add_price').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
-                node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1 !!});
+
+                node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+
+                if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});
+                  else node.find('.add_price').eq(0).val(returnedData.price_final)
+
+                if(!{!!$order->exchange_rate!!} == 0)
+                  node.find('.add_total').eq(0).val(returnedData.price_final * {!! ($order->exchange_rate)??1!!});
+                  else node.find('.add_total').eq(0).val(returnedData.price_final );
+
                 node.find('.add_attr').eq(0).html(returnedData.renderAttDetails);
+
                 node.find('.add_tax').eq(0).html(returnedData.tax);
                 
                 $('#loading').hide();
@@ -1418,7 +1428,7 @@ $( "#decision_final" ).change(function(e) {
             },
   
             success: function (respuestas) {
-              location.reload();
+              
                
               $('#loading').hide();
               

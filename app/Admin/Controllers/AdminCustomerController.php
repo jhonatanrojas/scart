@@ -271,6 +271,7 @@ class AdminCustomerController extends RootAdminController
         $referencia = new SC_referencia_personal(); 
         $referencia->nombre_ref = $datos['nombre_ref'];
         $referencia->apellido_ref = $datos['apellido_ref'];
+        $referencia->cedula_ref = $datos['cedula_ref'];
         $referencia->telefono = $datos['telefono_ref'];
         $referencia->id_usuario = $datos['id_usuario'];
         $referencia->parentesco = $datos['parentesco'];
