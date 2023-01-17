@@ -547,6 +547,21 @@ class  AdminOrderController extends RootAdminController
         ->orderBy('fecha_venciento')->get();
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
         $documento = SC__documento::where('id_usuario', $order->customer_id)->get();
+        
+        $ducumentocliente=[];
+        foreach ($documento as $verdument){
+            
+            $ducumentocliente = [
+                "id" => $verdument->id,
+                "first_name" => $verdument->first_name,
+                "id_usuario" => $verdument->id_usuario
+            ];
+
+           
+
+        }
+
+       
 
 
        
@@ -581,7 +596,7 @@ class  AdminOrderController extends RootAdminController
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
                 'convenio'=>$convenio,
-                'documento'=>$documento,
+                'documento'=>$ducumentocliente,
                 'clasificacion' => $Clasificacion ?? '',
                 "order" => $order,
                 'historial_pagos'=>$historialPagos,
