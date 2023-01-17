@@ -237,6 +237,8 @@
     
                                 </div>
                             </div>
+
+                            
                             @else
                             <div class="form-group row {{ $errors->has('first_name') ? ' text-red' : '' }}">
                                 <label for="first_name"

@@ -205,10 +205,11 @@
                     <tr>
                       <td class="td-title">Ver documentos:</td>
                       <td>
-                        @if (empty($documento ) )
-                        El cliente no ha adjuntado Documentos <br>
+                       
+                        @if (empty($documento))
+                          El cliente no ha adjuntado Documentos <br>
                         @endif
-                        <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
+                          <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
                       </td>
 
                    
@@ -296,9 +297,13 @@
                 <tbody>
           
                     @foreach ($order->details as $item)
+
+                
                           <tr>
                             <td>{{ $item->name }}
                               @php
+
+
                               $html = '';
                                 if($item->attribute && is_array(json_decode($item->attribute,true))){
                                   $array = json_decode($item->attribute,true);
@@ -326,10 +331,6 @@
                              </td>
                              <td>
 
-                     
-
-          
-                
                               <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
                                data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
                                data-pk="{{ $item->id }}"
@@ -362,14 +363,16 @@
                               $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
                               echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
-                             else:
-                              $precio_couta=  $item->total_price ;
-                              echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
+                             else :
+                                $precio_couta=  $item->total_price ;
+                                echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
                               
                              endif;
  
                               @endphp
                              </td>
+
+
                              <td class="product_qty">x <a href="#" class="edit-item-detail" data-value="{{ $item->qty }}" data-name="qty" data-type="number" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.qty') }}"> {{ $item->qty }}</a></td>
 
                             <td class="product_price">
@@ -379,7 +382,8 @@
                             <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
-                            @if (!$order->modalidad_de_compra == 1)
+
+                            @if ($order->modalidad_de_compra == 1)
                             <td>
                               <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
@@ -389,7 +393,7 @@
                     @endforeach
 
                     <tr  id="add-item" class="not-print">
-                      <td colspan="7">
+                      <td colspan="9">
                         @if ($order->total <= 0  && empty($convenio)  &&  $order->modalidad_de_compra == 1 )
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>  
                         @endif
@@ -870,10 +874,16 @@
               </select>
               <span class="add_attr"></span>
             </td>
+            
+            
+              <td></td>
 
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
+             
+
               <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" value="0"></td>
+
               <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
 
               <td><input type="number" disabled class="add_total form-control" value="0"></td>
@@ -1281,13 +1291,9 @@ function gen_table(fecha_p=false){
                   d3=r.toFixed(2);
                   deuda=deudas.toFixed(1);
                   document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
-                          `
-                          
-                          
-                          
+                  `
                           <tr>
                               <td>${i}</td>
-                            
                               <td> <input readonly class="form-control" name="coutas_calculo[]" type="text" value="${d2}"> </td>
                               <td> ${d3} </td>
                               <td> <input   class="form-control"  name="fechas_pago_cuotas[]" type="date" value="${ anof+"-"+mesf+"-"+diaf}"> </td>
