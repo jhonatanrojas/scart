@@ -1439,6 +1439,12 @@ class  AdminOrderController extends RootAdminController
         // dd($borrado_html->convenio);
         $convenio_cliente = false;
 
+        $order = ShopOrder::where('id',$id)->get();
+
+        
+
+       
+
        
 
 
@@ -1447,6 +1453,7 @@ class  AdminOrderController extends RootAdminController
         $data = [
             'title'             => "convenio del cliente ",
             'convenio_cliente' => $convenio_cliente,
+            'order' => $order[0]['id'],
             'id_convenio'          => $id,
             'borrado_html'          =>$borrado_html,
             'title_description' => sc_language_render('admin.news.add_new_des'),
