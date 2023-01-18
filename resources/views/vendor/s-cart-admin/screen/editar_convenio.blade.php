@@ -66,13 +66,15 @@
 
 
                         @if ($convenio_cliente)
-                        <div class="form-group row">
+                        <div class="form-group row m-auto">
                             <div class="col-sm-12">Soporte de variables:</div>
                             <div class="col-sm-8">
                                 <label></label>
                                 <div id="">
                                     <li>cod_nombre</li>
                                     <li>cod_apellido</li>
+                                    <li>cod_razon_social</li>
+                                    <li>cod_rif</li>
                                     <li>cod_direccion</li>
                                     <li>cod_estado</li>
                                     <li>cod_municipio</li>

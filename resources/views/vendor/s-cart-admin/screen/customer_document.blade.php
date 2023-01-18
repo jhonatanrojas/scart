@@ -1,5 +1,4 @@
 
-
 <style>
 
 .view {
@@ -133,6 +132,8 @@
 </style>
 
 
+
+
 {{-- {!!dd($documento)!!} --}}
 @extends($templatePathAdmin.'layout')
 @section('main')
@@ -143,6 +144,29 @@
             Documentos adjunto del cliente : {{$customer->first_name}}
         </div>
         <div class="row">
+
+           
+
+            @if ($documento[0]->cedula == '')
+            <form action="{{route('document_update')}}"  method="post" enctype="multipart/form-data">
+                @csrf
+                      <label class="h6 text-primary"  for="forma_pago">Adjunta Cedula </label>
+                      <input value="" type="file" class="form-control-file cedula" id="cedula" name="cedula" required="">
+                      @error('cedula')
+                      <small style="color: red">{{$message}}</small>
+                  @enderror
+                <div class=" col-12 mt-6  text-center ">
+                    <button id="guarda"  class="btn btn-primary w-100">guardar</button>
+                </div>
+                <input  type="hidden" name="upCedula" value="cedula">
+                
+
+              <input type="hidden" name="id_usuario" value="{!!$customer->id!!}">
+
+              <input type="hidden" name="id_document" value="{!!$documento[0]->id!!}">
+            </form>
+           
+            @else
             <div class="col-12 col-md-4 ">
                 <p class="text-black text-center   h5">Cedula</p>
                 <div class="view view-first ">  
@@ -163,12 +187,25 @@
                           </a>
                     
                     </div>
+
+                    <div class="mt-2">
+                        
+                        <a class="info" id="descarga" onclick="eliminar(cedula = 'cedula' , {!!$documento[0]->id!!})">
+                            Eliminar
+                              </a>
+                    
+                    </div>
                     </div>
                    
                        
                 </div>
                 
             </div>
+
+         
+            @endif
+
+            @if (!$documento[0]->rif == '')
             <div class="col-12 col-md-4 ">
                 <p class="text-black text-center  h5">Rif</p>
                 <div class="view view-first">  
@@ -189,10 +226,44 @@
                           </a>
                     
                     </div>
+                    <div class="mt-2">
+                        
+                        <a class="info" id="descarga" onclick="eliminar(rif = 'rif' , {!!$documento[0]->id!!})">
+                            Eliminar
+                              </a>
+                    
+                    </div>
                     </div>
                        
                     </div>
             </div>
+                @else
+
+
+                <form action="{{route('document_update')}}"  method="post" enctype="multipart/form-data">
+                    @csrf
+                          <label class="h6 text-primary"  for="forma_pago">Adjunta Cedula </label>
+                          <input value="" type="file" class="form-control-file cedula" id="rif" name="rif" required="">
+                          @error('rif')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
+                    <div class=" col-12 mt-6  text-center ">
+                        <button id="guarda"  class="btn btn-primary w-100">guardar</button>
+                    </div>
+                    <input  type="hidden" name="uprif" value="rif">
+                    
+    
+                  <input type="hidden" name="id_usuario" value="{!!$customer->id!!}">
+    
+                  <input type="hidden" name="id_document" value="{!!$documento[0]->id!!}">
+                </form>
+
+
+
+            @endif
+
+            @if (!$documento[0]->carta_trabajo == '')
+
             <div class="col-12 col-md-4">
                 <p class="text-black text-center  h5">Contancia</p>
                 <div class="view view-first">  
@@ -214,10 +285,39 @@
                               </a>
                         
                         </div>
+
+                        <a class="info" id="descarga" onclick="eliminar(contacia = 'contacia' , {!!$documento[0]->id!!})">
+                            Eliminar
+                              </a>
                     </div>
                        
                     </div>
             </div>
+
+            @else
+
+
+            <form action="{{route('document_update')}}"  method="post" enctype="multipart/form-data">
+                @csrf
+                      <label class="h6 text-primary"  for="forma_pago">Adjunta Cedula </label>
+                      <input value="" type="file" class="form-control-file carta_trabajo" id="carta_trabajo" name="carta_trabajo" required="">
+                      @error('carta_trabajo')
+                      <small style="color: red">{{$message}}</small>
+                  @enderror
+                <div class=" col-12 mt-6  text-center ">
+                    <button id="guarda"  class="btn btn-primary w-100">guardar</button>
+                </div>
+                <input  type="hidden" name="upcarta" value="carta">
+                
+
+              <input type="hidden" name="id_usuario" value="{!!$customer->id!!}">
+
+              <input type="hidden" name="id_document" value="{!!$documento[0]->id!!}">
+            </form>
+
+
+
+            @endif
         
         </div>
         <div class="card-header">
@@ -270,7 +370,7 @@
                     @error('cedula')
                     <small style="color: red">{{$message}}</small>
                 @enderror
-                      </div>
+                </div>
                      
                    
                   
@@ -341,6 +441,21 @@ function printErrorMsg (msg) {
     $(".print-error-msg").css('display','block');
     $.each( msg, function( key, value ) {
         $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+    });
+}
+
+function  eliminar (documento , id ) { 
+
+   
+    $.ajax({
+        url:'{{route("admin_delete_document") }}',
+              type:'POST',
+              dataType:'json',
+              data:{id:id, documento:documento ,"_token": "{{ csrf_token() }}"},
+           
+              success: function(data){
+                location.reload();
+              }
     });
 }
 
