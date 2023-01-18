@@ -624,6 +624,98 @@ class AdminCustomerController extends RootAdminController
        
     }
 
+    public function document_delete (Request $request){
+            if($request->documento == 'cedula'){
+            $user = SC__documento::find($request->id);
+            $user->cedula = '';
+            $user->save();
+
+            return response()->json(['success' => 1, 'msg' => 'eliminado']);
+
+           }
+
+           if($request->documento == 'rif'){
+            $user = SC__documento::find($request->id);
+            $user->rif = '';
+            $user->save();
+
+            return response()->json(['success' => 1, 'msg' => 'eliminado']);
+
+           }
+
+           if($request->documento == 'contacia'){
+            $user = SC__documento::find($request->id);
+            $user->carta_trabajo = '';
+            $user->save();
+
+            return response()->json(['success' => 1, 'msg' => 'eliminado']);
+
+           }
+
+            
+
+
+    }
+
+    public function document_update(Request $request){
+
+                $datos =  $request->all();
+
+                if(isset($datos['upCedula']) == 'cedula'){
+                   
+                $saveFile = time().'.'.$datos['cedula']->extension();  
+                $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
+                $datos['cedula']->move(public_path('data/clientes/cedula'), $saveFile);
+
+                $saveFile = SC__documento::find($datos['id_document']);
+
+                $saveFile->cedula = $cedulas;
+                $saveFile->save();
+                    if($saveFile){
+                        return redirect()->route('admin_customer.document', ['id' => $datos['id_usuario']])
+                    ->with(['success' => sc_language_render('customer.update_success')]);
+                     }
+
+                }else if(isset($datos['uprif']) =='rif'){
+                    $saveFile = time().'.'.$datos['rif']->extension();  
+                    $rifs= 'data/clientes/rif'.'/'. $saveFile;
+                    $datos['rif']->move(public_path('data/clientes/rif'), $saveFile);
+
+                    $saveFile = SC__documento::find($datos['id_document']);
+
+                    $saveFile->rif = $rifs;
+                    $saveFile->save();
+                    if($saveFile){
+                        return redirect()->route('admin_customer.document', ['id' => $datos['id_usuario']])
+                    ->with(['success' => sc_language_render('customer.update_success')]);
+                     }
+    
+
+                }else if(isset($datos['upcarta']) =='carta'){
+
+                    $saveFile = time().'.'.$datos['carta_trabajo']->extension();  
+                    $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
+                    $datos['carta_trabajo']->move(public_path('data/clientes/carta_trabajo'), $saveFile);
+
+
+                    $saveFile = SC__documento::find($datos['id_document']);
+
+                    $saveFile->carta_trabajo = $path_archivo;
+                    $saveFile->save();
+                    if($saveFile){
+                        return redirect()->route('admin_customer.document', ['id' => $datos['id_usuario']])
+                    ->with(['success' => sc_language_render('customer.update_success')]);
+                     }
+
+                }
+
+                
+
+                
+           
+
+    }
+
     /**
      * Check permisison item
      */
