@@ -121,10 +121,13 @@
                         <div class="btn-group float-right">
                             <button type="submit" class="btn btn-primary">{{ sc_language_render('action.submit') }}</button>
                         </div>
-
+                        
+                        @if (!empty($order))
                         <div class="btn-group float-left">
                             <a class="btn btn-primary float-left" href="{{ sc_route_admin('admin_order.detail', ['id' => $order ? $order : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
                         </div>
+                            
+                        @endif
                     </div>
                 </div>
 
