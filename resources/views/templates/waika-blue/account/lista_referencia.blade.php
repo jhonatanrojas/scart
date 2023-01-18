@@ -20,6 +20,7 @@ $layout_page = shop_profile
                         <tr>
                           <th>Nombre</th>
                           <th>Apellido</th>
+                          <th>cedula</th>
                           <th>Telefono</th>
                           <th>Parentesco</th>
                           <th>Acciones</th>
@@ -32,6 +33,7 @@ $layout_page = shop_profile
                     <tbody>
                         <td>{{$ref->nombre_ref}}</td>
                         <td>{{$ref->apellido_ref}}</td>
+                        <td>{{$ref->cedula_ref}}</td>
                         <td>{{$ref->telefono}}</td>      
                         <td>{{$ref->parentesco}}</td>      
                         <td><span onclick="deleteItem('{!!$ref->id!!}');" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt">X</i></span>
@@ -79,6 +81,12 @@ $layout_page = shop_profile
                                           <span class="input-group-text" id="addon-wrapping"></span>
                                           <input value="{{ (old('apellido_ref' ?? ''))}}" id="apellido_ref" name="apellido_ref" type="text" class="form-control" placeholder="Apellido" aria-label="Apellido" aria-describedby="addon-wrapping">
                                         </div></div>
+
+                                        <div class="col-12 mb-3">
+                                          <div class="input-group flex-nowrap">
+                                              <span class="input-group-text" id="addon-wrapping"></span>
+                                              <input value="{{ (old('cedula_ref' ?? ''))}}" id="cedula_ref" name="cedula_ref" type="text" class="form-control" placeholder="cedula" aria-label="cedula" aria-describedby="addon-wrapping">
+                                            </div></div>
                                   <div class="col-12 mb-3">
                                       <div class="input-group flex-nowrap">
                                           <span class="input-group-text" id="addon-wrapping"></span>
@@ -121,6 +129,7 @@ $layout_page = shop_profile
 function enViar_refencia(){
 let nombre_ref = $('#nombre_ref').val()
  let apellido_ref = $('#apellido_ref').val()
+ let cedula_ref = $('#cedula_ref').val()
  let telefono_ref = $('#telefono_ref').val()
  let parentesco = $('#parentesco').val()
  let id = $('#id_usuario').val()
@@ -132,6 +141,7 @@ if(nombre_ref !== "" && apellido_ref !== "" && telefono_ref !== "" && parentesco
             "_token": "{{ csrf_token() }}",
             nombre_ref:nombre_ref,
             apellido_ref:apellido_ref,
+            cedula_ref:cedula_ref,
             telefono_ref: telefono_ref,
             parentesco: parentesco
         },
