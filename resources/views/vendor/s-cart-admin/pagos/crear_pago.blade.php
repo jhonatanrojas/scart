@@ -218,7 +218,7 @@
                      
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Monto</label>
-                          <input type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
+                          <input step="any" type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
                           @error('monto')
                           <small style="color: red">{{$message}}</small>
                       @enderror
