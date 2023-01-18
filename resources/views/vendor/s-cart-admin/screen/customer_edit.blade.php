@@ -371,7 +371,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="address1" type="text" class="form-control" name="address1" 
+                                    <input max="200" id="address1" type="text" class="form-control" name="address1" 
                                         value="{{ (old('address1', $customer['address1'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('address1'))
@@ -380,6 +380,8 @@
     
                                 </div>
                             </div>
+
+                            
 
                             @if (sc_config_admin('customer_address2'))
                             <div class="form-group row {{ $errors->has('address2') ? ' text-red' : '' }}">
