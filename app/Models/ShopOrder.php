@@ -71,11 +71,19 @@ class ShopOrder extends Model
         //Uuid
 
      
-   
+        echo abs(000005);
       
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} =     str_pad(self::count()+1,6,"0",STR_PAD_LEFT).'-'.date("Y") ;
+                $consul=    self::select('id')->orderBy('create_at', 'desc')->first();
+                $id=1;
+                if($consul){
+                   $id= $consul->id;
+                   $porciones = explode("-",$id);
+                   $id= abs($porciones[0])+1; 
+                }
+             
+                $model->{$model->getKeyName()} =str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y") ;
             }
         });
     }
