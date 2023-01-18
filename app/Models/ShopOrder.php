@@ -76,16 +76,26 @@ class ShopOrder extends Model
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
                 $consul=    self::select('id')->orderBy('created_at', 'desc')->first();
+
+              
                 $id=1;
                 if($consul){
                    $id= $consul->id;
                    $porciones = explode("-",$id);
                    $id= abs($porciones[0])+1; 
                 }
-                if(self::find(str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y"))){
-                    $id+2;
+                $orden=    self::find(str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y"));
+                if ($orden) {
+                    $id= $orden->id;
+                    $porciones = explode("-",$id);
+                    $id= abs($porciones[0])+1; 
+                    $id= $id++;
+
+
+
                 }
 
+            
 
              
                 $model->{$model->getKeyName()} =str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y") ;
