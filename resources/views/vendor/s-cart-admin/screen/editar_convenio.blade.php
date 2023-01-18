@@ -7,11 +7,7 @@
  
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header with-border text-center">
-                <a class="h4" href="{{ sc_route_admin('admin_order.detail', ['id' => $order ? $order : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
-               
-
-            </div>
+            
             <!-- /.card-header -->
             <!-- form start -->
             <form action="{{ route('create_convenio', ['id' => $id_convenio]) }}" method="post" accept-charset="UTF-8" class="form-horizontal" id="form-main"
