@@ -82,7 +82,7 @@ class ShopOrder extends Model
                    $porciones = explode("-",$id);
                    $id= abs($porciones[0])+1; 
                 }
-                if(self::find($id)){
+                if(self::find(str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y"))){
                     $id+2;
                 }
 
