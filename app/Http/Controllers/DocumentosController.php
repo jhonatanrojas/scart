@@ -25,7 +25,25 @@ class DocumentosController extends Controller
             $id = $customer['id']; 
             $documento = SC__documento::where('id_usuario',$id)->get();
 
-            if(!isset($documento[0]['id_usuario']) == $id){
+           
+            $datos_del_documento =[];
+            foreach ($documento as $documentos){
+               
+
+                $datos_del_documento = [
+                    "id" => $documentos->id,
+                    "carta_trabajo" => $documentos->carta_trabajo,
+                    "cedula" => $documentos->cedula,
+                    "rif" => $documentos->rif,
+                    "id_usuario" => $documentos->id_usuario,
+
+                ];
+
+            }
+
+           
+
+            if(empty($datos_del_documento)){
            $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
            
         }else $dato = "";
@@ -34,7 +52,7 @@ class DocumentosController extends Controller
             ->with(
                 [
                     'title'       => 'adjuntar documento',
-                    'documentos'       => $documento,
+                    'documentos'       => $datos_del_documento,
                     'id_cliente' => $id,
                     'cart'               => session('dataCheckout'),
                     'customer'    => $customer,
@@ -65,6 +83,69 @@ class DocumentosController extends Controller
         $id = $customer['id'];
       
             $Financiamiento  = session('dataCheckout');
+
+
+            $result = $request->all();
+
+
+           
+            if(isset($result['c_vacio'])){
+                $request->validate([
+                    'cedula' => 'required',
+                    
+                ]);
+
+                $saveFile = time().'.'.$request->cedula->extension();  
+                $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
+                $request->cedula->move(public_path('data/clientes/cedula'), $saveFile);
+                $saveFile = SC__documento::find($result['id']);
+                $saveFile->cedula = $cedulas;
+                $saveFile->save();
+                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos cedula');
+               
+
+               
+
+            }
+            
+            if(isset($result['r_vacio'])){
+                $request->validate([
+                    'rif' => 'required',
+                ]);
+
+                
+
+                $saveFile = time().'.'.$request['rif']->extension();  
+                    $rifs= 'data/clientes/rif'.'/'. $saveFile;
+                    $request['rif']->move(public_path('data/clientes/rif'), $saveFile);
+                $saveFile = SC__documento::find($result['id']);
+                $saveFile->rif = $rifs;
+                $saveFile->save();
+                
+                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos rif');
+
+            }
+
+            if(isset($result['k_vacio'])){
+                $request->validate([
+                    'carta_trabajo' => 'required',
+                ]);
+                $saveFile = time().'.'.$request->carta_trabajo->extension();  
+                $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
+                $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
+
+                
+                $saveFile = SC__documento::find($result['id']);
+                $saveFile->carta_trabajo = $path_archivo;
+                $saveFile->save();
+                
+                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos carta de trabajo');
+
+            }
+
+           
+
+           
 
 
         $request->validate([
@@ -102,7 +183,9 @@ class DocumentosController extends Controller
             $saveFile->carta_trabajo = $path_archivo;
 
             if($saveFile->save()){
-                return redirect('/')->with('success', 'Datos enviado con exito');
+                
+                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos');
+
 
              }else{
                 return redirect('/')->with('error', 'error a enviar los datos');
