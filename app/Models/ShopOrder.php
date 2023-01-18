@@ -71,11 +71,11 @@ class ShopOrder extends Model
         //Uuid
 
      
-        echo abs(000005);
+
       
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $consul=    self::select('id')->orderBy('create_at', 'desc')->first();
+                $consul=    self::select('id')->orderBy('created_at', 'desc')->first();
                 $id=1;
                 if($consul){
                    $id= $consul->id;
