@@ -248,15 +248,21 @@ class  AdminOrderController extends RootAdminController
                                         ->count();
             $dataMap['created_at'] = $row['created_at'];
             $btn_pagos='';
+
+            $btn_reportar_pago="";
+
+            if($row->modalidad_de_compra==0){
+                $btn_reportar_pago='  <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;';
+            }
             if($dataMap['pagos']>0)
             $btn_pagos=' <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-university "></i></span></a>&nbsp;';
             $dataMap['action'] = '
             
             
             <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
-            '.$btn_pagos.'
-            <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
-            <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
+            '.$btn_pagos. $btn_reportar_pago.'
+        
+            <!--span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span-->
             ';
             $dataTr[$row['id']] = $dataMap;
         }
