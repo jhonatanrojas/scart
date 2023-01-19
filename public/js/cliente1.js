@@ -38,4 +38,4 @@ if(natural_Jurídica.value == "J"){
 function ocutaInput(valor) {
   oculta_razon_social.style.display = valor;
   rif.style.display = valor;
-}P
+}
