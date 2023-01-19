@@ -319,6 +319,25 @@
                                 </div>
                             </div>
                             @endif
+
+                            @if (sc_config_admin('customer_phone'))
+                            <div class="form-group row ">
+                                <label for="phone"
+                                    class="col-sm-2 col-form-label">Telefono /opcional</label>
+    
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                    <input id="phone2" type="text" class="form-control" name="phone2" 
+                                        value="{{ (old('phone2', $customer['phone2'] ?? ''))}}">
+                                    </div>
+                                    
+    
+                                </div>
+                            </div>
+                            @endif
     
                             @if (sc_config_admin('customer_postcode'))
                             <div class="form-group row {{ $errors->has('postcode') ? ' text-red' : '' }}">
@@ -371,7 +390,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="address1" type="text" class="form-control" name="address1" 
+                                    <input max="200" id="address1" type="text" class="form-control" name="address1" 
                                         value="{{ (old('address1', $customer['address1'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('address1'))
@@ -380,6 +399,8 @@
     
                                 </div>
                             </div>
+
+                            
 
                             @if (sc_config_admin('customer_address2'))
                             <div class="form-group row {{ $errors->has('address2') ? ' text-red' : '' }}">

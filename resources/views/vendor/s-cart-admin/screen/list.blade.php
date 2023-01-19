@@ -67,18 +67,16 @@
 
          <div class="float-left">
           @if (!empty($removeList))
-            <div class="menu-left">
-              <button type="button" class="btn btn-default grid-select-all"><i class="far fa-square"></i></button>
-            </div>
+            
             <div class="menu-left">
               <span class="btn btn-flat btn-danger grid-trash" title="{{ sc_language_render('action.delete') }}"><i class="fas fa-trash-alt"></i></span>
             </div>
           @endif
 
           @if (!empty($buttonRefresh))
-            <div class="menu-left">
-              <span class="btn btn-flat btn-primary grid-refresh" title="{{ sc_language_render('action.refresh') }}"><i class="fas fa-sync-alt"></i></span>
-            </div>
+          <div class="menu-left">
+            <span class="btn btn-flat btn-primary grid-refresh" title="{{ sc_language_render('action.refresh') }}"><i class="fas fa-sync-alt"></i></span>
+          </div>
           @endif
 
           @if (!empty($buttonSort))
@@ -207,6 +205,8 @@
     });
 
       $(document).on('submit', '#button_search', function(event) {
+
+        console.log(event)
         $.pjax.submit(event, '#pjax-container')
       })
 

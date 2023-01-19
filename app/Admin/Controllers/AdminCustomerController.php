@@ -38,6 +38,7 @@ class AdminCustomerController extends RootAdminController
     public function index()
     {
         $data = [
+            
             'title'         => sc_language_render('customer.admin.list'),
             'subTitle'      => '',
             'icon'          => 'fa fa-indent',
@@ -56,8 +57,10 @@ class AdminCustomerController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
+            'action'=> 'aciones',
             'email'      => sc_language_render('customer.email'),
             'name'       => sc_language_render('customer.name'),
+            'cedula'       => sc_language_render('customer.cedula'),
             'phone'      => sc_language_render('customer.phone'),
             'address1'   => sc_language_render('customer.address1'),
             'Estado'   => 'Estado',
@@ -65,10 +68,12 @@ class AdminCustomerController extends RootAdminController
             'Parroquia'    => 'Parroquia',
             'status'     => 'Status',
             'created_at' => sc_language_render('admin.created_at'),
-            'action'     => sc_language_render('action.title'),
+            
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
+
+       
         $arrSort = [
             'id__desc' => sc_language_render('filter_sort.id_desc'),
             'id__asc' => sc_language_render('filter_sort.id_asc'),
@@ -76,15 +81,37 @@ class AdminCustomerController extends RootAdminController
             'first_name__asc' => sc_language_render('filter_sort.first_name_asc'),
             'last_name__desc' => sc_language_render('filter_sort.last_name_desc'),
             'last_name__asc' => sc_language_render('filter_sort.last_name_asc'),
+           
         ];
 
         $dataSearch = [
-            'keyword'    => $keyword,
+            'keyword'    => $keyword ,
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
             'perfil'    => request('perfil') ?? '',
         ];
+
+
+
+
         $dataTmp = (new AdminCustomer)->getCustomerListAdmin($dataSearch);
+
+
+
+       
+
+       
+
+        
+
+
+
+       
+
+
+        
+
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -111,15 +138,6 @@ class AdminCustomerController extends RootAdminController
                      }
 
             $dataTr[$row['id']] = [
-                'email' => $row['email'],
-                'name' => $row['name'],
-                'phone' => $row['phone'],
-                'address1' => $row['address1'],
-                'Estado' => $nombreEstado,
-                'Municipio' => $nombremunicipos,
-                'Parroquia' =>  $nombreparroquias ,
-                'status' => $row['status'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
-                'created_at' => $row['created_at'],
                 'action' => '
                     <a href="' . sc_route_admin('admin_customer.edit', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
 
@@ -127,6 +145,17 @@ class AdminCustomerController extends RootAdminController
 
                     <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>'
                 ,
+                'email' => $row['email'],
+                'name' => $row['name'],
+                'cedula' => $row['cedula'],
+                'phone' => $row['phone'],
+                'address1' => $row['address1'],
+                'Estado' => $nombreEstado,
+                'Municipio' => $nombremunicipos,
+                'Parroquia' =>  $nombreparroquias ,
+                'status' => $row['status'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
+                'created_at' => $row['created_at'],
+                
             ];
         }
 
@@ -134,7 +163,7 @@ class AdminCustomerController extends RootAdminController
 
         
         $data['dataTr'] = $dataTr;
-        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination') ?? '';
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
 
         //menuRight
@@ -156,7 +185,7 @@ class AdminCustomerController extends RootAdminController
         $data['topMenuRight'][] = '
                 <form action="' . sc_route_admin('admin_customer.index') . '" id="button_search">
                 <div class="input-group input-group" style="width: 350px;">
-                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('search.placeholder') . '" value="' . $keyword . '">
+                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="' . 'buscar por cedula/nombre/email' . '" value="' . $keyword . '">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </div>
