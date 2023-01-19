@@ -95,6 +95,7 @@ class  AdminOrderController extends RootAdminController
         $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
+            'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
@@ -218,8 +219,16 @@ class  AdminOrderController extends RootAdminController
 
 
             }
+            $btn_pagos='';
 
             $dataMap = [
+             
+                'Acción' => $dataMap['action'] = '
+                <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                '.$btn_pagos.'
+                <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
+                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
+                ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
