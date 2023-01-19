@@ -30,7 +30,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
     {
 
        
-
+     
       
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
@@ -73,7 +73,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
         }
 
-        if (!empty($dataRaw['phone2'])) {
+        if (empty($dataRaw['phone2'])) {
             $dataInsert['phone2'] = $dataRaw['phone2'];
         }
 
