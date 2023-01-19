@@ -205,6 +205,8 @@
     });
 
       $(document).on('submit', '#button_search', function(event) {
+
+        console.log(event)
         $.pjax.submit(event, '#pjax-container')
       })
 

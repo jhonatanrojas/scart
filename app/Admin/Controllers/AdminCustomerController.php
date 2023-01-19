@@ -38,6 +38,7 @@ class AdminCustomerController extends RootAdminController
     public function index()
     {
         $data = [
+            
             'title'         => sc_language_render('customer.admin.list'),
             'subTitle'      => '',
             'icon'          => 'fa fa-indent',
@@ -56,6 +57,7 @@ class AdminCustomerController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
+            'action'=> 'aciones',
             'email'      => sc_language_render('customer.email'),
             'name'       => sc_language_render('customer.name'),
             'cedula'       => sc_language_render('customer.cedula'),
@@ -79,7 +81,6 @@ class AdminCustomerController extends RootAdminController
             'first_name__asc' => sc_language_render('filter_sort.first_name_asc'),
             'last_name__desc' => sc_language_render('filter_sort.last_name_desc'),
             'last_name__asc' => sc_language_render('filter_sort.last_name_asc'),
-            'last_cedula__asc' => sc_language_render('filter_sort.cedula_asc'),
            
         ];
 
@@ -146,7 +147,7 @@ class AdminCustomerController extends RootAdminController
                 ,
                 'email' => $row['email'],
                 'name' => $row['name'],
-                'name' => $row['cedula'],
+                'cedula' => $row['cedula'],
                 'phone' => $row['phone'],
                 'address1' => $row['address1'],
                 'Estado' => $nombreEstado,
