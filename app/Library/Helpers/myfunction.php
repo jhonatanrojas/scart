@@ -29,9 +29,6 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
     function sc_customer_data_insert_mapping(array $dataRaw)
     {
 
-       
-     
-      
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
             'email' => $dataRaw['email'],
