@@ -36,10 +36,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             'first_name' => $dataRaw['first_name'] ?? '',
             'email' => $dataRaw['email'],
             'cedula' => $dataRaw['cedula'],
-            'estado_civil' => $dataRaw['estado_civil'],
             'natural_jurídica' => $dataRaw['natural_jurídica'],
-            'rif' => $dataRaw['rif'] ?? '',
-            'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
             'nos_conocio' => $dataRaw['nos_conocio'] ,
             'cod_estado' => $dataRaw['cod_estado'],
             'cod_municipio' => $dataRaw['cod_municipio'],
@@ -59,6 +56,18 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
 
         if (isset($dataRaw['status'])) {
             $dataInsert['status']  = $dataRaw['status'];
+        }
+
+        if (isset($dataRaw['rif'])) {
+            $dataInsert['rif']  = $dataRaw['rif'];
+        }
+
+        if (isset($dataRaw['razon_social'])) {
+            $dataInsert['razon_social']  = $dataRaw['razon_social'];
+        }
+
+        if (isset($dataRaw['estado_civil'])) {
+            $dataInsert['estado_civil']  = $dataRaw['estado_civil'];
         }
         if (!empty($dataRaw['nos_conocio'])) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
