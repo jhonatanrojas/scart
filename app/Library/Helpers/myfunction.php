@@ -73,8 +73,8 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
         }
 
-        if (!empty($dataRaw['estado_civil'])) {
-            $dataInsert['estado_civil'] = $dataRaw['estado_civil'];
+        if (!empty($dataRaw['phone2'])) {
+            $dataInsert['phone2'] = $dataRaw['phone2'];
         }
 
         //Custom fields
