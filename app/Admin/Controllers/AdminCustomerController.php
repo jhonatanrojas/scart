@@ -57,7 +57,7 @@ class AdminCustomerController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
-            'action'=> 'aciones',
+            'action'=> 'Acciones',
             'email'      => sc_language_render('customer.email'),
             'name'       => sc_language_render('customer.name'),
             'cedula'       => sc_language_render('customer.cedula'),
