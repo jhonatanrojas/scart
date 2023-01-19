@@ -88,14 +88,26 @@ class ShopOrder extends Model
                 if ($orden) {
                     $id= $orden->id;
                     $porciones = explode("-",$id);
-                    $id= abs($porciones[0])+1; 
-                    $id= $id++;
+                    $id= abs($porciones[0]); 
+                    $id= $id+1;
 
 
 
                 }
 
-            
+                $orden=    self::find(str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y"));
+                if ($orden) {
+                    $id= $orden->id;
+                    $porciones = explode("-",$id);
+                    $id= abs($porciones[0]); 
+                    $id= $id+1;
+
+
+
+                }
+
+          
+
 
              
                 $model->{$model->getKeyName()} =str_pad($id,6,"0",STR_PAD_LEFT).'-'.date("Y") ;

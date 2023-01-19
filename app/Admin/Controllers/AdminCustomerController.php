@@ -474,36 +474,36 @@ class AdminCustomerController extends RootAdminController
         
         if (sc_config_admin('customer_lastname')) {
             if (sc_config_admin('customer_lastname_required')) {
-                $validate['last_name'] = 'required|string|max:100';
+                $validate['last_name'] = 'required|string|max:150';
             } else {
-                $validate['last_name'] = 'nullable|string|max:100';
+                $validate['last_name'] = 'nullable|string|max:150';
             }
             $dataUpdate['last_name'] = $data['last_name']??'';
         }
 
         if (sc_config_admin('customer_address1')) {
             if (sc_config_admin('customer_address1_required')) {
-                $validate['address1'] = 'required|string|max:100';
+                $validate['address1'] = 'required|string|max:250';
             } else {
-                $validate['address1'] = 'nullable|string|max:100';
+                $validate['address1'] = 'nullable|string|max:250';
             }
             $dataUpdate['address1'] = $data['address1']??'';
         }
 
         if (sc_config_admin('customer_address2')) {
             if (sc_config_admin('customer_address2_required')) {
-                $validate['address2'] = 'required|string|max:100';
+                $validate['address2'] = 'required|string|max:200';
             } else {
-                $validate['address2'] = 'nullable|string|max:100';
+                $validate['address2'] = 'nullable|string|max:200';
             }
             $dataUpdate['address2'] = $data['address2']??'';
         }
 
         if (sc_config_admin('customer_address3')) {
             if (sc_config_admin('customer_address3_required')) {
-                $validate['address3'] = 'required|string|max:100';
+                $validate['address3'] = 'required|string|max:200';
             } else {
-                $validate['address3'] = 'nullable|string|max:100';
+                $validate['address3'] = 'nullable|string|max:200';
             }
             $dataUpdate['address3'] = $data['address3']??'';
         }
