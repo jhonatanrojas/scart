@@ -26,8 +26,9 @@
            
                 <div class=" col-md-12">
                   <div class="input-group mb-4">
-                    <input name="cedula" type="file" class="form-control" id="Cedula">
+                    <input  name="cedula" type="file" class="form-control" id="Cedula">
                     <label class="input-group-text" for="cedula">adjuntar Cedula</label>
+
                   </div>
 
                   

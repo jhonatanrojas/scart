@@ -25,6 +25,14 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
     
 
     Route::get('/document/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@document')->name('admin_customer.document');
+
+    Route::post('/document', $nameSpaceAdminCustomer.'\AdminCustomerController@document_delete')->name('admin_delete_document');
+
+
+    Route::post('/documentActualizar', $nameSpaceAdminCustomer.'\AdminCustomerController@document_update')->name('document_update');
+
+    
+
     Route::post('/document_admin', $nameSpaceAdminCustomer.'\AdminCustomerController@documentn')->name('document_admin');
 
     Route::post('/edit/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@postEdit')->name('admin_customer.edit');
