@@ -84,10 +84,10 @@
                     </div>
                     @endif
 
-                    @if (sc_config('customer_razon_social'))
+                    @if (sc_config('customer_rif'))
                     <div class="col-md-6 oculta_rif">
                         <div class="form-group{{ $errors->has('rif') ? ' has-error' : '' }}">
-                            <input required type="text"
+                            <input disabled="true" required type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('rif'))?"input-error":"" }}"
                                 name="rif" id="rif" placeholder="Rif"
                                 value="{{ old('rif') }}">
