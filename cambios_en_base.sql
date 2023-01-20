@@ -32,6 +32,11 @@ ALTER TABLE sc_shop_order ADD COLUMN fecha_primer_pago date DEFAULT NULL;
 
   `fecha_venciento` timestamp NULL DEFAULT NULL,
 
+ALTER TABLE sc_shop_order ADD confiabilidad int  DEFAULT '0';
+
+ALTER TABLE sc_shop_order ADD confiabilidad2 int  DEFAULT '0';
+
+ALTER TABLE sc_shop_order ADD confiabilidad3 int  DEFAULT '0';
 
 ALTER TABLE sc_shop_customer ADD rif VARCHAR(100) NULL DEFAULT NULL AFTER razon_social;
 
