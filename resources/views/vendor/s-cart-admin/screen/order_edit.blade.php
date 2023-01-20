@@ -564,8 +564,8 @@
                  
                               
                 <a href="#" class="updateInfo" data-name="confiabilidad2 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad ))
-                      {{$order->confiabilidad }} 
+                  @if (!empty($order->confiabilidad2 ))
+                      {{$order->confiabilidad2 }} 
                   @endif
               </a>
             </td>
@@ -597,8 +597,8 @@
                   
                  
                 <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad ))
-                      {{$order->confiabilidad }} 
+                  @if (!empty($order->confiabilidad3 ))
+                      {{$order->confiabilidad3 }} 
                   @endif
               </a>
             </td>
