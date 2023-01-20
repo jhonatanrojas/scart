@@ -622,9 +622,10 @@
                  
                   <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
                     <option value="0"   {{ $order['decision_final'] == 0 ? 'selected':'' }}>Pendiente </option>
-                    <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Cancelado </option>
-                    <option value="2"   {{ $order['decision_final'] > 1 ? 'selected':'' }}>Aprobado </option>
-       
+                    <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Negado </option>
+                    <option value="2"   {{ $order['decision_final'] ==2  ? 'selected':'' }}>Aprobado </option>
+                    <option value="3"   {{ $order['decision_final'] ==3  ? 'selected':'' }}>Diferido </option>
+                    <option value="3"   {{ $order['decision_final'] >3  ? 'selected':'' }}>Otro </option>
                 </select>
               </td>
               </tr>
