@@ -505,7 +505,7 @@ class  AdminOrderController extends RootAdminController
             'exchange_rate'   => $data['exchange_rate'] ?? 0,
             'email'           => $data['email'],
             'modalidad_de_compra'           => $data['modalidad_compra'],
-            'comment'         => $data['comment'],
+            'comment'         => $data['comment']  ?? '',
             'usuario_id'         =>  Admin::user()->id,
             'created_at'         =>  $data['fecha_de_pedido']
         ];
@@ -704,21 +704,10 @@ class  AdminOrderController extends RootAdminController
 
 
 
-        if($code == "status" && $value == 5 && $ordert->modalidad_de_compra == 1){
-            $numeros = array($ordert->evaluacion_comercial, $ordert->evaluacion_financiera, $ordert->evaluacion_legal, $ordert->decision_final);
-            $valorFinal = 0;
-            foreach ($numeros as $numero) {
-                $valorFinal += $numero;
-            }
-            if($valorFinal < 400){
-                 return response()->json(['error' => 1, 'msg' => "las evaluaciones no estan al 100%", 'detail' => '']);
-            }
-            
-        }
-
+      
 
         if(!empty($Email)){
-            estatus_del_pedido($Email);
+        //    estatus_del_pedido($Email);
             
         }
 

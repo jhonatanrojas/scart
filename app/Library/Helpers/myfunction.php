@@ -29,17 +29,11 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
     function sc_customer_data_insert_mapping(array $dataRaw)
     {
 
-       
-
-      
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
             'email' => $dataRaw['email'],
             'cedula' => $dataRaw['cedula'],
-            'estado_civil' => $dataRaw['estado_civil'],
             'natural_jurídica' => $dataRaw['natural_jurídica'],
-            'rif' => $dataRaw['rif'] ?? '',
-            'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
             'nos_conocio' => $dataRaw['nos_conocio'] ,
             'cod_estado' => $dataRaw['cod_estado'],
             'cod_municipio' => $dataRaw['cod_municipio'],
@@ -60,12 +54,24 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
         if (isset($dataRaw['status'])) {
             $dataInsert['status']  = $dataRaw['status'];
         }
+
+        if (isset($dataRaw['rif'])) {
+            $dataInsert['rif']  = $dataRaw['rif'];
+        }
+
+        if (isset($dataRaw['razon_social'])) {
+            $dataInsert['razon_social']  = $dataRaw['razon_social'];
+        }
+
+        if (isset($dataRaw['estado_civil'])) {
+            $dataInsert['estado_civil']  = $dataRaw['estado_civil'];
+        }
         if (!empty($dataRaw['nos_conocio'])) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
         }
 
-        if (!empty($dataRaw['estado_civil'])) {
-            $dataInsert['estado_civil'] = $dataRaw['estado_civil'];
+        if (empty($dataRaw['phone2'])) {
+            $dataInsert['phone2'] = $dataRaw['phone2'];
         }
 
         //Custom fields
@@ -562,6 +568,11 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
             $validate['phone'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,12}$/');
             $dataAddress['phone'] = $dataRaw['phone']??'';
         }
+
+        if (sc_config('customer_phone2')) {
+            $validate['phone2'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,12}$/');
+            $dataAddress['phone2'] = $dataRaw['phone2']??'';
+        }
         // if (sc_config('customer_cedula')) {
         //     $validate['cedula'] = config('validation.customer_cedula_required', 'required|string|max:13');
         //     $dataAddress['cedula'] = $dataRaw['cedula']??'';
@@ -620,7 +631,6 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
     function sc_customer_data_edit_mapping(array $dataRaw)
     {
 
-        
         $dataUpdate = [
             'first_name' => $dataRaw['first_name'],
             'cedula' => $dataRaw['cedula'],
@@ -629,6 +639,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
             'natural_jurídica' => $dataRaw['natural_jurídica'],
             'rif' => $dataRaw['rif'] ?? '',
             'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
+            'phone2' => $dataRaw['phone2'] ?? "no aplica",
         ];
      
         if (isset($dataRaw['status'])) {
@@ -637,6 +648,11 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (isset($dataRaw['nos_conocio'])) {
             $dataUpdate['nos_conocio'] = $dataRaw['nos_conocio'];
+        }
+
+
+        if (isset($dataRaw['phone2'])) {
+            $dataUpdate['phone2'] = $dataRaw['phone2'];
         }
 
         if (!empty($dataRaw['estado_civil'])) {
