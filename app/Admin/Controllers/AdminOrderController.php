@@ -25,6 +25,7 @@ use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_fecha_de_entregas;
 use App\Models\Sc_plantilla_convenio;
+use App\Models\Declaracion_jurada;
 use App\Models\SC_shop_customer;
 use App\Models\SC_shop_order_status;
 use App\Models\shop_order_detail;
@@ -1133,23 +1134,31 @@ class  AdminOrderController extends RootAdminController
                     return 'No se encontró la plantilla';
                 }
 
-
-                // $data = [
-                //     'borrado_html' => $plantilla->convenio,
-                //     'convenio' => $plantilla['nro_convenio'],
-                // ];
-                // $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', $data)->setOptions(['defaultFont' => 'sans-serif']);
-                
-                // return $pdf->stream();
-                
-
-                // return $pdf->download('invoice.pdf');
-
                 
                     $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
                     ['borrado_html'=> $plantilla->convenio],
                     ['convenio'=> $plantilla['nro_convenio'] ],
 
+                    );
+
+                    return $pdf->stream();
+            }
+
+            public function downloadJuradada($id)
+            {
+                $user = Admin::user();
+                if ($user === null) {
+                    return 'inicia secion';
+                }
+
+                $plantilla = Convenio::where('order_id', $id)->first();
+                if (!$plantilla) {
+                    return 'No se encontró la plantilla';
+                }
+
+                
+                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
+                    ['borrado_html'=> $plantilla->declaracion_jurada],
                     );
 
                     return $pdf->stream();
@@ -1494,7 +1503,9 @@ class  AdminOrderController extends RootAdminController
        
             if($id == "1"){
 
-                Sc_plantilla_convenio::where('id' ,1)->where('status', 1)->update(['contenido' => $data['descriptions'][$code]['content']]);
+                Sc_plantilla_convenio::where('id' ,1)->where('status', 1)->update(
+                    ['contenido' => $data['descriptions'][$code]['content']
+                ]);
 
 
             } else if($id == "2"){
@@ -1643,10 +1654,6 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-
-
-       
-
     }
 
     public function fecha_edit($id){
@@ -1679,6 +1686,58 @@ class  AdminOrderController extends RootAdminController
         }
         return view($this->templatePathAdmin.'screen.reporte_de_pedido');
        
+    }
+
+    public function declaracion_jurada(){
+        $request = request()->all();
+        
+
+        if(!empty($request)){
+            $dataDes = [];
+        $languages = $this->languages;
+        foreach ($languages as $code => $value) {
+           
+       
+            $dataDes[] = [
+                'description' => $request['descriptions'][$code]['content'],
+                'content'     => $request['descriptions']['es']['content'],
+            ];
+        }
+
+            $dataDes = sc_clean($dataDes, ['content'], true);
+
+            if($request['save'] == 'save_plantilla'){
+                Declaracion_jurada::where('id', 1)
+                ->update(
+                    [
+                        'status' => 1 ?? 0,
+                        'file_html' =>$request['descriptions'][$code]['content']
+                    ],
+
+                );
+
+            }
+        }
+
+        $file_html = Declaracion_jurada::all();
+
+
+
+
+        $news = [];
+        $data = [
+            'title'             => "Declaración Jurada ",
+            'file_html'             => $file_html,
+            'title_description' => sc_language_render('admin.news.add_new_des'),
+            'icon'              => 'fa fa-plus',
+            'languages'         => $this->languages,
+            'news'              => $news,
+            'url_action'        => sc_route_admin('admin_news.create'),
+        ];
+
+
+        return view($this->templatePathAdmin.'screen.declaracion_jurada')
+            ->with($data);
     }
 
 }

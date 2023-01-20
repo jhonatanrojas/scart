@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sc_fecha_de_entrega' , function(Blueprint $table){
-
+        Schema::create('sc_declarecuion_jurada' , function(Blueprint $table){
             $table->id();
-            $table->date('fecha_entrega');
-            $table->boolean('activo');
+            $table->text('file_html');
+            $table->boolean('status');
             $table->timestamps();
 
         });
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sc_fecha_de_entrega');
+        //
     }
 };

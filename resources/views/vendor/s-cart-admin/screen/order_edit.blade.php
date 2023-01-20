@@ -38,14 +38,16 @@
                   @endif
                   <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;   @php echo $dblockconvenio  @endphp">
                     <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
-                     
-                    
+
                     </span></a>
                 </div>
-               
-               
-                
-             
+
+                @if ($order->total >0  && !empty($convenio))
+                <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadJuradada', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Declaracion jurada</span></a>
+              </div>
+                    
+                @endif
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -53,9 +55,7 @@
                 </div>
                       
                   @endif
-                  {{-- @php
-                    dd();
-                  @endphp --}}
+      
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -63,6 +63,7 @@
                 </div>
                       
                   @endif
+                 
                   @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador Convenio</span></a>
