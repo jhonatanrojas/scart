@@ -906,6 +906,13 @@
                             </div>
                         </div>
 
+                        <div class="col-md-12  mb-3 ">
+                            <div class="input-group">
+                                <input required type="text" id="observacionr" name="observacionr"
+                                    value="" class="form-control"
+                                    placeholder="Nota" />
+                            </div>
+                        </div>
                         <input type="hidden" id="id_usuario" name="id_usuario" value="{{$customer['id']}}">
 
                         <div class="text-center mt-3">
@@ -930,6 +937,7 @@
                                   <th>Cedula</th>
                                   <th>Telefono</th>
                                   <th>Parentesco</th>
+                                  <th>Nota</th>
                                   <th>Acciones</th>
                                 </tr>
                               </thead>
@@ -945,6 +953,7 @@
                                 <td>{{$ref->cedula_ref}}</td>
                                 <td>{{$ref->telefono}}</td>      
                                 <td>{{$ref->parentesco}}</td>      
+                                <td>{{$ref->nota}}</td>      
                                 <td><span onclick="deleteItem('{!!$ref->id!!}');" title="Borrar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
                                 </td>      
                                        
@@ -1030,6 +1039,7 @@ $('.add_attributes').click(function(event) {
  let telefono_ref = $('#telefono_ref').val()
  let Cedula_ref = $('#cedula_ref').val()
  let parentesco = $('#parentesco').val()
+ let nota = $('#observacionr').val()
  let id = $('#id_usuario').val()
 if(nombre_ref !== "" && apellido_ref !== "" && telefono_ref !== "" && parentesco !== ""){
     $.ajax({
@@ -1041,7 +1051,8 @@ if(nombre_ref !== "" && apellido_ref !== "" && telefono_ref !== "" && parentesco
             apellido_ref:apellido_ref,
             cedula_ref:Cedula_ref,
             telefono_ref: telefono_ref,
-            parentesco: parentesco
+            parentesco: parentesco,
+            nota:nota
         },
           url: '{{ route("ref_personales") }}',
           type: "post",

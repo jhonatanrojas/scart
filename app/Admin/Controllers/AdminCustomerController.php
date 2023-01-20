@@ -304,6 +304,7 @@ class AdminCustomerController extends RootAdminController
         $referencia->telefono = $datos['telefono_ref'];
         $referencia->id_usuario = $datos['id_usuario'];
         $referencia->parentesco = $datos['parentesco'];
+        $referencia->nota = $datos['parentesco'] ?? '';
 
         if($referencia->save()){
             return json_encode(['respuesta' => $referencia]);
