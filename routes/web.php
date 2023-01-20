@@ -31,15 +31,22 @@ Route::get('biopago', 'ShopAccountController@biopago')->name('biopago');
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
 
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
+
+
+Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJuradada'])->name('downloadJuradada');
+
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
 
 
 Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('borrador_cliente');
 
 
-
+Route::match(['get', 'post'], 'sc_admin/declaracion_jurada', [AdminOrderController::class,'declaracion_jurada'])->name('declaracion_jurada');
 
 Route::get('sc_admin/edit_convenio', [AdminOrderController::class,'edit_convenio'])->name('edit_convenio');
+
+
+Route::get('sc_admin/declaracion_jurada', [AdminOrderController::class,'declaracion_jurada'])->name('declaracion_jurada');
 
 Route::get('sc_admin/editar_convenio/{id}', [AdminOrderController::class,'editar_convenio'])->name('editar_convenio');
 
