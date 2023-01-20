@@ -414,6 +414,16 @@
       </div>
 </form>
 
+<table class="table table-hover box-body text-wrap table-bordered">
+  <tr>
+    <td  class="td-title">Notas de la solicitud:</td>
+    <td>
+      <a href="#" class="updateInfo" data-name="comment" data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="" >
+        {{ $order->comment }}
+      </a>
+  </td>
+  </tr>
+</table>
 <div class="accordion" id="accordionExample">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -492,11 +502,12 @@
               <td>Evaluación</td>
               <td>Observación</td>
               <td>Porcentaje</td>
+              <td>Confiabilidad</td>
              </tr>
               <tr>
                 <td  class="td-title"><span >Evaluación comercial</span></td>
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                       @if (!empty($order->nota_evaluacion_comercial ))
                           {{$order->nota_evaluacion_comercial }} 
                       @endif
@@ -504,14 +515,24 @@
               </td>
                 <td>
                   
-                 
-                  <select data-name="evaluacion_comercial"     id="evaluacion_comercial"  onChange="selectProduct2();"  class="evaluacion_comercial form-control select2 " name="evaluacion_comercial" >
-                    <option value="">Porcentaje </option>
-                    @foreach (range(0, 100) as $numero)
-                        <option value="{{$numero}}%" {{ $order['evaluacion_comercial'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
-                    @endforeach
-                </select>
+                  <a href="#" class="updateInfo" data-name="evaluacion_comercial " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->evaluacion_comercial ))
+                        {{$order->evaluacion_comercial }} 
+                    @endif
+                </a>
+               
               </td>
+
+              <td>
+                  
+                 
+                <a href="#" class="updateInfo" data-name="confiabilidad " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                  @if (!empty($order->confiabilidad ))
+                      {{$order->confiabilidad }} 
+                  @endif
+              </a>
+           
+            </td>
               </tr>
 
               {{-- Evaluacion_comercial --}}
@@ -522,7 +543,7 @@
               <tr>
                 <td  class="td-title"><span >Evaluación financiera</span></td>
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                   
                     @if (!empty($order->nota_evaluacion_financiera ))
                      
@@ -532,21 +553,30 @@
               </td>
                 <td>
                   
-                 
-                  <select  data-token="evaluacion_financiera"  id="evaluacion_financiera"  onChange="selectProduct2($(this));"  class="nota_evaluacion_financiera form-control select2 " name="evaluacion_financiera" >
-                    <option value="">Porcentaje </option>
-                    @foreach (range(0, 100) as $numero)
-                        <option value="{{$numero}}%" {{ $order['evaluacion_financiera'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
-                    @endforeach
-                </select>
+                  <a href="#" class="updateInfo" data-name="evaluacion_financiera " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->evaluacion_comercial ))
+                        {{$order->evaluacion_comercial }} 
+                    @endif
+                </a>
+                
               </td>
+              <td>
+                  
+                 
+                              
+                <a href="#" class="updateInfo" data-name="confiabilidad2 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                  @if (!empty($order->confiabilidad ))
+                      {{$order->confiabilidad }} 
+                  @endif
+              </a>
+            </td>
               </tr>
               {{-- nota_evaluacion_financiera --}}
 
               <tr>
                 <td  class="td-title"><span >Evaluación legal</span></td>
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     
                     @if (!empty($order->nota_evaluacion_legal ))
                          
@@ -557,13 +587,22 @@
                 <td>
                   
                  
-                  <select   id="evaluacion_legal"  onChange="selectProduct2($(this));"  class="evaluacion_legal form-control select2 " name="evaluacion_legal" >
-                    <option value="0">Porcentaje </option>
-                    @foreach (range(0, 100) as $numero)
-                        <option value="{{$numero}}%" {{ $order['evaluacion_legal'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
-                    @endforeach
-                </select>
+                  <a href="#" class="updateInfo" data-name="evaluacion_legal" data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->evaluacion_comercial ))
+                        {{$order->evaluacion_comercial }} 
+                    @endif
+                </a>
+                
               </td>
+              <td>
+                  
+                 
+                <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                  @if (!empty($order->confiabilidad ))
+                      {{$order->confiabilidad }} 
+                  @endif
+              </a>
+            </td>
               </tr>
 
 
@@ -573,7 +612,7 @@
               <tr>
                 <td  class="td-title"><span >Decisión final</span></td>
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     @if (!empty($order->nota_decision_final ))
                     {{$order->nota_decision_final }} 
                 @endif
@@ -583,10 +622,11 @@
                   
                  
                   <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
-                    <option value="0">Porcentaje </option>
-                    @foreach (range(0, 100) as $numero)
-                        <option value="{{$numero}}%" {{ $order['decision_final'] == $numero ? 'selected':'' }}>{{ $numero}}%</option>
-                    @endforeach
+                    <option value="0"   {{ $order['decision_final'] == 0 ? 'selected':'' }}>Pendiente </option>
+                    <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Negado </option>
+                    <option value="2"   {{ $order['decision_final'] ==2  ? 'selected':'' }}>Aprobado </option>
+                    <option value="3"   {{ $order['decision_final'] ==3  ? 'selected':'' }}>Diferido </option>
+                    <option value="3"   {{ $order['decision_final'] >3  ? 'selected':'' }}>Otro </option>
                 </select>
               </td>
               </tr>
@@ -595,16 +635,7 @@
              @endif
 
              
-              <table class="table table-hover box-body text-wrap table-bordered">
-                <tr>
-                  <td  class="td-title">{{ sc_language_render('order.order_note') }}:</td>
-                  <td>
-                    <a href="#" class="updateInfo" data-name="comment" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="" >
-                      {{ $order->comment }}
-                    </a>
-                </td>
-                </tr>
-              </table>
+        
             </div>
 
 
@@ -613,8 +644,7 @@
           {{-- //End evaluacion --}}
       </div>
     </div>
-  </div>
-  <div class="card">
+
     <div class="card-header" id="headingThree">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
