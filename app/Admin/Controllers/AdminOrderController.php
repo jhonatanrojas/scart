@@ -35,7 +35,7 @@ use Carbon\Carbon;
 use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
-
+use App\Models\SC_referencia_personal;
 class  AdminOrderController extends RootAdminController
 {
     public $statusPayment;
@@ -1106,6 +1106,91 @@ class  AdminOrderController extends RootAdminController
             }
             
             return view($this->templatePathAdmin.'format.invoice')
+            ->with($data);
+        } else {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+    }
+
+
+    public function ficha_pedido()
+    {
+        $orderId = request('order_id') ?? null;
+        $action = request('action') ?? '';
+        $order = AdminOrder::getOrderAdmin($orderId);
+        $convenio=Convenio::where('order_id',$orderId)->first();
+        
+        $nro_convenio = "No se ha creado un convenio";
+        if($convenio){
+            $nro_convenio = $convenio->nro_convenio;
+        }
+
+        if ($order) {
+         
+            $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            $data                    = array();
+            $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
+            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
+            $data['phone']           = $order['phone'];
+            $data['email']           = $order['email'];
+            $data['referencias']           = $referencias;
+            $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
+            $data['nro_convenio'] =  $nro_convenio;
+
+            $data['order'] =  $order;
+      
+            $data['cedula']           = $order['cedula'];
+            $data['comment']         = $order['comment'];
+            $data['payment_method']  = $order['payment_method'];
+            $data['shipping_method'] = $order['shipping_method'];
+            $data['created_at']      = $order['created_at'];
+            $data['currency']        = $order['currency'];
+            $data['exchange_rate']   = $order['exchange_rate'];
+            $data['subtotal']        = $order['subtotal'];
+            $data['tax']             = $order['tax'];
+            $data['shipping']        = $order['shipping'];
+            $data['discount']        = $order['discount'];
+            $data['total']           = $order['total'];
+            $data['received']        = $order['received'];
+            $data['balance']         = $order['balance'];
+            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['comment']         = $order['comment'];
+            $data['country']         = $order['country'];
+            $data['id']              = $order->id;
+            $data['details'] = [];
+
+            $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
+
+            if ($order->details) {
+                foreach ($order->details as $key => $detail) {
+                    $arrAtt = json_decode($detail->attribute, true);
+                    if ($arrAtt) {
+                        $htmlAtt = '';
+                        foreach ($arrAtt as $groupAtt => $att) {
+                            $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
+                        }
+                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                    } else {
+                        $name = $detail->name;
+                    }
+                    $data['details'][] = [
+                        'no' => $key + 1, 
+                        'sku' => $detail->sku, 
+                        'name' => $name, 
+                        'qty' => $detail->qty, 
+                        'price' => $detail->price, 
+                        'nro_coutas' => $detail->nro_coutas, 
+                        'total_price' => $detail->total_price,
+                    ];
+                }
+            }
+
+            if ($action =='invoice_excel') {
+                $options = ['filename' => 'Order ' . $orderId];
+                return \Export::export($action, $data, $options);
+            }
+            
+            return view($this->templatePathAdmin.'format.ficha_pedido')
             ->with($data);
         } else {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
