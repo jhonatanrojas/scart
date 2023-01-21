@@ -71,36 +71,83 @@
                             <div class="col-sm-8">
                                 <label></label>
                                 <div id="">
-                                    <li>cod_nombre</li>
-                                    <li>cod_apellido</li>
-                                    <li>cod_razon_social</li>
-                                    <li>cod_rif</li>
-                                    <li>cod_direccion</li>
-                                    <li>cod_estado</li>
-                                    <li>cod_municipio</li>
-                                    <li>cod_parroquia</li>
-                                    <li>cod_Cedula</li>
-                                    <li>cod_estado_civil</li>
-                                    <li>cod_Nacionalidad</li>
-                                    <li>cod_modalidad_pago</li>
-                                    <li>cod_dia</li>
-                                    <li>cod_cuotas</li>
-                                    <li>Cod_Cuota_total</li>
-                                    <li>Cod_cuotas_entre_precio_text</li>
-                                    <li>cod_mespago</li>
-                                    <li>cod_fecha_entrega</li>
-                                    <li>cod_subtotal</li>
-                                    <li>cod_bolivar_text</li>
-                                    <li>cod_bolibares</li>
-                                    <li>nombreProduct</li>
-                                    <li>cod_telefono</li>
-                                    <li>cod_email</li>
-                                    <li>cod_fecha_actual</li>
-                                 
-                            
+                                    <li ><span class="text-info">Nombre</span>: cod_nombre</li>
+                                    <li>
+                                        <span class="text-info">Apellido</span>:cod_apellido
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Razon Social</span>:cod_razon_social
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Rif</span>:cod_rif
+                                    </li>
+                                    <li>
+                                    <span class="text-info">Direccion1</span>:Direccioncod_direccion
+                                    </li>
+                                    <li>
+                                        
+                                        <span class="text-info">Estado</span>:cod_estado
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Municipio</span>:cod_municipio
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Parroquia</span>:cod_parroquia
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Cedula</span>:cod_Cedula
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Estado civil</span>:cod_Estado_Civil
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Nacionalida</span>:cod_Nacionalidad
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Modalida de pago (quinsenal /mensual)</span>:cod_modalidad_pago
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Dia de la modalida de pago </span>: cod_dia
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Numero de cuotas</span>: cod_cuotas
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Total de la cuotas en numero</span>:Cod_Cuota_total
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Total de la cuotas en texto</span> :
+                                        Cod_cuotas_entre_precio_text
+                                    </li>
+                                    <li>
+                                        cod_mespago
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Fecha de entrega</span>:cod_fecha_entrega
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Precio total del producto</span>:cod_subtotal
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Monto en bolivares en texto</span>:cod_bolivar_text
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Monto en bolivares en numeros<span>: cod_bolibares
+                                    </li>
+                                    <li>
+                                        <span class="text-info">Nombre del producto</span>:nombreProduct</li>
+                                    <li>
+                                        <span class="text-info">Telefono</span>:cod_telefono
+                                    </li>
+                                    <li><span class="text-info">Email</span>:cod_email</li>
+                                    <li>
+                                        <span class="text-info">Fecha actual</span>:cod_fecha_actual</li>
 
-                               
-                                </div>                                   
+                                        <li>
+                                            <span class="text-info">
+                                                Numero del combenio
+                                            </span>:cod_numero_combeniol</li>
+                                </div>                                    
                             </div>
                         </div>
                             
