@@ -146,7 +146,7 @@
                                         <li>
                                             <span class="text-info">
                                                 Numero del comvenio
-                                            </span>:cod_numero_comvenio</li>
+                                            </span>:cod_numero_convenio</li>
                                 </div>                                    
                             </div>
                         </div>
