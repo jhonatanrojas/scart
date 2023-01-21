@@ -146,8 +146,8 @@
 
                                     <li>
                                         <span class="text-info">
-                                            Numero del combenio
-                                        </span>:cod_numero_combeniol</li>
+                                            Numero del convenio
+                                        </span>:cod_numero_convenio</li>
                                 </div>                                   
                             </div>
                         </div>

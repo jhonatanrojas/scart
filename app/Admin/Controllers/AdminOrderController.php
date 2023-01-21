@@ -1380,7 +1380,6 @@ class  AdminOrderController extends RootAdminController
 
                
 
-                
                     $monto = $dato_usuario[0]['subtotal'];
                     $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
                     $cuotas = $dato_usuario[0]['cuotas'];
@@ -1393,12 +1392,14 @@ class  AdminOrderController extends RootAdminController
                         $number2 =  $monto*$cod_bolibares;
                        
                       }
+    
 
                   
                   $number2 =  $monto*$cod_bolibares;
                     
 
-                foreach($borrado_html as $replacee){
+                  foreach($borrado_html as $replacee){
+            
                     $dataFind = [
                         'cod_nombre',
                         'cod_apellido',
@@ -1407,7 +1408,7 @@ class  AdminOrderController extends RootAdminController
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_estado_civil',
+                        'cod_Estado_Civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
@@ -1426,10 +1427,19 @@ class  AdminOrderController extends RootAdminController
                         'cod_fecha_actual',
                         'logo_waika',
                         'logo_global',
-                        'cod_numero_combenio'
+                        'cod_numero_convenio'
                     ];
 
-                    $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT); 
+           
+
+      
+
+                  
+
+                    $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+
+                   
+
                     $dataReplace = [
                         $dato_usuario['first_name'],
                         $dato_usuario['last_name'],
@@ -1446,8 +1456,8 @@ class  AdminOrderController extends RootAdminController
                         'Cod_Cuota_total'=> number_format($number1, 2 ,',', ' '),
                         'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
-                        $monto ,
+                        'cod_fechaEntrega' =>request()->fecha_maxima_entrega ?? '',
+                        'cod_subtotal' => $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
@@ -1457,7 +1467,7 @@ class  AdminOrderController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio 
+                        'cod_numero_convenio' => 'no aplica'
                         
                     ];
             
