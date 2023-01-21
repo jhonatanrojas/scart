@@ -660,11 +660,11 @@ class HistorialPagosController extends RootAdminController
                         'cod_email',
                         'cod_doreccion',
                         'cod_fecha_actual',
-                        'logo_waika',
-                        'logo_global',
-                        'cod_numero_combenio',
-                        'cod_razon_social',
-                        'cod_rif'
+                        'cod_logo_waika',
+                        'cod_logo_global',
+                        'cod_Comvenio',
+                        
+                        
                     ];
 
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
@@ -696,11 +696,10 @@ class HistorialPagosController extends RootAdminController
                         'cod_email'=>$dato_usuario['email'],
                         'cod_direccion'=>$dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio,
-                        'cod_razon_social'=> $dato_usuario['razon_social'],
-                        'cod_rif'=> $dato_usuario['rif']
+                        'cod_logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'cod_logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_Comvenio' => $nro_convenio,
+                        
                         
                     ];
 
@@ -711,7 +710,7 @@ class HistorialPagosController extends RootAdminController
 
 
                 foreach($file_html as $replacee){
-                    $dataFind = [
+                    $dataFind1 = [
                         'cod_nombre',
                         'cod_apellido',
                         'cod_direccion',
@@ -736,9 +735,12 @@ class HistorialPagosController extends RootAdminController
                         'cod_email',
                         'cod_direccion',
                         'cod_fecha_actual',
-                        'logo_waika',
-                        'logo_global',
-                        'cod_numero_combenio'
+                        'cod_logo_waika',
+                        'cod_logo_global',
+                        'cod_Comvenio',
+                        
+                        
+                        
                     ];
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
 
@@ -767,28 +769,25 @@ class HistorialPagosController extends RootAdminController
                         'cod_email'=>$dato_usuario['email'],
                         'cod_direccion'=>$dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
-                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio 
-                        
+                        'cod_logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'cod_logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_Comvenio' => $nro_convenio ,
+
                     ];
 
                    
 
 
-                    $plantilla1 = str_replace($dataFind, $dataReplaces, $replacee->file_html);
+                    $plantilla1 = str_replace($dataFind1, $dataReplaces, $replacee->file_html);
 
                 }
 
-                
-
-                
+               
 
 
-                
+              
 
-
-
+  
                 $r_convenio=   Convenio::create([
                     'order_id'=> request()->c_order_id,
                     'nro_convenio' => request()->nro_convenio,

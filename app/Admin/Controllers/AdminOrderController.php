@@ -1380,7 +1380,6 @@ class  AdminOrderController extends RootAdminController
 
                
 
-                
                     $monto = $dato_usuario[0]['subtotal'];
                     $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
                     $cuotas = $dato_usuario[0]['cuotas'];
@@ -1393,6 +1392,7 @@ class  AdminOrderController extends RootAdminController
                         $number2 =  $monto*$cod_bolibares;
                        
                       }
+    
 
                   
                   $number2 =  $monto*$cod_bolibares;
@@ -1407,7 +1407,7 @@ class  AdminOrderController extends RootAdminController
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_estado_civil',
+                        'cod_Estado_Civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
@@ -1422,23 +1422,23 @@ class  AdminOrderController extends RootAdminController
                         'nombreProduct',
                         'cod_telefono',
                         'cod_email',
-                        'cod_doreccion',
+                        'cod_direccion',
                         'cod_fecha_actual',
                         'logo_waika',
                         'logo_global',
-                        'cod_numero_combenio'
+                        'cod_numero_comvenio'
                     ];
 
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT); 
                     $dataReplace = [
-                        $dato_usuario['first_name'],
-                        $dato_usuario['last_name'],
-                        $dato_usuario['address1'],
-                        $dato_usuario['cod_estado'],
-                        $dato_usuario['cod_municipio'],
-                        $dato_usuario['cod_parroquia'],
-                        $dato_usuario['cedula'],
-                        $dato_usuario['estado_civil'],
+                        'cod_nombre'=>$dato_usuario['first_name'],
+                        'cod_apellido'=>$dato_usuario['last_name'],
+                        'cod_direccion'=>$dato_usuario['address1'],
+                        'cod_estado'=>$dato_usuario['cod_estado'],
+                        'cod_municipio'=>$dato_usuario['cod_municipio'],
+                        'cod_parroquia'=>$dato_usuario['cod_parroquia'],
+                        'cod_Cedula'=>$dato_usuario['cedula'],
+                        'cod_Estado_Civil'=>$dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
@@ -1446,20 +1446,22 @@ class  AdminOrderController extends RootAdminController
                         'Cod_Cuota_total'=> number_format($number1, 2 ,',', ' '),
                         'Cod_cuotas_entre_precio_text'=> $letraconvertir_nuber->convertir2($number1),
                         'cod_mespago' => $cod_diaMes ,
-                        'cod_fechaEntrega' =>$convenio->fecha_maxima_entrega ?? "",
-                        $monto ,
+                        'cod_fechaEntrega' =>request()->fecha_maxima_entrega ?? '',
+                        'cod_subtotal' => $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
-                        $dato_usuario[0]['nombreProduct'] ,
-                        $dato_usuario['phone'],
-                        $dato_usuario['email'],
-                        $dato_usuario['address1'],
+                        'nombreProduct'=>$dato_usuario[0]['nombreProduct'] ,
+                        'cod_telefono'=>$dato_usuario['phone'],
+                        'cod_email'=>$dato_usuario['email'],
+                        'cod_direccion'=>$dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio 
+                        'cod_numero_comvenio' => $nro_convenio 
                         
                     ];
+                        
+                  
             
                     $resultado = str_replace($dataFind, $dataReplace, $replacee->contenido);
                 }
