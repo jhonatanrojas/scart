@@ -36,7 +36,7 @@ Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->na
 Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJuradada'])->name('downloadJuradada');
 
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
-
+Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
 
 Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('borrador_cliente');
 
