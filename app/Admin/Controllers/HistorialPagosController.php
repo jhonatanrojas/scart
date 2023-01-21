@@ -588,24 +588,19 @@ class HistorialPagosController extends RootAdminController
             switch ($dato_usuario['natural_jurídica']) {
                 case 'N':
                     $borrado_html = $abono_inicial > 0
-                        ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
-                        : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
-
-                        $file_html = Declaracion_jurada::all();
+                        ? 
+                        Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                        
+                        : 
+                        Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                        
                     break;
                 case 'J':
                     $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
-
-                    $file_html = Declaracion_jurada::all();
                     break;
             }
 
-            
-
-           
-
-                    
-
+                    $file_html = Declaracion_jurada::all();
 
                 $pieces = explode(" ", $dato_usuario['cedula']);
                 if ($dato_usuario[0]['id_modalidad_pago']== 3) {
@@ -648,7 +643,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_estado_civil',
+                        'cod_Estado_Civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
@@ -667,28 +662,24 @@ class HistorialPagosController extends RootAdminController
                         'cod_fecha_actual',
                         'logo_waika',
                         'logo_global',
-                        'cod_numero_combenio'
+                        'cod_numero_combenio',
+                        'cod_razon_social',
+                        'cod_rif'
                     ];
-
-           
-
-      
-
-                  
 
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
 
                    
 
                     $dataReplace = [
-                        $dato_usuario['first_name'],
-                        $dato_usuario['last_name'],
-                        $dato_usuario['address1'],
-                        $dato_usuario['cod_estado'],
-                        $dato_usuario['cod_municipio'],
-                        $dato_usuario['cod_parroquia'],
-                        $dato_usuario['cedula'],
-                        $dato_usuario['estado_civil'],
+                        'cod_nombre'=>$dato_usuario['first_name'],
+                        'cod_apellido'=>$dato_usuario['last_name'],
+                        'cod_direccion'=>$dato_usuario['address1'],
+                        'cod_estado'=>$dato_usuario['cod_estado'],
+                        'cod_municipio'=>$dato_usuario['cod_municipio'],
+                        'cod_parroquia'=>$dato_usuario['cod_parroquia'],
+                        'cod_Cedula'=>$dato_usuario['cedula'],
+                        'cod_Estado_Civil'=>$dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
@@ -700,17 +691,19 @@ class HistorialPagosController extends RootAdminController
                         'cod_subtotal' => $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
-                        $dato_usuario[0]['nombreProduct'] ,
-                        $dato_usuario['phone'],
-                        $dato_usuario['email'],
-                        $dato_usuario['address1'],
+                        'nombreProduct'=>$dato_usuario[0]['nombreProduct'] ,
+                        'cod_telefono'=>$dato_usuario['phone'],
+                        'cod_email'=>$dato_usuario['email'],
+                        'cod_direccion'=>$dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_combenio' => $nro_convenio 
+                        'cod_numero_combenio' => $nro_convenio,
+                        'cod_razon_social'=> $dato_usuario['razon_social'],
+                        'cod_rif'=> $dato_usuario['rif']
                         
                     ];
-            
+
                     $plantilla = str_replace($dataFind, $dataReplace, $replacee->contenido);
 
               
@@ -726,7 +719,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_municipio',
                         'cod_parroquia',
                         'cod_Cedula',
-                        'cod_estado_civil',
+                        'cod_Estado_Civil',
                         'cod_Nacionalidad',
                         'cod_modalidad_pago',
                         'cod_dia',
@@ -741,7 +734,7 @@ class HistorialPagosController extends RootAdminController
                         'nombreProduct',
                         'cod_telefono',
                         'cod_email',
-                        'cod_doreccion',
+                        'cod_direccion',
                         'cod_fecha_actual',
                         'logo_waika',
                         'logo_global',
@@ -750,14 +743,14 @@ class HistorialPagosController extends RootAdminController
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
 
                     $dataReplaces = [
-                        $dato_usuario['first_name'],
-                        $dato_usuario['last_name'],
-                        $dato_usuario['address1'],
-                        $dato_usuario['cod_estado'],
-                        $dato_usuario['cod_municipio'],
-                        $dato_usuario['cod_parroquia'],
-                        $dato_usuario['cedula'],
-                        $dato_usuario['estado_civil'],
+                        'cod_nombre'=>$dato_usuario['first_name'],
+                        'cod_apellido'=>$dato_usuario['last_name'],
+                        'cod_direccion'=>$dato_usuario['address1'],
+                        'cod_estado'=>$dato_usuario['cod_estado'],
+                        'cod_municipio'=>$dato_usuario['cod_municipio'],
+                        'cod_parroquia'=>$dato_usuario['cod_parroquia'],
+                        'cod_Cedula'=>$dato_usuario['cedula'],
+                        'cod_Estado_Civil'=>$dato_usuario['estado_civil'],
                         'cod_Nacionalidad'=> $Nacionalidad,
                         'cod_modalidad_pago' => $mesualQuinsena,
                         'cod_dia'=> $letraconvertir_nuber->convertir1($cuotas),
@@ -769,16 +762,18 @@ class HistorialPagosController extends RootAdminController
                         'cod_subtotal' => $monto ,
                         'cod_nombreBS'=> $letraconvertir_nuber->convertir2($number2),
                         'cod_bolibares'=> number_format($number2, 2 ,',', ' '),
-                        $dato_usuario[0]['nombreProduct'] ,
-                        $dato_usuario['phone'],
-                        $dato_usuario['email'],
-                        $dato_usuario['address1'],
+                        'nombreProduct'=>$dato_usuario[0]['nombreProduct'] ,
+                        'cod_telefono'=>$dato_usuario['phone'],
+                        'cod_email'=>$dato_usuario['email'],
+                        'cod_direccion'=>$dato_usuario['address1'],
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
                         'cod_numero_combenio' => $nro_convenio 
                         
                     ];
+
+                   
 
 
                     $plantilla1 = str_replace($dataFind, $dataReplaces, $replacee->file_html);
