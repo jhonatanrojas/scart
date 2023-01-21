@@ -1427,7 +1427,14 @@ class  AdminOrderController extends RootAdminController
 
                   
 
-                    $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+                  
+        $convenio = Convenio::where('order_id',$id)->first();
+    
+
+        $nro_convenio="001";
+        if($convenio){
+            $nro_convenio = $convenio->nro_convenio;
+        }
 
                    
 
@@ -1458,7 +1465,7 @@ class  AdminOrderController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_numero_convenio' => 'no aplica'
+                        'cod_numero_convenio' =>  $nro_convenio
                         
                     ];
             
