@@ -1152,13 +1152,13 @@ class  AdminOrderController extends RootAdminController
                 }
 
                 $plantilla = Convenio::where('order_id', $id)->first();
+
+
                 if (!$plantilla) {
                     return 'No se encontró la plantilla';
                 }
-
-                
-                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
-                    ['borrado_html'=> $plantilla->declaracion_jurada],
+                    $pdf = Pdf::loadView($this->templatePathAdmin.'screen.declaracion_juradapdf', 
+                    ['file_html'=> $plantilla->declaracion_jurada],
                     );
 
                     return $pdf->stream();
