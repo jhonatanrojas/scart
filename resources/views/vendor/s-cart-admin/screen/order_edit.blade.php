@@ -28,8 +28,12 @@
                       <a class="btn btn-flat" target=_new title="Invoice" href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs"> {{ sc_language_render('order.invoice') }}</span></a>
                   </div>
                   
-                 
+                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                    <a class="btn btn-flat" target=_new title="Descargar exp" href="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar exp </span></a>
+                </div>
+                
                
+
                                   
                   
                   @php  $dblockconvenio="display:none;";   @endphp
@@ -565,8 +569,8 @@
                  
                               
                 <a href="#" class="updateInfo" data-name="confiabilidad2 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad ))
-                      {{$order->confiabilidad }} 
+                  @if (!empty($order->confiabilidad2 ))
+                      {{$order->confiabilidad2 }} 
                   @endif
               </a>
             </td>
@@ -598,8 +602,8 @@
                   
                  
                 <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad ))
-                      {{$order->confiabilidad }} 
+                  @if (!empty($order->confiabilidad3 ))
+                      {{$order->confiabilidad3 }} 
                   @endif
               </a>
             </td>
