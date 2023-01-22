@@ -71,89 +71,88 @@
                             <div class="col-sm-8">
                                 <label></label>
                                 <div id="">
-                                    <li ><span class="text-info">Nombre</span>: cod_nombre</li>
+                                    <li ><span class="text-info">Nombre</span>:$nombre</li>
                                     <li>
-                                        <span class="text-info">Apellido</span>:cod_apellido
+                                        <span class="text-info">Apellido</span>:$apellido
                                     </li>
                                     <li>
-                                        <span class="text-info">Razon Social</span>:cod_razon_social
+                                        <span class="text-info">Razon Social</span>:$razon_social
                                     </li>
                                     <li>
-                                        <span class="text-info">Rif</span>:cod_rif
+                                        <span class="text-info">Rif</span>:$rif
                                     </li>
                                     <li>
                                     <span class="text-info">Direccion1</span>:Direccioncod_direccion
                                     </li>
                                     <li>
                                         
-                                        <span class="text-info">Estado</span>:cod_estado
+                                        <span class="text-info">Estado</span>:$estado
                                     </li>
                                     <li>
-                                        <span class="text-info">Municipio</span>:cod_municipio
+                                        <span class="text-info">Municipio</span>:$municipio
                                     </li>
                                     <li>
-                                        <span class="text-info">Parroquia</span>:cod_parroquia
+                                        <span class="text-info">Parroquia</span>:$parroquia
                                     </li>
                                     <li>
-                                        <span class="text-info">Cedula</span>:cod_Cedula
+                                        <span class="text-info">Cedula</span>:$cedula
                                     </li>
                                     <li>
-                                        <span class="text-info">Estado civil</span>:cod_Estado_Civil
+                                        <span class="text-info">Estado civil</span>:$estado_civil
                                     </li>
                                     <li>
-                                        <span class="text-info">Nacionalida</span>:cod_Nacionalidad
+                                        <span class="text-info">Nacionalida</span>:$nacionalidad
                                     </li>
                                     <li>
-                                        <span class="text-info">Modalida de pago (quinsenal /mensual)</span>:cod_modalidad_pago
+                                        <span class="text-info">Modalida de pago (quinsenal /mensual)</span>:$modalidad_pago
                                     </li>
                                     <li>
-                                        <span class="text-info">Dia de la modalida de pago </span>: cod_dia
+                                        <span class="text-info">Dia de la modalida de pago </span>: $dia_modalida_pago
                                     </li>
                                     <li>
-                                        <span class="text-info">Numero de cuotas</span>: cod_cuotas
+                                        <span class="text-info">Numero de cuotas</span>: $cuotas
                                     </li>
                                     <li>
-                                        <span class="text-info">Total de la cuotas en numero</span>:Cod_Cuota_total
+                                        <span class="text-info">Total de la cuotas en numero</span>:$cuotas_total
                                     </li>
                                     <li>
                                         <span class="text-info">Total de la cuotas en texto</span> :
-                                        Cod_cuotas_entre_precio_text
+                                        $cuotas_entre_precio_text
                                     </li>
                                     <li>
-                                        cod_mespago
+                                        $cod_mespago
                                     </li>
                                     <li>
-                                        <span class="text-info">Fecha de entrega</span>:cod_fecha_entrega
+                                        <span class="text-info">Fecha de entrega</span>:$fecha_entrega
                                     </li>
                                     <li>
-                                        <span class="text-info">Precio total del producto</span>:cod_subtotal
+                                        <span class="text-info">Precio total del producto</span>:$subtotal
                                     </li>
                                     <li>
-                                        <span class="text-info">Monto en bolivares en texto</span>:cod_bolivar_text
+                                        <span class="text-info">Monto en bolivares en texto</span>:$bolivar_text
                                     </li>
                                     <li>
-                                        <span class="text-info">Monto en bolivares en numeros<span>: cod_bolibares
+                                        <span class="text-info">Monto en bolivares en numeros<span>:$bolibares_number
                                     </li>
                                     <li>
-                                        <span class="text-info">Nombre del producto</span>:nombreProduct</li>
+                                        <span class="text-info">Nombre del producto</span>:$nombre_de_producto</li>
                                     <li>
-                                        <span class="text-info">Telefono</span>:cod_telefono
+                                        <span class="text-info">Telefono</span>:$telefono
                                     </li>
-                                    <li><span class="text-info">Email</span>:cod_email</li>
+                                    <li><span class="text-info">Email</span>:$email</li>
                                     <li>
-                                        <span class="text-info">Fecha actual</span>:cod_fecha_actual</li>
+                                        <span class="text-info">Fecha actual</span>:fecha_de_hoy</li>
 
                                         <li>
                                             <span class="text-info">
                                                 Numero del comvenio
-                                            </span>:cod_numero_convenio</li>
+                                            </span>:$numero_de_convenio</li>
                                 </div>                                    
                             </div>
                         </div>
                             
                         @endif
 
-                        
 
                 </div>
 
