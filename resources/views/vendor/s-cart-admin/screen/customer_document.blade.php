@@ -406,14 +406,7 @@
               </div>
               <br>
 <br>
-              <div class=" col-12 mt-6 p-2 text-center ">
-                @php
-                $url_document="/sc_admin/uploads?type=$customer->id";
-                   @endphp
-                <a href="{{$url_document}}"  target="_blank" class="btn btn-info w-100">Otros Documentos</a>
-
-            </div>
-
+         
 
               <input  type="hidden" name="first_name" value="{{$customer['first_name']}}">
               <input type="hidden" name="id_usu" value="{{$customer['id']}}">
@@ -434,6 +427,18 @@
 </div>
     
     @endif
+
+    <div class="row  align-items-center justify-content-cente">
+        <div class=" col-6 mt-6 p-2 text-center ">
+            @php
+            $url_document="/sc_admin/uploads?type=$customer->id";
+               @endphp
+            <a href="{{$url_document}}"  target="_blank" class="btn btn-info w-100">Otros Documentos</a>
+    
+        </div>
+
+    </div>
+
 
      
 
