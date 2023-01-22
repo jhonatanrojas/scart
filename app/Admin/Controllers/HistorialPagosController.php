@@ -699,7 +699,7 @@ class HistorialPagosController extends RootAdminController
                         date('d-m-y'),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        $nro_convenio 
+                        $nro_convenio,
                     ];
                     $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
                     $dataView = [
