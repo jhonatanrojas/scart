@@ -1434,6 +1434,7 @@ class  AdminOrderController extends RootAdminController
                         '/\{\{\$logo_global\}\}/',
                         '/\{\{\$numero_de_convenio\}\}/',
                     ];
+                    
                     $dataReplace = [
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],
