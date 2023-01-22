@@ -273,18 +273,30 @@
                      </td>
                        <td>
                          
-                        
-                         <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
-                           <option value="0"   {{ $order['decision_final'] == 0 ? 'selected':'' }}>Pendiente </option>
-                           <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Negado </option>
-                           <option value="2"   {{ $order['decision_final'] ==2  ? 'selected':'' }}>Aprobado </option>
-                           <option value="3"   {{ $order['decision_final'] ==3  ? 'selected':'' }}>Diferido </option>
-                           <option value="3"   {{ $order['decision_final'] >3  ? 'selected':'' }}>Otro </option>
-                       </select>
+                
+                            <span value="0"  >  {{ $order['decision_final'] == 0 ? 'Pendiente':'' }}  </span>
+                           <span value="1"   > {{ $order['decision_final'] == 1 ? 'Negado ':'' }}</span>
+                           <span value="2"   > {{ $order['decision_final'] ==2  ? 'Aprobado':'' }}</span>
+                           <span value="3"   >  {{ $order['decision_final'] ==3  ? 'Diferido':'' }}</span>
+                           <span value="3"   > {{ $order['decision_final'] >3  ? 'Otro':'' }}</span>
+                 
                      </td>
                      </tr>
                    </table>
             </div>
+        </div>
+
+        <div class="row">
+<div class="col-12 ml-5">
+
+    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+        <p>Notas:</p>
+        <i>{!! $comment !!}</i>
+    </div>
+
+     
+</div>
+
         </div>
     </div>
 </div>

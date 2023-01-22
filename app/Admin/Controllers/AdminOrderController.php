@@ -228,7 +228,7 @@ class  AdminOrderController extends RootAdminController
                 <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
                 '.$btn_pagos.'
                 <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
-                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
+                <!-- span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span -->
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
@@ -428,22 +428,13 @@ class  AdminOrderController extends RootAdminController
             $validate['fecha_de_pedido'] = 'required|max:100';
         }
 
-        
-        if (sc_config_admin('customer_address2')) {
-            $validate['address2'] = 'required|max:100';
-        }
-        if (sc_config_admin('customer_address3')) {
-            $validate['address3'] = 'required|max:100';
-        }
+      
+       
         if (sc_config_admin('customer_phone')) {
             $validate['phone'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,12}$/');
         }
-        if (sc_config_admin('customer_country')) {
-            $validate['country'] = 'required|min:2';
-        }
-        if (sc_config_admin('customer_postcode')) {
-            $validate['postcode'] = 'required|min:5';
-        }
+    
+     
         if (sc_config_admin('customer_company')) {
             $validate['company'] = 'required|min:3';
         }
@@ -1400,9 +1391,6 @@ class  AdminOrderController extends RootAdminController
                     
 
                   foreach($borrado_html as $replacee){
-
-                    $nro_convenio = 'no aplica borrador del convenio';
-
                     $dataFind = [
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
@@ -1465,6 +1453,11 @@ class  AdminOrderController extends RootAdminController
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
                         $nro_convenio 
+                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_numero_convenio' =>  $nro_convenio
+
                     ];
                     $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
                     $dataView = [
