@@ -696,7 +696,7 @@ class HistorialPagosController extends RootAdminController
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
                         $dato_usuario['address1'],
-                        date('d-m-y'),
+                            date('d-m-y'),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
                         $nro_convenio 

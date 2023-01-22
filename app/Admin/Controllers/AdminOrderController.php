@@ -1453,7 +1453,7 @@ class  AdminOrderController extends RootAdminController
                         date('d-m-y'),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        $nro_convenio 
+                        $nro_convenio,
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))) ,
@@ -1464,12 +1464,10 @@ class  AdminOrderController extends RootAdminController
                     $dataView = [
                         'content' => $content,
                     ];
-
-                    
-
-
-
                 }
+
+
+                
 
 
 
