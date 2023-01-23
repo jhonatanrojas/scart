@@ -37,6 +37,7 @@ Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer)
 
     Route::post('/edit/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@postEdit')->name('admin_customer.edit');
     Route::post('/ref_personales', $nameSpaceAdminCustomer.'\AdminCustomerController@ref_personales')->name('ref_personales');
+    Route::post('/editar_referencia', $nameSpaceAdminCustomer.'\AdminCustomerController@editar_referencia')->name('editar_referencia'); 
     Route::post('/ref_delete', $nameSpaceAdminCustomer.'\AdminCustomerController@delete_ref')->name('ref_delete');
     Route::post('/delete', $nameSpaceAdminCustomer.'\AdminCustomerController@deleteList')->name('admin_customer.delete');
     Route::get('/update-address/{id}', $nameSpaceAdminCustomer.'\AdminCustomerController@updateAddress')->name('admin_customer.update_address');
