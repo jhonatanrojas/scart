@@ -135,6 +135,13 @@
                   <tr><td> Estatus de pago Global:</td><td><a href="#" class="updateStatus" data-name="payment_status" data-type="select" data-source ="{{ json_encode($statusPayment) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_status') }}">{{ $statusPayment[$order->payment_status]??$order->payment_status }}</a></td></tr>
 
                   <tr><td></i> {{ sc_language_render('admin.created_at') }}:</td><td>{{ $order->created_at }}</td></tr>
+                  <tr>
+                    <td  class="td-title">
+                      Vendedor Asignado:</td>
+                    <td>
+                    <a  href="#" class="updateStatus" data-name="vendedor_id" data-type="select" data-source ="{{ json_encode($list_usuarios) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->vendedor_id!!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $list_usuarios[$order->vendedor_id] ?? $order->vendedor_id }}</a>
+                  </td>
+                </tr>
                 </table>
                <table class="table table-hover box-body text-wrap table-bordered">
                   <tr>
@@ -214,7 +221,7 @@
                         @if (empty($documento))
                           El cliente no ha adjuntado Documentos <br>
                         @endif
-                          <a href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
+                          <a  target="_blank" href="{{ sc_route_admin('admin_customer.document', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ir a Documentos</a>
                       </td>
 
                    
@@ -223,7 +230,7 @@
                       <td class="td-title">datos del cliente</td>
                       <td>
                        
-                        <a href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
+                        <a  target="_blank" href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
                       </td>
 
                    
@@ -231,7 +238,7 @@
                     <tr>
                       <td class="td-title">Creado Por:</td>
                       <td>
-                        {{ $order->usuario}}
+                        {!! empty($order->usuario) ? 'Catalogo-Cliente' :  $order->usuario!!}
                       </td>
 
                    
@@ -243,7 +250,7 @@
                         @if (!empty($clasificacion))
                             {{$clasificacion}}
                             @else
-                            <span class="text-info">No ah
+                            <span class="text-info">No ha
                               realizado el primer pago</span>
                             
                         @endif
@@ -438,7 +445,7 @@
       </h2>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
       {{-- Total --}}
       <div class="col-sm-12">
@@ -493,7 +500,7 @@
         </button>
       </h2>
     </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingevaluacion" data-parent="#accordionExample">
+    <div id="collapseThree" class="collapse show" aria-labelledby="headingevaluacion" data-parent="#accordionExample">
       <div class="card-body">
           {{-- evaluacion --}}
           <div class="col-sm-12">
@@ -519,7 +526,7 @@
               </td>
                 <td>
                   
-                  <a href="#" class="updateInfo" data-name="evaluacion_comercial " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                  <a href="#" class="updateInfo" data-name="evaluacion_comercial " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     @if (!empty($order->evaluacion_comercial ))
                         {{$order->evaluacion_comercial }} 
                     @endif
@@ -547,7 +554,7 @@
               <tr>
                 <td  class="td-title"><span >Evaluación financiera</span></td>
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota F" >
                   
                     @if (!empty($order->nota_evaluacion_financiera ))
                      
@@ -557,9 +564,9 @@
               </td>
                 <td>
                   
-                  <a href="#" class="updateInfo" data-name="evaluacion_financiera " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                    @if (!empty($order->evaluacion_comercial ))
-                        {{$order->evaluacion_comercial }} 
+                  <a href="#" class="updateInfo" data-name="evaluacion_financiera " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                    @if (!empty($order->evaluacion_financiera ))
+                        {{$order->evaluacion_financiera }} 
                     @endif
                 </a>
                 
@@ -582,18 +589,18 @@
                 <td>
                   <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     
-                    @if (!empty($order->nota_evaluacion_legal ))
+                   
                          
                           {{$order->nota_evaluacion_legal }} 
-                      @endif
+                   
                   </a>
               </td>
                 <td>
                   
                  
                   <a href="#" class="updateInfo" data-name="evaluacion_legal" data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                    @if (!empty($order->evaluacion_comercial ))
-                        {{$order->evaluacion_comercial }} 
+                    @if (!empty($order->evaluacion_legal ))
+                        {{$order->evaluacion_legal }} 
                     @endif
                 </a>
                 

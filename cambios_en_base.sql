@@ -49,7 +49,7 @@ ALTER TABLE sc_shop_customer ADD rif VARCHAR(100) NULL DEFAULT NULL AFTER razon_
   INSERT INTO sc_admin_config (id, group, code, key, value, security, store_id, sort, detail, created_at, updated_at) VALUES (NULL, '', 'customer_config_attribute', 'customer_razon_social', '1', '0', '1', '0', 'customer.config_manager.razon_social', NULL, NULL);
 
   INSERT INTO sc_admin_config (id, group, code, key, value, security, store_id, sort, detail, created_at, updated_at) VALUES (NULL, '', 'customer_config_attribute', 'customer_natural_jurídica', '1', '0', '1', '0', 'customer.config_manager.natural_jurídica', NULL, NULL);
-
+  ALTER TABLE sc_shop_order ADD COLUMN vendedor_id   varchar(36)  DEFAULT '';
 
   ALTER TABLE sc_shop_customer ADD nos_conocio VARCHAR(100) NULL DEFAULT NULL AFTER last_name_kana;
 ALTER TABLE sc_shop_order ADD COLUMN fecha_maxima_entrega date DEFAULT NULL;

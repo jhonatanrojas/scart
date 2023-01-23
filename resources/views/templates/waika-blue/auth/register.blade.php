@@ -588,7 +588,14 @@
                     <div class="submit">
                         <button type="submit" class="button button-lg button-secondary  w-100" id="button-form-process">{{ sc_language_render('customer.signup') }}</button>
                     </div>
+                   </div>  
+                   <div class="col-12 col-md-12 text-center">
+                   ¿ Ya te encuentras Registrado?
+                       <a class="btn btn-link" href="{{ sc_route('login') }}">
+                          Iniciar Sesion
+                       </a>
                    </div>
+               
                 </div>
             
 

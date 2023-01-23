@@ -304,7 +304,31 @@ class AdminCustomerController extends RootAdminController
         $referencia->telefono = $datos['telefono_ref'];
         $referencia->id_usuario = $datos['id_usuario'];
         $referencia->parentesco = $datos['parentesco'];
-        $referencia->nota = $datos['parentesco'] ?? '';
+        $referencia->nota = $datos['nota'] ?? '';
+
+        if($referencia->save()){
+            return json_encode(['respuesta' => $referencia]);
+
+        }else{
+            return json_encode(['error' => 'erro en la consulta']);
+
+        }
+
+
+
+       
+
+    }
+
+    public function editar_referencia(Request $request){
+        $datos = $request->all();
+        $referencia =  SC_referencia_personal::find($datos['id_usuario']);
+        $referencia->nombre_ref = $datos['nombre_ref'];
+        $referencia->apellido_ref = $datos['apellido_ref'];
+        $referencia->cedula_ref = $datos['cedula_ref'];
+        $referencia->telefono = $datos['telefono_ref'];
+        $referencia->parentesco = $datos['parentesco'];
+        $referencia->nota = $datos['nota'] ?? '';
 
         if($referencia->save()){
             return json_encode(['respuesta' => $referencia]);

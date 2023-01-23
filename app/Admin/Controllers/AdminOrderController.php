@@ -36,6 +36,7 @@ use FFI;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\SC_referencia_personal;
+use SCart\Core\Admin\Models\AdminUser;
 class  AdminOrderController extends RootAdminController
 {
     public $statusPayment;
@@ -98,6 +99,7 @@ class  AdminOrderController extends RootAdminController
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
+            'N°'          => 'N°',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -167,7 +169,8 @@ class  AdminOrderController extends RootAdminController
             // dd($this->statusOrder);
         }else if($perfil=='riesgo'){
             $id_status=[4,5,14,15];
-            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        //    $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+            $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
         }else if($perfil=='administracion'){
             $id_status=[6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
@@ -221,16 +224,22 @@ class  AdminOrderController extends RootAdminController
 
             }
             $btn_pagos='';
+            $btn_pagos='';
 
+            $btn_reportar_pago="";
+
+            if($row->modalidad_de_compra==0){
+                $btn_reportar_pago='  <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;';
+            }
             $dataMap = [
              
-                'Acción' => $dataMap['action'] = '
+                'Acción' =>  '
                 <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
-                '.$btn_pagos.'
-                <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;
+                '.$btn_pagos. $btn_reportar_pago.'
                 <!-- span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span -->
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
+                'N°'          => $row['id'] ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
@@ -257,23 +266,10 @@ class  AdminOrderController extends RootAdminController
                                         ->where('payment_status',' <>',1)
                                         ->count();
             $dataMap['created_at'] = $row['created_at'];
-            $btn_pagos='';
 
-            $btn_reportar_pago="";
-
-            if($row->modalidad_de_compra==0){
-                $btn_reportar_pago='  <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;';
-            }
             if($dataMap['pagos']>0)
             $btn_pagos=' <a href="' . sc_route_admin('historial_pagos.detalle', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Historial de pagos" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-university "></i></span></a>&nbsp;';
-            $dataMap['action'] = '
-            
-            
-            <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
-            '.$btn_pagos. $btn_reportar_pago.'
-        
-            <!--span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span-->
-            ';
+          
             $dataTr[$row['id']] = $dataMap;
         }
 
@@ -527,13 +523,13 @@ class  AdminOrderController extends RootAdminController
      * @return [type]     [description]
      */
     public function detail($id)
-
-    
     {
 
-        
+    
         $order = AdminOrder::getOrderAdmin($id);
-
+        $dminUser = new AdminUser;
+       $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+         
        
 
         $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
@@ -608,6 +604,7 @@ class  AdminOrderController extends RootAdminController
                 "subTitle" => '',
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
+                'list_usuarios' => $list_usuarios,
                 'convenio'=>$convenio,
                 'documento'=>$ducumentocliente,
                 'clasificacion' => $Clasificacion ?? '',
@@ -733,7 +730,7 @@ class  AdminOrderController extends RootAdminController
 
         }
 
-        
+    
         
         if ($code == 'shipping' || $code == 'discount' || $code == 'received' || $code == 'other_fee') {
             $orderTotalOrigin = AdminOrder::getRowOrderTotal($id);
@@ -786,6 +783,20 @@ class  AdminOrderController extends RootAdminController
         }
 
         
+        if($code=='vendedor_id'){
+            $userad = new AdminUser;
+            if($oldValue !=''){
+           $getuser=     $userad->where('id',$oldValue)->first();
+           if($getuser)
+           $oldValue= $getuser->name;
+            }
+            if($value !=''){
+                $getuser=     $userad->where('id',$value)->first();
+                if($getuser)
+                $value= $getuser->name;
+                 }
+           
+        }
 
         //Add history
         $dataHistory = [
@@ -1116,6 +1127,10 @@ class  AdminOrderController extends RootAdminController
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
         $convenio=Convenio::where('order_id',$orderId)->first();
+        $constacia_trabajo='';
+        $rif='';
+        $cedula='';
+
         
         $nro_convenio = "No se ha creado un convenio";
         if($convenio){
@@ -1123,8 +1138,13 @@ class  AdminOrderController extends RootAdminController
         }
 
         if ($order) {
-         
+            $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            if($documento){
+                $constacia_trabajo= $documento->carta_trabajo ;
+                $rif= $documento->rif ;
+                $cedula= $documento->cedula ;
+            }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
@@ -1133,6 +1153,9 @@ class  AdminOrderController extends RootAdminController
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
             $data['nro_convenio'] =  $nro_convenio;
+            $data['constacia_trabajo'] =  $constacia_trabajo;
+            $data['rif'] =  $rif;
+            $data['cedula'] =  $cedula;
 
             $data['order'] =  $order;
       
@@ -1157,6 +1180,8 @@ class  AdminOrderController extends RootAdminController
             $data['details'] = [];
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
+         
+
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
