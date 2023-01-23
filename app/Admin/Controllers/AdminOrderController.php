@@ -1227,9 +1227,7 @@ class  AdminOrderController extends RootAdminController
         return AdminOrder::getOrderAdmin($id);
     }
 
-
-    // 
-             public function downloadPdf($id)
+        public function downloadPdf($id)
             {
                 $user = Admin::user();
                 if ($user === null) {

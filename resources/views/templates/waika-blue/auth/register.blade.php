@@ -257,7 +257,7 @@
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                             <input type="text"
                                 class="is_required validate account_input form-control {{ ($errors->has('phone2'))?"input-error":"" }}"
-                                name="phone2" placeholder="{{ sc_language_render('customer.phone') }}" value="{{ old('phone2') }}">
+                                name="phone2" placeholder="telefono2" value="{{ old('phone2') }}">
                             @if ($errors->has('phone2'))
                             <span class="help-block">
                                 {{ $errors->first('phone2') }}
