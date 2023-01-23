@@ -297,6 +297,20 @@
      
 </div>
 
+
+<div class="col-6">
+
+    <div class="view view-first ">  
+    
+        <img  width="100%" class="img-fluid" src="/{!! $cedula !!}" />  
+
+      
+        <img  width="100%" class="img-fluid" src="/{!! $rif !!}" />  
+        <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
+           
+    </div>
+</div>
+
         </div>
     </div>
 </div>
