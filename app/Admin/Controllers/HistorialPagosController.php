@@ -526,7 +526,6 @@ class HistorialPagosController extends RootAdminController
         foreach($result as $c){
             foreach($estado as $estados){
            if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
-
                 foreach($municipio as $municipos){
                     if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
                 }
@@ -534,7 +533,6 @@ class HistorialPagosController extends RootAdminController
                     if($parroquias->codigomunicipio == $c['cod_municipio']){
                         $nombreparroquias = $parroquias->nombre;}
                 }
-              
             }
 
             $dato_usuario = [
@@ -791,10 +789,6 @@ class HistorialPagosController extends RootAdminController
 
                 }
 
-
-                
-                  
-  
                 $r_convenio=   Convenio::create([
                     'order_id'=> request()->c_order_id,
                     'nro_convenio' => request()->nro_convenio,

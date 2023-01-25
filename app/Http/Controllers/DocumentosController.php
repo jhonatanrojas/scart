@@ -81,70 +81,74 @@ class DocumentosController extends Controller
 
         $customer = auth()->user();
         $id = $customer['id'];
-      
-            $Financiamiento  = session('dataCheckout');
+
+        $documento = SC__documento::where('id_usuario', $id)->get();
+
+
+        $Financiamiento  = session('dataCheckout');
 
 
             $result = $request->all();
+             
+            if(isset($documento[0]->cedula) || isset($documento[0]->rif) || isset($documento[0]->arta_trabajo)){
+                if(isset($result['c_vacio'])){
+                    $request->validate([
+                        'cedula' => 'required',
+                        
+                    ]);
+    
+                    $saveFile = time().'.'.$request->cedula->extension();  
+                    $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
+                    $request->cedula->move(public_path('data/clientes/cedula'), $saveFile);
+                    $saveFile = SC__documento::find($result['id']);
+                    $saveFile->cedula = $cedulas;
+                    $saveFile->save();
+                    return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos cedula');
 
-
-           
-            if(isset($result['c_vacio'])){
-                $request->validate([
-                    'cedula' => 'required',
+    
+                }
+    
+    
+                
+                if(isset($result['r_vacio'])){
+                    $request->validate([
+                        'rif' => 'required',
+                    ]);
+    
                     
-                ]);
-
-                $saveFile = time().'.'.$request->cedula->extension();  
-                $cedulas= 'data/clientes/cedula'.'/'. $saveFile;
-                $request->cedula->move(public_path('data/clientes/cedula'), $saveFile);
-                $saveFile = SC__documento::find($result['id']);
-                $saveFile->cedula = $cedulas;
-                $saveFile->save();
-                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos cedula');
-               
-
-               
-
-            }
-            
-            if(isset($result['r_vacio'])){
-                $request->validate([
-                    'rif' => 'required',
-                ]);
-
-                
-
-                $saveFile = time().'.'.$request['rif']->extension();  
-                    $rifs= 'data/clientes/rif'.'/'. $saveFile;
-                    $request['rif']->move(public_path('data/clientes/rif'), $saveFile);
-                $saveFile = SC__documento::find($result['id']);
-                $saveFile->rif = $rifs;
-                $saveFile->save();
-                
-                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos rif');
-
-            }
-
-            if(isset($result['k_vacio'])){
-                $request->validate([
-                    'carta_trabajo' => 'required',
-                ]);
-                $saveFile = time().'.'.$request->carta_trabajo->extension();  
-                $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
-                $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
-
-                
-                $saveFile = SC__documento::find($result['id']);
-                $saveFile->carta_trabajo = $path_archivo;
-                $saveFile->save();
-                
-                return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos carta de trabajo');
+    
+                    $saveFile = time().'.'.$request['rif']->extension();  
+                        $rifs= 'data/clientes/rif'.'/'. $saveFile;
+                        $request['rif']->move(public_path('data/clientes/rif'), $saveFile);
+                    $saveFile = SC__documento::find($result['id']);
+                    $saveFile->rif = $rifs;
+                    $saveFile->save();
+                    
+                    return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos rif');
+    
+                }
+    
+                if(isset($result['k_vacio'])){
+                    $request->validate([
+                        'carta_trabajo' => 'required',
+                    ]);
+                    $saveFile = time().'.'.$request->carta_trabajo->extension();  
+                    $path_archivo= 'data/clientes/carta_trabajo'.'/'. $saveFile;
+                    $request->carta_trabajo->move(public_path('data/clientes/carta_trabajo'), $saveFile);
+    
+                    
+                    $saveFile = SC__documento::find($result['id']);
+                    $saveFile->carta_trabajo = $path_archivo;
+                    $saveFile->save();
+                    
+                    return redirect('/adjuntar_document')->with('success', 'Adjunto los documentos carta de trabajo');
+    
+                }
+    
 
             }
 
            
-
            
 
 

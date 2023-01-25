@@ -1227,9 +1227,7 @@ class  AdminOrderController extends RootAdminController
         return AdminOrder::getOrderAdmin($id);
     }
 
-
-    // 
-             public function downloadPdf($id)
+        public function downloadPdf($id)
             {
                 $user = Admin::user();
                 if ($user === null) {
@@ -1447,6 +1445,8 @@ class  AdminOrderController extends RootAdminController
                         '/\{\{\$logo_global\}\}/',
                         '/\{\{\$numero_de_convenio\}\}/',
                     ];
+
+                    $nro_convenio = 'no aplica';
                     
 
                     $dataReplace = [
@@ -1481,9 +1481,12 @@ class  AdminOrderController extends RootAdminController
                         'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'cod_numero_convenio' =>  $nro_convenio
+                        'numero_de_convenio'=>      $nro_convenio
+                        
 
                     ];
+
+
                     $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
                     $dataView = [
                         'content' => $content,
