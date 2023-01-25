@@ -148,12 +148,13 @@
                     <td class="td-title"><i class="far fa-money-bill-alt nav-icon"></i> {{ sc_language_render('order.currency') }}:</td><td>{{ $order->currency }}</td>
                   </tr>
                   <tr>
-                    <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td>
-                    <td>
-                      <a href="#" class="updateStatus" data-value="{{($order->exchange_rate)??1  }}" data-name="exchange_rate" data-type="text" min=0 data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="tipo de cambio">{{ $order->exchange_rate }}</a>
-
-        
                     
+                      @if (!$order['modalidad_de_compra'] == 0)
+                      <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td>
+                      <td>
+                      <a href="#" class="updateStatus" data-value="{{($order->exchange_rate)??1  }}" data-name="exchange_rate" data-type="text" min=0 data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="tipo de cambio">{{ $order->exchange_rate }}</a>
+                      @endif
+
                     </td>
                   </tr>
               </table>
@@ -245,7 +246,7 @@
                     </tr>
 
                     <tr>
-                      <td class="td-title">Clasificacion:</td>
+                      <td class="td-title">Clasificación del cliente:</td>
                       <td>
                         @if (!empty($clasificacion))
                             {{$clasificacion}}
@@ -693,7 +694,7 @@
     <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
     @endif
 @if($historial->payment_status == 2 || $historial->payment_status ==5)
-<a href='#' onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+<a href="#" onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
 @endif
 @if($historial->payment_status != 2 && $historial->payment_status !=5)
 
@@ -1171,7 +1172,7 @@ function obtener_detalle_pago(id_pago){
 
             
                 $('#loading').hide();
-                location.reload();
+                
                 }
             });
         
