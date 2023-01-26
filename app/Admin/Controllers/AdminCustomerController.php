@@ -555,9 +555,9 @@ class AdminCustomerController extends RootAdminController
 
         if (sc_config_admin('customer_postcode')) {
             if (sc_config_admin('customer_postcode_required')) {
-                $validate['postcode'] = 'required|min:5';
+                $validate['postcode'] = 'required|min:4';
             } else {
-                $validate['postcode'] = 'nullable|min:5';
+                $validate['postcode'] = 'nullable|min:4';
             }
             $dataUpdate['postcode'] = $data['postcode']??'';
         }
