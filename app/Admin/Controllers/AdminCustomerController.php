@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopCountry;
 use SCart\Core\Front\Models\ShopLanguage;
-use SCart\Core\Admin\Models\AdminCustomer;
+use App\Models\AdminCustomer;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;

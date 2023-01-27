@@ -187,27 +187,12 @@
                     </tr>
                     @endif
 
-                    @if (sc_config_admin('customer_postcode'))
-                    <tr>
-                      <td class="td-title">{{ sc_language_render('order.postcode') }}:</td><td><a href="#" class="updateInfoRequired" data-name="postcode" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.postcode') }}" >{!! $order->postcode !!}</a></td>
-                    </tr>
-                    @endif
+             
 
-                    <tr>
-                      <td class="td-title">{{ sc_language_render('order.address1') }}:</td><td><a href="#" class="" data-name="address1" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.address1') }}" >{!! $order->address1 !!}</a></td>
-                    </tr>
+                 
+                 
 
-                    @if (sc_config_admin('customer_address2'))
-                    <tr>
-                      <td class="td-title">{{ sc_language_render('order.address2') }}:</td><td><a href="#" class="updateInfoRequired" data-name="address2" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.address2') }}" >{!! $order->address2 !!}</a></td>
-                    </tr>
-                    @endif
-
-                    @if (sc_config_admin('customer_address3'))
-                    <tr>
-                      <td class="td-title">{{ sc_language_render('order.address3') }}:</td><td><a href="#" class="updateInfoRequired" data-name="address3" data-type="text" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.address3') }}" >{!! $order->address3 !!}</a></td>
-                    </tr>
-                    @endif
+                   
 
                     @if (sc_config_admin('customer_country'))
                     <tr>
