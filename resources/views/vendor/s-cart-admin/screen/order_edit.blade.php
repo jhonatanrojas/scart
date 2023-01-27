@@ -1532,7 +1532,7 @@ function all_editable(){
       success: function(response) {
         if(response.error ==0){
           alertJs('success', response.msg);
-          location.reload();
+    
         } else {
           alertJs('error', response.msg);
         }
