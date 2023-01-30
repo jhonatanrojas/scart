@@ -375,13 +375,12 @@ class AdminOrder extends ShopOrder
      */
     public static function getCountOrderNew()
     {
+        $fecha_hoy = date('y-m-d');
         $total_pagos= HistorialPago::where('payment_status',2)->count();
-        $Pago_relizado= HistorialPago::where('payment_status',5)->count();
+        $Pago_relizado= HistorialPago::where('payment_status',5)->where('fecha_pago' , $fecha_hoy)->count();
 
 
-        $fecha_vencimineto =   HistorialPago::where('fecha_venciento')
-            ->orWhere('payment_status', 4)
-            ->orderBy('fecha_venciento')->count();
+        $fecha_vencimineto =   HistorialPago::where('payment_status',4)->count();
 
 
     
