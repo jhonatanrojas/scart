@@ -71,6 +71,11 @@ Route::post('/sc_admin/fecha_delete/{id}', [AdminOrderController::class,'fecha_d
 
 });
 
+Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
+
+
+Route::get('/sc_admin/pagos_realizado',[HistorialPagosController::class ,'pagos_realizado'])->name('pagos_realizado');
+
 
 
 
