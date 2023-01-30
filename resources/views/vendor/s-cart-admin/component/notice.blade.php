@@ -1,9 +1,8 @@
 
 @php
-$orderNew = \SCart\Core\Admin\Models\AdminOrder::getCountOrderNew()
+$orderNew = \App\Models\AdminOrder::getCountOrderNew()
 
 @endphp
-
 
 <li class="nav-item dropdown">
   <a class="nav-link" data-toggle="dropdown" href="#">
@@ -21,10 +20,10 @@ $orderNew = \SCart\Core\Admin\Models\AdminOrder::getCountOrderNew()
   <li class="nav-item dropdown">
     <a class="nav-link" data-toggle="dropdown" href="#">
       <i class="far fa-bell "></i>
-      <span class="badge badge-warning navbar-badge">{{ $orderNew['total_pagados'] }}</span>
+      <span class="badge badge-warning navbar-badge">{!! $orderNew['total_pagados']  ??  '0' !!}</span>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-      <span class="dropdown-item dropdown-header">Tienes {{$orderNew['total_pagados']}}  pago nuevo pendiente </span>
+      <span class="dropdown-item dropdown-header">Tienes {!! $orderNew['total_pagados']  ??  '0' !!}  pago nuevo pendiente </span>
       <div class="dropdown-divider"></div>
         <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=2" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
     </div>
@@ -35,10 +34,10 @@ $orderNew = \SCart\Core\Admin\Models\AdminOrder::getCountOrderNew()
   <li class="nav-item dropdown">
     <a class="nav-link" data-toggle="dropdown" href="#">
       <i class="far fa-bell "></i>
-      <span class="badge badge-warning navbar-badge">{{ $orderNew['Pago_relizado'] }}</span>
+      <span class="badge badge-warning navbar-badge">{!! $orderNew['Pago_relizado']  ?? '0'!!}</span>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-      <span class="dropdown-item dropdown-header">Tienes {{$orderNew['Pago_relizado']}}  pago realizado hoy </span>
+      <span class="dropdown-item dropdown-header">Tienes {!! $orderNew['Pago_relizado']  ?? '0'!!}  pago realizado hoy </span>
       <div class="dropdown-divider"></div>
         <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=6" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
     </div>
@@ -51,10 +50,10 @@ $orderNew = \SCart\Core\Admin\Models\AdminOrder::getCountOrderNew()
     <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="far fa-bell "></i>
-        <span class="badge badge-warning navbar-badge">{{ $orderNew['fecha_vencimineto'] }}</span>
+        <span class="badge badge-warning navbar-badge">{!!$orderNew['fecha_vencimineto'] ?? '0'!!}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <span class="dropdown-item dropdown-header">Tienes {{$orderNew['fecha_vencimineto']}}  pago vencido </span>
+        <span class="dropdown-item dropdown-header">Tienes {!!$orderNew['fecha_vencimineto'] ?? '0'!!}  pago vencido </span>
         <div class="dropdown-divider"></div>
           <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=4" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
       </div>
