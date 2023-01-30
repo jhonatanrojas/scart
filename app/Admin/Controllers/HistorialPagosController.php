@@ -44,6 +44,9 @@ class HistorialPagosController extends RootAdminController
 
      public function index(){
 
+
+        
+
         $data = [
             'title'         => 'Historial de pagos', 
             'subTitle'      => '',
@@ -55,6 +58,9 @@ class HistorialPagosController extends RootAdminController
             'css'           => '',
             'js'            => '',
         ];
+
+
+       
         //Process add content
         $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
         $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
@@ -79,28 +85,43 @@ class HistorialPagosController extends RootAdminController
 
    
         $keyword    = sc_clean(request('keyword') ?? '');
-      $statusPayment = PaymentStatus::select(['name','id'])->get();
+        $fechas1    = sc_clean(request('fecha1') ?? '');
+        $fechas2    = sc_clean(request('fecha2') ?? '');
+        $statusPayment = PaymentStatus::select(['name','id'])->get();
 
+       
 
+       
+
+        
 
       foreach ($statusPayment as $key => $value) {
         $arrSort[$value->id] = $value->name;
         # code...
       }
+
+
+      
       $arrSort['0'] ='Todos';
 
 
 
         $dataSearch = [
             'keyword'    => $keyword,
+            'fechas1'    => $fechas1,
+            'fechas2'    => $fechas2,
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
         ];
-     
+        
+
+      
         $dataTmp = $this->getPagosListAdmin($dataSearch);
 
+      
 
 
+        
 
     
 
@@ -157,25 +178,63 @@ class HistorialPagosController extends RootAdminController
         //=menuRight
 
         //menuSort
+     
+        //=menuSort
         $optionSort = '';
         foreach ($arrSort as $key => $status) {
             $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
         $data['urlSort'] = sc_route_admin('historial_pagos.index', request()->except(['_token', '_pjax', 'sort_order']));
         $data['optionSort'] = $optionSort;
-        //=menuSort
 
         //menuSearch
         $data['topMenuRight'][] = '
                 <form action="' . sc_route_admin('historial_pagos.index') . '" id="button_search">
-                <div class="input-group input-group" style="width: 350px;">
+                
+                <div class="row justify-content-md-center align-items-center">
+                <div class="col-md-4 form-group">
+                        <label>'.'Status'.':</label>
+                        <div class="input-group">
+                        <select class="form-control rounded-0" name="sort_order" id="">
+                       
+                        <option value=""> Búsqueda por Estatus</option>
+                        <option value="1">No pagado</option><option value="2">Pago reportado(Pendiente)</option><option value="3">Pago Pendiente</option><option value="4">Pago en mora (Vencido)</option><option value="5">Pagado</option><option value="0">Todos</option>
+                
+                      </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label>'.sc_language_render('action.from').':</label>
+                        <div class="input-group">
+                        <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/> 
+                        </div>
+                    </div>
+               
+               
+                    <div class=" col-md-4 form-group">
+                        <label>'.sc_language_render('action.to').':</label>
+                        <div class="input-group">
+                        <input type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  /> 
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-4  form-group d-flex">
                     <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="Buscar por numero de orden" value="' . $keyword . '">
-                    <div class="input-group-append">
+                    <div class="">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
+                
+            </div>
+                
+
+                
                 </form>';
+
+                
         //=menuSearch
+
+        
 
         return view($this->templatePathAdmin.'pagos.detalle')
             ->with($data);
@@ -307,6 +366,9 @@ class HistorialPagosController extends RootAdminController
         $data['optionSort'] = $optionSort;
         //=menuSort
 
+
+       
+
         //menuSearch
         $data['topMenuRight'][] = '
                 <form action="' . sc_route_admin('historial_pagos.detalle') . '" id="button_search">
@@ -383,6 +445,8 @@ class HistorialPagosController extends RootAdminController
         $id_pago = $request->id_pago;
         $order = AdminOrder::getOrderAdmin($request->order_id);
 
+
+
         $data_pago =[
          'order_id' =>$request->order_id,
          
@@ -407,6 +471,8 @@ class HistorialPagosController extends RootAdminController
         ->update($data_pago);
 
         }
+
+       
  
 
         return redirect(sc_route_admin('admin_order.detail', ['id' => $request->order_id ]) )
@@ -416,6 +482,8 @@ class HistorialPagosController extends RootAdminController
     public static function getPagosListAdmin(array $dataSearch)
     {
         $keyword      = $dataSearch['keyword'] ?? '';
+        $fechas1      = $dataSearch['fechas1'] ?? '';
+        $fechas2      = $dataSearch['fechas2'] ?? '';
         $email        = $dataSearch['email'] ?? '';
         $from_to      = $dataSearch['from_to'] ?? '';
         $end_to       = $dataSearch['end_to'] ?? '';
@@ -423,7 +491,6 @@ class HistorialPagosController extends RootAdminController
         $arrSort      = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId      = $dataSearch['storeId'] ?? '';
-
         $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
      
         ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
@@ -436,9 +503,46 @@ class HistorialPagosController extends RootAdminController
             $orderList = $orderList->where('status', $order_status);
         }
         if ($keyword) {
+
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('order_id', $keyword);
             });
+        }
+        if ($fechas1 || $fechas2 || $keyword) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $keyword) {
+                if($keyword){
+                    $sql->Where('order_id', $keyword);
+                }
+                if($keyword && $fechas1 && $fechas2){
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'>=' ,$fechas1)
+                ;
+
+                }
+                if($keyword && $fechas1 && $fechas2){
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'<=' ,$fechas2)
+                ;
+
+                }
+                
+
+            });
+
+        }
+        if ($fechas1 || $fechas2) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $sort_order) {
+                
+                if($fechas1 && $fechas2){
+                    $sql->Where('fecha_pago' ,'>=' ,$fechas1)
+                ;
+                }
+                if($fechas1 && $fechas2){
+                    $sql->Where('fecha_pago' ,'<=' ,$fechas2)
+                ;
+                }
+                
+            });
+
+          
         }
 
         if ($email) {
@@ -460,13 +564,28 @@ class HistorialPagosController extends RootAdminController
         }
 
         if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+            if($sort_order == 4){
+                $fecha_hoy = date('y-m-d');
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
 
+            }else if($sort_order == 5){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }else if($sort_order == 6){
+                $fecha_hoy = date('y-m-d');
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
+            }
+            else if($sort_order == 2){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }
+            else if($sort_order == 1){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }else if($sort_order == 3){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+               
+            }
+            
 
-
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
         } else {
-
-   
             $orderList->where('sc_historial_pagos.payment_status','<>' ,1)
             ->orderBy('fecha_pago', 'desc');
         }
@@ -1026,4 +1145,14 @@ class HistorialPagosController extends RootAdminController
       
        
     }
+
+    public function pagos_realizado(){
+
+
+
+        return view($this->templatePathAdmin.'component.notice')
+        ->with("");
+    }
+
+
 }

@@ -219,7 +219,7 @@
 
     // tag a
     $(function(){
-     $(document).pjax('a.page-link', '#pjax-container')
+   //  $(document).pjax('a.page-link', '#pjax-container')
     })
 
 

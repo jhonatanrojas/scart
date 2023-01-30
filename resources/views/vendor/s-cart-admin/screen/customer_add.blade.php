@@ -58,7 +58,7 @@
                                 <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                 </div>
-                            <input disabled="true" id="razon_social" placeholder="Razon social" type="text" class="form-control" name="razon_social"
+                            <input required disabled="true" id="razon_social" placeholder="Razon social" type="text" class="form-control" name="razon_social"
                                 value="{{ (old('razon_social', $customer['razon_social'] ?? ''))}}">
                             </div>
                             @if($errors->has('razon_social'))
@@ -80,7 +80,7 @@
                                     <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                     </div>
-                                <input  disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
+                                <input required disabled="true" placeholder="Nro Rif" id="rif" type="text" class="form-control" name="rif"
                                     value="{{ (old('rif', $customer['rif'] ?? ''))}}">
                                 </div>
                                 @if($errors->has('rif'))

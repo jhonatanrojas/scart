@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopCountry;
 use SCart\Core\Front\Models\ShopLanguage;
-use SCart\Core\Admin\Models\AdminCustomer;
+use App\Models\AdminCustomer;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
@@ -555,9 +555,9 @@ class AdminCustomerController extends RootAdminController
 
         if (sc_config_admin('customer_postcode')) {
             if (sc_config_admin('customer_postcode_required')) {
-                $validate['postcode'] = 'required|min:5';
+                $validate['postcode'] = 'required|min:4';
             } else {
-                $validate['postcode'] = 'nullable|min:5';
+                $validate['postcode'] = 'nullable|min:4';
             }
             $dataUpdate['postcode'] = $data['postcode']??'';
         }

@@ -88,7 +88,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                                 </div>
-                                                <input disabled="true" placeholder="Nro Rif" id="rif" type="text"
+                                                <input required disabled="true" placeholder="Nro Rif" id="rif" type="text"
                                                     class="form-control" name="rif"
                                                     value="{{ old('rif', $customer['rif'] ?? '') }}">
                                             </div>
@@ -1069,7 +1069,7 @@
                 </div>
             @endif
         </div>
-        <script src="/js/cliente1.js"></script>
+        <script src="/js/cliente.js"></script>
         @vite('resources/js/estado.js')
     @endsection
 

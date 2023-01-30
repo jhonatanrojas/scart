@@ -75,7 +75,7 @@ class ShopOrder extends Model
       
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $consul=    self::select('id')->orderBy('created_at', 'desc')->first();
+                $consul=    self::select('id')->orderBy('id', 'desc')->first();
 
               
                 $id=1;
