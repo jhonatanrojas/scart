@@ -75,27 +75,9 @@
             </div>
           @endif
 
-          @if (!empty($buttonRefresh))
-            <div class="menu-left">
-              <span class="btn btn-flat btn-primary grid-refresh" title="{{ sc_language_render('action.refresh') }}"><i class="fas fa-sync-alt"></i></span>
-            </div>
-          @endif
+          
 
-          @if (!empty($buttonSort))
-          <div class="menu-left">
-            <div class="input-group float-right ml-1" style="width: 350px;">
-              <div class="btn-group">
-                <select class="form-control rounded-0 float-right" id="order_sort">
-                {!! $optionSort??'' !!}
-                </select>
-              </div>
-              <div class="input-group-append">
-                  <button id="button_sort" type="submit" class="btn btn-primary"><i class="fas fa-sort-amount-down-alt"></i></button>
-              </div>
-            </div>
-          </div>
-          @endif
-
+          
           @if (!empty($menuLeft) && count($menuLeft))
             @foreach ($menuLeft as $item)
                 <div class="menu-left">

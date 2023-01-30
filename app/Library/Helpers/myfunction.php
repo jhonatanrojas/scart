@@ -155,9 +155,9 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
 
         if (sc_config('customer_postcode')) {
             if (sc_config('customer_postcode_required')) {
-                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:5');
+                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
             } else {
-                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:5');
+                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
             }
             if (!empty($dataRaw['postcode'])) {
                 $dataInsert['postcode'] = $dataRaw['postcode'];
@@ -584,7 +584,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
             $dataAddress['country'] = $dataRaw['country']??'';
         }
         if (sc_config('customer_postcode')) {
-            $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:5');
+            $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
             $dataAddress['postcode'] = $dataRaw['postcode']??'';
         }
 
@@ -838,9 +838,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (sc_config('customer_postcode')) {
             if (sc_config('customer_postcode_required')) {
-                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:5');
+                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
             } else {
-                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:5');
+                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
             }
             if (!empty($dataRaw['postcode'])) {
                 $dataUpdate['postcode'] = $dataRaw['postcode'];

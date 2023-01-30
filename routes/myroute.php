@@ -76,6 +76,7 @@ Route::group(['prefix' => 'sc_admin/order'], function () use ($nameSpaceAdminPro
     Route::post('/crear_convenio', 'App\Admin\Controllers\HistorialPagosController@postCrearConvenio')->name('crear_convenio');
     Route::post('/reportar_pago','App\Admin\Controllers\HistorialPagosController@postReportarPago')->name('historial_pagos.postreportar');
 
+
    
 
     

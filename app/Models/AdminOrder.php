@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\HistorialPago;
 use App\Models\ShopOrder;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use Cache;
@@ -375,8 +375,29 @@ class AdminOrder extends ShopOrder
      */
     public static function getCountOrderNew()
     {
-        return self::where('status', 1)
-        ->count();
+        $total_pagos= HistorialPago::where('payment_status',2)->count();
+        $Pago_relizado= HistorialPago::where('payment_status',5)->count();
+
+
+        $fecha_vencimineto =   HistorialPago::where('fecha_venciento')
+            ->orWhere('payment_status', 4)
+            ->orderBy('fecha_venciento')->count();
+
+
+    
+
+
+        $resultado = array(
+            'total_ordenes' => $datos = self::where('status', 1)
+            ->count(),
+            'total_pagados' => $total_pagos ?? 0,
+            'fecha_vencimineto' => $fecha_vencimineto ?? 0,
+            'Pago_relizado' => $Pago_relizado ?? 0
+        );
+
+       
+   
+            return $resultado;
     }
     
     /**
