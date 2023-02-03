@@ -1033,15 +1033,238 @@ class ShopAccountController extends RootFrontController
         );;
     }
     public function borrador_pdf($id){
-        $plantilla = Convenio::where('order_id', $id)->first();
-        if ($plantilla == null) {
-            return 'No se encontró la plantilla';
-        }
-            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
-            ['borrado_html'=> $plantilla->convenio],
-            )->setOptions(['defaultFont' => 'sans-serif']);
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
 
-             return $pdf->stream();
+        $order = ShopOrder::where('id',$id)->get();
+        $letraconvertir_nuber = new NumeroLetra;
+
+        $convenio = Convenio::where('order_id',$id)->first();
+        
+        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
+        $result = $usuario->all();
+        $productoDetail = shop_order_detail::where('order_id' , $id)->get();
+        $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
+        $nombreProduct = [];
+        $cuotas = [];
+        $abono_inicial = [];
+        $id_modalidad_pago = [];
+
+        foreach($productoDetail as $key => $p){
+            $nombreProduct = $p->name;
+            $cuotas = $p->nro_coutas;
+            $abono_inicial = $p->abono_inicial;
+            $id_modalidad_pago = $p->id_modalidad_pago;
+            $fecha_maxima_entrega = $p->fecha_maxima_entrega;
+        }
+        
+
+        $nombreEstado=[];
+        $nombreparroquias =[];
+        $nombremunicipos =[];
+        foreach($result as $c){
+            foreach($estado as $estados){
+           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
+
+                foreach($municipio as $municipos){
+                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
+                }
+                foreach($parroquia as $parroquias){
+                    if($parroquias->codigomunicipio == $c['cod_municipio']){
+                        $nombreparroquias = $parroquias->nombre;}
+                }
+              
+            }
+
+            $dato_usuario = [
+                'subtotal' => $c['subtotal'],
+                'natural_jurídica' => $c['natural_jurídica'],
+                'razon_social' => $c['razon_social'],
+                'rif' => $c['rif'],
+                'first_name' => $c['first_name'],
+                'last_name' => $c['last_name'],
+                'phone' => $c['phone'],
+                'email' => $c['email'],
+                'address1' => $c['address1'],
+                'cedula' => $c['cedula'],
+                'cod_estado' => $nombreEstado ,
+                'cod_municipio' => $nombremunicipos,
+                'cod_parroquia' => $nombreparroquias,
+                'estado_civil' => $c['estado_civil'],
+                
+                
+                [
+        
+                    'subtotal'=> $order[0]['subtotal'],
+                    'cantidaProduc'=> $cantidaProduc,
+                    'nombreProduct'=> $nombreProduct,
+                    'cuotas' => $cuotas,
+                    'abono_inicial' => $abono_inicial,
+                    'id_modalidad_pago' => $id_modalidad_pago
+
+                ]
+
+            ];
+
+
+        }
+
+            
+
+                    $Moneda_CAMBIOBS = sc_currency_all();
+                    foreach($Moneda_CAMBIOBS as $cambio){
+                        if($cambio->name == "Bolivares"){
+                           $cod_bolibares =  $cambio->exchange_rate;
+                        }
+                    }
+
+                $borrado_html = [];
+                switch ($dato_usuario['natural_jurídica']) {
+                    case 'N':
+                        $borrado_html = $abono_inicial > 0
+                            ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                            : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                        break;
+                    case 'J':
+                        $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
+                        break;
+                }
+
+
+                $pieces = explode(" ", $dato_usuario['cedula']);
+                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
+                    $mesualQuinsena = "MENSUAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+                }else {
+                    $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
+                    $mesualQuinsena = " QUINCENAL";
+                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " .$suma ." DE CADA MES";
+                } 
+                if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
+                    else $Nacionalidad = "Extranjer(A)"; 
+
+               
+
+                    $monto = $dato_usuario[0]['subtotal'];
+                    $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
+                    $cuotas = $dato_usuario[0]['cuotas'];
+                    if($dato_usuario[0]['abono_inicial']>0){
+                        $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
+                        $monto = $dato_usuario[0]['subtotal'];
+                        $monto = $monto - $totalinicial;
+                        $number1 =  $monto/$dato_usuario[0]['cuotas'];
+                        $cuotas_entre_monto =  $dato_usuario[0]['subtotal']/$cuotas;
+                        $number2 =  $monto*$cod_bolibares;
+                       
+                      }
+    
+
+                  
+                  $number2 =  $monto*$cod_bolibares;
+                  $nro_convenio = 'no aplica';
+                    
+
+                  foreach($borrado_html as $replacee){
+                    $dataFind = [
+                        '/\{\{\$razon_social\}\}/',
+                        '/\{\{\$rif\}\}/',
+                        '/\{\{\$nombre\}\}/',
+                        '/\{\{\$apellido\}\}/',
+                        '/\{\{\$direccion\}\}/',
+                        '/\{\{\$estado\}\}/',
+                        '/\{\{\$municipio\}\}/',
+                        '/\{\{\$parroquia\}\}/',
+                        '/\{\{\$cedula\}\}/',
+                        '/\{\{\$estado_civil\}\}/',
+                        '/\{\{\$nacionalidad\}\}/',
+                        '/\{\{\$modalidad_de_pago\}\}/',
+                        '/\{\{\$dia_modalida_pago\}\}/',
+                        '/\{\{\$cuotas\}\}/',
+                        '/\{\{\$cuotas_total\}\}/',
+                        '/\{\{\$cuotas_entre_precio_text\}\}/',
+                        '/\{\{\$cod_mespago\}\}/',
+                        '/\{\{\$fecha_entrega\}\}/',
+                        '/\{\{\$subtotal\}\}/',
+                        '/\{\{\$bolivar_text\}\}/',
+                        '/\{\{\$bolibares_number\}\}/',
+                        '/\{\{\$nombre_de_producto\}\}/',
+                        '/\{\{\$telefono\}\}/',
+                        '/\{\{\$email\}\}/',
+                        '/\{\{\$direccion\}\}/',
+                        '/\{\{\$fecha_de_hoy\}\}/',
+                        '/\{\{\$logo_waika\}\}/',
+                        '/\{\{\$logo_global\}\}/',
+                        '/\{\{\$numero_de_convenio\}\}/',
+                    ];
+
+                    
+                    
+
+                    $dataReplace = [
+                        'razon_social' => $dato_usuario['razon_social'],
+                        'rif' => $dato_usuario['rif'],
+                        'nombre' => $dato_usuario['first_name'],
+                        'apellido' =>$dato_usuario['last_name'],
+                        'direccion' => $dato_usuario['address1'],
+                        'estado'=> $dato_usuario['cod_estado'],
+                        'municipio'=>$dato_usuario['cod_municipio'],
+                        'parroquia'=>$dato_usuario['cod_parroquia'],
+                        'cedula'=>$dato_usuario['cedula'],
+                        'estado_civil'=>$dato_usuario['estado_civil'],
+                        'nacionalidad'=>$Nacionalidad,
+                        $mesualQuinsena,
+                        $letraconvertir_nuber->convertir1($cuotas),
+                        number_format($cuotas),
+                        number_format($number1, 2 ,',', ' '),
+                         $letraconvertir_nuber->convertir2($number1),
+                        $cod_diaMes ,
+                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? '...',
+                         $monto,
+                         $letraconvertir_nuber->convertir2($number2),
+                         number_format($number2, 2 ,',', ' '),
+                        $dato_usuario[0]['nombreProduct'] ,
+                        $dato_usuario['phone'],
+                        $dato_usuario['email'],
+                        $dato_usuario['address1'],
+                        date('d-m-y'),
+                        sc_file(sc_store('logo', ($storeId ?? null))),
+                        sc_file(sc_store('logo', ($storeId ?? null))) ,
+                        'cod_Fecha_De_Hoy'=> '_______',
+                        'logo_waika' =>sc_file(sc_store('logo',
+                        ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        $nro_convenio => '0',
+                        
+                        
+
+                    ];
+
+
+                    $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
+                    $dataView = [
+                        'content' => $content,
+                    ];
+
+                    
+
+
+
+                }
+
+
+
+            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+                    ['borrado_html'=> $dataView['content']]
+
+                    )->setOptions(['defaultFont' => 'sans-serif']);
+
+                    return $pdf->stream();
+            // $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+            // ['borrado_html'=> $plantilla->convenio],
+            // )->setOptions(['defaultFont' => 'sans-serif']);
+
+            //  return $pdf->stream();
 
     }
 
