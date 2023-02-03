@@ -16,7 +16,7 @@ $orderNew = \App\Models\AdminOrder::getCountOrderNew()
   </div>
   </li>
   
-  @if (!$orderNew['total_pagados'] == 0)
+  {{-- @if (!$orderNew['total_pagados'] == 0)
   <li class="nav-item dropdown">
     <a class="nav-link" data-toggle="dropdown" href="#">
       <i class="far fa-bell "></i>
@@ -28,9 +28,9 @@ $orderNew = \App\Models\AdminOrder::getCountOrderNew()
         <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=2" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
     </div>
     </li>
-  @endif
+  @endif --}}
 
-  @if (!$orderNew['Pago_relizado'] == 0)
+  {{-- @if (!$orderNew['Pago_relizado'] == 0)
   <li class="nav-item dropdown">
     <a class="nav-link" data-toggle="dropdown" href="#">
       <i class="far fa-bell "></i>
@@ -44,7 +44,7 @@ $orderNew = \App\Models\AdminOrder::getCountOrderNew()
     </li>
       
   @endif
-  
+   --}}
     
     @if (!$orderNew['fecha_vencimineto'] == 0)
     <li class="nav-item dropdown">
