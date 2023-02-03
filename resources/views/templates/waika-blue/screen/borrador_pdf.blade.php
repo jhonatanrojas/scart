@@ -18,16 +18,8 @@
                 box-sizing: border-box;
                 height: 200vh;
             }
-            .borrador{
-                padding: 15px;
-                max-width: 85%;
-                widows: 100%;
-                margin: auto;
-                border:solid 1px  #00000027;
-            }
-            .borrador p{
-                font-weight: 400;
-            }
+            
+          
         .imge_fondo1{
              position: absolute;
              z-index: 2;
@@ -165,13 +157,8 @@
 </head>
 <body class="container">
     <div style="text-align: center; margin:auto;" class=" ">
-        
             <img width="100px" class="img12" alt="logo" src="/images/image1.jpg" >
             <h3 style=" text-align: center;"  class="text-center">BORRADOR DEL CONVENIO</h3>
-        
-
-       
-       
      </div>
      <div  class="borrador">{!!$borrado_html!!}</div>
     

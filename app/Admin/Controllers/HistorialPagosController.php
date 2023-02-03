@@ -954,19 +954,10 @@ class HistorialPagosController extends RootAdminController
             }
 
         }else{
- 
-            
 
         }
-
-
-    
-   
-
         return redirect()->back()
         ->with(['success' => 'Accion completada']);
-      
-       
     }
 
     public function postUpdate(){
