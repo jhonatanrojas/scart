@@ -267,7 +267,7 @@
                       <tr>
                         <td><a href="{{ sc_route_admin('historial_pagos.index')}}?sort_order=2&fecha1=&fecha2=&keyword={{$order['numero_order']}}">#{{ $order['numero_order'] }}</a></td>
                         <td>{{ $order['email'] }}</td>
-                        <td><span class="badge badge-{{ $mapStyleStatus[3]??'' }}">Pago pendiente
+                        <td><span class="badge badge-{{ $mapStyleStatus[3]??'' }}">Pago reportado
                         </span></td>
                         <td>{{ $order['creado'] }}</td>
                       </tr>
