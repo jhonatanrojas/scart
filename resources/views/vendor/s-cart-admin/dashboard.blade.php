@@ -223,6 +223,83 @@
               <!-- /.card-footer -->
             </div>
             <!-- /.card -->
+            <!-- TABLE: LATEST ORDERS -->
+            <div class="card">
+              <div class="card-header border-transparent">
+                <h3 class="card-title">Pagos recibidos</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table m-0">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>{{ sc_language_render('order.email') }}</th>
+                        <th>Estatus de pago</th>
+                        <th>{{ sc_language_render('admin.created_at') }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    @if ($pago_pendiente)
+                      @php
+                        
+
+                        $fecha_actual = date('Y-m-d');
+                        $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
+
+                      @endphp
+
+                      @foreach ($pago_pendiente as $order)
+                     
+                      @if ($order['pago_revicion'] === 2)
+                
+                      <tr>
+                        <td><a href="{{ sc_route_admin('historial_pagos.index')}}?sort_order=2&fecha1=&fecha2=&keyword={{$order['numero_order']}}">#{{ $order['numero_order'] }}</a></td>
+                        <td>{{ $order['email'] }}</td>
+                        <td><span class="badge badge-{{ $mapStyleStatus[3]??'' }}">Pago pendiente
+                        </span></td>
+                        <td>{{ $order['creado'] }}</td>
+                      </tr>
+                      @endif
+
+                      @if ($order['pago_revicion'] === 5 && $order['fecha_de_pago'] >= $fech_p )
+                
+                      <tr>
+                        <td><a href="{{ sc_route_admin('historial_pagos.index')}}?sort_order=5&fecha1=&fecha2=&keyword={{$order['numero_order']}}">#{{ $order['numero_order'] }}</a></td>
+                        <td>{{ $order['email'] }}</td>
+                        <td><span class="badge badge-{{ $mapStyleStatus[5]??'' }}">Pago pagados
+                        </span></td>
+                        <td>{{ $order['fecha_de_pago'] }}</td>
+                      </tr>
+                      @endif
+
+                     
+                            
+                      @endforeach
+                    @endif
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.table-responsive -->
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
           </div>
           <!-- /.col -->
           @endif

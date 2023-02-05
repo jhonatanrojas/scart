@@ -382,10 +382,6 @@ class AdminOrder extends ShopOrder
 
         $fecha_vencimineto =   HistorialPago::where('payment_status',4)->count();
 
-
-    
-
-
         $resultado = array(
             'total_ordenes' => $datos = self::where('status', 1)
             ->count(),

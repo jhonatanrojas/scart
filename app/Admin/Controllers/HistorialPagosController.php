@@ -191,8 +191,8 @@ class HistorialPagosController extends RootAdminController
         $data['topMenuRight'][] = '
                 <form action="' . sc_route_admin('historial_pagos.index') . '" id="button_search">
                 
-                <div class="row justify-content-md-center align-items-center">
-                <div class="col-md-4 form-group">
+                <div class="row align-items-center">
+                <div class="col-md-3 form-group">
                         <label>'.'Status'.':</label>
                         <div class="input-group">
                         <select class="form-control rounded-0" name="sort_order" id="">
@@ -203,7 +203,7 @@ class HistorialPagosController extends RootAdminController
                       </select>
                         </div>
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label>'.sc_language_render('action.from').':</label>
                         <div class="input-group">
                         <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/> 
@@ -211,21 +211,31 @@ class HistorialPagosController extends RootAdminController
                     </div>
                
                
-                    <div class=" col-md-4 form-group">
+                    <div class=" col-md-3 form-group">
                         <label>'.sc_language_render('action.to').':</label>
                         <div class="input-group">
                         <input type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  /> 
                         </div>
                     </div>
+
+                    
                    
-                    <div class="col-md-4  form-group d-flex">
-                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="Buscar por numero de orden" value="' . $keyword . '">
-                    <div class="">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                    </div>
-                </div>
+               
+                      
+                <div class="col-md-3 d-flex mt-4 align-items-center   form-group ">
+                
+              
+                <input type="text" name="keyword" class="form-control input-sm  " placeholder="Buscar por numero de orden" value="' . $keyword . '">
+                <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
+                
+               
+                   
                 
             </div>
+           
+                </div>
+                
+           
                 
 
                 
@@ -944,19 +954,10 @@ class HistorialPagosController extends RootAdminController
             }
 
         }else{
- 
-            
 
         }
-
-
-    
-   
-
         return redirect()->back()
         ->with(['success' => 'Accion completada']);
-      
-       
     }
 
     public function postUpdate(){
