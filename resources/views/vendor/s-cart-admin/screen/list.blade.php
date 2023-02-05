@@ -5,10 +5,10 @@
   <div class="col-12">
     <div class="card" >
       <div class="card-header with-border">
-        <div class="card-tools">
+        <div class="">
           @if (!empty($topMenuRight) && count($topMenuRight))
             @foreach ($topMenuRight as $item)
-                <div class="menu-right">
+                <div class="">
                   @php
                       $arrCheck = explode('view::', $item);
                   @endphp
