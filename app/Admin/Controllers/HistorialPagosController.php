@@ -596,8 +596,134 @@ class HistorialPagosController extends RootAdminController
             
 
         } else {
+            $orderList->where('sc_historial_pagos.payment_status','<>' ,5)
+            ->orderBy('fecha_pago', 'desc');
+        }
+        $orderList = $orderList->paginate(20);
+
+        return $orderList;
+    }
+
+    public static function getPagosListAdmin2(array $dataSearch)
+    {
+        $keyword      = $dataSearch['keyword'] ?? '';
+        $fechas1      = $dataSearch['fechas1'] ?? '';
+        $fechas2      = $dataSearch['fechas2'] ?? '';
+        $email        = $dataSearch['email'] ?? '';
+        $from_to      = $dataSearch['from_to'] ?? '';
+        $end_to       = $dataSearch['end_to'] ?? '';
+        $sort_order   = $dataSearch['sort_order'] ?? '';
+        $arrSort      = $dataSearch['arrSort'] ?? '';
+        $order_status = $dataSearch['order_status'] ?? '';
+        $storeId      = $dataSearch['storeId'] ?? '';
+        $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' );
+        if ($storeId) {
+
+            
+
+            
+
+            
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status','<>', 1)
+            ->orderBy('fecha_pago', 'desc');
+        }
+
+        if ($order_status) {
+            
+            $orderList = $orderList->where('status', $order_status);
+        }
+        if ($keyword) {
+
+            
+            
+
+            $orderList = $orderList->where(function ($sql) use ($keyword) {
+                $sql->Where('order_id', $keyword);
+            });
+        }
+        if ($fechas1 || $fechas2 || $keyword) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $keyword) {
+                if($keyword){
+                    $sql->Where('order_id', $keyword);
+                }
+                if($keyword && $fechas1 && $fechas2){
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'>=' ,$fechas1)
+                ;
+
+                }
+                if($keyword && $fechas1 && $fechas2){
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'<=' ,$fechas2)
+                ;
+
+                }
+                
+
+            });
+
+        }
+        if ($fechas1 || $fechas2) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $sort_order) {
+                if($fechas1 && $fechas2){
+                    $sql->Where('fecha_pago' ,'>=' ,$fechas1)
+                ;
+                }
+                if($fechas1 && $fechas2){
+                    $sql->Where('fecha_pago' ,'<=' ,$fechas2)
+                ;
+                }
+                
+            });
+
+          
+        }
+
+        if ($email) {
+            $orderList = $orderList->where(function ($sql) use ($email) {
+                $sql->Where('email', 'like', '%'.$email.'%');
+            });
+        }
+
+        if ($from_to) {
+            $orderList = $orderList->where(function ($sql) use ($from_to) {
+                $sql->Where('created_at', '>=', $from_to);
+            });
+        }
+
+        if ($end_to) {
+            $orderList = $orderList->where(function ($sql) use ($end_to) {
+                $sql->Where('created_at', '<=', $end_to);
+            });
+        }
+
+        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+            if($sort_order == 4){
+                $fecha_hoy = date('y-m-d');
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+
+            }else if($sort_order == 5){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }else if($sort_order == 6){
+                $fecha_hoy = date('y-m-d');
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
+            }
+            else if($sort_order == 2){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }
+            else if($sort_order == 1){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status',  $sort_order);
+            }else if($sort_order == 3){
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+               
+            }
+            
+
+        } else {
+           
             $orderList->where('sc_historial_pagos.payment_status','<>' ,1)
             ->orderBy('fecha_pago', 'desc');
+
+            
         }
         $orderList = $orderList->paginate(20);
 
@@ -1076,21 +1202,14 @@ class HistorialPagosController extends RootAdminController
             if (!$order) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$pago->order_id]), 'detail' => '']);
             }
-          
             if ($pago->importe_pagado==0 &&  $request->estatus_pagos==5 ) {
                 return redirect()->back()
                 ->with(['error' => ' El importe pagado debe ser mayor a 0']);
             }
-          
-    
 
-      
-     
         $pago->update([
             'payment_status' =>$request->estatus_pagos,
             'observacion' => $request->observacion
-            
-        
         ]);
         //actulizar pagos
 
@@ -1101,11 +1220,9 @@ class HistorialPagosController extends RootAdminController
 
                             // Obtén el ID del cliente
                     $clientId =  $order->customer_id;
-
                     // Calcula el nivel del cliente
                     $calculator = new ClientLevelCalculator();
                     $level = $calculator->calculate($clientId);
-                
                     // Obtén el cliente a partir de su ID
                     $client = SC_shop_customer::find($clientId);
 
@@ -1117,15 +1234,9 @@ class HistorialPagosController extends RootAdminController
 
             foreach ($total_pagos as $key => $value) {
                 $tasa =  empty($pago->tasa_cambio) ? 1 :$pago->tasa_cambio;
-               
                 $balance += ($pago->importe_pagado *  $tasa);
             }
-         
-     
-
             $dataTotal=[];
-            
-           
 
           $shopOrderTotal=   ShopOrderTotal::where('order_id',$pago->order_id)->where('code','received')
             ->first();
@@ -1134,26 +1245,200 @@ class HistorialPagosController extends RootAdminController
             $dataTotal['text'] =sc_currency_render_symbol($balance, $order->currency);
 
             AdminOrder::updateRowOrderTotal($dataTotal);
-          
+
         }
-      
-
-
-      
 
         return redirect()->back()
         ->with(['success' => 'Estatus actualizado']);
-      
-       
+
     }
 
     public function pagos_realizado(){
-
-
-
         return view($this->templatePathAdmin.'component.notice')
         ->with("");
     }
+
+
+    public function pago_diarios(){
+
+        $data = [
+            'title'         => 'COBRANZAS DIARIAS',
+            'subTitle'      => '',
+            'icon'          => '',
+            'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+            'removeList'    => 0, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+
+
+        //Process add content
+        $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'Nro orden'      => 'Nro',
+            'CLIENTES'       => 'CLIENTES',
+            'CEDULA'       => 'CEDULA',
+            'LOTE'      => 'LOTE',
+            'CONVENIO' => 'CONVENIO',
+            'FORMA_DE_PAGO' => 'FORMA DE PAGO',
+            'REFRENCIA' => 'REFRENCIA',
+            'DOLARES' => 'DOLARES',
+            'EUROS' => 'EUROS',
+            'BOLIVARES_efectivo' => 'BOLIVARES EFECTIVO',
+            'BOLIVARES_DIGITAL' => 'BOLIVARES DIGITALES',
+           
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword    = sc_clean(request('keyword') ?? '');
+        $fechas1    = sc_clean(request('fecha1') ?? '');
+        $fechas2    = sc_clean(request('fecha2') ?? '');
+        $statusPayment = PaymentStatus::select(['name','id'])->get();
+
+      foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+      }
+
+      $arrSort['0'] ='Todos';
+
+
+        $dataSearch = [
+            'keyword'    => $keyword,
+            'fechas1'    => $fechas1,
+            'fechas2'    => $fechas2,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+        ];
+
+        $dataTmp = $this->getPagosListAdmin2($dataSearch);
+
+
+
+        $Nr= 1;
+        $dataTr = [];
+        $totalBS = [
+            'TOTA_USD' => 0,
+            'TOTA_Bs' =>  0,
+            'TOTA_general' =>  0,
+            
+
+        ];
+
+        
+        foreach ($dataTmp as $key => $row) {
+            $order = AdminOrder::getOrderAdmin($row->order_id);
+
+            $monedas = [
+                'USD' => '0.00',
+                'Bs' =>  '0.00',
+                'Efectivo' =>  '0.00',
+                'Euro' =>  '0.00',
+    
+            ];
+        
+
+            
+            if($row->moneda == 'USD' && $row->metodoPago == 'Pago Movil' ){
+                $monedas['USD'] = $row->importe_pagado ;
+            }elseif($row->moneda == 'USD' && $row->metodoPago == 'BIOPAGO BDV'){
+                $monedas['USD'] = $row->importe_pagado ;
+
+            }elseif($row->moneda == 'USD' && $row->metodoPago == 'Transferencia'){
+                $monedas['USD'] = $row->importe_pagado ;
+                $totalBS['TOTA_USD'] +=  $monedas['USD']; 
+
+            }
+            
+            if($row->moneda == 'Bs'){
+                $monedas['Bs'] = $row->importe_pagado;
+                $totalBS['TOTA_Bs'] +=  $monedas['Bs']; 
+
+            }
+
+            
+
+           
+
+            $dataTr[$row->id ] = [
+                'Nro orden'      => $Nr++,
+                'CLIENTES'       => $row->first_name .' '. $row->last_name,
+                'CEDULA'       => $order->cedula,
+                'LOTE'      => $row->lote,
+                'CONVENIO' => $row->nro_convenio,
+                'FORMA_DE_PAGO' => $row->metodoPago,
+                'REFRENCIA' => $row->referencia,
+                'DOLARES' => $monedas['USD'],
+                'EUROS' => $monedas['Euro'],
+                'BOLIVARES_efectivo' => $monedas['Efectivo'],
+                'BOLIVARES_DIGITAL' => $monedas['Bs'],
+                 
+                
+            ];
+
+
+            
+
+
+           
+        }
+
+
+        $data['listTh'] = $listTh;
+        $data['total_bs'] = $totalBS['TOTA_Bs'];
+        $data['total_usd'] = $totalBS['TOTA_USD'];
+        $data['statusPayment'] = $statusPayment;
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+
+        //=menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $status) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+        $data['urlSort'] = sc_route_admin('pago_diarios', request()->except(['_token', '_pjax', 'sort_order']));
+        $data['optionSort'] = $optionSort;
+        
+
+       
+        //menuSearch
+        $data['topMenuRight'][] = '
+                <form action="' . sc_route_admin('pago_diarios') . '" id="button_search">
+                <div class="row  ">
+                    <div class="col-md-4 form-group">
+                        <label>'.sc_language_render('action.from').':</label>
+                        <div class="input-group">
+                        <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                        </div>
+                    </div>
+                    <div class=" col-md-4 form-group">
+                        <label>'.sc_language_render('action.to').':</label>
+                        <div class="input-group">
+                        <input type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  />
+                        </div>
+                    </div>
+
+                    <div class=" col-md-4 mt-4 form-group">
+                    <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+
+                </div>
+
+                </form>';
+
+        //=menuSearch
+
+        return view($this->templatePathAdmin.'pagos-diarios.pagos-diarios')
+            ->with($data);
+    }
+
 
 
 }
