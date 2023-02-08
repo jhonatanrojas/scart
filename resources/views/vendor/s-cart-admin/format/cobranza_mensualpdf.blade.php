@@ -30,8 +30,7 @@
                             <span class="text-default-d3">
                                 COBRANZAS {{$fecha}}
                                 </span>
-                                <img src="{{ sc_file(sc_store('logo')) }}" style="width:50px;">
-                            <span class="text-default-d3">
+                               
                         </div>
                     </div>
                 </div>
@@ -83,6 +82,48 @@
                     
                               
                             </table>
+
+
+                            <table class=" table table-hover box-body text-wrap table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Forma de pago</th>
+                                    <th>Divisa</th>
+                                    <th>Total</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php foreach ($totales as $forma_pago => $monedas): ?>
+                                    <?php foreach ($monedas as $moneda => $total): ?>
+                                      <tr>
+                                        <td><?php echo $forma_pago; ?></td>
+                                        <td><?php echo $moneda; ?></td>
+                                        <td><?php echo $total; ?></td>
+                                      </tr>
+                                    <?php endforeach; ?>
+                                  <?php endforeach; ?>
+                                </tbody>
+                              </table>
+    
+    
+                              <table class=" table table-hover box-body text-wrap table-bordered" style="width: 50%; margin-left: 50%">
+                                <thead>
+                                  <tr>
+                                    <th>Divisa</th>
+                                    <th>Total</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php foreach ($totaleudsBS as $forma_pago => $monedas): ?>
+                                    <?php foreach ($monedas as $moneda => $total): ?>
+                                      <tr>
+                                        <td><?php echo $moneda; ?></td>
+                                        <td><?php echo $total; ?></td>
+                                      </tr>
+                                    <?php endforeach; ?>
+                                  <?php endforeach; ?>
+                                </tbody>
+                              </table>
                     
                                 
                             </div>

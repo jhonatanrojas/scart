@@ -131,7 +131,7 @@
 
             
         </div>
-        {{-- <div class="det">
+       <div class="det">
           <table class=" table table-hover box-body text-wrap table-bordered">
             <thead>
               <tr>
@@ -179,7 +179,7 @@
                
     
             </div>
-        </div> --}}
+        </div> 
         
         <div class="block-pagination clearfix m-10">
           <div class="ml-3 float-left">
