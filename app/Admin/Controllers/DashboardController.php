@@ -155,6 +155,8 @@ class DashboardController extends RootAdminController
         return view($this->templatePathAdmin.'dashboard', $data);
     }
 
+ 
+
     /**
      * Page not found
      *
