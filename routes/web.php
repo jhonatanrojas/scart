@@ -78,6 +78,8 @@ Route::get('/sc_admin/pagos_realizado',[HistorialPagosController::class ,'pagos_
 
 Route::get('/sc_admin/pago_diarios',[HistorialPagosController::class ,'pago_diarios'])->name('pago_diarios');
 
+Route::get('/sc_admin/cobranza_mensual',[HistorialPagosController::class ,'cobranza_mensual'])->name('cobranza_mensual');
+
 
 
 

@@ -608,6 +608,7 @@ class HistorialPagosController extends RootAdminController
     {
         $keyword      = $dataSearch['keyword'] ?? '';
         $fechas1      = $dataSearch['fechas1'] ?? '';
+        $fechas2      = $dataSearch['fecha2'] ?? '';
         $pdf_cobranzas      = $dataSearch['pdf_cobranzas'] ?? '';
         $email        = $dataSearch['email'] ?? '';
         $from_to      = $dataSearch['from_to'] ?? '';
@@ -630,10 +631,15 @@ class HistorialPagosController extends RootAdminController
         }
         
         
-        if ($fechas1) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1) {
+        if ($fechas1 || $fechas2) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2) {
                 if($fechas1){
-                    $sql->Where('fecha_pago' ,'<=' ,$fechas1)
+                    $sql->Where('fecha_pago' ,'>=' ,$fechas1)
+                ;
+                }
+
+                if($fechas2){
+                    $sql->Where('fecha_pago' ,'<=' ,$fechas2)
                 ;
                 }
                 
@@ -1412,5 +1418,226 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin.'pagos-diarios.pagos-diarios')
             ->with($data);
+    }
+
+
+
+
+    public function cobranza_mensual(){
+
+        $data = [
+            'title'         => 'COBRANZAS MENSUAL',
+            'subTitle'      => '',
+            'icon'          => '',
+            'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+            'removeList'    => 0, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+
+
+        //Process add content
+        $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'Nro orden'      => 'Nro',
+            'CLIENTES'       => 'CLIENTES',
+            'CEDULA'       => 'CEDULA',
+            'LOTE'      => 'LOTE',
+            'CONVENIO' => 'CONVENIO',
+            'MONTO' => 'MONTO',
+            'DIVISA' => 'DIVISA',
+            'FORMA_DE_PAGO' => 'FORMA DE PAGO',
+            'REFRENCIA' => 'REFRENCIA',
+            'FECHA' => 'FECHA',
+            'tasa_cambio' => 'TASA DE CAMBIO',
+            
+            
+           
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword    = sc_clean(request('keyword') ?? '');
+        $fechas1    = sc_clean(request('fecha1') ?? '');
+        $fechas2    = sc_clean(request('fecha2') ?? '');
+        $pdf_cobranzas    = sc_clean(request('pdf_cobranzas') ?? '');
+        $statusPayment = PaymentStatus::select(['name','id'])->get();
+
+      foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+      }
+
+      $arrSort['0'] ='Todos';
+
+
+        $dataSearch = [
+            'keyword'    => $keyword,
+            'fechas1'    => $fechas1,
+            'fecha2'    => $fechas2,
+            'pdf_cobranzas'    => $pdf_cobranzas,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+        ];
+
+
+        $dataTmp = $this->getPagosListAdmin2($dataSearch);
+        $Nr= 1;
+        $dataTr = [];
+        
+        $totales = [];
+        $totale = [];
+
+        foreach ($dataTmp as $key => $row) {
+
+           
+            $pagados = [];
+            
+            $order = AdminOrder::getOrderAdmin($row->order_id);
+
+                $forma_pago = $row['metodoPago'];
+                $moneda = $row['moneda'];
+                $monto = $row['importe_pagado'];
+                $totalusd = '';
+
+                if (!isset($pagados[$moneda])) {
+                    $pagados[$moneda] = [];
+                }
+                if (!isset($pagados[$moneda][$moneda])) {
+                    $pagados[$moneda][$monto] = 0;
+                }
+                $pagados[$moneda][$monto] = $monto;
+                if (!isset($totales[$forma_pago])) {
+                    $totales[$forma_pago] = [];
+                }
+                if (!isset($totales[$forma_pago][$moneda])) {
+                    $totales[$forma_pago][$moneda] = 0;
+                }
+                $totales[$forma_pago][$moneda] += $monto;
+                if (!isset($totale[$totalusd])) {
+                    $totale[$totalusd] = [];
+                }
+                if (!isset($totale[$totalusd][$moneda])) {
+                    $totale[$totalusd][$moneda] = 0;
+                }
+                $totale[$totalusd][$moneda] += $monto;
+
+               
+
+            
+            foreach($pagados as $forma_pagos => $monedas){
+                foreach($monedas as $moneda => $totals){
+                    $divisa = $forma_pagos;
+                    $monto = $totals;}}
+
+
+            $dataTr[$row->id ] = [
+                'Nro orden'      => $Nr++,
+                'CLIENTES'       => $row->first_name .' '. $row->last_name,
+                'CEDULA'       => $order->cedula,
+                'LOTE'      => $row->lote,
+                'CONVENIO' => $row->nro_convenio,
+                'MONTO' => $monto,
+                'DIVISA' => $divisa,
+                'FORMA_DE_PAGO' => $row->metodoPago,
+                'REFRENCIA' => $row->referencia,
+                'FECHA' => $row->fecha_pago,
+                'tasa_cambio' => $row->tasa_cambio
+            ];
+        }
+
+        setlocale(LC_TIME, "spanish");
+$fecha = $dataSearch['fechas1'];
+$newDate = date("d-m-Y", strtotime($fecha)); 
+$mesDesc = strftime("%B", strtotime($newDate));
+
+function fechaEs($fecha) {
+    $fecha = substr($fecha, 0, 10);
+    $numeroDia = date('d', strtotime($fecha));
+    $dia = date('l', strtotime($fecha));
+    $mes = date('F', strtotime($fecha));
+    $anio = date('Y', strtotime($fecha));
+    $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+    $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+    $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+    $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+    $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+    return $nombreMes;
+    }
+
+   
+
+
+
+        if($dataSearch['pdf_cobranzas']){
+            $data['totales'] = $totales;
+            $data['fecha'] = strtoupper(fechaEs($fecha));
+            $data['totaleudsBS'] = $totale;
+            $data['listTh'] = $listTh;
+            $data['dataTr'] = $dataTr;
+            return view($this->templatePathAdmin.'format.cobranza_mensualpdf')
+            ->with($data);}
+
+
+        $data['listTh'] = $listTh;
+        $data['totales'] = $totales;
+        $data['totaleudsBS'] = $totale;
+        $data['statusPayment'] = $statusPayment;
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+        $fecha_hoy = date('y-m-d');
+
+        //=menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $status) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+        $data['urlSort'] = sc_route_admin('cobranza_mensual', request()->except(['_token', '_pjax', 'sort_order']));
+        $data['optionSort'] = $optionSort;
+        //menuSearch
+        $data['topMenuRight'][] = '
+
+           
+
+
+                <form action="' . sc_route_admin('cobranza_mensual') . '" id="button_search">
+                <div class="row  ">
+                    <div class="col-md-4 form-group">
+                    <label>'.sc_language_render('action.from').':</label>
+                        <div class="input-group">
+                        <input value="' . $fecha_hoy .'" id="fecha" type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                        </div>
+                    </div>
+
+
+                    <div class=" col-md-4 form-group">
+                        <label>'.sc_language_render('action.to').':</label>
+                        <div class="input-group">
+                        <input id="fecha2" value="' . $fecha_hoy .'"  type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  /> 
+                        </div>
+                    </div>
+
+                    <div class=" col-md-4 mt-4 form-group">
+                    <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </div>
+
+                </div>
+
+                </form>
+                ';
+
+        //=menuSearch
+
+        return view($this->templatePathAdmin.'pagos-diarios.cobranza_mensual')
+            ->with($data);
+
+        
     }
 }
