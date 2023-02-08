@@ -256,7 +256,7 @@
                         
 
                         $fecha_actual = date('Y-m-d');
-                        $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
+                        $fech_p = date('Y-m-d',strtotime($fecha_actual . "-5 day"));
 
                       @endphp
 

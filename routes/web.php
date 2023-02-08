@@ -77,6 +77,10 @@ Route::get('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'crear_tas
 
 Route::get('/sc_admin/pagos_realizado',[HistorialPagosController::class ,'pagos_realizado'])->name('pagos_realizado');
 
+Route::get('/sc_admin/pago_diarios',[HistorialPagosController::class ,'pago_diarios'])->name('pago_diarios');
+
+
+
 
 
 
