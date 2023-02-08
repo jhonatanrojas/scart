@@ -608,7 +608,7 @@ class HistorialPagosController extends RootAdminController
     {
         $keyword      = $dataSearch['keyword'] ?? '';
         $fechas1      = $dataSearch['fechas1'] ?? '';
-        $fechas2      = $dataSearch['fechas2'] ?? '';
+        $pdf_cobranzas      = $dataSearch['pdf_cobranzas'] ?? '';
         $email        = $dataSearch['email'] ?? '';
         $from_to      = $dataSearch['from_to'] ?? '';
         $end_to       = $dataSearch['end_to'] ?? '';
@@ -620,12 +620,7 @@ class HistorialPagosController extends RootAdminController
         ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' );
         if ($storeId) {
 
-            
-
-            
-
-            
-            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status','<>', 1)
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status','<>', 2)
             ->orderBy('fecha_pago', 'desc');
         }
 
@@ -633,43 +628,24 @@ class HistorialPagosController extends RootAdminController
             
             $orderList = $orderList->where('status', $order_status);
         }
-        if ($keyword) {
-
-            
-            
-
-            $orderList = $orderList->where(function ($sql) use ($keyword) {
-                $sql->Where('order_id', $keyword);
-            });
-        }
-        if ($fechas1 || $fechas2 || $keyword) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $keyword) {
-                if($keyword){
-                    $sql->Where('order_id', $keyword);
-                }
-                if($keyword && $fechas1 && $fechas2){
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'>=' ,$fechas1)
+        
+        
+        if ($fechas1) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1) {
+                if($fechas1){
+                    $sql->Where('fecha_pago' ,'<=' ,$fechas1)
                 ;
-
-                }
-                if($keyword && $fechas1 && $fechas2){
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago' ,'<=' ,$fechas2)
-                ;
-
                 }
                 
-
             });
 
+          
         }
-        if ($fechas1 || $fechas2) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2 , $sort_order) {
-                if($fechas1 && $fechas2){
-                    $sql->Where('fecha_pago' ,'>=' ,$fechas1)
-                ;
-                }
-                if($fechas1 && $fechas2){
-                    $sql->Where('fecha_pago' ,'<=' ,$fechas2)
+
+        if ($fechas1 || $pdf_cobranzas) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $pdf_cobranzas) {
+                if($fechas1 && $pdf_cobranzas){
+                    $sql->Where('fecha_pago' ,'<=' ,$fechas1)->where('status' , $pdf_cobranzas);
                 ;
                 }
                 
@@ -720,7 +696,7 @@ class HistorialPagosController extends RootAdminController
 
         } else {
            
-            $orderList->where('sc_historial_pagos.payment_status','<>' ,1)
+            $orderList->where('sc_historial_pagos.payment_status','<>' ,2)
             ->orderBy('fecha_pago', 'desc');
 
             
@@ -1289,16 +1265,16 @@ class HistorialPagosController extends RootAdminController
             'CONVENIO' => 'CONVENIO',
             'FORMA_DE_PAGO' => 'FORMA DE PAGO',
             'REFRENCIA' => 'REFRENCIA',
-            'DOLARES' => 'DOLARES',
-            'EUROS' => 'EUROS',
-            'BOLIVARES_efectivo' => 'BOLIVARES EFECTIVO',
-            'BOLIVARES_DIGITAL' => 'BOLIVARES DIGITALES',
+            'MONTO' => 'MONTO',
+            'DIVISA' => 'DIVISA',
+            'tasa_cambio' => 'TASA DE CAMBIO'
+            
            
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
         $fechas1    = sc_clean(request('fecha1') ?? '');
-        $fechas2    = sc_clean(request('fecha2') ?? '');
+        $pdf_cobranzas    = sc_clean(request('pdf_cobranzas') ?? '');
         $statusPayment = PaymentStatus::select(['name','id'])->get();
 
       foreach ($statusPayment as $key => $value) {
@@ -1312,59 +1288,61 @@ class HistorialPagosController extends RootAdminController
         $dataSearch = [
             'keyword'    => $keyword,
             'fechas1'    => $fechas1,
-            'fechas2'    => $fechas2,
+            'pdf_cobranzas'    => $pdf_cobranzas,
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
         ];
 
+
         $dataTmp = $this->getPagosListAdmin2($dataSearch);
-
-
-
         $Nr= 1;
         $dataTr = [];
-        $totalBS = [
-            'TOTA_USD' => 0,
-            'TOTA_Bs' =>  0,
-            'TOTA_general' =>  0,
-            
-
-        ];
-
         
+        $totales = [];
+        $totale = [];
+
         foreach ($dataTmp as $key => $row) {
-            $order = AdminOrder::getOrderAdmin($row->order_id);
-
-            $monedas = [
-                'USD' => '0.00',
-                'Bs' =>  '0.00',
-                'Efectivo' =>  '0.00',
-                'Euro' =>  '0.00',
-    
-            ];
-        
-
-            
-            if($row->moneda == 'USD' && $row->metodoPago == 'Pago Movil' ){
-                $monedas['USD'] = $row->importe_pagado ;
-            }elseif($row->moneda == 'USD' && $row->metodoPago == 'BIOPAGO BDV'){
-                $monedas['USD'] = $row->importe_pagado ;
-
-            }elseif($row->moneda == 'USD' && $row->metodoPago == 'Transferencia'){
-                $monedas['USD'] = $row->importe_pagado ;
-                $totalBS['TOTA_USD'] +=  $monedas['USD']; 
-
-            }
-            
-            if($row->moneda == 'Bs'){
-                $monedas['Bs'] = $row->importe_pagado;
-                $totalBS['TOTA_Bs'] +=  $monedas['Bs']; 
-
-            }
-
-            
 
            
+            $pagados = [];
+            
+            $order = AdminOrder::getOrderAdmin($row->order_id);
+
+                $forma_pago = $row['metodoPago'];
+                $moneda = $row['moneda'];
+                $monto = $row['importe_pagado'];
+                $totalusd = '';
+
+                if (!isset($pagados[$moneda])) {
+                    $pagados[$moneda] = [];
+                }
+                if (!isset($pagados[$moneda][$moneda])) {
+                    $pagados[$moneda][$monto] = 0;
+                }
+                $pagados[$moneda][$monto] = $monto;
+                if (!isset($totales[$forma_pago])) {
+                    $totales[$forma_pago] = [];
+                }
+                if (!isset($totales[$forma_pago][$moneda])) {
+                    $totales[$forma_pago][$moneda] = 0;
+                }
+                $totales[$forma_pago][$moneda] += $monto;
+                if (!isset($totale[$totalusd])) {
+                    $totale[$totalusd] = [];
+                }
+                if (!isset($totale[$totalusd][$moneda])) {
+                    $totale[$totalusd][$moneda] = 0;
+                }
+                $totale[$totalusd][$moneda] += $monto;
+
+               
+
+            
+            foreach($pagados as $forma_pagos => $monedas){
+                foreach($monedas as $moneda => $totals){
+                    $divisa = $forma_pagos;
+                    $monto = $totals;}}
+
 
             $dataTr[$row->id ] = [
                 'Nro orden'      => $Nr++,
@@ -1374,29 +1352,30 @@ class HistorialPagosController extends RootAdminController
                 'CONVENIO' => $row->nro_convenio,
                 'FORMA_DE_PAGO' => $row->metodoPago,
                 'REFRENCIA' => $row->referencia,
-                'DOLARES' => $monedas['USD'],
-                'EUROS' => $monedas['Euro'],
-                'BOLIVARES_efectivo' => $monedas['Efectivo'],
-                'BOLIVARES_DIGITAL' => $monedas['Bs'],
-                 
-                
+                'MONTO' => $monto,
+                'DIVISA' => $divisa,
+                'tasa_cambio' => $row->tasa_cambio
             ];
-
-
-            
-
-
-           
         }
 
 
+        if($dataSearch['pdf_cobranzas']){
+            $data['totales'] = $totales;
+            $data['totaleudsBS'] = $totale;
+            $data['listTh'] = $listTh;
+            $data['dataTr'] = $dataTr;
+            return view($this->templatePathAdmin.'format.pagos_diariospdf')
+            ->with($data);}
+
+
         $data['listTh'] = $listTh;
-        $data['total_bs'] = $totalBS['TOTA_Bs'];
-        $data['total_usd'] = $totalBS['TOTA_USD'];
+        $data['totales'] = $totales;
+        $data['totaleudsBS'] = $totale;
         $data['statusPayment'] = $statusPayment;
         $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+        $fecha_hoy = date('y-m-d');
 
         //=menuSort
         $optionSort = '';
@@ -1405,23 +1384,18 @@ class HistorialPagosController extends RootAdminController
         }
         $data['urlSort'] = sc_route_admin('pago_diarios', request()->except(['_token', '_pjax', 'sort_order']));
         $data['optionSort'] = $optionSort;
-        
-
-       
         //menuSearch
         $data['topMenuRight'][] = '
+
+           
+
+
                 <form action="' . sc_route_admin('pago_diarios') . '" id="button_search">
                 <div class="row  ">
-                    <div class="col-md-4 form-group">
-                        <label>'.sc_language_render('action.from').':</label>
+                    <div class="col-md-6 form-group">
+                        <label>'.'fecha'.':</label>
                         <div class="input-group">
-                        <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
-                        </div>
-                    </div>
-                    <div class=" col-md-4 form-group">
-                        <label>'.sc_language_render('action.to').':</label>
-                        <div class="input-group">
-                        <input type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  />
+                        <input value="' . $fecha_hoy .'" id="fecha" type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
                         </div>
                     </div>
 
@@ -1431,14 +1405,12 @@ class HistorialPagosController extends RootAdminController
 
                 </div>
 
-                </form>';
+                </form>
+                ';
 
         //=menuSearch
 
         return view($this->templatePathAdmin.'pagos-diarios.pagos-diarios')
             ->with($data);
     }
-
-
-
 }

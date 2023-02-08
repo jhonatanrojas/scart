@@ -46,7 +46,11 @@
       </div>
 
       <div class="card-header with-border">
+        <button class="btn btn-primary" onclick="pdf_coBrAnZaS()" id="pdf">Descarga pdf</button>
+       
+
         <div class="card-tools">
+          
            @if (!empty($menuRight) && count($menuRight))
              @foreach ($menuRight as $item)
                  <div class="menu-right">
@@ -63,10 +67,11 @@
                  </div>
              @endforeach
            @endif
+           
+
          </div>
 
-
-
+         
       </div>
 
 
@@ -85,9 +90,9 @@
 
       <!-- /.card-header -->
       <div class="card-body p-0" id="pjax-container">
-        <div class="">
+        <div class="p-3">
             <h3 class="text-center">COBRANZAS DIARIAS</h3>
-        <p style="text-align: end; color:rgba(255, 0, 0, 0.671);">TASA DEL DIA<br>{{$cod_bolibares}}</p>
+       
         </div>
         @php
             $urlSort = $urlSort ?? '';
@@ -126,22 +131,53 @@
 
             
         </div>
-        <div class="row">
-            <div class="col-md-3 p-3">
-                <ul>
-                    <li>TOTAL $ </li>
-                    <li>TOTAL BS </li>
-                    <li>TOTAL GENERAL BS </li>
-                    <li>TOTAL GENERAL $ </li>
-                </ul>
-                
-                
-            </div>
+        <div class="">
+          <table class=" table table-hover box-body text-wrap table-bordered">
+            <thead>
+              <tr>
+                <th>Forma de pago</th>
+                <th>Divisa</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($totales as $forma_pago => $monedas): ?>
+                <?php foreach ($monedas as $moneda => $total): ?>
+                  <tr>
+                    <td><?php echo $forma_pago; ?></td>
+                    <td><?php echo $moneda; ?></td>
+                    <td><?php echo $total; ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+
+
+
+          <table class=" table table-hover box-body text-wrap table-bordered" style="width: 49%; margin-left: 50%">
+            <thead>
+              <tr>
+                <th>Divisa</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($totaleudsBS as $forma_pago => $monedas): ?>
+                <?php foreach ($monedas as $moneda => $total): ?>
+                  <tr>
+                    <td><?php echo $moneda; ?></td>
+                    <td><?php echo $total; ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+           
             <div class="col-md-1 p-3">
-                <span class="text-danger">{{$total_usd}}</span>
-                <span class="text-danger">{{$total_bs}}</span>
-                
-                
+
+               
+    
             </div>
         </div>
         
@@ -198,48 +234,24 @@
 
   <script type="text/javascript">
 
-function obtener_detalle_pago(id_pago){
 
-$.ajax({
-              url : '{{ sc_route_admin('obtener_pago') }}',
-              type : "get",
-              dateType:"application/json; charset=utf-8",
-              data : {
-                   id : id_pago,
-                  
-              },
-          beforeSend: function(){
-              $('#loading').show();
-          },
-          success: function(returnedData){
-         $('#modal_detalle_pago').modal('show')
+function pdf_coBrAnZaS(){
+  var fecha = $("#fecha").val()
 
-         var data = returnedData.data;
+  if(!fecha){
+    alert('la fecha esta vacia');
 
-         $("#idpago").text(data.id)
-          $("#mforma_pago").val(data.metodo)
-          $("#mreferencia").val(data.referencia)
+  }else{
+    window.location.href = '{{route('pago_diarios')}}?pdf_cobranzas=5&fecha1='+fecha
 
-          $("#mfecha").val(data.fecha_pago)
-          $("#mvencimiento").val(data.fecha_venciento)
-          $("#mmonto").val(data.importe_pagado)
-          $("#mreferencia").val(data.referencia)
-          $("#mdivisa").val(data.moneda)
-          $("#mobservacion").val(data.comment)
-          $("#mstatus").val(data.status)
-          $("#mtasa").val(data.mtasa)
-          $("#dcomprobante").attr('href', data.comprobante)
-          
+  }
+  
 
-          
-
-          
-              $('#loading').hide();
-              }
-          });
-      
 
 }
+
+
+
 $('.mostrar_estatus_pago').click(function(){
   $("#modal_estatus_pago").modal('show');
 

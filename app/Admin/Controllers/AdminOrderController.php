@@ -1180,8 +1180,7 @@ class  AdminOrderController extends RootAdminController
             $data['details'] = [];
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
-         
-
+        
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
