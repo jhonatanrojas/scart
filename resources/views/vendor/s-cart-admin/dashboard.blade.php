@@ -261,13 +261,12 @@
                       @endphp
 
                       @foreach ($pago_pendiente as $order)
-                     
                       @if ($order['pago_revicion'] === 2)
                 
                       <tr>
                         <td><a href="{{ sc_route_admin('historial_pagos.index')}}?sort_order=2&fecha1=&fecha2=&keyword={{$order['numero_order']}}">#{{ $order['numero_order'] }}</a></td>
                         <td>{{ $order['email'] }}</td>
-                        <td><span class="badge badge-{{ $mapStyleStatus[3]??'' }}">Pago reportado
+                        <td><span class="badge badge-{{ $mapStyleStatus[3]??'' }}">{{$order['payment_Estatus']}}
                         </span></td>
                         <td>{{ $order['creado'] }}</td>
                       </tr>
@@ -278,9 +277,9 @@
                       <tr>
                         <td><a href="{{ sc_route_admin('historial_pagos.index')}}?sort_order=5&fecha1=&fecha2=&keyword={{$order['numero_order']}}">#{{ $order['numero_order'] }}</a></td>
                         <td>{{ $order['email'] }}</td>
-                        <td><span class="badge badge-{{ $mapStyleStatus[5]??'' }}">Pago pagados
+                        <td><span class="badge badge-{{ $mapStyleStatus[5]??'' }}">{{$order['payment_Estatus']}}
                         </span></td>
-                        <td>{{ $order['fecha_de_pago'] }}</td>
+                        <td>{{$order['fecha_de_pago'] }}</td>
                       </tr>
                       @endif
 
