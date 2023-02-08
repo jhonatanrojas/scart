@@ -39,7 +39,7 @@ class DashboardController extends RootAdminController
 
 
 
-        $data['pago_pendiente'] =  HistorialPago::Join('sc_shop_order', 'order_id' , '=', 'sc_shop_order.id')->select('sc_shop_order.*', 'sc_shop_order.phone' , 'sc_shop_order.payment_status as ss' ,'sc_historial_pagos.payment_status as pago_revicion' ,'sc_historial_pagos.order_id as numero_order' , 'sc_historial_pagos.created_at as creado' , 'sc_historial_pagos.fecha_pago as fecha_de_pago')
+        $data['pago_pendiente'] =  HistorialPago::Join('sc_shop_order', 'order_id' , '=', 'sc_shop_order.id')->join('sc_shop_payment_status', 'sc_shop_payment_status.id', '=', 'sc_historial_pagos.payment_status')->select('sc_shop_order.*', 'sc_shop_order.phone' , 'sc_shop_order.payment_status as estatus' ,'sc_historial_pagos.payment_status as pago_revicion' ,'sc_historial_pagos.order_id as numero_order' , 'sc_shop_payment_status.name as payment_Estatus', 'sc_historial_pagos.created_at as creado' , 'sc_historial_pagos.fecha_pago as fecha_de_pago')
         ->get();
 
        
