@@ -68,6 +68,19 @@ CREATE TABLE `sc_plantilla_convenio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `sc_tipo_cambio_bcv` (
+`id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+   `valor` decimal(15,2) DEFAULT '0.00',
+  `moneda` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fecha` timestamp NULL DEFAULT NULL,
+
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+
+    UNIQUE KEY `id` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 
 CREATE TABLE `sc_modalidad_pagos` (
