@@ -677,7 +677,7 @@ class HistorialPagosController extends RootAdminController
     public static function getPagosListAdmin2(array $dataSearch)
     {
         $keyword      = $dataSearch['keyword'] ?? '';
-        $fechas1      = $dataSearch['fechas1'] ?? '';
+        $fechas1      = $dataSearch['fecha1'] ?? '';
         $fechas2      = $dataSearch['fecha2'] ?? '';
         $pdf_cobranzas      = $dataSearch['pdf_cobranzas'] ?? '';
         $email        = $dataSearch['email'] ?? '';
@@ -701,13 +701,22 @@ class HistorialPagosController extends RootAdminController
         }
         
         
-        if ($fechas1 ) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1 ) {
-                $fechas1 =  explode('-', $fechas1);
+        if ($fechas1 || $fechas2) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2) {
+                
                 if($fechas1){
-                    $sql->whereYear('fecha_pago', $fechas1[0])->whereMonth('fecha_pago', $fechas1[1])
+                     $sql->Where('fecha_pago' ,'=' ,$fechas1);
+
                 ;
+                }else if($fechas2){
+                    $fecha =  explode('-', $fechas2);
+                    $sql->whereYear('fecha_pago', $fecha[0])->whereMonth('fecha_pago', $fecha[1]);
+
+                    
                 }
+
+                
+                
 
                 
                 
@@ -716,13 +725,22 @@ class HistorialPagosController extends RootAdminController
           
         }
 
-        if ($fechas1 || $pdf_cobranzas) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1 , $pdf_cobranzas) {
-                $fechas1 =  explode('-', $fechas1);
+        if ($fechas1 && $pdf_cobranzas || $fechas2) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 ,$fechas2, $pdf_cobranzas) {
+                
                 if($fechas1){
-                    $sql->whereYear('fecha_pago', $fechas1[0])->whereMonth('fecha_pago', $fechas1[1])
+                    $sql->Where('fecha_pago' ,'=' ,$fechas1);
+                    
                 ;
                 }
+                if($fechas2){
+                    $fechas2 =  explode('-', $fechas2);
+                    $sql->whereYear('fecha_pago', $fechas2[0])->whereMonth('fecha_pago', $fechas2[1]);
+                        
+                    
+                }
+
+
                 
             });
 
@@ -1362,7 +1380,7 @@ class HistorialPagosController extends RootAdminController
 
         $dataSearch = [
             'keyword'    => $keyword,
-            'fechas1'    => $fechas1,
+            'fecha1'    => $fechas1,
             'pdf_cobranzas'    => $pdf_cobranzas,
             'sort_order' => $sort_order,
             'arrSort'    => $arrSort,
@@ -1470,7 +1488,7 @@ class HistorialPagosController extends RootAdminController
                     <div class="col-md-6 form-group">
                         <label>'.'fecha'.':</label>
                         <div class="input-group">
-                        <input value="' . $fecha_hoy .'" id="fecha" type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                        <input value="' . $fecha_hoy .'" id="fecha1" type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
                         </div>
                     </div>
 
@@ -1532,7 +1550,6 @@ class HistorialPagosController extends RootAdminController
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
-        $fechas1    = sc_clean(request('fecha1') ?? '');
         $fechas2    = sc_clean(request('fecha2') ?? '');
         $pdf_cobranzas    = sc_clean(request('pdf_cobranzas') ?? '');
         $statusPayment = PaymentStatus::select(['name','id'])->get();
@@ -1547,7 +1564,6 @@ class HistorialPagosController extends RootAdminController
 
         $dataSearch = [
             'keyword'    => $keyword,
-            'fechas1'    => $fechas1,
             'fecha2'    => $fechas2,
             'pdf_cobranzas'    => $pdf_cobranzas,
             'sort_order' => $sort_order,
@@ -1620,11 +1636,6 @@ class HistorialPagosController extends RootAdminController
             ];
         }
 
-setlocale(LC_TIME, "spanish");
-$fecha = $dataSearch['fechas1'];
-$newDate = date("d-m-Y", strtotime($fecha)); 
-$mesDesc = strftime("%B", strtotime($newDate));
-
 function fechaEs($fecha) {
     $fecha = substr($fecha, 0, 10);
     $numeroDia = date('d', strtotime($fecha));
@@ -1646,7 +1657,7 @@ function fechaEs($fecha) {
 
         if($dataSearch['pdf_cobranzas']){
             $data['totales'] = $totales;
-            $data['fecha'] = strtoupper(fechaEs($fecha));
+            $data['fecha'] = strtoupper(fechaEs($fechas2));
             $data['totaleudsBS'] = $totale;
             $data['listTh'] = $listTh;
             $data['dataTr'] = $dataTr;
@@ -1682,7 +1693,7 @@ function fechaEs($fecha) {
                     <div class="col-md-7 form-group">
                     <label>'.sc_language_render('action.from').':</label>
                         <div class="input-group">
-                        <input value="' . $año.'-'.$mes.'" id="fecha" type="month" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm" placeholder="yyyy-mm"/>
+                        <input value="' . $año.'-'.$mes.'" id="fecha2" type="month" name="fecha2"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm" placeholder="yyyy-mm"/>
                         </div>
                     </div>
 
