@@ -701,17 +701,15 @@ class HistorialPagosController extends RootAdminController
         }
         
         
-        if ($fechas1 || $fechas2) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1 , $fechas2) {
+        if ($fechas1 ) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1 ) {
+                $fechas1 =  explode('-', $fechas1);
                 if($fechas1){
-                    $sql->Where('fecha_pago' ,'>=' ,$fechas1)
+                    $sql->whereYear('fecha_pago', $fechas1[0])->whereMonth('fecha_pago', $fechas1[1])
                 ;
                 }
 
-                if($fechas2){
-                    $sql->Where('fecha_pago' ,'<=' ,$fechas2)
-                ;
-                }
+                
                 
             });
 
@@ -720,8 +718,9 @@ class HistorialPagosController extends RootAdminController
 
         if ($fechas1 || $pdf_cobranzas) {
             $orderList = $orderList->where(function ($sql) use ($fechas1 , $pdf_cobranzas) {
-                if($fechas1 && $pdf_cobranzas){
-                    $sql->Where('fecha_pago' ,'<=' ,$fechas1)->where('status' , $pdf_cobranzas);
+                $fechas1 =  explode('-', $fechas1);
+                if($fechas1){
+                    $sql->whereYear('fecha_pago', $fechas1[0])->whereMonth('fecha_pago', $fechas1[1])
                 ;
                 }
                 
@@ -1621,7 +1620,7 @@ class HistorialPagosController extends RootAdminController
             ];
         }
 
-        setlocale(LC_TIME, "spanish");
+setlocale(LC_TIME, "spanish");
 $fecha = $dataSearch['fechas1'];
 $newDate = date("d-m-Y", strtotime($fecha)); 
 $mesDesc = strftime("%B", strtotime($newDate));
@@ -1663,6 +1662,11 @@ function fechaEs($fecha) {
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
         $fecha_hoy = date('y-m-d');
+        $año = date('Y', strtotime($fecha_hoy));
+        $mes = date('m', strtotime($fecha_hoy));
+
+        
+        
 
         //=menuSort
         $optionSort = '';
@@ -1673,27 +1677,19 @@ function fechaEs($fecha) {
         $data['optionSort'] = $optionSort;
         //menuSearch
         $data['topMenuRight'][] = '
-
-           
-
-
                 <form action="' . sc_route_admin('cobranza_mensual') . '" id="button_search">
                 <div class="row  ">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-7 form-group">
                     <label>'.sc_language_render('action.from').':</label>
                         <div class="input-group">
-                        <input value="' . $fecha_hoy .'" id="fecha" type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/>
+                        <input value="' . $año.'-'.$mes.'" id="fecha" type="month" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm" placeholder="yyyy-mm"/>
                         </div>
                     </div>
 
+                    
 
-                    <div class=" col-md-4 form-group">
-                        <label>'.sc_language_render('action.to').':</label>
-                        <div class="input-group">
-                        <input id="fecha2" value="' . $fecha_hoy .'"  type="text" name="fecha2" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"  /> 
-                        </div>
-                    </div>
 
+                   
                     <div class=" col-md-4 mt-4 form-group">
                     <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
                 </div>
