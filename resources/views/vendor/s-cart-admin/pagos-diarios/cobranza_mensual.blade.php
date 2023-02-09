@@ -236,15 +236,15 @@
 
 
 function pdf_coBrAnZaS(){
-  var fecha1 = $("#fecha").val()
+  var fecha2 = $("#fecha2").val()
   
 
-  if(!fecha1 ){
+  if(!fecha2 ){
     alert('la fecha esta vacia');
     windows.reload();
 
   }else{
-    window.location.href = '{{route('cobranza_mensual')}}?pdf_cobranzas=5&fecha1='+fecha1
+    window.location.href = '{{route('cobranza_mensual')}}?pdf_cobranzas=5&fecha2='+fecha2
 
   }
   
