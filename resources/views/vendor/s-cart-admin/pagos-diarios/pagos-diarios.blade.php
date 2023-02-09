@@ -236,7 +236,7 @@
 
 
 function pdf_coBrAnZaS(){
-  var fecha = $("#fecha").val()
+  var fecha = $("#fecha1").val()
 
   if(!fecha){
     alert('la fecha esta vacia');
