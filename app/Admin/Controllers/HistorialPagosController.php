@@ -19,7 +19,7 @@ use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
 use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
-
+use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
 class HistorialPagosController extends RootAdminController
 {
@@ -474,6 +474,40 @@ class HistorialPagosController extends RootAdminController
     }
 
 
+    public function list_tasa_cambio()
+    {
+     
+    
+        
+        $tipocambio = TipoCambioBcv::orderByDesc('fecha')->paginate(20);
+   
+            $data = [
+                'title'         => ' Tasa de cambio', 
+                'subTitle'      => '',
+                'icon'          => 'fa fa-indent',
+                'urlDeleteItem' => '',
+                'tipocambio' =>$tipocambio,
+                'removeList'    => 0, // 1 - Enable function delete list item
+                'buttonRefresh' => 0, // 1 - Enable button refresh
+                'buttonSort'    => 1, // 1 - Enable button sort
+                'css'           => '',
+                'js'            => '',
+            ];
+            //Process add content
+            $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+            $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+            $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+            $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+            $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+  
+    
+            return view($this->templatePathAdmin.'screen.list_tasa_cambio')
+                ->with($data);
+
+    }
+
+
     public function post_crear_tasa(Request $request){
 
         $request->validate([
@@ -503,9 +537,17 @@ class HistorialPagosController extends RootAdminController
           ->update($data_pago);
   
           }
+          if($request->fecha==date('Y-m-d')){
+          //  exchange_rate
+          $currency =ShopCurrency::Where('code','Bs')->update([
+            'exchange_rate' =>$request->valor,            
+         
+           ]);
+    
+          }
   
 
-          return redirect(sc_route_admin('tasa_cambio.crear') )
+          return redirect(sc_route_admin('list_tasa_cambio') )
           ->with(['success' => 'Su tasa ha sido registrada de forma exitosa']);
     }
 

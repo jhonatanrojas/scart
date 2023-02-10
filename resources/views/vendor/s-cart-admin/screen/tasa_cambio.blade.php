@@ -9,7 +9,7 @@
 
                     <div class="card-tools">
                         <div class="btn-group float-right mr-5">
-                            <a href="{{ sc_route_admin('admin_currency.index') }}" class="btn  btn-flat btn-default" title="List"><i class="fa fa-list"></i><span class="hidden-xs"> {{ sc_language_render('admin.back_list') }}</span></a>
+                            <a href="{{ route('list_tasa_cambio') }}" class="btn  btn-flat btn-default" title="List"><i class="fa fa-list"></i><span class="hidden-xs"> {{ sc_language_render('admin.back_list') }}</span></a>
                         </div>
                     </div>
                 </div>
