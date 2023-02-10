@@ -9,9 +9,7 @@ class TipoCambioBcv extends Model
     protected $table = 'sc_tipo_cambio_bcv';
     protected $guarded = [];
 
- 
-
-
+    
   
   
 }
