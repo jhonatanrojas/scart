@@ -154,15 +154,15 @@
     </form>
     </div>
   </div>
+  @endsection
 
-@endsection
-
-@push('styles')
-{!! $css ?? '' !!}
-@endpush
-
-@push('scripts')
-
+  @push('styles')
+  
+  @endpush
+  
+  @push('scripts')
+  
+  @endpush
 
 <script type="text/javascript">
 
