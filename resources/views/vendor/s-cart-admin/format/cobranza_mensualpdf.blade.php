@@ -10,11 +10,11 @@
         </div>
     </div>
 
-    <div class="container px-0">
+    <div class="container px-0 ">
         <div class="row mt-4">
             <div class="col-12 col-lg-12 offset-lg-1">
                 <div class="row">
-                    <div class="action-buttons">
+                    <div class="action-buttons m-auto mb-4">
                         <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
                             <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                             Imprimir
@@ -22,12 +22,21 @@
                     
                        
                     </div>
+
+                    <div class="col-12 mb-4">
+                        
+                      <span class="h4">WAIKA IMPORT C.A</span>
+                      <img width="100" class="text-center img-fluid" src="{{ sc_file(sc_store('logo')) }}" style="margin-left: 30%">
+                      <p>
+                          RIF. J-50145053-6
+                          A.V CUARTA TRANSVERSAL CALLE MIRAIMA EDIF: G.M.S.Y.T , BOLEITA NORTE, CARACAS MIRANDA ZONA POSTAL 1073
+                          0412.635.40.41 / 0412.635.40.38</p>
+                  </div>
                     
                     <div class="col-12">
                         
                         <div class="text-center text-155">
-                            <img src="{{ sc_file(sc_store('logo')) }}" style="width:50px;">
-                            <span class="text-default-d3">
+      
                                 COBRANZAS {{$fecha}}
                                 </span>
                                

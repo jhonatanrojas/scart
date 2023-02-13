@@ -606,7 +606,10 @@ class HistorialPagosController extends RootAdminController
 
     public static function getPagosListAdmin2(array $dataSearch)
     {
+
+        
         $keyword      = $dataSearch['keyword'] ?? '';
+        $historial_pago      = $dataSearch['historial_pago'] ?? '';
         $fechas1      = $dataSearch['fecha1'] ?? '';
         $fechas2      = $dataSearch['fecha2'] ?? '';
         $pdf_cobranzas      = $dataSearch['pdf_cobranzas'] ?? '';
@@ -618,11 +621,31 @@ class HistorialPagosController extends RootAdminController
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId      = $dataSearch['storeId'] ?? '';
         $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
-        ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' );
-        if ($storeId) {
+        ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
+        ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente');
 
+        
+
+
+        if ($storeId) {
             $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status','<>', 2)
             ->orderBy('fecha_pago', 'desc');
+        }
+
+
+       
+        
+        if ($keyword) {
+            $orderList->where('sc_historial_pagos.order_id',$keyword)
+            ->where('sc_historial_pagos.payment_status', 5);
+
+        }
+
+        if ($historial_pago && $keyword) {
+            $orderList->where('sc_historial_pagos.order_id',$keyword)
+            ->where('sc_historial_pagos.payment_status', 5);
+
         }
 
         if ($order_status) {
@@ -718,7 +741,6 @@ class HistorialPagosController extends RootAdminController
             
 
         } else {
-           
             $orderList->where('sc_historial_pagos.payment_status','<>' ,2)
             ->orderBy('fecha_pago', 'desc');
 
@@ -1317,6 +1339,9 @@ class HistorialPagosController extends RootAdminController
         ];
 
 
+       
+
+
         $dataTmp = $this->getPagosListAdmin2($dataSearch);
         $Nr= 1;
         $dataTr = [];
@@ -1566,20 +1591,20 @@ class HistorialPagosController extends RootAdminController
             ];
         }
 
-function fechaEs($fecha) {
-    $fecha = substr($fecha, 0, 10);
-    $numeroDia = date('d', strtotime($fecha));
-    $dia = date('l', strtotime($fecha));
-    $mes = date('F', strtotime($fecha));
-    $anio = date('Y', strtotime($fecha));
-    $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-    $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-    $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-    $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-    $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-    $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-    return $nombreMes;
-    }
+                function fechaEs($fecha) {
+                    $fecha = substr($fecha, 0, 10);
+                    $numeroDia = date('d', strtotime($fecha));
+                    $dia = date('l', strtotime($fecha));
+                    $mes = date('F', strtotime($fecha));
+                    $anio = date('Y', strtotime($fecha));
+                    $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+                    $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+                    $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+                    $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                    $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+                    $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+                    return $nombreMes;
+                    }
 
    
 
@@ -1646,5 +1671,209 @@ function fechaEs($fecha) {
             ->with($data);
 
         
+    }
+
+
+    public function historial_cliente(){
+
+        $data = [
+            'title'         => '
+            HISTORIAL DE PAGO
+            ',
+            'subTitle'      => '',
+            'icon'          => '',
+            'urlDeleteItem' => sc_route_admin('admin_customer.delete'),
+            'removeList'    => 0, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+
+
+        //Process add content
+        $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'N° de Pago'      => 'N° de Pago',
+            'MONTO' => 'Monto de
+            Pago Bs',
+            'tasa_cambio' => 'TASA DE CAMBIO',
+            'Referencia_$' => 'Referencia $',
+            'FORMA_DE_PAGO' => 'FORMA DE PAGO',
+            'REFRENCIA' => 'REFRENCIA',
+
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword    = sc_clean(request('keyword') ?? '');
+        $historial_pago = sc_clean(request('historial_pago') ?? '');
+        $statusPayment = PaymentStatus::select(['name','id'])->get();
+
+       
+
+      foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+      }
+
+        $dataSearch = [
+            'keyword'    => $keyword ,
+            'historial_pago'    => $historial_pago,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+            'arrSort'    => $arrSort,
+        ];
+
+
+      
+
+
+        $dataTmp = $this->getPagosListAdmin2($dataSearch);
+        $Nr= 1;
+        $dataTr = [];
+        
+        $totales = [];
+        $totale = [];
+        $total_monto_pagado = 0;
+        $total_usd_pagado = 0;
+
+
+
+        if(empty($dataTmp->all())){
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
+            ->with(['error' => 'no hay pago Reportado']);
+        }
+        
+        foreach ($dataTmp as $key => $row) {
+           
+                $pagados = [];
+
+                $order = AdminOrder::getOrderAdmin($row->order_id);
+
+                $forma_pago = $row['metodoPago'];
+                $moneda = $row['moneda'];
+                $monto = $row['importe_pagado'];
+                $totalusd = '';
+            
+
+
+
+               if($moneda == 'USD'){
+                     $result=  24.17 * $monto;
+                     $monto = round($result , 2);
+                     $result2  = $monto / 24.17; 
+                     $Referencia = round($result2 , 2);
+               }else if($moneda == 'Bs'){
+
+                        $result = $monto;
+                        $monto = round($result , 2);
+                        $result2  = $monto /  24.17  ; 
+                        $Referencia = round($result2 , 2);
+                }
+
+
+
+
+
+
+                $dataTr[$row->id ] = [
+                    'N° de Pago'      => $Nr++,
+                    'MONTO' => $monto,
+                    'tasa_cambio' => 24.17,
+                    'Referencia_$' => $Referencia,
+                    'FORMA_DE_PAGO' => $row->metodoPago,
+                    'REFRENCIA' => $row->referencia,
+
+                ];
+
+                
+
+            $cliente = $row->first_name;
+            $nro_convenio = $row->nro_convenio;
+            $nombre_product = $row->nombre_product;
+            $cantidad = $row->cantidad;
+            $tota_product= $row->tota_product;
+            $fecha_maxima_entrega= $row->fecha_maxima_entrega;
+            $order_id = $row->order_id;
+            $lote = $row->lote;
+            $fecha_pago = $row->fecha_pago;
+            $Cuotas_Pendientes  =  ($Nr - $row->cuaotas_pendiente);
+            $total_monto_pagado += $monto ;
+            $total_usd_pagado += $Referencia;
+
+           
+
+            
+        }
+
+        function fechaEs($fecha) {
+            $fecha = substr($fecha, 0, 10);
+            $numeroDia = date('d', strtotime($fecha));
+            $dia = date('l', strtotime($fecha));
+            $mes = date('F', strtotime($fecha));
+            $anio = date('Y', strtotime($fecha));
+            $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+            $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+            $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+            $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+            $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+            $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+            return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+            }
+            
+            $data['cliente'] = $cliente;
+            $data['total_monto_pagado'] = $total_monto_pagado;
+            $data['total_usd_pagado'] = $total_usd_pagado;
+            $data['Cuotas_Pendientes'] = $Cuotas_Pendientes;
+            $data['fecha_pago'] = $fecha_pago;
+            $data['lote'] = $lote;
+            $data['order_id'] = $order_id;
+            $data['nro_convenio'] = $nro_convenio;
+            $data['nombre_product'] = $nombre_product;
+            $data['cantidad'] = $cantidad;
+            $data['tota_product'] = $tota_product;
+            $data['totales'] = $totales;
+            $data['fecha_maxima_entrega'] =fechaEs($fecha_maxima_entrega) ;
+
+
+            if($dataSearch['historial_pago']){
+                $data['totales'] = $totales;
+                $data['totaleudsBS'] = $totale;
+                $data['listTh'] = $listTh;
+                $data['dataTr'] = $dataTr;
+                return view($this->templatePathAdmin.'format.historial_pagospdf')
+                ->with($data);}
+
+        $data['listTh'] = $listTh;
+        $data['totaleudsBS'] = $totale;
+        $data['statusPayment'] = $statusPayment;
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+        $fecha_hoy = date('y-m-d');
+
+        //=menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $status) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+        $data['urlSort'] = sc_route_admin('pago_diarios', request()->except(['_token', '_pjax', 'sort_order']));
+        $data['optionSort'] = $optionSort;
+        //menuSearch
+        
+
+        //=menuSearch
+
+
+
+        return view($this->templatePathAdmin.'pagos.historial_cliente')
+            ->with($data);
+
+
+
     }
 }

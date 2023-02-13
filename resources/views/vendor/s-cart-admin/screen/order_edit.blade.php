@@ -221,6 +221,16 @@
 
                    
                     </tr>
+
+                    <tr>
+                      <td class="td-title">Reporte de pago</td>
+                      <td>
+                       
+                        <a  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
+                      </td>
+
+                   
+                    </tr>
                     <tr>
                       <td class="td-title">Creado Por:</td>
                       <td>
