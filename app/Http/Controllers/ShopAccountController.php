@@ -609,7 +609,7 @@ class ShopAccountController extends RootFrontController
         $pago = explode("?", request('id_pago'));
 
       
-        dd(request());
+       
         
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
