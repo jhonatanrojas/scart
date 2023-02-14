@@ -51,9 +51,9 @@
                         </div>
                         <div class="text-grey-m2">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> direccion, :
+                              <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
                             </div>
-                            <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI</div>
+                            <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
                             <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR:</div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                                 <thead>
                                     <td class="text-center" colspan="5"><h4>PRODUCTO</h4></td>
                                     <tr>
-                                        <td>Id del producto</td>
+                                       
                                         <td>Descriccion</td>
                                         <td>Cant.</td>
                                         <td>precio.</td>
@@ -91,11 +91,11 @@
                 
                                 <tbody>
                                     <tr>
-                                        <td>Id del producto</td>
+                                        
                                         <td>{{$nombre_product}}</td>
                                         <td>{{$cantidad}}</td>
                                         <td>{{$tota_product}}$</td>
-                                        <td>Dcto.</td>
+                                        <td></td>
                                     </tr>
                                     <br>
                                 <td class="text-center" colspan="5"> <h4>
@@ -157,7 +157,7 @@
                                     
                                     <ul class="" style="list-style: none">
                                         <li class="">Numero de Cuotas Pendientes:{{$Cuotas_Pendientes}}</li>
-                                        <li>Monto de Proxima Cuota (Ref. $):</li>
+                                        <li>Monto de Proxima Cuota (Ref. $):        ${{$Importe_couta}}</li>
                                         <li>Fecha Proxima Cuota:</li>
                                         <li></li>
                                     </ul>

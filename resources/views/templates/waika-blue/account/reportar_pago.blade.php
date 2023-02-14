@@ -89,7 +89,7 @@ $layout_page = shop_profile
         </h5>
 
         <div class="text-center">
-          @if ($lisPago == 'Transferencia')
+          @if (isset($lisPago) == 'Transferencia')
           @if (sc_config('customer_Transferencia'))
           <p>
              {{ sc_language_render('customer.Transferencia') }}</p>
@@ -110,7 +110,7 @@ $layout_page = shop_profile
           @endif
           
           
-         @if ($lisPago == 'Pago Movil')
+         @if (isset($lisPago) == 'Pago Movil')
           @if (sc_config('customer_pago_movil'))
           <p> {{ sc_language_render('customer.pago_movil') }}</p>
           <p> {{ sc_language_render('customer.telefono') }}</p>

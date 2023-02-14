@@ -735,7 +735,7 @@ class HistorialPagosController extends RootAdminController
         $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
         ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
         ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
-        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente');
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente' , 'sc_shop_order.address1 as direccion' , 'sc_shop_order.cedula');
 
         
 
@@ -746,8 +746,6 @@ class HistorialPagosController extends RootAdminController
         }
 
 
-       
-        
         if ($keyword) {
             $orderList->where('sc_historial_pagos.order_id',$keyword)
             ->where('sc_historial_pagos.payment_status', 5);
@@ -1785,6 +1783,21 @@ class HistorialPagosController extends RootAdminController
         
     }
 
+        public static function fechaEs($fecha) {
+        $fecha = substr($fecha, 0, 10);
+        $numeroDia = date('d', strtotime($fecha));
+        $dia = date('l', strtotime($fecha));
+        $mes = date('F', strtotime($fecha));
+        $anio = date('Y', strtotime($fecha));
+        $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+        $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+        $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+        $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+        return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+        }
+
 
     public function historial_cliente(){
 
@@ -1853,6 +1866,9 @@ class HistorialPagosController extends RootAdminController
         $total_monto_pagado = 0;
         $total_usd_pagado = 0;
 
+        $TipoCambioBcv = TipoCambioBcv::all();
+        
+
 
 
         if(empty($dataTmp->all())){
@@ -1861,7 +1877,7 @@ class HistorialPagosController extends RootAdminController
         }
         
         foreach ($dataTmp as $key => $row) {
-           
+
                 $pagados = [];
 
                 $order = AdminOrder::getOrderAdmin($row->order_id);
@@ -1870,32 +1886,24 @@ class HistorialPagosController extends RootAdminController
                 $moneda = $row['moneda'];
                 $monto = $row['importe_pagado'];
                 $totalusd = '';
-            
-
-
 
                if($moneda == 'USD'){
-                     $result=  24.17 * $monto;
+                     $result=  24.2 * $monto;
                      $monto = round($result , 2);
-                     $result2  = $monto / 24.17; 
+                     $result2  = $monto / 24.2; 
                      $Referencia = round($result2 , 2);
                }else if($moneda == 'Bs'){
-
                         $result = $monto;
                         $monto = round($result , 2);
-                        $result2  = $monto /  24.17  ; 
+                        $result2  = $monto /  24.2  ; 
                         $Referencia = round($result2 , 2);
                 }
-
-
-
-
 
 
                 $dataTr[$row->id ] = [
                     'N° de Pago'      => $Nr++,
                     'MONTO' => $monto,
-                    'tasa_cambio' => 24.17,
+                    'tasa_cambio' => 24.2,
                     'Referencia_$' => $Referencia,
                     'FORMA_DE_PAGO' => $row->metodoPago,
                     'REFRENCIA' => $row->referencia,
@@ -1904,40 +1912,33 @@ class HistorialPagosController extends RootAdminController
 
                 
 
-            $cliente = $row->first_name;
-            $nro_convenio = $row->nro_convenio;
-            $nombre_product = $row->nombre_product;
-            $cantidad = $row->cantidad;
-            $tota_product= $row->tota_product;
-            $fecha_maxima_entrega= $row->fecha_maxima_entrega;
-            $order_id = $row->order_id;
-            $lote = $row->lote;
-            $fecha_pago = $row->fecha_pago;
-            $Cuotas_Pendientes  =  ($Nr - $row->cuaotas_pendiente);
-            $total_monto_pagado += $monto ;
-            $total_usd_pagado += $Referencia;
+                $cliente = $row->first_name .' '. $row->last_name;
+                $direccion = $row->direccion;
+                $nro_convenio = $row->nro_convenio;
+                $nombre_product = $row->nombre_product;
+                $cantidad = $row->cantidad;
+                $tota_product= $row->tota_product;
+                $fecha_maxima_entrega= $row->fecha_maxima_entrega;
+                $order_id = $row->order_id;
+                $lote = $row->lote;
+                $fecha_pago = $row->fecha_pago;
+                $Cuotas_Pendientes  =  ($Nr - $row->cuaotas_pendiente);
+                $total_monto_pagado += $monto ;
+                $total_usd_pagado += $Referencia;
+                $Importe_couta = $row->importe_couta;
+                $Cedula = $row->cedula;
 
            
 
             
         }
 
-        function fechaEs($fecha) {
-            $fecha = substr($fecha, 0, 10);
-            $numeroDia = date('d', strtotime($fecha));
-            $dia = date('l', strtotime($fecha));
-            $mes = date('F', strtotime($fecha));
-            $anio = date('Y', strtotime($fecha));
-            $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-            $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-            $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-            $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-            $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-            $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-            return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
-            }
+     
             
-            $data['cliente'] = $cliente;
+            $data['cliente'] = $cliente ?? '';
+            $data['cedula'] = $Cedula ?? '';
+            $data['direccion'] = $direccion ?? '';
+            $data['Importe_couta'] = $Importe_couta ?? '';
             $data['total_monto_pagado'] = $total_monto_pagado;
             $data['total_usd_pagado'] = $total_usd_pagado;
             $data['Cuotas_Pendientes'] = $Cuotas_Pendientes;
@@ -1949,7 +1950,7 @@ class HistorialPagosController extends RootAdminController
             $data['cantidad'] = $cantidad;
             $data['tota_product'] = $tota_product;
             $data['totales'] = $totales;
-            $data['fecha_maxima_entrega'] =fechaEs($fecha_maxima_entrega) ;
+            $data['fecha_maxima_entrega'] =$this->fechaEs($fecha_maxima_entrega) ;
 
 
             if($dataSearch['historial_pago']){

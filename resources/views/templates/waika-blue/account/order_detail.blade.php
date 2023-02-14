@@ -275,8 +275,7 @@ $layout_page = shop_profile
         @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>      
         
-         
-          <button onclick="pagar({{$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
+          <button onclick="pagar({{$historial->order_id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
           
