@@ -213,10 +213,11 @@
                    
                     </tr>
                     <tr>
+                      
                       <td class="td-title">datos del cliente</td>
                       <td>
                        
-                        <a  target="_blank" href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
+                        <a  href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
                       </td>
 
                    
