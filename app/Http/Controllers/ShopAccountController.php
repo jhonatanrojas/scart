@@ -596,7 +596,7 @@ class ShopAccountController extends RootFrontController
         return $this->_addressList();
     }
 
-    public function reportarPago(...$params)
+    public function reportarPago(Request $request , ...$params)
     {
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
@@ -606,11 +606,9 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
-        $pago = explode("?", request('id_pago'));
+        $pago = $request->all();
 
-      
-       
-        
+
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
@@ -631,7 +629,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'           => 'Reportar pago',
                     'id_pago' => $id_pago,
-                    'lisPago' =>      $pago[1] ?? "",
+                    'lisPago' =>      $pago ?? "",
 
                     'historial_pago' => $historial_pago,
                     'customer'        => $customer,
@@ -658,8 +656,6 @@ class ShopAccountController extends RootFrontController
         $user = Auth::user();
         $cId = $user->id;
         $data = request()->all();
-
-        
 
 
         $request->validate([
