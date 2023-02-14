@@ -6,6 +6,7 @@ $layout_page = shop_profile
 - $orders
 */ 
 
+
 @endphp
 
 @extends($sc_templatePath.'.account.layout')
@@ -89,7 +90,7 @@ $layout_page = shop_profile
         </h5>
 
         <div class="text-center">
-          @if (isset($lisPago) == 'Transferencia')
+          @if (isset($lisPago['Transferencia']))
           @if (sc_config('customer_Transferencia'))
           <p>
              {{ sc_language_render('customer.Transferencia') }}</p>
@@ -110,7 +111,7 @@ $layout_page = shop_profile
           @endif
           
           
-         @if (isset($lisPago) == 'Pago Movil')
+         @if (isset($lisPago['Pago Movil']))
           @if (sc_config('customer_pago_movil'))
           <p> {{ sc_language_render('customer.pago_movil') }}</p>
           <p> {{ sc_language_render('customer.telefono') }}</p>
@@ -137,17 +138,18 @@ $layout_page = shop_profile
                 <div class="form-group col-md-6">
                     <label for="forma_pago">Forma de pago</label>
                     <select  id="forma_pago" name="forma_pago" required class="form-control">
-                      @if ($lisPago == 'Transferencia' || $lisPago == 'Pago Movil')
+                      @if (isset($lisPago['Transferencia']) || isset($lisPago['Pago Movil']))
+
+
+                      
                      
-                      @if ($lisPago == 'Transferencia')
-                      <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
+                      @if (isset($lisPago['Transferencia']))
+                      <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago['Transferencia'] ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
                         @else
-                        <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name == $lisPago ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
+                        <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name == $lisPago['Pago Movil'] ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
 
                       @endif
-                      
-                    
-                     
+
 
                       @else
                       @foreach($metodos_pagos as $metodo)
