@@ -618,10 +618,14 @@ class ShopAccountController extends RootFrontController
 
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago = request('id_pago');
+        $id_pago = $params[1];
 
 
-        $historial_pago = HistorialPago::where('id', $id_pago)->first();
+        $historial_pago = HistorialPago::where('order_id', $params[1])->first();
+
+       
+
+       
         $metodos_pagos = MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')

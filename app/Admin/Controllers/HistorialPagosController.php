@@ -129,6 +129,7 @@ class HistorialPagosController extends RootAdminController
 
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
+            $Referencia = "";
 
             $order = AdminOrder::getOrderAdmin($row->order_id);
             $btn_estatus='';
@@ -138,8 +139,19 @@ class HistorialPagosController extends RootAdminController
             endif;
 
                     if($row->payment_status == 2 || $row->payment_status ==5):
-                        $btn_ver_pago_estatus=' <a href="#" onclick="obtener_detalle_pago('.$row->id.')" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>';
+                        $btn_ver_pago_estatus=' <button  onclick="obtener_detalle_pago('.$row->id.')" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></button>';
                     endif;
+            
+            
+            if($row->comprobante){
+                $Referencia = ' <a   href="'. sc_file($row->comprobante) .'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;';
+
+            }
+               
+
+
+
+               
 
             $dataTr[$row->id ] = [
                 
@@ -153,17 +165,22 @@ class HistorialPagosController extends RootAdminController
                 'fecha_pago' =>  $row->fecha_pago,
                 
                 'Creado' =>  $row->created_at->format('d/m/Y'),
+
+                
          
     
                 'action' => '
                 '.$btn_estatus.$btn_ver_pago_estatus.'
 
-                    <a target="_blank" href="'. sc_file( $row->comprobante).'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;
+                   '.$Referencia.'
+                
                     <a href="' . sc_route_admin('admin_order.detail', ['id' =>$row->order_id ?$row->order_id : 'not-found-id']) . '"><span title="Ir al pedido" type="button" class="btn btn-flat btn-sm btn-info"><i class="fas fa-arrow-right"></i></span></a>&nbsp;
 
 
                     
                     '
+
+                    
                 ,
             ];
         }

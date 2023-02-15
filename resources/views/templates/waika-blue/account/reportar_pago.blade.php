@@ -7,6 +7,8 @@ $layout_page = shop_profile
 */ 
 
 
+
+
 @endphp
 
 @extends($sc_templatePath.'.account.layout')

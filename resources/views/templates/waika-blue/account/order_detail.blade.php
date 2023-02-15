@@ -8,6 +8,9 @@ $layout_page = shop_profile
 - $countries
 - $attributesGroup
 */ 
+
+
+
 @endphp
 
 @extends($sc_templatePath.'.account.layout')
@@ -101,7 +104,7 @@ $layout_page = shop_profile
                   <tr>
                     <th>Producto</th>
                  
-                    @if (!empty($order->details[0]->modalidad_de_compra == 1))
+                    @if (empty($order->details[0]->modalidad_de_compra == 1))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_price">Cuotas</th>
@@ -146,7 +149,7 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                            @if (!empty($order->details[0]->modalidad_de_compra == 1))
+                            @if (empty($order->details[0]->modalidad_de_compra == 1))
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
                             <td class="product_price">{{ $cuotas }}$</td>

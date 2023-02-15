@@ -149,7 +149,7 @@
                   </tr>
                   <tr>
                     
-                      @if (!$order['modalidad_de_compra'] == 0)
+                      @if (!$order['modalidad_de_compra'] == 1)
                       <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td>
                       <td>
                       <a href="#" class="updateStatus" data-value="{{($order->exchange_rate)??1  }}" data-name="exchange_rate" data-type="text" min=0 data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="tipo de cambio">{{ $order->exchange_rate }}</a>
@@ -706,7 +706,7 @@
          $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1
           @endphp
               <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
-          <td><span class="item_21_sku">{!! $historial->importe_pagado / $tasa_cambio  !!}$</span></td>
+          <td><span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio ,2) !!}$</span></td>
       
           <td><span class="item_21_sku">{{ $historial->estatus->name }}
           
