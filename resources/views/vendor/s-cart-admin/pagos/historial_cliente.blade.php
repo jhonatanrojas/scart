@@ -4,6 +4,8 @@
 <div class="row">
    
   <div class="col-12">
+
+    
     <div class="card" >
       <div class="card-header with-border">
         <div class="card-tools">
@@ -25,6 +27,7 @@
           @endif
         </div>
         <div class="float-left">
+
           @if (!empty($topMenuLeft) && count($topMenuLeft))
             @foreach ($topMenuLeft as $item)
                 <div class="menu-left">
@@ -46,7 +49,35 @@
       </div>
 
       <div class="card-header with-border">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-4">
+                <div>
+                    <span class="text-sm text-grey-m2 align-middle">Cliente:{{$cliente}}</span> <br>
+                    
+                </div>
+                <div class="text-grey-m2">
+                    <div class="my-1">
+                      <i class="fas fa-map-marker-alt"></i> direccion, :
+                    </div>
+                    <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI</div>
+                    <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR:</div>
+                </div>
+            </div>
+            <!-- /.col -->
+
+            <div class="text-50 col-md-4  d-sm-flex justify-content-end">
+                <hr class="d-sm-none" />
+                <div class="text-grey-m2">
+                    <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
+                    <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
+                    <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
+
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
         <button class="btn btn-primary" onclick="pdf_coBrAnZaS()" id="pdf">Descarga pdf</button>
+
        
 
         <div class="card-tools">
@@ -91,7 +122,8 @@
       <!-- /.card-header -->
       <div class="card-body p-0" id="pjax-container">
         <div class="p-3">
-            <h3 class="text-center"> COBRANZAS MENSUAL </h3>
+            <h3 class="text-center">HISTORIAL DE PAGO</h3>
+           
        
         </div>
         @php
@@ -99,8 +131,43 @@
         @endphp
         <div id="url-sort" data-urlsort="{!! strpos($urlSort, "?")?$urlSort."&":$urlSort."?" !!}"  style="display: none;"></div>
         <div class="table-responsive">
+            <table class="table table-hover box-body text-wrap table-bordered">
+                <thead>
+                    <td class="text-center" colspan="5"><h4>PRODUCTO</h4></td>
+                    <tr>
+                        <td>Id del producto</td>
+                        <td>Descriccion</td>
+                        <td>Cant.</td>
+                        <td>precio.</td>
+                        <td>Dcto.</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Id del producto</td>
+                        <td>{{$nombre_product}}</td>
+                        <td>{{$cantidad}}</td>
+                        <td>{{$tota_product}}$</td>
+                        <td>Dcto.</td>
+                    </tr>
+                    <br>
+                <td class="text-center" colspan="5"> <h4>
+                        FECHA ESTIMADA DE ENTREGA <hr><br>
+                        {{$fecha_maxima_entrega}}
+                    </h4>
+                    <span>La fecha de entrega puede ser modificada si el Beneficiario no realiza los pagos puntualmente (fecha de pago o día siguiente).</span></
+                </td>
+                       
+                </tbody>
+
+            </table>
+            <br>
+
+
         <table class="table table-hover box-body text-wrap table-bordered">
           <thead>
+            <td class="text-center" colspan="6"><h4>DESCRIPCION DE PAGOS RECIBIDOS</h4></td>
             <tr>
               @if (!empty($removeList))
               <th></th>
@@ -131,7 +198,7 @@
 
             
         </div>
-       <div class="det">
+        <div class="">
           <table class=" table table-hover box-body text-wrap table-bordered">
             <thead>
               <tr>
@@ -179,7 +246,7 @@
                
     
             </div>
-        </div> 
+        </div>
         
         <div class="block-pagination clearfix m-10">
           <div class="ml-3 float-left">
@@ -236,22 +303,11 @@
 
 
 function pdf_coBrAnZaS(){
-  var fecha2 = $("#fecha2").val()
-  
-  if(!fecha2 ){
-    alert('la fecha esta vacia');
-    windows.reload();
-
-  }else{
-    window.location.href = '{{route('cobranza_mensual')}}?pdf_cobranzas=5&fecha2='+fecha2
+ 
+    window.location.href = '{{route('historial.cliente')}}?historial_pago=true&keyword={{$order_id}}'
 
   }
   
-
-
-}
-
-
 
 $('.mostrar_estatus_pago').click(function(){
   $("#modal_estatus_pago").modal('show');
@@ -440,6 +496,3 @@ function cloneProduct(id){
 
 {!! $js ?? '' !!}
 @endpush
-
-
-
