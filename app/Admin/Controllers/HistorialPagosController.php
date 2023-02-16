@@ -1899,7 +1899,6 @@ class HistorialPagosController extends RootAdminController
         }
         
         foreach ($dataTmp as $key => $row) {
-
                 $pagados = [];
 
                 $order = AdminOrder::getOrderAdmin($row->order_id);
