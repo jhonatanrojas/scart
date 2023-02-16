@@ -45,10 +45,8 @@
 
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="col-md-5">
-                        <div>
-                            <span class="text-sm text-grey-m2 align-middle">Cliente:{{$cliente}}</span> <br>
-                            
-                        </div>
+                        <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$cliente}}</div>
+                        
                         <div class="text-grey-m2">
                             <div class="my-1">
                               <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
