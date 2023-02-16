@@ -144,19 +144,22 @@
                 </tr>
                 </table>
                <table class="table table-hover box-body text-wrap table-bordered">
+                @if (!$order['modalidad_de_compra'] == 1)
                   <tr>
-                    <td class="td-title"><i class="far fa-money-bill-alt nav-icon"></i> {{ sc_language_render('order.currency') }}:</td><td>{{ $order->currency }}</td>
+                    <td class="td-title"><i class="far fa-money-bill-alt nav-icon"></i> {{ sc_language_render('order.currency') }}:</td>
+                    <td>{{ $order->currency }}</td>
                   </tr>
                   <tr>
                     
-                      @if (!$order['modalidad_de_compra'] == 1)
+                      
                       <td class="td-title"><i class="fas fa-chart-line"></i> {{ sc_language_render('order.exchange_rate') }}:</td>
                       <td>
                       <a href="#" class="updateStatus" data-value="{{($order->exchange_rate)??1  }}" data-name="exchange_rate" data-type="text" min=0 data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="tipo de cambio">{{ $order->exchange_rate }}</a>
-                      @endif
+                     
 
                     </td>
                   </tr>
+                  @endif
               </table>
           </div>
             <div class="col-sm-6">
@@ -703,10 +706,22 @@
           <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
           <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
           @php
-         $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1
+         $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1;
+
+              
           @endphp
               <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
-          <td><span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio ,2) !!}$</span></td>
+             
+          <td>
+            @if ($historial->moneda == 'USD')
+            <span class="item_21_sku">{!! round($historial->importe_pagado *$tasa_cambio , 2) !!}</span>
+
+            @else
+            <span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio , 2) !!}</span>
+
+                
+            @endif
+          </td>
       
           <td><span class="item_21_sku">{{ $historial->estatus->name }}
           
