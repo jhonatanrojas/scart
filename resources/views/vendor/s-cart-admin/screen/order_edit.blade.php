@@ -714,10 +714,10 @@
              
           <td>
             @if ($historial->moneda == 'USD')
-            <span class="item_21_sku">{!! round($historial->importe_pagado *$tasa_cambio , 2) !!}</span>
+            <span class="item_21_sku">{!! round($historial->importe_pagado *$tasa_cambio , 2) !!} bs</span>
 
             @else
-            <span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio , 2) !!}</span>
+            <span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio , 2) !!} $</span>
 
                 
             @endif
