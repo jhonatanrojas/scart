@@ -17,6 +17,7 @@ use App\Models\Sc_plantilla_convenio;
 use App\Models\Declaracion_jurada;
 use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
+use SCart\Core\Admin\Models\AdminUser;
 use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
@@ -1823,6 +1824,12 @@ class HistorialPagosController extends RootAdminController
 
     public function historial_cliente(){
 
+        $dminUser = new AdminUser;
+       $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+
+
+       
+
         $data = [
             'title'         => '
             HISTORIAL DE PAGO
@@ -1932,6 +1939,8 @@ class HistorialPagosController extends RootAdminController
 
                 ];
 
+
+
                 
 
                 $cliente = $row->first_name .' '. $row->last_name;
@@ -1949,6 +1958,7 @@ class HistorialPagosController extends RootAdminController
                 $total_usd_pagado += $Referencia;
                 $Importe_couta = $row->importe_couta;
                 $Cedula = $row->cedula;
+                $vendedor = $list_usuarios[$row->vendedor_id];
 
            
 
@@ -1958,6 +1968,7 @@ class HistorialPagosController extends RootAdminController
      
             
             $data['cliente'] = $cliente ?? '';
+            $data['vendedor'] = $vendedor ?? '';
             $data['cedula'] = $Cedula ?? '';
             $data['direccion'] = $direccion ?? '';
             $data['Importe_couta'] = $Importe_couta ?? '';

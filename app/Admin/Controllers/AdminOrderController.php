@@ -529,6 +529,9 @@ class  AdminOrderController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($id);
         $dminUser = new AdminUser;
        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+
+
+      
          
        
 

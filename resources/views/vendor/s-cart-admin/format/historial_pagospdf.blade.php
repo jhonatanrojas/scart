@@ -54,7 +54,7 @@
                               <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
                             </div>
                             <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
-                            <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR:</div>
+                            <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR: {{$vendedor}}</div>
                         </div>
                     </div>
                     <!-- /.col -->
