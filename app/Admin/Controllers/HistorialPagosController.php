@@ -757,7 +757,7 @@ class HistorialPagosController extends RootAdminController
         ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
         ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
         ->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente' , 'sc_shop_customer.address1 as direccion' , 'sc_shop_order.cedula');
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente' , 'sc_shop_customer.address1 as direccion' , 'sc_shop_order.cedula' , 'sc_shop_order.vendedor_id');
 
         
 
@@ -1901,6 +1901,7 @@ class HistorialPagosController extends RootAdminController
         foreach ($dataTmp as $key => $row) {
                 $pagados = [];
 
+
                 $order = AdminOrder::getOrderAdmin($row->order_id);
 
                 $forma_pago = $row['metodoPago'];
@@ -1943,7 +1944,7 @@ class HistorialPagosController extends RootAdminController
                 $order_id = $row->order_id;
                 $lote = $row->lote;
                 $fecha_pago = $row->fecha_pago;
-                $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr);
+                $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr ) +1;
                 $total_monto_pagado += $monto ;
                 $total_usd_pagado += $Referencia;
                 $Importe_couta = $row->importe_couta;
