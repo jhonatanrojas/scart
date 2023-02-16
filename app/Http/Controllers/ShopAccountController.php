@@ -596,7 +596,7 @@ class ShopAccountController extends RootFrontController
         return $this->_addressList();
     }
 
-    public function reportarPago(...$params)
+    public function reportarPago(Request $request , ...$params)
     {
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
@@ -606,11 +606,9 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
-        $pago = explode("?", request('id_pago'));
+        $pago = $request->all();
 
-      
 
-        
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
@@ -620,10 +618,14 @@ class ShopAccountController extends RootFrontController
 
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago = request('id_pago');
+        $id_pago = $params[1];
 
 
-        $historial_pago = HistorialPago::where('id', $id_pago)->first();
+        $historial_pago = HistorialPago::where('order_id', $params[1])->first();
+
+       
+
+       
         $metodos_pagos = MetodoPago::all();
         sc_check_view($this->templatePath . '.account.reportar_pago');
         return view($this->templatePath . '.account.reportar_pago')
@@ -631,7 +633,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'           => 'Reportar pago',
                     'id_pago' => $id_pago,
-                    'lisPago' =>      $pago[1] ?? "",
+                    'lisPago' =>      $pago ?? "",
 
                     'historial_pago' => $historial_pago,
                     'customer'        => $customer,

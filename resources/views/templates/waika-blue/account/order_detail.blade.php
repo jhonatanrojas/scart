@@ -8,6 +8,9 @@ $layout_page = shop_profile
 - $countries
 - $attributesGroup
 */ 
+
+
+
 @endphp
 
 @extends($sc_templatePath.'.account.layout')
@@ -101,7 +104,7 @@ $layout_page = shop_profile
                   <tr>
                     <th>Producto</th>
                  
-                    @if (!empty($order->details[0]->modalidad_de_compra == 1))
+                    @if (empty($order->details[0]->modalidad_de_compra == 1))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_price">Cuotas</th>
@@ -146,7 +149,7 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                            @if (!empty($order->details[0]->modalidad_de_compra == 1))
+                            @if (empty($order->details[0]->modalidad_de_compra == 1))
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
                             <td class="product_price">{{ $cuotas }}$</td>
@@ -275,8 +278,8 @@ $layout_page = shop_profile
         @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>      
         
-         
-          <button onclick="pagar({{$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
+
+          <button onclick="pagar({{$historial->order_id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
           
@@ -377,18 +380,16 @@ $layout_page = shop_profile
 
 
       function transferencia (){
-           number = document.getElementById('tranferencia').value
-          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${number}?Transferencia`
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ])}}?Transferencia=Tranferencia`
         }
 
         
       function pagoMovil (){
-           number = document.getElementById('pagoMovil').value
-          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${number}?Pago Movil`
+          
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ])}}?Pago Movil=Pago Movil`
         }
 
         function bioPago (){
-           number = document.getElementById('bioPago').value
           location.href=`{!! sc_route("biopago", ['id' => $order->id ,'id_pago'])!!}=${number}" `
         }
 

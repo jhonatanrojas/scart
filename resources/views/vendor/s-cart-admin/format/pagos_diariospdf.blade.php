@@ -4,8 +4,7 @@
 
 <div class="page-content container">
     <div class="page-header text-blue-d2">
-      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:65px;">
-        <div class="page-tools">
+        <div class="page-tools m-auto">
             <div class="action-buttons">
                 <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
                     <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
@@ -21,6 +20,17 @@
         <div class="row mt-4">
             <div class="col-12 col-lg-10 offset-lg-1">
                 <div class="row">
+
+                  <div class="col-12 mb-4">
+                        
+                    <span class="h4">WAIKA IMPORT C.A</span>
+                    <img width="100" class="text-center img-fluid" src="{{ sc_file(sc_store('logo')) }}" style="margin-left: 25%">
+                    <p>
+                        RIF. J-50145053-6
+                        A.V CUARTA TRANSVERSAL CALLE MIRAIMA EDIF: G.M.S.Y.T , BOLEITA NORTE, CARACAS MIRANDA ZONA POSTAL 1073
+                        0412.635.40.41 / 0412.635.40.38</p>
+                </div>
+
                     <div class="col-12">
                         <div class="text-center text-150">
                             <span class="text-default-d3">

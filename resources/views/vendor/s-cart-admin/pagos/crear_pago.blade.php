@@ -237,9 +237,13 @@
                       @enderror
                         </div>
 
+                     
+
+
+
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Tasa de cambio</label>
-                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio"  value="1">
+                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio"  value="{!!sc_currency_all()[0]->exchange_rate!!}">
             
                           @error('tipo_cambio')
                           <small style="color: red">{{$message}}</small>
