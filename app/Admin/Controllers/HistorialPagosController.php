@@ -9,6 +9,7 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
+
 use App\Models\ClientLevelCalculator;
 use App\Models\Estado;
 use App\Models\Municipio;
@@ -1828,6 +1829,9 @@ class HistorialPagosController extends RootAdminController
        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
 
+        
+
+
        
 
         $data = [
@@ -1894,8 +1898,9 @@ class HistorialPagosController extends RootAdminController
         $totale = [];
         $total_monto_pagado = 0;
         $total_usd_pagado = 0;
+        $vendedor = '';
 
-        $TipoCambioBcv = TipoCambioBcv::all();
+        
         
 
 
@@ -1907,6 +1912,16 @@ class HistorialPagosController extends RootAdminController
         
         foreach ($dataTmp as $key => $row) {
                 $pagados = [];
+        
+        // $fecha_actual = date('Y-m-d');
+        // $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
+
+        //     $historial_pagos =   HistorialPago::where('order_id', $row->order_id)->where('payment_status',3)
+        //     ->orWhere('payment_status',4 )
+        //     ->orderBy('fecha_venciento')->first();
+            
+
+        //     dd($historial_pagos);
 
 
                 $order = AdminOrder::getOrderAdmin($row->order_id);
@@ -1958,7 +1973,7 @@ class HistorialPagosController extends RootAdminController
                 $total_usd_pagado += $Referencia;
                 $Importe_couta = $row->importe_couta;
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios[$row->vendedor_id];
+                $vendedor = $list_usuarios[$row->vendedor_id] ?? '';
 
            
 
@@ -2019,6 +2034,108 @@ class HistorialPagosController extends RootAdminController
         return view($this->templatePathAdmin.'pagos.historial_cliente')
             ->with($data);
 
+
+
+    }
+
+    public function notas_d_entrega(){
+
+        $dminUser = new AdminUser;
+        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword    = sc_clean(request('keyword') ?? '');
+        $historial_pago = sc_clean(request('notas_entrega') ?? '');
+        $statusPayment = PaymentStatus::select(['name','id'])->get();
+
+       
+
+      foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+      }
+
+        $dataSearch = [
+            'keyword'    => $keyword ,
+            'notas_entrega'    => $historial_pago,
+            'sort_order' => $sort_order,
+            'arrSort'    => $arrSort,
+            'arrSort'    => $arrSort,
+        ];
+
+        $id = $dataSearch['keyword'];
+
+
+        $dataTmp = $this->getPagosListAdmin2($dataSearch);
+        $dataTr = [];
+        $vendedor = '';
+
+        
+
+            $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')
+            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad')->get();
+
+            $historia = HistorialPago::where('order_id' , $id)->where('payment_status' , 1)->get();
+            $lasuma = 0.00;
+
+            foreach($historia as $historias){
+                $lasuma += $historias->importe_couta ;
+
+            }
+
+                $monedas = sc_currency_all();
+                $tasa_cambio = $monedas[1]->exchange_rate;
+
+                
+           
+
+                    
+
+
+        foreach ($REFERENCIA as $key => $row) {
+                $pagados = [];
+                $order = AdminOrder::getOrderAdmin($row->id);
+
+
+                $cliente = $row->first_name .' '. $row->last_name;
+                $direccion = $row->direccion ?? '';
+                $nro_convenio = $row->nro_convenio;
+                $nombre_product = $row->name_product;
+                $cantidad = $row->cantidad;
+                $fecha_pago = $row->fecha_pago;
+                $lote = $row->lote;
+                $order_id = $row->id;
+                $Cedula = $row->cedula;
+                $vendedor = $list_usuarios [$row->vendedor_id] ?? '';
+                $subtotal = $row->subtotal;
+
+        }
+
+        
+
+            $data['cliente'] = $cliente ?? '';
+            $data['vendedor'] = $vendedor ?? '';
+            $data['cedula'] = $Cedula ?? '';
+            $data['direccion'] = $direccion ?? '';
+            $data['fecha_pago'] = $fecha_pago;
+            $data['nro_convenio'] = $nro_convenio;
+            $data['nombre_product'] = $nombre_product;
+            $data['cantidad'] = $cantidad;
+            $data['tota_product'] = $subtotal * $tasa_cambio ?? '';
+            $data['tota_productusd'] = $subtotal ?? '';
+            $data['lote'] = $lote;
+            $data['tasa_cambio'] = $tasa_cambio;
+            $data['referencia'] = $lasuma;
+
+
+          
+           
+
+
+            if($dataSearch['notas_entrega']){
+                $data['dataTr'] = $dataTr;
+                return view($this->templatePathAdmin.'format.notas_d_entrega')
+                ->with($data);}
 
 
     }

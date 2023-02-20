@@ -84,6 +84,8 @@ Route::get('/sc_admin/cobranza_mensual',[HistorialPagosController::class ,'cobra
 
 Route::get('sc_admin/historial_cliente', [HistorialPagosController::class,'historial_cliente'])->name('historial.cliente');
 
+Route::get('sc_admin/notas_d_entrega', [HistorialPagosController::class,'notas_d_entrega'])->name('notas.entrega');
+
 
 
 

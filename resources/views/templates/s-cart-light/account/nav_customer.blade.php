@@ -2,7 +2,10 @@
 
 <ul class="list-group list-group-flush member-nav ">
     <li class="list-group-item ">
-        <a style="color: black;" href="{{ sc_route('customer.order_list') }}"><i class="fa fa-cart-arrow-down text-black" style="color: black;" aria-hidden="true"></i> {{ sc_language_render('customer.order_history') }}</a>
+        <a style="color: black;" href="{{ sc_route('customer.order_list') }}"><i class="fa fa-cart-arrow-down text-black" style="color: black;" aria-hidden="true"></i> {{ sc_language_render('customer.order_history') }}
+
+        </a>
+        
     </li>
 
     
