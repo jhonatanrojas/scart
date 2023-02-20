@@ -225,16 +225,29 @@
 
                    
                     </tr>
+                    @if ($pagadoCount >= 1 )
 
                     <tr>
                       <td class="td-title">Reporte de pago</td>
                       <td>
-                       
+
                         <a  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
                       </td>
 
-                   
+
                     </tr>
+
+                    
+                        <tr>
+                          <td class="td-title">Nota de entrega</td>
+                          <td>
+                          
+                            <a  href="{{ sc_route_admin('notas.entrega')}}?notas_entrega=true&keyword={{$order->id }}" class="" data-name="address2" >Ir a la Nota de entrega </a>
+                          </td>
+                        </tr>
+                        
+                    @endif
+                  
                     <tr>
                       <td class="td-title">Creado Por:</td>
                       <td>

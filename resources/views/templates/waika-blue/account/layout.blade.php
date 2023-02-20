@@ -6,7 +6,7 @@
       
       <div class="row">
        
-        <div class="col-12 col-sm-12 col-md-3">
+        <div class="col-12 col-sm-12 col-md-3 animate__animated animate__fadeInDown">
           
           @include($sc_templatePath.'.account.nav_customer')
         </div>

@@ -34,7 +34,7 @@
                     <div class="col-12">
                         <div class="text-center text-150">
                             <span class="text-default-d3">
-                                HISTORIAL DE PAGO
+                                NOTA DE ENTREGA N°:
                                 </span>
                         </div>
                     </div>
@@ -77,13 +77,16 @@
 
                             <table class="table table-hover box-body text-wrap table-bordered">
                                 <thead>
-                                    <td class="text-center" colspan="5"><h4>PRODUCTO</h4></td>
+                                    <td class="text-center" colspan="7"><h4>PRODUCTO</h4></td>
                                     <tr>
                                        
-                                        <td>Descriccion</td>
-                                        <td>Cant.</td>
-                                        <td>precio.</td>
-                                        <td>Dcto.</td>
+                                        <td>DESCRIPCION</td>
+                                        <td>CANT</td>
+                                        <td>PRECIO</td>
+                                        <td>TASA DE CAMBIO</td>
+                                        <td>Dcto</td>
+                                        <td>Total</td>
+                                        <td>Referencia ($)</td>
                                     </tr>
                                 </thead>
                 
@@ -92,60 +95,34 @@
                                         
                                         <td>{{$nombre_product}}</td>
                                         <td>{{$cantidad}}</td>
-                                        <td>{{$tota_product}}$</td>
+                                        <td>{{$tota_product}}</td>
+                                        <td>{{$tasa_cambio}}</td>
                                         <td></td>
+                                        <td>{{$tota_product}}</td>
+                                        <td>{{$tota_productusd}} </td>
+                                        
                                     </tr>
                                     <br>
-                                <td class="text-center" colspan="5"> <h4>
-                                        FECHA ESTIMADA DE ENTREGA <hr><br>
-                                        {{$fecha_maxima_entrega}}
-                                    </h4>
-                                    <span>La fecha de entrega puede ser modificada si el Beneficiario no realiza los pagos puntualmente (fecha de pago o día siguiente).</span></
+                                <td class="text-center" colspan="7"> <h4>
+                                    MONTO ADEUDADO PARA LA FECHA 
+                                    
                                 </td>
+                                <br>
+                                <tr>
+                                    <td class="text-center" colspan="7"> <h4>
+                                        <span>REFERENCIA: {{$referencia}}$</span>
+                                        
+                                    </td>
+                                </tr>
+                               
                                        
                                 </tbody>
                 
                             </table>
-                            <br>
-                            <table class="table table-hover  text-wrap table-bordered">
-                              <thead>
-                                <tr>
-                                  @if (!empty($removeList))
-                                  <th></th>
-                                  @endif
-                                  @foreach ($listTh as $key => $th)
-                                    <th>{!! $th !!}</th>
-                                  @endforeach
-                                 </tr>
-                              </thead>
-                              <tbody>
-                                @foreach ($dataTr as $keyRow => $tr)
-                    
-                                <tr>
-                                    @if (!empty($removeList))
-                                    <td>
-                                      <input class="checkbox grid-row-checkbox" type="checkbox" data-id="{{ $keyRow }}">
-                                    </td>
-                                    @endif
-                                    @foreach ($tr as $key => $trtd)
-                                        <td>{!! $trtd !!}</td>
-                                    @endforeach
-                                </tr>
-                                @endforeach
-                              </tbody>
 
-                              <tr>
-                                <td colspan="2">Total de pago</td>
-                                <td colspan="1">BS</td>
-                                <td colspan="2">BS .F {{$total_monto_pagado}}</td>
-                                <td>Ref. {{$total_usd_pagado}} $</td>
-                              </tr>
-                              <tr>
-                                <td class="h4 text-center" colspan="6">RESUMEN</td>
-                              </tr>
-                    
-                              
-                            </table>
+
+                            <br>
+                           
 
                             <div class="d-flex align-items-center mb-4">
 
@@ -154,15 +131,15 @@
                                     
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Numero de Cuotas Pendientes:  {{$Cuotas_Pendientes}}</li>
-                                        <li>Monto de Proxima Cuota (Ref. $):    {{$Importe_couta}}
+                                        <li class="">TERMINOS DE GARANTIA:</li>
+                                        <li>Monto de 1.- 360 DIAS DE GARANTIA POR SERVICIO TECNICO
                                         </li>
-                                        <li>Fecha Proxima Cuota:</li>
-                                        <li></li>
+                                        <li>2.- NO CUBRE DAÑO POR MAL USO NI FALLAS ELECTRICAS</li>
+                                        <li>SE ENTREGA NUEVO Y EN PERFECTO ESTADO.</li>
                                     </ul>
 
                                     <div style="margin-left: 35px">
-                                        PAGA CONFORME:________________
+                                        RECIBE CONFORME:__________________
                                     </div>
                                 </div>
 
@@ -170,15 +147,18 @@
                                        
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Total Convenio (Referencia)::</li>
-                                        <li>Total Pagado para la Fecha (Referencia):</li>
-                                        <li>FTotal Monto Adeudado (Referencia):</li>
+                                        <li class="">Total Nota de Entrega:</li>
+                                        <li>Total Descuento:</li>
+                                        <li>Total Operación:</li>
                                         <li></li>
                                     </ul>
+                                    <br>
+                                    <br>
+                                    <br>
 
-                                    <span class="" style="margin-left: 35px">
-                                        PAGA CONFORME:________________
-                                    </span>
+                                    <div style="margin-left: 35px">
+                                        Cantidad de Productos:             {{$cantidad}}
+                                    </div>
                                 </div>
                             </div>
                     
