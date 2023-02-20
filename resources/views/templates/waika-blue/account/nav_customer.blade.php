@@ -3,10 +3,8 @@ $customer = auth()->user();
 $nr= 1;
 $nro = 1;
 $order_id = '';
-$historial = '';
 $results = DB::select('select * from sc_shop_order');
 foreach ($results as $key => $value) {
-
   if($value->customer_id === $customer->id){
     $results=$nr++;
     $order_id = $value->id;
@@ -15,17 +13,10 @@ foreach ($results as $key => $value) {
 
 $historial = DB::select('select * from sc_historial_pagos');
 foreach ($historial as $key => $value) {
-
-  
   if($value->order_id == $order_id && $value->payment_status == 5){
-    
     $historial=$nro++;
-
-  }
+  }else if(!$value->order_id == $order_id || !$value->payment_status == 5) $historial = 0;
 }
-
-
-
 @endphp
 
 <ul class="list-group list-group-flush member-nav ">
@@ -36,17 +27,23 @@ foreach ($historial as $key => $value) {
        
       
       <a style="color: rgba(248, 19, 19, 0.726); font-size: 15px" class="rd-navbar-basket far fa-bell " href="#">
-        <span style="color: rgba(248, 19, 19, 0.596)" class="count " >{{$results ?? 0}}</span>
+        <span style="color: rgba(248, 19, 19, 0.596)" class="count " >{{$results}}</span>
        
       </a>
     </li>
 
     <li class="list-group-item ">
       <a style="color: black;" href="{{ sc_route('customer.historial_pagos') }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Historial de pagos</a>
+     
       <a style="color: rgba(248, 19, 19, 0.726); font-size: 15px" class="rd-navbar-basket far fa-bell " href="#">
-        <span style="color: rgba(248, 19, 19, 0.596)" class="count " >{{$historial}}</span>
+        <span style="color: rgba(248, 19, 19, 0.596)" class="count " >
+          {{$historial}}
+            
+        
+      </span>
        
       </a>
+     
   </li>
   <li class="list-group-item">
     <a style="color: black;" href="{{route('adjuntar_document')}}"><i class="fa fa-file" aria-hidden="true"></i> Adjuntar documentos </a>
