@@ -767,7 +767,7 @@ class ShopCartController extends RootFrontController
         //Process escape
         $data      = sc_clean($data);
         
-     
+       
 
         if(isset($data['financiamiento'])){
             $productId = $data['product_id'];
@@ -779,7 +779,7 @@ class ShopCartController extends RootFrontController
             $fecha = $data['fecha'] ?? '';
             $inicial = $data['inicial']?? 0;
 
-        }else{
+        }else if(isset($data['modalidad_pago'])){
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $Cuotas = $data['Cuotas'] ?? 0;
@@ -838,7 +838,7 @@ class ShopCartController extends RootFrontController
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
                 );
-            }else {
+            }else if(isset($data['modalidad_pago'])){
                 $options = $formAttr;
                 $dataCart = array(
                     'id'      => $productId,

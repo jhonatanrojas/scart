@@ -528,7 +528,10 @@ class  AdminOrderController extends RootAdminController
     
         $order = AdminOrder::getOrderAdmin($id);
         $dminUser = new AdminUser;
-       $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+
+
+      
          
        
 
@@ -554,6 +557,11 @@ class  AdminOrderController extends RootAdminController
         }
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
+
+        $pagadoCount =  HistorialPago::Where('order_id',$id)
+        ->Where('payment_status' , 5)->count();
+
+        
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
         $documento = SC__documento::where('id_usuario', $order->customer_id)->get();
         
@@ -566,17 +574,10 @@ class  AdminOrderController extends RootAdminController
                 "id_usuario" => $verdument->id_usuario
             ];
 
-           
 
         }
 
-       
 
-
-       
- 
-        
-       
         $products = (new AdminProduct)->getProductSelectAdmin(['kind' => [SC_PRODUCT_SINGLE, SC_PRODUCT_BUILD]]);
         $paymentMethod = [];
         $shippingMethod = [];
@@ -602,6 +603,7 @@ class  AdminOrderController extends RootAdminController
             [
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
+                'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
                 'list_usuarios' => $list_usuarios,

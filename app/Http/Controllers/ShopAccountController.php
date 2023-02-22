@@ -450,6 +450,11 @@ class ShopAccountController extends RootFrontController
      */
     private function _orderList()
     {
+
+        $mapStyleStatus = AdminOrder::$mapStyleStatus;
+
+
+
         $customer = auth()->user();
         $id = $customer['id'];
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
@@ -469,6 +474,8 @@ class ShopAccountController extends RootFrontController
         }
 
         $statusOrder = ShopOrderStatus::getIdAll();
+
+        
         sc_check_view($this->templatePath . '.account.order_list');
         return view($this->templatePath . '.account.order_list')
             ->with(
@@ -477,6 +484,7 @@ class ShopAccountController extends RootFrontController
                     'statusOrder' => $statusOrder,
                     'orders'      => (new ShopOrder)->profile()->getData(),
                     'customer'    => $customer,
+                    'mapStyleStatus' => $mapStyleStatus,
                     'order'    => $Order_resultado,
                     'productoDetail' => $productoDetail ?? '',
                     'combenio'    => $Combenio,
