@@ -132,6 +132,7 @@ class HistorialPagosController extends RootAdminController
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
             $Referencia = "";
+            $NOta = "";
 
             $order = AdminOrder::getOrderAdmin($row->order_id);
             $btn_estatus='';
@@ -149,6 +150,10 @@ class HistorialPagosController extends RootAdminController
                 $Referencia = ' <a   href="'. sc_file($row->comprobante) .'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;';
 
             }
+
+            if($row->payment_status ==5):
+                $NOta = ' <a   href="'. sc_route_admin('notas.entrega').'?notas_entrega=true&keyword='.$row->order_id.'"><span title="Nota de entrega" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fas fa-clipboard"></i></span></a>&nbsp;';
+            endif;
                
 
 
@@ -179,11 +184,15 @@ class HistorialPagosController extends RootAdminController
                     <a href="' . sc_route_admin('admin_order.detail', ['id' =>$row->order_id ?$row->order_id : 'not-found-id']) . '"><span title="Ir al pedido" type="button" class="btn btn-flat btn-sm btn-info"><i class="fas fa-arrow-right"></i></span></a>&nbsp;
 
 
+
+                    '.$NOta.'
+
+
                     
                     '
 
                     
-                ,
+                
             ];
         }
 
@@ -2070,6 +2079,10 @@ class HistorialPagosController extends RootAdminController
         $dataTr = [];
         $vendedor = '';
 
+        if(empty($dataSearch['notas_entrega'])){
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+
         
 
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')
@@ -2090,24 +2103,26 @@ class HistorialPagosController extends RootAdminController
            
 
                     
-
+                $cantidad =  0.00;
+                $subtotal = 0.00;
+                $lote= 0;
 
         foreach ($REFERENCIA as $key => $row) {
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
 
 
-                $cliente = $row->first_name .' '. $row->last_name;
+                $cliente = $row->first_name .' '. $row->last_name ?? '';
                 $direccion = $row->direccion ?? '';
-                $nro_convenio = $row->nro_convenio;
-                $nombre_product = $row->name_product;
-                $cantidad = $row->cantidad;
-                $fecha_pago = $row->fecha_pago;
-                $lote = $row->lote;
-                $order_id = $row->id;
+                $nro_convenio = $row->nro_convenio ?? '';
+                $nombre_product = $row->name_product ?? '';
+                $cantidad = $row->cantidad ;
+                $fecha_pago = $row->fecha_pago ?? '';
+                $lote = $row->lote ?? '';
+                $order_id = $row->id ?? '';
                 $Cedula = $row->cedula;
                 $vendedor = $list_usuarios [$row->vendedor_id] ?? '';
-                $subtotal = $row->subtotal;
+                $subtotal = $row->subtotal ?? '';
 
         }
 
@@ -2117,15 +2132,15 @@ class HistorialPagosController extends RootAdminController
             $data['vendedor'] = $vendedor ?? '';
             $data['cedula'] = $Cedula ?? '';
             $data['direccion'] = $direccion ?? '';
-            $data['fecha_pago'] = $fecha_pago;
-            $data['nro_convenio'] = $nro_convenio;
-            $data['nombre_product'] = $nombre_product;
+            $data['fecha_pago'] = $fecha_pago ?? '';
+            $data['nro_convenio'] = $nro_convenio ?? '';
+            $data['nombre_product'] = $nombre_product ?? '';
             $data['cantidad'] = $cantidad;
             $data['tota_product'] = $subtotal * $tasa_cambio ?? '';
             $data['tota_productusd'] = $subtotal ?? '';
             $data['lote'] = $lote;
-            $data['tasa_cambio'] = $tasa_cambio;
-            $data['referencia'] = $lasuma;
+            $data['tasa_cambio'] = $tasa_cambio ?? '';
+            $data['referencia'] = $lasuma ?? '';
 
 
           
