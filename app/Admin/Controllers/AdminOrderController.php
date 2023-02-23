@@ -30,9 +30,11 @@ use App\Models\SC_shop_customer;
 use App\Models\SC_shop_order_status;
 use App\Models\shop_order_detail;
 use App\Models\ShopOrder;
+use App\Models\SC_admin_role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use FFI;
+
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\SC_referencia_personal;
@@ -524,16 +526,42 @@ class  AdminOrderController extends RootAdminController
      */
     public function detail($id)
     {
-
-    
         $order = AdminOrder::getOrderAdmin($id);
         $dminUser = new AdminUser;
         $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+        $ademin = SC_admin_role::pluck('id' , 'name')->all();
+        $id_usuario_rol = Admin::user()->id;
+
+        $user_roles = $dminUser::where('id' ,$id_usuario_rol)->orderBy('id')->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+
+        $User_roles = $user_roles[0]->role_user;
 
 
-      
-         
-       
+        if($ademin['Vendedor']  == $User_roles){
+
+             $id_status=[1,2,3,4 , 11,13];
+             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+
+            
+
+        }
+        else if($ademin['Riesgo']  == $User_roles){
+
+             $id_status=[1, 5, 6,7,8,14,15];
+             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+
+           
+            }
+        else if($ademin['Administrator']  == $User_roles){
+
+            $id_status=[5,9,10,11,12,13,18,16,17];
+            $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+
+            }
+
+            $styleStatus = $this->statusOrder;
+
+
 
         $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
 
@@ -597,7 +625,7 @@ class  AdminOrderController extends RootAdminController
 
     
 
-      
+        
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -614,7 +642,8 @@ class  AdminOrderController extends RootAdminController
                 'historial_pagos'=>$historialPagos,
                 "modalidad_pago" =>  $modalidad_pago,
                 "products" => $products,
-                "statusOrder" => $this->statusOrder,
+                "statusOrder" => $styleStatus ,
+                "statusOrdert" => $this->statusOrder ?? '',
                 "statusPayment" => $this->statusPayment,
                 "statusShipping" => $this->statusShipping,
                 'dataTotal' => AdminOrder::getOrderTotal($id),
