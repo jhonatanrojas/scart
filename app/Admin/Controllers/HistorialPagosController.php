@@ -1,5 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
+use SCart\Core\Admin\Admin;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
-
+use App\Models\SC_admin_role;
 use App\Models\ClientLevelCalculator;
 use App\Models\Estado;
 use App\Models\Municipio;
@@ -23,6 +24,7 @@ use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
+
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -1933,6 +1935,13 @@ class HistorialPagosController extends RootAdminController
         //     dd($historial_pagos);
 
 
+                $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+                $User_roles = $user_roles[0]->role_user;
+                $ademin = SC_admin_role::where('id' , $User_roles)->get();
+                $list_usuarios = $ademin[0]->name;
+
+
+
                 $order = AdminOrder::getOrderAdmin($row->order_id);
 
                 $forma_pago = $row['metodoPago'];
@@ -1982,7 +1991,7 @@ class HistorialPagosController extends RootAdminController
                 $total_usd_pagado += $Referencia;
                 $Importe_couta = $row->importe_couta;
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios[$row->vendedor_id] ?? '';
+                $vendedor = $list_usuarios;
 
            
 
@@ -2049,9 +2058,13 @@ class HistorialPagosController extends RootAdminController
 
     public function notas_d_entrega(){
 
-        $dminUser = new AdminUser;
-        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
+        $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+        $User_roles = $user_roles[0]->role_user;
+        $ademin = SC_admin_role::where('id' , $User_roles)->get();
+        $list_usuarios = $ademin[0]->name;
+
+       
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
         $historial_pago = sc_clean(request('notas_entrega') ?? '');
@@ -2099,10 +2112,7 @@ class HistorialPagosController extends RootAdminController
                 $monedas = sc_currency_all();
                 $tasa_cambio = $monedas[1]->exchange_rate;
 
-                
-           
-
-                    
+ 
                 $cantidad =  0.00;
                 $subtotal = 0.00;
                 $lote= 0;
@@ -2110,8 +2120,6 @@ class HistorialPagosController extends RootAdminController
         foreach ($REFERENCIA as $key => $row) {
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
-
-
                 $cliente = $row->first_name .' '. $row->last_name ?? '';
                 $direccion = $row->direccion ?? '';
                 $nro_convenio = $row->nro_convenio ?? '';
@@ -2121,12 +2129,12 @@ class HistorialPagosController extends RootAdminController
                 $lote = $row->lote ?? '';
                 $order_id = $row->id ?? '';
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios [$row->vendedor_id] ?? '';
+                $vendedor = $list_usuarios ?? '';
                 $subtotal = $row->subtotal ?? '';
 
         }
 
-        
+
 
             $data['cliente'] = $cliente ?? '';
             $data['vendedor'] = $vendedor ?? '';
