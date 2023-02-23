@@ -1,5 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
+use SCart\Core\Admin\Admin;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Controllers\RootAdminController;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
-
+use App\Models\SC_admin_role;
 use App\Models\ClientLevelCalculator;
 use App\Models\Estado;
 use App\Models\Municipio;
@@ -23,6 +24,7 @@ use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
+
 class HistorialPagosController extends RootAdminController
 {
     public $statusPayment;
@@ -132,6 +134,7 @@ class HistorialPagosController extends RootAdminController
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
             $Referencia = "";
+            $NOta = "";
 
             $order = AdminOrder::getOrderAdmin($row->order_id);
             $btn_estatus='';
@@ -149,6 +152,10 @@ class HistorialPagosController extends RootAdminController
                 $Referencia = ' <a   href="'. sc_file($row->comprobante) .'"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;';
 
             }
+
+            if($row->payment_status ==5):
+                $NOta = ' <a   href="'. sc_route_admin('notas.entrega').'?notas_entrega=true&keyword='.$row->order_id.'"><span title="Nota de entrega" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fas fa-clipboard"></i></span></a>&nbsp;';
+            endif;
                
 
 
@@ -179,11 +186,15 @@ class HistorialPagosController extends RootAdminController
                     <a href="' . sc_route_admin('admin_order.detail', ['id' =>$row->order_id ?$row->order_id : 'not-found-id']) . '"><span title="Ir al pedido" type="button" class="btn btn-flat btn-sm btn-info"><i class="fas fa-arrow-right"></i></span></a>&nbsp;
 
 
+
+                    '.$NOta.'
+
+
                     
                     '
 
                     
-                ,
+                
             ];
         }
 
@@ -1924,6 +1935,13 @@ class HistorialPagosController extends RootAdminController
         //     dd($historial_pagos);
 
 
+                $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+                $User_roles = $user_roles[0]->role_user;
+                $ademin = SC_admin_role::where('id' , $User_roles)->get();
+                $list_usuarios = $ademin[0]->name;
+
+
+
                 $order = AdminOrder::getOrderAdmin($row->order_id);
 
                 $forma_pago = $row['metodoPago'];
@@ -1973,7 +1991,7 @@ class HistorialPagosController extends RootAdminController
                 $total_usd_pagado += $Referencia;
                 $Importe_couta = $row->importe_couta;
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios[$row->vendedor_id] ?? '';
+                $vendedor = $list_usuarios;
 
            
 
@@ -2040,9 +2058,13 @@ class HistorialPagosController extends RootAdminController
 
     public function notas_d_entrega(){
 
-        $dminUser = new AdminUser;
-        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
+        $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+        $User_roles = $user_roles[0]->role_user;
+        $ademin = SC_admin_role::where('id' , $User_roles)->get();
+        $list_usuarios = $ademin[0]->name;
+
+       
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
         $historial_pago = sc_clean(request('notas_entrega') ?? '');
@@ -2070,6 +2092,10 @@ class HistorialPagosController extends RootAdminController
         $dataTr = [];
         $vendedor = '';
 
+        if(empty($dataSearch['notas_entrega'])){
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+
         
 
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')
@@ -2086,46 +2112,43 @@ class HistorialPagosController extends RootAdminController
                 $monedas = sc_currency_all();
                 $tasa_cambio = $monedas[1]->exchange_rate;
 
-                
-           
-
-                    
-
+ 
+                $cantidad =  0.00;
+                $subtotal = 0.00;
+                $lote= 0;
 
         foreach ($REFERENCIA as $key => $row) {
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
-
-
-                $cliente = $row->first_name .' '. $row->last_name;
+                $cliente = $row->first_name .' '. $row->last_name ?? '';
                 $direccion = $row->direccion ?? '';
-                $nro_convenio = $row->nro_convenio;
-                $nombre_product = $row->name_product;
-                $cantidad = $row->cantidad;
-                $fecha_pago = $row->fecha_pago;
-                $lote = $row->lote;
-                $order_id = $row->id;
+                $nro_convenio = $row->nro_convenio ?? '';
+                $nombre_product = $row->name_product ?? '';
+                $cantidad = $row->cantidad ;
+                $fecha_pago = $row->fecha_pago ?? '';
+                $lote = $row->lote ?? '';
+                $order_id = $row->id ?? '';
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios [$row->vendedor_id] ?? '';
-                $subtotal = $row->subtotal;
+                $vendedor = $list_usuarios ?? '';
+                $subtotal = $row->subtotal ?? '';
 
         }
 
-        
+
 
             $data['cliente'] = $cliente ?? '';
             $data['vendedor'] = $vendedor ?? '';
             $data['cedula'] = $Cedula ?? '';
             $data['direccion'] = $direccion ?? '';
-            $data['fecha_pago'] = $fecha_pago;
-            $data['nro_convenio'] = $nro_convenio;
-            $data['nombre_product'] = $nombre_product;
+            $data['fecha_pago'] = $fecha_pago ?? '';
+            $data['nro_convenio'] = $nro_convenio ?? '';
+            $data['nombre_product'] = $nombre_product ?? '';
             $data['cantidad'] = $cantidad;
             $data['tota_product'] = $subtotal * $tasa_cambio ?? '';
             $data['tota_productusd'] = $subtotal ?? '';
             $data['lote'] = $lote;
-            $data['tasa_cambio'] = $tasa_cambio;
-            $data['referencia'] = $lasuma;
+            $data['tasa_cambio'] = $tasa_cambio ?? '';
+            $data['referencia'] = $lasuma ?? '';
 
 
           
