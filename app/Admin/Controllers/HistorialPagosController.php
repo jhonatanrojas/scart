@@ -2057,8 +2057,6 @@ class HistorialPagosController extends RootAdminController
     }
 
     public function notas_d_entrega(){
-
-
         $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
         $User_roles = $user_roles[0]->role_user;
         $ademin = SC_admin_role::where('id' , $User_roles)->get();
@@ -2098,8 +2096,10 @@ class HistorialPagosController extends RootAdminController
 
         
 
-            $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')
-            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad')->get();
+            $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
+            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
+
+            
 
             $historia = HistorialPago::where('order_id' , $id)->where('payment_status' , 1)->get();
             $lasuma = 0.00;
@@ -2121,7 +2121,7 @@ class HistorialPagosController extends RootAdminController
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
                 $cliente = $row->first_name .' '. $row->last_name ?? '';
-                $direccion = $row->direccion ?? '';
+                $direccion = $row->Direccion ?? '';
                 $nro_convenio = $row->nro_convenio ?? '';
                 $nombre_product = $row->name_product ?? '';
                 $cantidad = $row->cantidad ;
@@ -2149,11 +2149,6 @@ class HistorialPagosController extends RootAdminController
             $data['lote'] = $lote;
             $data['tasa_cambio'] = $tasa_cambio ?? '';
             $data['referencia'] = $lasuma ?? '';
-
-
-          
-           
-
 
             if($dataSearch['notas_entrega']){
                 $data['dataTr'] = $dataTr;
