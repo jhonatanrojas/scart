@@ -16,7 +16,7 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action="{{ $url_action }}" method="post" accept-charset="UTF-8" class="form-horizontal" id="form-main"  enctype="multipart/form-data">
+                <form action="{{ $url_action }}" method="post" accept-charset="UTF-8" class="form-horizontal  was-validated" id="form-main"  enctype="multipart/form-data" novalidate>
 
 
                     <div class="card-body">
@@ -136,7 +136,7 @@
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                             </div>
-                        <input min="4" maxlength="20" id="cedula" placeholder="Nro Documento" type="text" class="form-control" name="cedula"
+                        <input required min="4" maxlength="20" id="cedula" placeholder="Nro Documento" type="text" class="form-control is-invalid" name="cedula"
                             value="{{ (old('cedula', $customer['cedula'] ?? ''))}}">
                         </div>
                         @if($errors->has('cedula'))
@@ -158,7 +158,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                 </div>
-                    <select  type="text"
+                    <select required  type="text"
                     class="is_required validate account_input form-control {{ ($errors->has('estado_civil'))?"input-error":"" }}"
                     name="estado_civil" id="estado_civil">
 
@@ -297,7 +297,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input placeholder="Telefono" id="phone" type="text" class="form-control" name="phone"
+                                    <input required placeholder="Telefono" id="phone" type="text" class="form-control" name="phone"
                                         value="{{ (old('phone', $customer['phone'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('phone'))
@@ -413,7 +413,7 @@
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
                                         <select required class="form-control show-tick" id="cod_municipio" name="cod_municipio">
-                                            <option value="0">Seleccione un Municipio</option>
+                                            <option value="">Seleccione un Municipio</option>
                                     <?php
                                         if(isset($municipio)){
                                         foreach ($municipio as $key => $municipios) {
@@ -425,9 +425,9 @@
                                     ?>        
                                             </select>
                                     </div>
-                                        @if ($errors->has('estado'))
+                                        @if ($errors->has('municipio'))
                                             <span class="form-text">
-                                                <i class="fa fa-info-circle"></i> {{ $errors->first('estado') }}
+                                                <i class="fa fa-info-circle"></i> {{ $errors->first('municipio') }}
                                             </span>
                                         @else
                                             @if ($customer)
@@ -447,7 +447,7 @@
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
                                         <select required class="form-control show-tick" id="cod_parroquia" name="cod_parroquia">
-                                            <option value="0">Seleccione un Parroquia</option>
+                                            <option value="">Seleccione un Parroquia</option>
                                     <?php
                                         if(isset($parroquia)){
                                         foreach ($parroquia as $key => $parroquias) {
@@ -461,9 +461,9 @@
                                     ?>        
                                             </select>
                                     </div>
-                                        @if ($errors->has('parroquias'))
+                                        @if ($errors->has('cod_parroquia'))
                                             <span class="form-text">
-                                                <i class="fa fa-info-circle"></i> {{ $errors->first('parroquias') }}
+                                                <i class="fa fa-info-circle"></i> {{ $errors->first('cod_parroquia') }}
                                             </span>
                                         @else
                                             @if ($customer)
@@ -485,7 +485,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="address1" type="text" class="form-control" name="address1"
+                                    <input  placeholder="Direccion 1" required id="address1" type="text" class="form-control" name="address1"
                                         value="{{ (old('address1', $customer['address1'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('address1'))
@@ -504,7 +504,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="address2" type="text" class="form-control" name="address2"
+                                    <input placeholder="Direccion 2" id="address2" type="text" class="form-control" name="address2"
                                         value="{{ (old('address2', $customer['address2'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('address2'))
@@ -635,7 +635,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input type="text"   id="password" name="password" value="{{ old('password')??'' }}" class="form-control password" placeholder="" />
+                                        <input required type="text"   id="password" name="password" value="{{ old('password')??'' }}" class="form-control password" placeholder="" />
                                     </div>
                                         @if ($errors->has('password'))
                                             <span class="form-text">
@@ -658,7 +658,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input type="text"   id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation')??'' }}" class="form-control password_confirmation" placeholder="" />
+                                        <input required type="text"   id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation')??'' }}" class="form-control password_confirmation" placeholder="" />
                                     </div>
                                         @if ($errors->has('password_confirmation'))
                                             <span class="form-text">
@@ -878,6 +878,27 @@
               }
           });
     });
+
+
+    (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
   </script>
 
 @endpush
