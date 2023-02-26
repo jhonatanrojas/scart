@@ -258,7 +258,7 @@
                         <div class="form-group col-md-6">
                        
                             <label for="forma_pago">Adjunta  referencia</label>
-                            <input type="file" class="form-control-file" id="capture" name="capture" required="">
+                            <input type="file" class="form-control-file" id="capture" name="capture">
                             @error('capture')
                             <small style="color: red">{{$message}}</small>
                         @enderror

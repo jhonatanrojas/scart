@@ -584,18 +584,22 @@ class HistorialPagosController extends RootAdminController
     public function postReportarPago(Request $request){
         
         $request->validate([
-            'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
+            'capture' => 'mimes:pdf,jpg,jpge,png|max:2048',
             'referencia' => 'required',
             'order_id'=>'required'
         ]);
 
        
 
-
+        $path_archivo='';
       
-        $fileName = time().'.'.$request->capture->extension();  
-        $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
-        $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+        if($request->capture){
+            $fileName = time().'.'.$request->capture->extension();  
+            $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
+            $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+
+        }
+
         
 
         $id_pago = $request->id_pago;
