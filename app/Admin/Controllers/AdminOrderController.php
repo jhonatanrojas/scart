@@ -660,9 +660,7 @@ class  AdminOrderController extends RootAdminController
     {
         $id = request('id');
         $order = AdminOrder::getOrderAdmin($id);
-       
-      
-    
+
      return  response()->json($order );
      
 
