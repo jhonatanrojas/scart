@@ -542,15 +542,10 @@ class  AdminOrderController extends RootAdminController
              $id_status=[1,2,3,4 , 11,13];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
-            
-
         }
         else if($ademin['Riesgo']  == $User_roles){
-
              $id_status=[1, 5, 6,7,8,14,15];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-
-           
             }
         else if($ademin['Administrator']  == $User_roles){
 
@@ -558,6 +553,12 @@ class  AdminOrderController extends RootAdminController
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
+            else if($ademin['administrator']  == $User_roles){
+
+                $id_status=[5,9,10,11,12,13,18,16,17];
+                $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+    
+                }
 
             $styleStatus = $this->statusOrder;
 
@@ -659,9 +660,7 @@ class  AdminOrderController extends RootAdminController
     {
         $id = request('id');
         $order = AdminOrder::getOrderAdmin($id);
-       
-      
-    
+
      return  response()->json($order );
      
 
