@@ -22,7 +22,7 @@
                     <div class="card-body">
                         @if (sc_config('customer_natural_jurídica'))
                         <div class="form-group row{{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
-                            <label for="first_name"
+                            <label for="natural_jurídica"
                                     class="col-sm-2 col-form-label title2">Persona Natural </label>
                             <div class="col-sm-8">
                                 <div class="input-group">
@@ -99,7 +99,7 @@
                    
                     @if (sc_config('customer_nacionalidad'))
                     <div class="form-group row{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
-                        <label for="first_name"
+                        <label for="nacionalidad"
                                 class="col-sm-2 col-form-label"> Nacionalidad</label>
                         <div class="col-sm-8">
                             <div class="input-group">
@@ -151,7 +151,7 @@
                
                 @endif
                 <div class="form-group row{{ $errors->has('estado_civil') ? ' has-error' : '' }}">
-                    <label for="first_name"
+                    <label for="estado_civil"
                             class="col-sm-2 col-form-label"> Estado civil</label>
                     <div class="col-sm-8">
                         <div class="input-group">
@@ -297,7 +297,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input required placeholder="Telefono" id="phone" type="text" class="form-control" name="phone"
+                                    <input required placeholder="Telefono 1" id="phone" type="text" class="form-control" name="phone"
                                         value="{{ (old('phone', $customer['phone'] ?? ''))}}">
                                     </div>
                                     @if($errors->has('phone'))
@@ -310,7 +310,7 @@
 
                             @if (sc_config_admin('customer_phone'))
                             <div class="form-group row ">
-                                <label for="phone"
+                                <label for="phone2"
                                     class="col-sm-2 col-form-label">Telefono /opcional</label>
     
                                 <div class="col-sm-8">
@@ -318,8 +318,8 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="phone2" type="text" class="form-control" name="phone2" 
-                                        value="{{ (old('phone2', $customer['phone2'] ?? ''))}}">
+                                    <input placeholder="Telefono 2 /opcional" id="phone2" type="text" class="form-control" name="phone2" 
+                                        >
                                     </div>
                                     
     
@@ -337,7 +337,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                    <input id="postcode" type="text" class="form-control" name="postcode"
+                                    <input placeholder="Codigo postal" id="postcode" type="text" class="form-control" name="postcode"
                                         value="{{ (old('postcode', $customer['postcode'] ?? ''))}}">
                                     </div>
     
@@ -369,7 +369,7 @@
                                 </div>
                             </div>
                             <div class="form-group  row {{ $errors->has('estado') ? ' text-red' : '' }}">
-                                <label for="estado" class="col-sm-2  col-form-label">{{ sc_language_render('customer.estado') }}</label>
+                                <label for="cod_estado" class="col-sm-2  col-form-label">{{ sc_language_render('customer.estado') }}</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -635,7 +635,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input required type="text"   id="password" name="password" value="{{ old('password')??'' }}" class="form-control password" placeholder="" />
+                                        <input required type="text"   id="password" name="password" value="{{ old('password')??'' }}" class="form-control password" placeholder="Contraseña" />
                                     </div>
                                         @if ($errors->has('password'))
                                             <span class="form-text">
@@ -658,7 +658,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input required type="text"   id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation')??'' }}" class="form-control password_confirmation" placeholder="" />
+                                        <input required type="text"   id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation')??'' }}" class="form-control password_confirmation" placeholder="Confirma contraseña" />
                                     </div>
                                         @if ($errors->has('password_confirmation'))
                                             <span class="form-text">
@@ -668,7 +668,7 @@
                                 </div>
                             </div>
                             <div class="form-group  row">
-                                <label for="cod_parroquia" class="col-sm-2  col-form-label">¿COMO NOS CONOCISTE?</label>
+                                <label for="nos_conocio" class="col-sm-2  col-form-label">¿COMO NOS CONOCISTE?</label>
                                 <div class="col-sm-8 {{ $errors->has('nos_conocio') ? ' has-error' : '' }}">
                                     <div class="input-group">
                                     <select required  type="text"
