@@ -2,7 +2,7 @@
     <div class="product-body">
       <div class="product-figure">
           <a href="{{ $product->getUrl() }}">
-          <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}"/>
+            <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}"/>
           </a>
       </div>
       <h6 class="product-title"><a href="{{ $product->getUrl() }}">{{ $product->name }}</a></h6>
@@ -68,9 +68,13 @@
 
       {{-- {!! $product->showPrice() !!} --}}
     </div>
-    @if( $product->precio_de_cuota)
+
+    
+    {{-- @if( $product->precio_de_cuota)
     <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/etiqueta.png') }}" class="new" alt="" /></span> 
-    @endif
+    @endif --}}
+
+
      {{-- @if ($product->price != $product->getFinalPrice() && $product->kind !=SC_PRODUCT_GROUP)
     <span><img class="product-badge new" src="{{ sc_file($sc_templateFile.'/images/home/sale.png') }}" class="new" alt="" /></span>
     @elseif($product->kind == SC_PRODUCT_BUILD)
