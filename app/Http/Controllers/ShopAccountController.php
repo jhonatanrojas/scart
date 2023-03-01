@@ -498,7 +498,7 @@ class ShopAccountController extends RootFrontController
                     'mapStyleStatus' => $mapStyleStatus,
                     'order'    => $Order_resultado,
                     'productoDetail' => $productoDetail ?? '',
-                    'combenio'    => $numeroCombenio ?? 'Nr°conbenio no aprobado',
+                    'combenio'    => $numeroCombenio ?? 'Nr°convenio no aprobado',
                     'referencia'    => $referencia,
                     'layout_page' => 'shop_profile',
                     'breadcrumbs' => [
@@ -742,10 +742,12 @@ class ShopAccountController extends RootFrontController
         $historial_pagos=   HistorialPago::where('customer_id', $id1)->where('payment_status', '<>', 1)
         ->orderByDesc('id','DESC')->get();
 
-
+       
+        
       
         $convenio=[];
-        if(empty($order)){
+        $numeroCombenio=[];
+        if(!empty($order)){
             $convenio = Convenio::where('order_id', $order[0]->id)->get();
             $numeroCombenio=[];
             foreach($convenio as $combenios){
@@ -772,7 +774,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'           => 'Historial de pagos',
                     'customer'        => $customer,
-                    'combenio'    => $numeroCombenio ?? 'Nr°combenio no aprobado',
+                    'combenio'    => $numeroCombenio,
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
                     'historial_pagos' => $historial_pagos,

@@ -2,7 +2,7 @@
 
 @section('block_main')
 <!--form-->
-<section class=" section section-sm section-first bg-default text-md-left">
+<section class=" section section-sm section-first bg-default text-md-left animate__animated animate__fadeIn">
     <div class="container">
         <div class="container  h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
