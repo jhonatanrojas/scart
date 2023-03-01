@@ -10,31 +10,38 @@ $layout_page = shop_profile
 @extends($sc_templatePath.'.account.layout')
 
 @section('block_main_profile')
-<h6 class="title-store">{{ $title }}</h6>
-      <table class="table table-hover box-body text-wrap table-bordered" width="100%">
-        <thead>
+<div class="panel-heading animate__animated animate__backInRight">
+  <h5 class="panel-title">{{ $title }}</h5>
+
+</div>
+    <div class="table-responsive">
+
+      <table class="table table-hover box-body text-wrap table-fixed" width="100%">
+        <thead class="table-dark">
           <tr>
             <th style="width: 50px;">No.</th>
-            <th style="width: 100px;">Id Orden</th>
+            <th style="width: 100px;">Solicitud</th>
             <th>Pagado</th>
+            <th>Divisa</th>
             <th>Tasa de cambio</th>
             <th>Forma de pago</th>
             <th>estatus del pago</th>
             <th>{{ sc_language_render('common.created_at') }}</th>
-            <th></th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           @foreach($historial_pagos as $historial)
-
             <tr>
               @php
               $n = (isset($n)?$n:0);
               $n++;
               @endphp
             <td><span class="item_21_id">{{ $n }}</span></td>
-            <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
+            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] ?? ''}}</span></td>
             <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
+
+            <th>{{$historial->moneda}}</th>
             <td>{{$historial->tasa_cambio}}</td>
             <td><span class="item_21_sku">
               {!! isset($historial->metodo_pago->name ) ?$historial->metodo_pago->name  :'';  !!}
@@ -49,5 +56,8 @@ $layout_page = shop_profile
 @endforeach
         </tbody>
       </table>
+
+    </div>
+      
 
 @endsection

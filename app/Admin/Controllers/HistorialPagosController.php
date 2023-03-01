@@ -584,18 +584,22 @@ class HistorialPagosController extends RootAdminController
     public function postReportarPago(Request $request){
         
         $request->validate([
-            'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
+            'capture' => 'mimes:pdf,jpg,jpge,png|max:2048',
             'referencia' => 'required',
             'order_id'=>'required'
         ]);
 
        
 
-
+        $path_archivo='';
       
-        $fileName = time().'.'.$request->capture->extension();  
-        $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
-        $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+        if($request->capture){
+            $fileName = time().'.'.$request->capture->extension();  
+            $path_archivo= 'data/clientes/pagos'.'/'. $fileName;
+            $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+
+        }
+
         
 
         $id_pago = $request->id_pago;
@@ -617,7 +621,7 @@ class HistorialPagosController extends RootAdminController
          'moneda' =>$request->moneda,
          'tasa_cambio' => $request->tipo_cambio,
          'comprobante'=>   $path_archivo,
-         'payment_status' => 2
+         'payment_status' => 5
 
         ];
         if( $id_pago==null){
@@ -907,6 +911,10 @@ class HistorialPagosController extends RootAdminController
 
         ]);
 
+
+
+        
+
         $tiene_convenio = Convenio::where('order_id', request()->c_order_id)->first();
 
         if(!$tiene_convenio ){
@@ -966,6 +974,7 @@ class HistorialPagosController extends RootAdminController
                 'phone' => $c['phone'],
                 'email' => $c['email'],
                 'address1' => $c['address1'],
+                'address2' => $c['address2'],
                 'cedula' => $c['cedula'],
                 'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
@@ -1083,7 +1092,8 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion1\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
@@ -1094,7 +1104,8 @@ class HistorialPagosController extends RootAdminController
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
-                        'direccion' => $dato_usuario['address1'],
+                        'direccion1' => $dato_usuario['address1'],
+                        'address2' => $dato_usuario['address2'],
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
@@ -1160,7 +1171,8 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion1\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
@@ -1173,7 +1185,8 @@ class HistorialPagosController extends RootAdminController
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
-                        'direccion' => $dato_usuario['address1'],
+                        'direccion1' => $dato_usuario['address1'],
+                        'address2' => $dato_usuario['address2'],
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
@@ -1216,13 +1229,12 @@ class HistorialPagosController extends RootAdminController
                     'lote' =>  request()->lote,
                     'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
                     'nro_coutas'=> request()->c_nro_coutas,
-                    'total'=> request()->_monto,
+                    'total'=> $monto,
                     'inicial'=> request()->c_inicial,
                     'modalidad'=> request()->c_modalidad,
                     'convenio'=>$dataView['content'],
                     'declaracion_jurada'=>$dataViewe['content'],
                     'fecha_maxima_entrega'=> request()->fecha_maxima_entrega ?? '',
-
             ]);
    
             $order = AdminOrder::getOrderAdmin(request()->c_order_id);
@@ -1298,7 +1310,7 @@ class HistorialPagosController extends RootAdminController
         $data = request()->all();
       
         $request->validate([
-           
+
             'estatus_pagos' => 'required',
             'observacion' => 'required',
             'id_pago' => 'required'
@@ -1840,11 +1852,6 @@ class HistorialPagosController extends RootAdminController
        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
 
-        
-
-
-       
-
         $data = [
             'title'         => '
             HISTORIAL DE PAGO
@@ -1911,10 +1918,6 @@ class HistorialPagosController extends RootAdminController
         $total_usd_pagado = 0;
         $vendedor = '';
 
-        
-        
-
-
 
         if(empty($dataTmp->all())){
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
@@ -1923,6 +1926,9 @@ class HistorialPagosController extends RootAdminController
         
         foreach ($dataTmp as $key => $row) {
                 $pagados = [];
+
+
+               
         
         // $fecha_actual = date('Y-m-d');
         // $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
@@ -2099,6 +2105,8 @@ class HistorialPagosController extends RootAdminController
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
             ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
 
+
+           
             
 
             $historia = HistorialPago::where('order_id' , $id)->where('payment_status' , 1)->get();
@@ -2118,6 +2126,9 @@ class HistorialPagosController extends RootAdminController
                 $lote= 0;
 
         foreach ($REFERENCIA as $key => $row) {
+
+                
+
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
                 $cliente = $row->first_name .' '. $row->last_name ?? '';
@@ -2130,7 +2141,7 @@ class HistorialPagosController extends RootAdminController
                 $order_id = $row->id ?? '';
                 $Cedula = $row->cedula;
                 $vendedor = $list_usuarios ?? '';
-                $subtotal = $row->subtotal ?? '';
+                $subtotal = $row->cb_total ?? '';
 
         }
 

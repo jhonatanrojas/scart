@@ -26,30 +26,30 @@ $layout_page = shop_profile
 
        
       <div class="col-sm-6">
-        <table class="table table-bordered">
+        <table class="table table-sm ">
            <tr>
-             <td class="td-title">{{ sc_language_render('order.first_name') }}:</td><td>{!! $order->first_name !!}</td>
+             <td class="td-title"><i class="fas fa-user p-1"></i>{{ sc_language_render('order.first_name') }}:</td><td>{!! $order->first_name !!}</td>
            </tr>
 
            @if (sc_config('customer_lastname'))
            <tr>
-             <td class="td-title">{{ sc_language_render('order.last_name') }}:</td><td>{!! $order->last_name !!}</td>
+             <td class="td-title"><i class="fas fa-user p-1"></i>{{ sc_language_render('order.last_name') }}:</td><td>{!! $order->last_name !!}</td>
            </tr>
            @endif
 
            @if (sc_config('customer_phone'))
            <tr>
-             <td class="td-title">{{ sc_language_render('order.phone') }}:</td><td>{!! $order->phone !!}</td>
+             <td class="td-title"><i class="fas fa-phone p-1"></i>{{ sc_language_render('order.phone') }}:</td><td>{!! $order->phone !!}</td>
            </tr>
            @endif
 
            <tr>
-             <td class="td-title">{{ sc_language_render('order.email') }}:</td><td>{!! empty($order->email)?'N/A':$order->email!!}</td>
+             <td class="td-title"><i class="fas fa-envelope p-1"></i>{{ sc_language_render('order.email') }}:</td><td>{!! empty($order->email)?'N/A':$order->email!!}</td>
            </tr>
 
            @if (sc_config('customer_company'))
            <tr>
-             <td class="td-title">{{ sc_language_render('order.company') }}:</td><td>{!! $order->company !!}</td>
+             <td class="td-title"><i class="fas fa-user p-1"></i>{{ sc_language_render('order.company') }}:</td><td>{!! $order->company !!}</td>
            </tr>
            @endif
 
@@ -60,12 +60,12 @@ $layout_page = shop_profile
            @endif
 
            <tr>
-             <td class="td-title">{{ sc_language_render('order.address1') }}:</td><td>{!! $order->address1 !!}</td>
+             <td class="td-title"><i class="fas fa-building p-1"></i>{{ sc_language_render('order.address1') }}:</td><td>{!! $order->address1 !!}</td>
            </tr>
 
            @if (sc_config('customer_address2'))
            <tr>
-             <td class="td-title">{{ sc_language_render('order.address2') }}:</td><td>{!! $order->address2 !!}</td>
+             <td class="td-title"><i class="fas fa-building p-1"></i>{{ sc_language_render('order.address2') }}:</td><td>{!! $order->address2 !!}</td>
            </tr>
            @endif
 
@@ -86,9 +86,9 @@ $layout_page = shop_profile
 
 
    <div class="col-sm-6">
-    <table  class="table table-bordered">
+    <table  class="table table-borderless">
         <tr><td class="td-title">{{ sc_language_render('order.order_status') }}:</td>
-          <td>{{ $statusOrder[$order->status] }} - {{ $order->mensaje }}</td>
+          <td class="badge badge-{{ $mapStyleStatus[$order->status]??'' }}">{{ $statusOrder[$order->status] }} - {{ $order->mensaje }}</td>
         </tr>
 
     </table>
@@ -97,17 +97,18 @@ $layout_page = shop_profile
 
 <div class="row">
         <div class="col-sm-12">
-          <div class="box collapsed-box">
+          <div class="">
           <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
+            <table class="table    collapsed-box">
+                <thead class="table-dark table-striped">
                   <tr>
                     <th>Producto</th>
                  
                     @if (empty($order->details[0]->modalidad_de_compra == 1))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
-                    <th class="product_price">Cuotas</th>
+                    <th class="product_price">Cuota</th>
+                    <th class="product_price">Monto de la  Cuota</th>
                     <th class="product_total">Modalidad</th>
                         @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>
@@ -137,7 +138,7 @@ $layout_page = shop_profile
                     
 
                           <tr>
-                            <td>{{ $item->name }}
+                            <td >{{ $item->name }}
                               @php
                               $html = '';
                                 if($item->attribute && is_array(json_decode($item->attribute,true))){
@@ -152,6 +153,10 @@ $layout_page = shop_profile
                             @if (empty($order->details[0]->modalidad_de_compra == 1))
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
+
+                            <th>{{$item->nro_coutas}}</th>
+
+
                             <td class="product_price">{{ $cuotas }}$</td>
                             <td class="product_total item_id_{{ $item->id }}">
                               @if ($item->modalida_pago == 2)
@@ -182,7 +187,7 @@ $layout_page = shop_profile
       @endphp
       <div class="row">
         <div class="col-md-12">
-          <div class="box collapsed-box">
+          <div class="box collapsed-box table-responsive">
               <table   class="table table-bordered">
                 @foreach ($dataTotal as $element)
                   @if ($element['code'] =='subtotal')
@@ -225,27 +230,30 @@ $layout_page = shop_profile
         @endif
 
       </div>
-      <table class="table   table-hover  table-bordered" >
-        <thead>
+      <table class="table  table-hover " >
+        <thead class="table-dark table-striped">
           <tr>
-            <th style="width: 50px;">No.</th>
+            <th>No.</th>
                 @if($order->modalidad_de_compra==1)
-            <th><span class="item_21_sku"> Cuota</span></th>
+            <th><span class="item_21_sku">Monto de la Cuota</span></th>
             @endif
             <th>Pagado</th>
+            <td>Divisa</td>
             <th>Forma de pago</th>
             <th>estatus del pago</th>
              @if($order->modalidad_de_compra==0)
             <th>{{ sc_language_render('common.created_at') }}</th>
                 @endif
                   @if($order->modalidad_de_compra==1)
-            <th>Fecha de vencimiento</th>
+            <th colspan="1">Fecha de Pago</th>
                 @endif
             <th></th>
           </tr>
         </thead>
         <tbody>
           @foreach($historial_pagos as $historial)
+
+         
           <tr>
           @php
           $n = (isset($n)?$n:0);
@@ -257,17 +265,21 @@ $layout_page = shop_profile
             @if($order->modalidad_de_compra==1)
         <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
             @endif
+
+         
         <td>
           <span class="item_21_sku">{{ $historial->importe_pagado}}</span>
         </td>
+
+        <td>{{$historial->moneda}}</td>
         <td>
           <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}
           </span>
         </td>
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
             @if($order->modalidad_de_compra==1)
-              <td>
-                {{$historial->fecha_venciento}}
+              <td colspan="6">
+                {{$historial->fecha_pago}}
               </td>
             @endif
               @if($order->modalidad_de_compra==0)

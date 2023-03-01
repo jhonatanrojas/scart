@@ -82,8 +82,12 @@
                                         <span class="text-info">Rif</span>:$rif
                                     </li>
                                     <li>
-                                    <span class="text-info">Direccion1</span>:Direccioncod_direccion
+                                    <span class="text-info">Direccion1</span>:direccion1
                                     </li>
+
+                                    <li>
+                                        <span class="text-info">Direccion2</span>:direccion2
+                                        </li>
                                     <li>
                                         
                                         <span class="text-info">Estado</span>:$estado

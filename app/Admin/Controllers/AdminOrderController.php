@@ -532,31 +532,32 @@ class  AdminOrderController extends RootAdminController
         $ademin = SC_admin_role::pluck('id' , 'name')->all();
         $id_usuario_rol = Admin::user()->id;
 
-        $user_roles = $dminUser::where('id' ,$id_usuario_rol)->orderBy('id')->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+        $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+        ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+        ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
+        
 
-        $User_roles = $user_roles[0]->role_user;
 
-
-        if($ademin['Vendedor']  == $User_roles){
+        if(  $user_roles == 'Vendedor'){
 
              $id_status=[1,2,3,4 , 11,13];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
-        else if($ademin['Riesgo']  == $User_roles){
+        else if( $user_roles == 'Riesgo'){
              $id_status=[1, 5, 6,7,8,14,15];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
-        else if($ademin['Administrator']  == $User_roles){
+        else if( $user_roles == 'adminitracion'){
 
             $id_status=[5,9,10,11,12,13,18,16,17];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
-            else if($ademin['administrator']  == $User_roles){
+            else {
 
-                $id_status=[5,9,10,11,12,13,18,16,17];
-                $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+                $estatus=  $this->statusOrder   = ShopOrderStatus::pluck('name', 'id')->all();
     
                 }
 

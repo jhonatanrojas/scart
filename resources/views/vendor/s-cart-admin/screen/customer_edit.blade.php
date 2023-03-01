@@ -417,8 +417,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                             </div>
-                                            <input id="address2" type="text" class="form-control" name="address2"
-                                                value="{{ old('address2', $customer['address2'] ?? '') }}">
+                                            <textarea   class="form-control" name="address2" id="address2" cols="30" rows="3">{{ old('address2', $customer['address2'] ?? '') }}</textarea>
                                         </div>
                                         @if ($errors->has('address2'))
                                             <span class="form-text">{{ $errors->first('address2') }}</span>
