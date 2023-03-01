@@ -911,6 +911,10 @@ class HistorialPagosController extends RootAdminController
 
         ]);
 
+
+
+        
+
         $tiene_convenio = Convenio::where('order_id', request()->c_order_id)->first();
 
         if(!$tiene_convenio ){
@@ -1225,13 +1229,12 @@ class HistorialPagosController extends RootAdminController
                     'lote' =>  request()->lote,
                     'fecha_pagos'=> fecha_to_sql(request()->c_fecha_inicial),
                     'nro_coutas'=> request()->c_nro_coutas,
-                    'total'=> request()->_monto,
+                    'total'=> $monto,
                     'inicial'=> request()->c_inicial,
                     'modalidad'=> request()->c_modalidad,
                     'convenio'=>$dataView['content'],
                     'declaracion_jurada'=>$dataViewe['content'],
                     'fecha_maxima_entrega'=> request()->fecha_maxima_entrega ?? '',
-
             ]);
    
             $order = AdminOrder::getOrderAdmin(request()->c_order_id);
@@ -1849,11 +1852,6 @@ class HistorialPagosController extends RootAdminController
        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
 
-        
-
-
-       
-
         $data = [
             'title'         => '
             HISTORIAL DE PAGO
@@ -1920,10 +1918,6 @@ class HistorialPagosController extends RootAdminController
         $total_usd_pagado = 0;
         $vendedor = '';
 
-        
-        
-
-
 
         if(empty($dataTmp->all())){
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
@@ -1932,6 +1926,9 @@ class HistorialPagosController extends RootAdminController
         
         foreach ($dataTmp as $key => $row) {
                 $pagados = [];
+
+
+               
         
         // $fecha_actual = date('Y-m-d');
         // $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
@@ -2108,6 +2105,8 @@ class HistorialPagosController extends RootAdminController
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
             ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
 
+
+           
             
 
             $historia = HistorialPago::where('order_id' , $id)->where('payment_status' , 1)->get();
@@ -2127,6 +2126,9 @@ class HistorialPagosController extends RootAdminController
                 $lote= 0;
 
         foreach ($REFERENCIA as $key => $row) {
+
+                
+
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
                 $cliente = $row->first_name .' '. $row->last_name ?? '';
@@ -2139,7 +2141,7 @@ class HistorialPagosController extends RootAdminController
                 $order_id = $row->id ?? '';
                 $Cedula = $row->cedula;
                 $vendedor = $list_usuarios ?? '';
-                $subtotal = $row->subtotal ?? '';
+                $subtotal = $row->cb_total ?? '';
 
         }
 
