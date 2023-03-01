@@ -20,7 +20,15 @@ $layout_page = shop_product_detail
     width: 100%;
     margin-top: 20px;
     padding: 5px;
+    border: solid 1px rgba(126, 126, 126, 0.534);
 
+  }
+
+  .modal .modal-body{
+    background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 
   table{
@@ -29,10 +37,7 @@ $layout_page = shop_product_detail
   width: 100%;
   
 }
-.table-1{
-  width: 707px;
-  margin: auto;
-}
+
 .financiando{
   flex-direction: row-reverse;
   display: flex;
@@ -45,14 +50,14 @@ $layout_page = shop_product_detail
   }
 
   .table-1{
-  width: 100%;
+  width: 80%;
  
 }
 
   table {
   border-collapse: collapse;
   border-spacing: 0;
-  width: 100%;
+  width: 90%;
 }
 
 .financiando{
@@ -592,7 +597,7 @@ table tfoot {
         </div>
       </section>
       @endif
-      <div class="modal  mt-5" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog   modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -604,7 +609,7 @@ table tfoot {
                 <div id="w-100">
                    {{ csrf_field() }}
                   <div class="header">
-                    <h5 class="text-center p-0">Calcular financiamiento</h5>
+                    <h4 class="text-center animate__animated animate__flipInX animate__delay-1s p-0">Calcular financiamiento</h4>
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
@@ -696,10 +701,10 @@ table tfoot {
                     <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
 
-                  <div style="overflow-x:auto;" class="table-1 table-responsive">
-                    <table class=" table"  >
+                  <div class="table-1 table-responsive">
+                    <table style="width: 85%; margin: auto;" class="table "   >
                     
-                      <tbody id="tab">
+                      <tbody  id="tab">
                         <thead>
                           <tr>
                             <td>NRO</td>
@@ -914,7 +919,7 @@ table tfoot {
                           
                           
                           
-                          <tr>
+                          <tr class="animate__animated animate__fadeInUp animate__delay-1s">
                               <td>${i}</td>
                               <td>${d2}$</td>
                       
