@@ -1918,10 +1918,6 @@ class HistorialPagosController extends RootAdminController
         $total_usd_pagado = 0;
         $vendedor = '';
 
-        
-        
-
-
 
         if(empty($dataTmp->all())){
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
