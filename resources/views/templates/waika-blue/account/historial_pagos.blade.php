@@ -38,7 +38,7 @@ $layout_page = shop_profile
               $n++;
               @endphp
             <td><span class="item_21_id">{{ $n }}</span></td>
-            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] }}</span></td>
+            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] ?? ''}}</span></td>
             <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
 
             <th>{{$historial->moneda}}</th>

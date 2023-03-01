@@ -45,7 +45,7 @@
         
            
           <td><span class="item_21_id">{{ $n }}</span></td>
-          <td><span class="item_21_sku">Nr°:{{$combenio['Nr_combenio'] }}</span></td>
+          <td><span class="item_21_sku">:{{$combenio['Nr_combenio'] ?? 'Nr°conbenio no aprobado'}}</span></td>
           <td>
             
             <span class="badge badge-{{ $mapStyleStatus[$order->status]??'' }}">{{$statusOrder[$order->status]}}

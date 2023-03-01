@@ -469,15 +469,19 @@ class ShopAccountController extends RootFrontController
 
             }
 
-             $convenio = Convenio::where('order_id', $order[0]->id)->get();
+            
 
+       
+        }else if (empty($order)){
+            $convenio = Convenio::where('order_id', $order[0]->id)->get();
 
-                foreach($convenio as $combenios){
-                $numeroCombenio =[
-                    "Nr_combenio" => $combenios->nro_convenio
-                ];
+            foreach($convenio as $combenios){
+            $numeroCombenio =[
+                "Nr_combenio" => $combenios->nro_convenio
+            ];
 
-            }
+        }
+
         }
 
         $statusOrder = ShopOrderStatus::getIdAll();
@@ -739,18 +743,21 @@ class ShopAccountController extends RootFrontController
         ->orderByDesc('id','DESC')->get();
 
 
+      
+        $convenio=[];
+        if(empty($order)){
+            $convenio = Convenio::where('order_id', $order[0]->id)->get();
+            $numeroCombenio=[];
+            foreach($convenio as $combenios){
+                    $numeroCombenio =[
+                        "Nr_combenio" => $combenios->nro_convenio
+                    ];
+    
+                }
+
+        }
+
        
-
-        $convenio = Convenio::where('order_id', $order[0]->id)->get();
-
-
-        $numeroCombenio=[];
-        foreach($convenio as $combenios){
-                $numeroCombenio =[
-                    "Nr_combenio" => $combenios->nro_convenio
-                ];
-
-            }
 
 
 
