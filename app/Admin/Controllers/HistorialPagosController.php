@@ -621,7 +621,7 @@ class HistorialPagosController extends RootAdminController
          'moneda' =>$request->moneda,
          'tasa_cambio' => $request->tipo_cambio,
          'comprobante'=>   $path_archivo,
-         'payment_status' => 2
+         'payment_status' => 5
 
         ];
         if( $id_pago==null){
