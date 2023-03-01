@@ -20,7 +20,8 @@ $layout_page = shop_profile
         <thead class="table-dark">
           <tr>
             <th style="width: 50px;">No.</th>
-            <th style="width: 100px;">Solicitud</th>
+            <th style="width: 100px;">Nr°Convenio</th>
+            <th style="width: 100px;">Nr°Solicitud</th>
             <th>Pagado</th>
             <th>Divisa</th>
             <th>Tasa de cambio</th>
@@ -38,7 +39,9 @@ $layout_page = shop_profile
               $n++;
               @endphp
             <td><span class="item_21_id">{{ $n }}</span></td>
-            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] ?? ''}}</span></td>
+            
+            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] ?? 'convenio no aprobado'}}</span></td>
+            <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
             <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
 
             <th>{{$historial->moneda}}</th>
