@@ -1310,7 +1310,7 @@ class HistorialPagosController extends RootAdminController
         $data = request()->all();
       
         $request->validate([
-           
+
             'estatus_pagos' => 'required',
             'observacion' => 'required',
             'id_pago' => 'required'

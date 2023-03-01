@@ -459,18 +459,29 @@ class ShopAccountController extends RootFrontController
         $id = $customer['id'];
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
         $order = AdminOrder::where('customer_id', $id)->get();
-        $Combenio = [];
+        $numeroCombenio = [];
         $Order_resultado = [];
         if (!empty($order)) {
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
             foreach ($order as $odenr) {
                 $Order_resultado = $odenr;
-                $convenio = Convenio::where('order_id', $odenr->id)->get();
-
                 $productoDetail = shop_order_detail::where('id' , $id)->get();
-                
-                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
+
             }
+
+            
+
+       
+        }else if (empty($order)){
+            $convenio = Convenio::where('order_id', $order[0]->id)->get();
+
+            foreach($convenio as $combenios){
+            $numeroCombenio =[
+                "Nr_combenio" => $combenios->nro_convenio
+            ];
+
+        }
+
         }
 
         $statusOrder = ShopOrderStatus::getIdAll();
@@ -487,7 +498,7 @@ class ShopAccountController extends RootFrontController
                     'mapStyleStatus' => $mapStyleStatus,
                     'order'    => $Order_resultado,
                     'productoDetail' => $productoDetail ?? '',
-                    'combenio'    => $Combenio,
+                    'combenio'    => $numeroCombenio ?? 'Nr°conbenio no aprobado',
                     'referencia'    => $referencia,
                     'layout_page' => 'shop_profile',
                     'breadcrumbs' => [
@@ -522,6 +533,8 @@ class ShopAccountController extends RootFrontController
      */
     private function _orderDetail($id)
     {
+
+        $mapStyleStatus = AdminOrder::$mapStyleStatus;
         $customer = auth()->user();
         $statusOrder = ShopOrderStatus::getIdAll();
         $statusShipping = ShopShippingStatus::getIdAll();
@@ -574,6 +587,7 @@ class ShopAccountController extends RootFrontController
                     'referencia'           => $referencia,
                     'statusOrder'     => $statusOrder,
                     'mensaje'     => $dato,
+                    'mapStyleStatus' => $mapStyleStatus,
                     'statusShipping'  => $statusShipping,
                     'countries'       => ShopCountry::getCodeAll(),
                     'attributesGroup' => $attributesGroup,
@@ -729,6 +743,28 @@ class ShopAccountController extends RootFrontController
         ->orderByDesc('id','DESC')->get();
 
 
+      
+        $convenio=[];
+        if(empty($order)){
+            $convenio = Convenio::where('order_id', $order[0]->id)->get();
+            $numeroCombenio=[];
+            foreach($convenio as $combenios){
+                    $numeroCombenio =[
+                        "Nr_combenio" => $combenios->nro_convenio
+                    ];
+    
+                }
+
+        }
+
+       
+
+
+
+
+
+
+
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
         return view($this->templatePath . '.account.historial_pagos')
@@ -736,6 +772,7 @@ class ShopAccountController extends RootFrontController
                 [
                     'title'           => 'Historial de pagos',
                     'customer'        => $customer,
+                    'combenio'    => $numeroCombenio ?? 'Nr°combenio no aprobado',
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
                     'historial_pagos' => $historial_pagos,
