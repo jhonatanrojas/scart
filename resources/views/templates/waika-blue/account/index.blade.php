@@ -22,7 +22,7 @@
    <div class="container">
     <div class="row">
         <div class="col-12 col-md-12 imagen_svg">
-            <p class="text-center  h4">Bienvenido  <span> {{ $customer['first_name'] }} {{ $customer['last_name'] }}</span>!</p>
+            <p class="text-center animate__animated animate__backInRight h4">Bienvenido  <span> {{ $customer['first_name'] }} {{ $customer['last_name'] }}</span>!</p>
         </div>
 
         @if (count($cart) >0)
