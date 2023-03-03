@@ -461,28 +461,41 @@ class ShopAccountController extends RootFrontController
         $order = AdminOrder::where('customer_id', $id)->get();
         $numeroCombenio = [];
         $Order_resultado = [];
+        $Name_product = [];
         if (!empty($order)) {
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
             foreach ($order as $odenr) {
                 $Order_resultado = $odenr;
-                $productoDetail = shop_order_detail::where('id' , $id)->get();
+                $Name_product = shop_order_detail::where('order_id' ,$odenr->id)->get();
 
             }
 
-            
-
+            foreach ($Name_product as $name_productos){
+                $Name_producto =[
+                    "name" => $name_productos->name
+                ];
+            } 
        
-        }else if (empty($order)){
-            $convenio = Convenio::where('order_id', $order[0]->id)->get();
+        }
 
+
+
+        foreach($order as $orders){
+            $convenio = Convenio::where('order_id', $orders->id)->get();
             foreach($convenio as $combenios){
-            $numeroCombenio =[
-                "Nr_combenio" => $combenios->nro_convenio
-            ];
+                    $numeroCombenio =[
+                        "Nr_combenio" => $combenios->nro_convenio
+                    ];
+    
+                }
 
-        }
+                $Name_product = shop_order_detail::where('order_id' ,$orders->id)->get();
 
-        }
+     
+
+
+    }
+
 
         $statusOrder = ShopOrderStatus::getIdAll();
 
@@ -498,6 +511,7 @@ class ShopAccountController extends RootFrontController
                     'mapStyleStatus' => $mapStyleStatus,
                     'order'    => $Order_resultado,
                     'productoDetail' => $productoDetail ?? '',
+                    'Name_product' => $Name_product,
                     'combenio'    => $numeroCombenio ?? 'Nr°convenio no aprobado',
                     'referencia'    => $referencia,
                     'layout_page' => 'shop_profile',
@@ -547,17 +561,23 @@ class ShopAccountController extends RootFrontController
         }
         $fecha_actual = date('Y-m-d');
 
-        
         $fech_p = date('Y-m-d',strtotime($fecha_actual . "+5 day"));
+
+       
 
         if ($order->modalidad_de_compra == 0) {
             $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
-        } {
+
+            
+        }
+         if ($order->modalidad_de_compra == 1) {
             $historial_pagos =   HistorialPago::where('order_id', $id)
             ->where('fecha_venciento','<' ,$fech_p)
             ->orWhere('payment_status', 5)->where('order_id', $id)
-            ->orWhere('payment_status', 2)->where('order_id', $id)
+            ->orWhere('payment_status', 4)->where('order_id', $id)
             ->orderBy('fecha_venciento')->get();
+
+            
         }
 
 
@@ -632,6 +652,10 @@ class ShopAccountController extends RootFrontController
 
 
 
+      
+
+
+
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
 
@@ -697,6 +721,10 @@ class ShopAccountController extends RootFrontController
         $id_pago = $request->id_pago;
 
 
+
+       
+
+
         $data_pago = [
             'order_id' => $request->order_id,
             'customer_id' => $cId,
@@ -710,7 +738,7 @@ class ShopAccountController extends RootFrontController
             'comment' => $request->observacion,
             'moneda' => $request->moneda,
             'comprobante' =>   $path_archivo,
-            'payment_status' => 2
+            'payment_status' => 5
 
         ];
 
@@ -743,22 +771,31 @@ class ShopAccountController extends RootFrontController
         ->orderByDesc('id','DESC')->get();
 
        
-        
-      
-        $convenio=[];
-        $numeroCombenio=[];
-        if(!empty($order)){
-            $convenio = Convenio::where('order_id', $order[0]->id)->get();
-            $numeroCombenio=[];
-            foreach($convenio as $combenios){
-                    $numeroCombenio =[
-                        "Nr_combenio" => $combenios->nro_convenio
-                    ];
-    
+                $convenio=[];
+                $Name_producto = [];
+                $numeroCombenio=[];
+
+                foreach($order as $orders){
+                        $convenio = Convenio::where('order_id', $orders->id)->get();
+                        foreach($convenio as $combenios){
+                                $numeroCombenio =[
+                                    "Nr_combenio" => $combenios->nro_convenio
+                                ];
+                
+                            }
+            
+                            $Name_product = shop_order_detail::where('order_id' ,$orders->id)->get();
+            
+                 
+            
+
                 }
 
-        }
+               
+      
 
+
+    
        
 
 
@@ -775,6 +812,7 @@ class ShopAccountController extends RootFrontController
                     'title'           => 'Historial de pagos',
                     'customer'        => $customer,
                     'combenio'    => $numeroCombenio,
+                    'Name_product' => $Name_producto,
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
                     'historial_pagos' => $historial_pagos,
