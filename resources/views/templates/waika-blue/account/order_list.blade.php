@@ -26,6 +26,7 @@
           <th style="width: 50px;">No.</th>
           <th style="width: 100px;">Nr°Convenio</th>
           <th style="width: 100px;">Nr°Solicitud</th>
+          <th style="width: 100px;">Producto</th>
           <th>{{ sc_language_render('order.order_status') }}</th>
           <th>{{ sc_language_render('common.created_at') }}</th>
           <th>Acciones</th>
@@ -49,6 +50,7 @@
           <td><span class="item_21_id">{{ $n }}</span></td>
           <td><span class="item_21_sku">{{$combenio['Nr_combenio'] ?? 'convenio no aprobado'}}</span></td>
           <td><span class="item_21_id">{{ $order->id }}</span></td>
+          <td >{{$Name_product['name'] ?? ''}}</td>
           <td>
             
             <span class="badge badge-{{ $mapStyleStatus[$order->status]??'' }}">{{$statusOrder[$order->status]}}
