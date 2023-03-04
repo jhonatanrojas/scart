@@ -2,6 +2,8 @@
     if(!empty($convenio)){
         $inconoAlert = "block";
     }
+
+
  
 @endphp
 @extends($sc_templatePath.'.account.layout')
@@ -24,9 +26,11 @@
       <thead class="table-dark">
         <tr>
           <th style="width: 50px;">No.</th>
+          <th style="width: 100px;">Convenio</th>
           <th style="width: 100px;">Solicitud</th>
+          <th style="width: 100px;">Producto</th>
           <th>{{ sc_language_render('order.order_status') }}</th>
-          <th>{{ sc_language_render('common.created_at') }}</th>
+          <th>Fecha de reporte</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -44,8 +48,23 @@
         
         
            
+          
           <td><span class="item_21_id">{{ $n }}</span></td>
-          <td><span class="item_21_sku">:{{$combenio['Nr_combenio'] ?? 'Nr°conbenio no aprobado'}}</span></td>
+          <td><span class="item_21_sku">
+            {{$order->nro_convenio}}
+
+            
+        </span>
+      </td>
+
+          <td><span class="item_21_id">{{ $order->id }}</span></td>
+         
+            
+             <td >
+              {{$order->name_product}}
+            </td>
+            
+        
           <td>
             
             <span class="badge badge-{{ $mapStyleStatus[$order->status]??'' }}">{{$statusOrder[$order->status]}}
@@ -62,7 +81,7 @@
 
             <br>
             @if ($order->status == 5 )
-            <a target="_blank" class="d-flex" href="{{route('borrador_cliente', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Ver Convenio</a>
+            <a target="_blank" class="d-flex" href="{{route('borrador_cliente', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Convenio</a>
             @endif
 
           </td>

@@ -234,26 +234,32 @@ $layout_page = shop_profile
         <thead class="table-dark table-striped">
           <tr>
             <th>No.</th>
-                @if($order->modalidad_de_compra==1)
-            <th><span class="item_21_sku">Monto de la Cuota</span></th>
+
+            @if($order->modalidad_de_compra==1)
+            <th>
+              <span class="item_21_sku text-center">Monto de la Cuota</span>
+            </th>
             @endif
+
             <th>Pagado</th>
-            <td>Divisa</td>
-            <th>Forma de pago</th>
-            <th>estatus del pago</th>
+            <th>Divisa</th>
+            <th class="text-center">Forma de pago</th>
+            <th class="text-center">estatus del pago</th>
              @if($order->modalidad_de_compra==0)
-            <th>{{ sc_language_render('common.created_at') }}</th>
-                @endif
-                  @if($order->modalidad_de_compra==1)
-            <th colspan="1">Fecha de Pago</th>
-                @endif
-            <th></th>
+            <th>
+              {{ sc_language_render('common.created_at') }}
+            </th>
+              @endif
+            @if($order->modalidad_de_compra==1)
+            <th class="text-center">Fecha de Pago</th>
+            @endif
+            <th>Accione</th>
+            
           </tr>
         </thead>
+
         <tbody>
           @foreach($historial_pagos as $historial)
-
-         
           <tr>
           @php
           $n = (isset($n)?$n:0);
@@ -270,36 +276,40 @@ $layout_page = shop_profile
         <td>
           <span class="item_21_sku">{{ $historial->importe_pagado}}</span>
         </td>
-
-        <td>{{$historial->moneda}}</td>
+        
+        <td>{{$historial->moneda ?? 'xx' }}</td>
         <td>
-          <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}
+      
+          <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : 'x' !!}
           </span>
         </td>
         <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
             @if($order->modalidad_de_compra==1)
-              <td colspan="6">
-                {{$historial->fecha_pago}}
+              <td colspan="1">
+                {{$historial->fecha_venciento}}
               </td>
             @endif
-              @if($order->modalidad_de_compra==0)
-        <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
+        @if($order->modalidad_de_compra==0)
+        <td>
+          <span class="item_21_sku">
+            {{$historial->fecha_venciento}}</span>
+        </td>
           @endif
       
 
         @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
-        <td>      
-        
+        <td>   
 
           <button onclick="pagar({{$historial->order_id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
           
         </td>
-      
-      
+
+
 
             @endif
+            
 
          
       </tr>

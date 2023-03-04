@@ -138,7 +138,9 @@
                         <option value="SOLTERO(a)" >Soltero(a)</option>
                         <option value="CASADO(a)" >Casado(a)</option>
 
-                        <option value="CONCUBINATO(a)" >Concubinato(a)</option>
+                        <option value="DIVORCIADO(a)" >DIVORCIADO(a)</option>
+                        <option value="VIUDO(a)" >VIUDO(a)</option>
+                        <option value="CONCUBINATO(a)" >Concubinato</option>
                         
                     
                         </select>

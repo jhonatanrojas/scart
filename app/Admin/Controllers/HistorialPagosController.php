@@ -1058,15 +1058,10 @@ class HistorialPagosController extends RootAdminController
                    
                   }
 
-
                   $number2 =  $monto*$cod_bolibares;
 
-                  
-               
                   foreach($borrado_html as $replacee){
-
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
-
                     $dataFind = [
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
@@ -1092,8 +1087,7 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion1\}\}/',
-                        '/\{\{\$direccion2\}\}/',
+                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
@@ -1104,8 +1098,7 @@ class HistorialPagosController extends RootAdminController
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
-                        'direccion1' => $dato_usuario['address1'],
-                        'address2' => $dato_usuario['address2'],
+                        'direccion' => $dato_usuario['address1'],
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
@@ -1136,13 +1129,7 @@ class HistorialPagosController extends RootAdminController
                         'content' => $content,
                     ];
 
-                    
-
-
-
                 }
-
-                
 
 
                 foreach($file_html as $jurada){
@@ -1171,8 +1158,7 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion1\}\}/',
-                        '/\{\{\$direccion2\}\}/',
+                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
@@ -1185,8 +1171,7 @@ class HistorialPagosController extends RootAdminController
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
-                        'direccion1' => $dato_usuario['address1'],
-                        'address2' => $dato_usuario['address2'],
+                        'direccion' => $dato_usuario['address1'],
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
