@@ -1,7 +1,36 @@
-<article class="product wow fadeInRight">
+<style>
+  .wrapper{
+   z-index: 100;
+    position: relative;
+}
+
+img{
+   
+    object-fit: cover;
+}
+.wrapper::before{
+    transition: all .5s ease-in;
+    background-color: rgba(0, 0, 0, 0.459);
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.wrapper:hover::before{
+    opacity: .6 ;
+}
+
+
+</style>
+<hr>
+<article class="product wow fadeInRight border">
     <div class="product-body">
-      <div class="product-figure">
-          <a href="{{ $product->getUrl() }}">
+      <div class="product-figure wrapper">
+          <a href="{{$product->getUrl()}}">
             <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}"/>
           </a>
       </div>

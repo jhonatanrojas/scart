@@ -23,7 +23,7 @@
                         @if (sc_config('customer_natural_jurídica'))
                         <div class="form-group row{{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
                             <label for="natural_jurídica"
-                                    class="col-sm-2 col-form-label title2">Persona Natural </label>
+                                    class="col-sm-2 col-form-label title2">Persona</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -164,10 +164,9 @@
 
                     <option value="SOLTERO(a)" >Soltero(a)</option>
                     <option value="CASADO(a)" >Casado(a)</option>
-
-                    <option value="CONCUBINATO(a)" >Concubinato(a)</option>
-                    
-                
+                    <option value="DIVORCIADO(a)" >DIVORCIADO(a)</option>
+                    <option value="VIUDO(a)" >VIUDO(a)</option>
+                    <option value="CONCUBINATO(a)" >Concubinato</option>
                     </select>
                 </div>
                     @if ($errors->has('estado_civil'))

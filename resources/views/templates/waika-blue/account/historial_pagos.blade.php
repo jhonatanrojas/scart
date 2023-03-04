@@ -10,6 +10,12 @@ $layout_page = shop_profile
 @extends($sc_templatePath.'.account.layout')
 
 @section('block_main_profile')
+
+@if(count($historial_pagos) ==0)
+<div class="text-danger">
+  {{sc_language_render('front.data_notfound') }}
+</div>
+@else
 <div class="panel-heading animate__animated animate__backInRight">
   <h5 class="panel-title">{{ $title }}</h5>
 
@@ -20,14 +26,15 @@ $layout_page = shop_profile
         <thead class="table-dark">
           <tr>
             <th style="width: 50px;">No.</th>
-            <th style="width: 100px;">Nr°Convenio</th>
-            <th style="width: 100px;">Nr°Solicitud</th>
+            <th style="width: 100px;">Convenio</th>
+            <th style="width: 100px;">Solicitud</th>
+            <th >Producto</th>
             <th>Pagado</th>
             <th>Divisa</th>
-            <th>Tasa de cambio</th>
+            <th>Tasa </th>
             <th>Forma de pago</th>
-            <th>estatus del pago</th>
-            <th>{{ sc_language_render('common.created_at') }}</th>
+            <th>estatus</th>
+            <th>Fecha de reporte</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -40,8 +47,16 @@ $layout_page = shop_profile
               @endphp
             <td><span class="item_21_id">{{ $n }}</span></td>
             
-            <td><span class="item_21_sku">{{ $combenio['Nr_combenio'] ?? 'convenio no aprobado'}}</span></td>
-            <td><span class="item_21_sku">{{ $historial->order_id }}</span></td>
+            <td><span class="item_21_sku">{{$historial->nro_convenio}}</span></td>
+            <td>
+              <span class="item_21_sku">{{ $historial->order_id }}</span>
+            </td>
+
+            <td>
+              <span class="item_21_sku">{{ $historial->nombre_product }}</span>
+            </td>
+
+
             <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
 
             <th>{{$historial->moneda}}</th>
@@ -56,11 +71,13 @@ $layout_page = shop_profile
             </td>
           </tr>
 
+         
+
 @endforeach
         </tbody>
       </table>
 
     </div>
       
-
+    @endif
 @endsection
