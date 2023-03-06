@@ -635,35 +635,33 @@ class ShopAccountController extends RootFrontController
 
         
 
-      
-
 
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago = $params[1];
+        $id_pago = $request->all();
 
 
         $historial_pago = HistorialPago::where('order_id', $params[1])->first();
 
 
        
+            
 
-       
 
        
         $metodos_pagos = MetodoPago::all();
 
-
+       
         sc_check_view($this->templatePath . '.account.reportar_pago');
         
         return view($this->templatePath . '.account.reportar_pago')
             ->with(
                 [
                     'title'           => 'Reportar pago',
-                    'id_pago' => $id_pago,
-                    'lisPago' =>      $pago ?? "",
+                    'id_pago' => $id_pago['id_pago'] ?? "",
+                    'lisPago' =>      $id_pago ?? "",
                     'historial_pago' => $historial_pago,
                     'customer'        => $customer,
                     'referencia'        => $referencia,
@@ -722,19 +720,19 @@ class ShopAccountController extends RootFrontController
             'comment' => $request->observacion,
             'moneda' => $request->moneda,
             'comprobante' =>   $path_archivo,
-            'payment_status' => 5
+            'payment_status' => 2
 
         ];
 
        
-            dd($id_pago);
+      
         if ($id_pago == null) {
-
-            dd($data_pago);
             HistorialPago::create($data_pago);
         } else {
             HistorialPago::where('id', $id_pago)
                 ->update($data_pago);
+
+
         }
 
 
