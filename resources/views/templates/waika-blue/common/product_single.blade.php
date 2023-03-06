@@ -1,4 +1,3 @@
--- Active: 1678063866763@@127.0.0.1@3306@desarollo
 <style>
   .wrapper{
    z-index: 100;
