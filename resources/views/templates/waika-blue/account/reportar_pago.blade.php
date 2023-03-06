@@ -156,7 +156,7 @@ $layout_page = shop_profile
 
                       @endif
 
-                      @if ($lisPago['Pago Movil'])
+                      @if (isset($lisPago['Pago Movil']))
                       <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name ==$lisPago['Pago Movil'] ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
                           
                       @endif
