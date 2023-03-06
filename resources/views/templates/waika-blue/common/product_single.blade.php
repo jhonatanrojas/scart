@@ -1,3 +1,4 @@
+-- Active: 1678063866763@@127.0.0.1@3306@desarollo
 <style>
   .wrapper{
    z-index: 100;
@@ -25,9 +26,10 @@ img{
 }
 
 
+
 </style>
-<hr>
-<article class="product wow fadeInRight border">
+
+<article class="product wow fadeInRight ">
     <div class="product-body">
       <div class="product-figure wrapper">
           <a href="{{$product->getUrl()}}">
