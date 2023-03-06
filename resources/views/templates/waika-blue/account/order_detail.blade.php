@@ -303,7 +303,9 @@ $layout_page = shop_profile
         @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>   
 
-          <button onclick="pagar({{$historial->order_id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
+         
+
+          <button onclick="pagar({{$historial->order_id  , $historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
           
@@ -319,7 +321,66 @@ $layout_page = shop_profile
 
       <!-- Button trigger modal -->
 
-    
+      <div class="modal  " id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered   " role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>Seleccione la forma de pago</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+             
+            </div>
+  
+            @if($order->modalidad_de_compra==1)
+                  <div class="modal-body  d-flex justify-content-between">
+                      <div class=" ">
+                        <a onclick="bioPago({{$historial->id}})" id="bioPago"    class="btn btn-danger">
+                          <span class="d-flex">
+                            <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
+                            Biopago BDV
+                          </span>
+                          
+      
+                        </a>
+                      </div>
+                   
+  
+                        <div class=" ">
+                          <a onclick="transferencia({{$historial->id}})"  id="tranferencia"   class="btn btn-info">
+                            <span class="d-flex">
+                              <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
+                              Transferencia
+                            </span>
+        
+                          </a>
+                        </div>
+  
+                        <div class=" ">
+                          <a id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning">
+                            <span class="d-flex">
+                              <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
+                              Pago movil
+                            </span>
+        
+                          </a>
+                        </div>
+                   
+  
+              
+              
+             
+                  </div>
+                  @endif
+                    
+                    <div class="modal-footer mb-4">
+                      <button  type="button" class="btn btn-danger"        data-dismiss="modal">
+                        Cancelar
+                      </button>
+                      
+                    </div>
+            </div>
+            
+          </div><!-- /.modal-content -->
+        </div>
 @endforeach
 
         </tbody>
@@ -327,66 +388,7 @@ $layout_page = shop_profile
 
     </div>
 
-    <div class="modal  " id="myModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered   " role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>Seleccione la forma de pago</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-           
-          </div>
 
-          @if($order->modalidad_de_compra==1)
-                <div class="modal-body  d-flex justify-content-between">
-                    <div class=" ">
-                      <a onclick="bioPago()" id="bioPago"    class="btn btn-danger">
-                        <span class="d-flex">
-                          <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
-                          Biopago BDV
-                        </span>
-                        
-    
-                      </a>
-                    </div>
-                 
-
-                      <div class=" ">
-                        <a onclick="transferencia()"  id="tranferencia"   class="btn btn-info">
-                          <span class="d-flex">
-                            <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
-                            Transferencia
-                          </span>
-      
-                        </a>
-                      </div>
-
-                      <div class=" ">
-                        <a id="pagoMovil" onclick="pagoMovil()"  class="btn btn-warning">
-                          <span class="d-flex">
-                            <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
-                            Pago movil
-                          </span>
-      
-                        </a>
-                      </div>
-                 
-
-            
-            
-           
-                </div>
-                @endif
-                  
-                  <div class="modal-footer mb-4">
-                    <button  type="button" class="btn btn-danger"        data-dismiss="modal">
-                      Cancelar
-                    </button>
-                    
-                  </div>
-          </div>
-          
-        </div><!-- /.modal-content -->
-      </div>
     
 
 
@@ -395,27 +397,20 @@ $layout_page = shop_profile
 
 
 <script type="text/javascript">
- 
-   function  pagar(id){
-    document.getElementById('tranferencia').value = id
-    document.getElementById('pagoMovil').value = id
-    document.getElementById('bioPago').value = id
 
-    }
+         function transferencia (id){
 
-
-      function transferencia (){
-          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ])}}?Transferencia=Tranferencia`
+           number = id
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Transferencia=Transferencia`
         }
 
-        
-      function pagoMovil (){
-          
-          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ])}}?Pago Movil=Pago Movil`
+      function pagoMovil (id){
+          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Pago Movil=Pago Movil`
         }
 
-        function bioPago (){
-          location.href=`{!! sc_route("biopago", ['id' => $order->id ,'id_pago'])!!}=${number}" `
+        function bioPago (id){
+          location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
+
         }
 
     

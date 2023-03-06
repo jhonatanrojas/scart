@@ -241,7 +241,7 @@ class  AdminOrderController extends RootAdminController
                 <!-- span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span -->
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
-                'N°'          => $row['id'] ?? 'N/A',
+                'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',

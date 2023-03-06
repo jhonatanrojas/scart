@@ -33,10 +33,13 @@ $layout_page = shop_profile
               </tr>
             </thead>
             <tbody>
+
+              
                 @foreach ($order->details as $item)
                       <tr>
+                       
                         <td>{{ $item->name }}
-                          @php
+                          {{-- @php
                           $html = '';
                             if($item->attribute && is_array(json_decode($item->attribute,true))){
                               $array = json_decode($item->attribute,true);
@@ -45,7 +48,7 @@ $layout_page = shop_profile
                                   }
                             }
                           @endphp
-                        {!! $html !!}
+                       {!! $html !!}  --}}
                         </td>
            
                         <td class="product_price">{{ $item->price }}</td>
@@ -78,13 +81,13 @@ $layout_page = shop_profile
 @endif
     <div class="card">
 
- 
+      
 
       <form action="{{route('post_reporte_pago')}}"  method="post" enctype="multipart/form-data">
        @csrf
 
 
-       <input type="hidden" name="id_pago" value="{{ $id_pago}}">
+       <input type="hidden" name="id_pago" value="{{$id_pago}}">
         <h5 class="card-header">{{ $title }}
           @if($historial_pago)
           <h5 class="text-center"> Monto cuota: {{ $historial_pago->importe_couta }}$ <br> <small> Vence:    {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</small></h5>
@@ -92,7 +95,8 @@ $layout_page = shop_profile
         </h5>
 
         <div class="text-center">
-          @if (isset($lisPago['Transferencia']))
+          
+          @if (isset($lisPago))
           @if (sc_config('customer_Transferencia'))
           <p>
              {{ sc_language_render('customer.Transferencia') }}</p>
@@ -113,7 +117,7 @@ $layout_page = shop_profile
           @endif
           
           
-         @if (isset($lisPago['Pago Movil']))
+         @if (isset($lisPago))
           @if (sc_config('customer_pago_movil'))
           <p> {{ sc_language_render('customer.pago_movil') }}</p>
           <p> {{ sc_language_render('customer.telefono') }}</p>
@@ -142,19 +146,25 @@ $layout_page = shop_profile
                     <select  id="forma_pago" name="forma_pago" required class="form-control">
                       @if (isset($lisPago['Transferencia']) || isset($lisPago['Pago Movil']))
 
+                      @if (isset($lisPago['Transferencia'] ) )
 
                       
-                     
-                      @if (isset($lisPago['Transferencia']))
                       <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago['Transferencia'] ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
-                        @else
-                        <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name == $lisPago['Pago Movil'] ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
+                       
+                        
+                       
 
+                      @endif
+
+                      @if ($lisPago['Pago Movil'])
+                      <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name ==$lisPago['Pago Movil'] ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
+                          
                       @endif
 
 
                       @else
                       @foreach($metodos_pagos as $metodo)
+                      
                       <option  value="{{ $metodo->id}}" {!! $metodo->name == $lisPago ? 'selected' :'' !!}  >{{ $metodo->name}}</option>
                       
                     

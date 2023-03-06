@@ -1166,6 +1166,11 @@ class HistorialPagosController extends RootAdminController
                     ];
                         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
 
+
+                   
+
+               
+
                     $dataReplaces = [
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],

@@ -620,6 +620,9 @@ class ShopAccountController extends RootFrontController
 
     public function reportarPago(Request $request , ...$params)
     {
+
+
+        
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
             $id = $params[1] ?? '';
@@ -630,37 +633,35 @@ class ShopAccountController extends RootFrontController
         $customer = auth()->user();
         $pago = $request->all();
 
-
-
-      
+        
 
 
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
-
-
-
-
-
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago = $params[1];
+        $id_pago = $request->all();
 
 
         $historial_pago = HistorialPago::where('order_id', $params[1])->first();
 
+
        
+            
+
 
        
         $metodos_pagos = MetodoPago::all();
+
+       
         sc_check_view($this->templatePath . '.account.reportar_pago');
+        
         return view($this->templatePath . '.account.reportar_pago')
             ->with(
                 [
                     'title'           => 'Reportar pago',
-                    'id_pago' => $id_pago,
-                    'lisPago' =>      $pago ?? "",
-
+                    'id_pago' => $id_pago['id_pago'] ?? "",
+                    'lisPago' =>      $id_pago ?? "",
                     'historial_pago' => $historial_pago,
                     'customer'        => $customer,
                     'referencia'        => $referencia,
@@ -683,11 +684,12 @@ class ShopAccountController extends RootFrontController
 
     public function postReportarPago(Request $request)
     {
+
+
+       
         $user = Auth::user();
         $cId = $user->id;
         $data = request()->all();
-
-
         $request->validate([
             'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
             'monto' => 'required',
@@ -718,15 +720,19 @@ class ShopAccountController extends RootFrontController
             'comment' => $request->observacion,
             'moneda' => $request->moneda,
             'comprobante' =>   $path_archivo,
-            'payment_status' => 5
+            'payment_status' => 2
 
         ];
 
+       
+      
         if ($id_pago == null) {
             HistorialPago::create($data_pago);
         } else {
             HistorialPago::where('id', $id_pago)
                 ->update($data_pago);
+
+
         }
 
 
