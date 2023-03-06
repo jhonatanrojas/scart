@@ -102,14 +102,14 @@ $layout_page = shop_profile
             <table class="table    collapsed-box">
                 <thead class="table-dark table-striped">
                   <tr>
-                    <th>Producto</th>
+                    <th>Articulo</th>
                  
                     @if (empty($order->details[0]->modalidad_de_compra == 1))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_price">Cuota</th>
                     <th class="product_price">Monto de la  Cuota</th>
-                    <th class="product_total">Modalidad</th>
+                    <th class="product_total">Frecuencia</th>
                         @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
@@ -234,14 +234,8 @@ $layout_page = shop_profile
         <thead class="table-dark table-striped">
           <tr>
             <th>No.</th>
-
-            @if($order->modalidad_de_compra==1)
-            <th>
-              <span class="item_21_sku text-center">Monto de la Cuota</span>
-            </th>
-            @endif
-
             <th>Pagado</th>
+            <th>Tasa</th>
             <th>Divisa</th>
             <th class="text-center">Forma de pago</th>
             <th class="text-center">estatus del pago</th>
@@ -267,14 +261,19 @@ $layout_page = shop_profile
             if($order->modalidad_de_compra==0)
               $n=$historial->nro_coutas;
           @endphp
-        <td><span class="item_21_id">{{ $n }}</span></td>
-            @if($order->modalidad_de_compra==1)
-        <td><span class="item_21_sku">{{ $historial->importe_couta}}</span></td>
-            @endif
-
-         
         <td>
-          <span class="item_21_sku">{{ $historial->importe_pagado}}</span>
+          <span class="item_21_id">
+            {{ $n }}
+          </span>
+        </td>
+        
+        <td>
+          <span class="badge badge-{{ $mapStyleStatus[$historial->payment_status]??'' }} item_21_sku z">{{ $historial->importe_pagado}}</span>
+        </td>
+
+      
+        <td>
+          <span class="item_21_sku">{{ $historial->tasa_cambio}}</span>
         </td>
         
         <td>{{$historial->moneda ?? 'xx' }}</td>
@@ -283,7 +282,11 @@ $layout_page = shop_profile
           <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : 'x' !!}
           </span>
         </td>
-        <td><span class="item_21_sku">{{ $historial->estatus->name }}</span></td>
+        <td>
+          <span class="item_21_sku badge badge-{{ $mapStyleStatus[$historial->payment_status]??'' }}">
+            {{ $historial->estatus->name }}
+        </span>
+      </td>
             @if($order->modalidad_de_compra==1)
               <td colspan="1">
                 {{$historial->fecha_venciento}}
