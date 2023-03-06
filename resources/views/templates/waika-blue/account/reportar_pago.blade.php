@@ -33,8 +33,11 @@ $layout_page = shop_profile
               </tr>
             </thead>
             <tbody>
+
+              
                 @foreach ($order->details as $item)
                       <tr>
+                       {!!dd($item)!!}
                         <td>{{ $item->name }}
                           @php
                           $html = '';
@@ -78,8 +81,6 @@ $layout_page = shop_profile
 @endif
     <div class="card">
 
- 
-
       <form action="{{route('post_reporte_pago')}}"  method="post" enctype="multipart/form-data">
        @csrf
 
@@ -92,6 +93,7 @@ $layout_page = shop_profile
         </h5>
 
         <div class="text-center">
+          
           @if (isset($lisPago['Transferencia']))
           @if (sc_config('customer_Transferencia'))
           <p>
