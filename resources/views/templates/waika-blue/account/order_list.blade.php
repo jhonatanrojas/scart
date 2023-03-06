@@ -28,7 +28,7 @@
           <th style="width: 50px;">No.</th>
           <th style="width: 100px;">Convenio</th>
           <th style="width: 100px;">Solicitud</th>
-          <th style="width: 100px;">Producto</th>
+          <th style="width: 100px;">Articulo</th>
           <th>{{ sc_language_render('order.order_status') }}</th>
           <th>Fecha de reporte</th>
           <th>Acciones</th>

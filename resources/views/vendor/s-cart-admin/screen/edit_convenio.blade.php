@@ -5,7 +5,7 @@
     <table class="table table-hover box-body text-wrap table-bordered">
       <thead>
         <tr>
-                            <th>No.</th>
+                        <th>No.</th>
                           <th>inicial</th>
                           <th>Estatus</th>
                           <th>Acción</th>
@@ -18,22 +18,18 @@
                         $n = (isset($n)?$n:0);
                         $n++;
                         @endphp
-
-                        
-
-
                                 <tr>
                                     <td>{{$n}}</td>
                                 <td>
                                     @if ($plantilla->name == "sin_inicial")
 
-                                        Sin iniacial
+                                        Sin inicial
 
                                         
                                     @endif
                                     @if ($plantilla->name == "con_inicial")
 
-                                    Con iniacial
+                                    Con inicial
 
                                     
                                 @endif
