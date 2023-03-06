@@ -735,6 +735,7 @@ class ShopAccountController extends RootFrontController
     }
     public function historialPagos()
     {
+
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
             $id = $params[1] ?? '';
@@ -744,6 +745,7 @@ class ShopAccountController extends RootFrontController
         }
         $customer = auth()->user();
         $id1 = $customer['id'];
+        $mapStyleStatus = AdminOrder::$mapStyleStatus;
 
         $order = AdminOrder::where('customer_id',$id1)->get();
         $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
@@ -760,6 +762,7 @@ class ShopAccountController extends RootFrontController
             ->with(
                 [
                     'title'           => 'Historial de pagos',
+                    'mapStyleStatus' => $mapStyleStatus,
                     'customer'        => $customer,
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
@@ -798,6 +801,8 @@ class ShopAccountController extends RootFrontController
                     ],
                 ]
             );
+
+           
     }
 
     /**
