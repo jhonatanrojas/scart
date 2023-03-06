@@ -726,7 +726,11 @@ class ShopAccountController extends RootFrontController
 
         ];
 
+       
+            dd($id_pago);
         if ($id_pago == null) {
+
+            dd($data_pago);
             HistorialPago::create($data_pago);
         } else {
             HistorialPago::where('id', $id_pago)

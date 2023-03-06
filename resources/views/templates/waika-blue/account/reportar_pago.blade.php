@@ -37,9 +37,9 @@ $layout_page = shop_profile
               
                 @foreach ($order->details as $item)
                       <tr>
-                       {!!dd($item)!!}
+                       
                         <td>{{ $item->name }}
-                          @php
+                          {{-- @php
                           $html = '';
                             if($item->attribute && is_array(json_decode($item->attribute,true))){
                               $array = json_decode($item->attribute,true);
@@ -47,8 +47,8 @@ $layout_page = shop_profile
                                     $html .= '<br><b>'.$attributesGroup[$key].'</b> : <i>'.$element.'</i>';
                                   }
                             }
-                          @endphp
-                        {!! $html !!}
+                          @endphp --}}
+                        {{-- {!! $html !!} --}}
                         </td>
            
                         <td class="product_price">{{ $item->price }}</td>
