@@ -22,7 +22,7 @@ $layout_page = shop_profile
 </div>
     <div class="table-responsive">
       <table class="table table-hover box-body text-wrap table-fixed" width="100%">
-        <thead class="table-dark">
+        <thead class="table-dark text-center">
           <tr>
             <th >No.</th>
             <th >Convenio</th>
