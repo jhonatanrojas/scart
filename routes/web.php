@@ -93,3 +93,5 @@ Route::get('sc_admin/notas_d_entrega', [HistorialPagosController::class,'notas_d
 
 
 
+
+

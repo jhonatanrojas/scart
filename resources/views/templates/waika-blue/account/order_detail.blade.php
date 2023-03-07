@@ -289,13 +289,13 @@ $layout_page = shop_profile
       </td>
             @if($order->modalidad_de_compra==1)
               <td colspan="1">
-                {{$historial->fecha_venciento}}
+                {{$historial->fecha_pago}}
               </td>
             @endif
         @if($order->modalidad_de_compra==0)
         <td>
           <span class="item_21_sku">
-            {{$historial->fecha_venciento}}</span>
+            {{$historial->fecha_pago}}</span>
         </td>
           @endif
       
