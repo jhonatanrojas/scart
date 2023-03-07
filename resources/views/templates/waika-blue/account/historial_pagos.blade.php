@@ -29,8 +29,8 @@ $layout_page = shop_profile
             <th >Solicitud</th>
             <th >Articulo</th>
             <th>Pagado</th>
-            <th>Divisa</th>
-            <th>Referencia$</th>
+            <th style="width: 90px">Divisa</th>
+            <th style="width: 100px ; text-align: center; margin: auto">Referencia$</th>
             <th>Tasa</th>
             <th>Forma de pago</th>
             <th>Estatus</th>
@@ -72,7 +72,7 @@ $layout_page = shop_profile
                   }
               @endphp
 
-              {{$monedas}}$
+              {{$monedas}}
              
             </td>
             <td>{{$historial->tasa_cambio}}</td>
