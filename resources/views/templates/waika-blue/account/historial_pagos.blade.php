@@ -67,7 +67,7 @@ $layout_page = shop_profile
               @php
                 $monedas = $historial->importe_pagado;
                   if($historial->moneda == 'Bs'){
-                    $monedas =  number_format((float)$historial->importe_pagado / $historial->tasa_cambio, 3, '.', ''); ;
+                    $monedas =  number_format((float)$historial->importe_pagado / $historial->tasa_cambio, 2, '.', ''); ;
 
                   }
               @endphp
