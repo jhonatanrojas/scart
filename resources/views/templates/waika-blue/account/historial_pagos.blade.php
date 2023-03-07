@@ -21,19 +21,19 @@ $layout_page = shop_profile
 
 </div>
     <div class="table-responsive">
-
       <table class="table table-hover box-body text-wrap table-fixed" width="100%">
         <thead class="table-dark">
           <tr>
-            <th style="width: 50px;">No.</th>
-            <th style="width: 100px;">Convenio</th>
-            <th style="width: 100px;">Solicitud</th>
+            <th >No.</th>
+            <th >Convenio</th>
+            <th >Solicitud</th>
             <th >Articulo</th>
             <th>Pagado</th>
             <th>Divisa</th>
-            <th>Tasa </th>
+            <th>Referencia$</th>
+            <th>Tasa</th>
             <th>Forma de pago</th>
-            <th>estatus</th>
+            <th>Estatus</th>
             <th>Fecha de reporte</th>
             <th>Acciones</th>
           </tr>
@@ -49,8 +49,10 @@ $layout_page = shop_profile
             
             <td><span class="item_21_sku">{{$historial->nro_convenio}}</span></td>
             <td>
-              <span class="item_21_sku">{{ $historial->order_id }}</span>
+              <span class="item_21_sku"> {!!substr($historial->order_id, 0, -5)!!}</span>
             </td>
+
+           
 
             <td>
               <span class="item_21_sku">{{ $historial->nombre_product }}</span>
@@ -60,15 +62,28 @@ $layout_page = shop_profile
             <td><span class="item_21_sku badge badge-{{ $mapStyleStatus[$historial->payment_status]??'' }}">
               {{ $historial->importe_pagado}}
             </span></td>
+            <td>{{$historial->moneda}}</td>
+            <td class="badge badge-{{ $mapStyleStatus[3]??'' }}">
+              @php
+                $monedas = $historial->importe_pagado;
+                  if($historial->moneda == 'Bs'){
+                    $monedas =  number_format((float)$historial->importe_pagado / $historial->tasa_cambio, 3, '.', ''); ;
 
-            <th>{{$historial->moneda}}</th>
+                  }
+              @endphp
+
+              {{$monedas}}$
+             
+            </td>
             <td>{{$historial->tasa_cambio}}</td>
             <td><span class="item_21_sku ">
               {!! isset($historial->metodo_pago->name ) ?$historial->metodo_pago->name  :'';  !!}
             </span></td>
+
+            
             
             <td><span class="item_21_sku badge badge-{{ $mapStyleStatus[$historial->payment_status]??'' }}">{!! isset($historial->estatus->name ) ?$historial->estatus->name  :'';  !!}</span></td>
-            <td><span class="item_21_sku">{{ $historial->created_at->format('d/m/Y')}}</span></td>
+            <td><span class="item_21_sku">{{ $historial->fecha_pago}}</span></td>
             <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
             </td>
           </tr>

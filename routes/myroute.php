@@ -69,6 +69,9 @@ Route::group(['prefix' => 'sc_admin/order'], function () use ($nameSpaceAdminPro
 
     Route::get('/detalle_pago','App\Admin\Controllers\HistorialPagosController@detalle')->name('historial_pagos.detalle');
     Route::get('/obtener_pago','App\Admin\Controllers\HistorialPagosController@obtener_pago')->name('obtener_pago');
+
+    Route::post('/edit_pagos','App\Admin\Controllers\HistorialPagosController@edit_pagos')->name('edit_pagos');
+
     Route::post('/estatus-pago', 'App\Admin\Controllers\HistorialPagosController@postEstatusPago')->name('post_status_pago');
     Route::get('/historial_pagos','App\Admin\Controllers\HistorialPagosController@index')->name('historial_pagos.index');
     Route::get('/reportar_pago','App\Admin\Controllers\HistorialPagosController@reportarPago')->name('historial_pagos.reportar');
