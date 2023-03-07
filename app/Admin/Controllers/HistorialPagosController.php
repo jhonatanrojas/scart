@@ -1296,8 +1296,38 @@ class HistorialPagosController extends RootAdminController
 
     public function edit_pagos(Request $request){
 
+        $datos = $request->all();
 
-        dd($request->all());
+
+        request()->validate([
+            'metodo_pago_id' => 'required' ,
+            'importe_pagado' => 'required',
+            'moneda' => 'required' ,
+            'fecha_pago' => 'required',
+            'tasa_cambio' => 'required',
+            
+
+        ]);
+
+
+        HistorialPago::where('id',$datos['id'])->first()->update([
+            "metodo_pago_id" => $datos['metodo_pago_id'],
+            "importe_pagado" => $datos['importe_pagado'],
+            "moneda" => $datos['moneda'],
+            "fecha_pago" => $datos['fecha_pago'],
+            "payment_status" => $datos['payment_status'],
+            "tasa_cambio" => $datos['tasa_cambio'],
+
+           ]);
+
+           return redirect()->back()
+        ->with(['success' => 'Historial de pago  actualizado']);
+
+       
+
+
+      
+       
 
     }
 
