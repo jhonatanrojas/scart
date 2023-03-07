@@ -971,90 +971,110 @@
  <!-- Modal detaalle pago -->
  <div class="modal fade" id="modal_detalle_pago" tabindex="-1" role="dialog" aria-labelledby="modal_detalle_pago" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-    
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Detalle de pago #<span id="idpago"></span> </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group col-md-6">
-              <label for="forma_pago">Forma de pago</label>
-              <input id="mforma_pago" name="" required class="form-control" readonly>
-   
-              </select>  
-            </div>
-          <div class="form-group col-md-6">
-            <label for="inputEmail4">Nro de referencia</label>
-            <input type="text" class="form-control"  required name="" id="mreferencia" placeholder="referencia" readonly>
-          </div>
-
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputEmail4">Fecha de pago</label>
-            <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="inputEmail4">Fecha de Vencimiento</label>
-            <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="forma_pago">Monto</label>
-            <input type="text" required class="form-control"  id="mmonto" name=""  readonly  placeholder="Monto">
-
-          </div>
-          <div class="form-group col-md-6">
-            <label for="forma_pago">Divisa</label>
-            <input type="text" required  readonly class="form-control readonly"  id="mdivisa" name=""  placeholder="divisa">
-
-           
-          </div>
-        </div>
-
-        <div class="form-row">
-       
+    <form action="{!!sc_route_admin('edit_pagos')!!}" method="POST">
+      @csrf
      
-
-          <div class="form-group col-md-6">
-         
-              <label for="forma_pago"> descargar referencia </label>
-              <a href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
-                </div>
-                <div class="form-group col-md-6">
-         
-                  <label for="forma_pago">Estatus</label>
-                  <input type="text"  id="mstatus" class="form-control" name=""  readonly required="">
-    
-                    </div>
-
-                    <div class="form-group col-md-6">
-         
-                      <label for="forma_pago">Tasa de cambio</label>
-                      <input type="text"  id="mtasa" class="form-control" readonly name="" required="" readonly>
+      <div class="modal-content">
         
-                        </div>
-                <div class="form-group col-md-6">
-         
-                  <label for="forma_pago">Observación</label>
-                  <input type="text"  id="mobservacion" class="form-control" readonly name="" required="">
-    
-                    </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Detalle de pago <span ></span> </h5>
+          <input type="hidden" name="idpago" id="idpago">
+           <input type="hidden" name="order_id" id="order_id">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="forma_pago">Forma de pago</label>
+                <input id="mforma_pago" name="mforma_pago" required class="form-control" readonly>
+     
+                </select>  
+              </div>
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Nro de referencia</label>
+              <input type="text" class="form-control"  required name="mreferencia" id="mreferencia" placeholder="referencia" readonly>
+            </div>
+  
+          </div>
+  
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Fecha de pago</label>
+              <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Fecha de Vencimiento</label>
+              <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="forma_pago">Monto</label>
+              <input type="text" required class="form-control"  id="mmonto" name=""    placeholder="Monto">
+  
+            </div>
+            <div class="form-group col-md-6">
+              <label for="forma_pago">Divisa</label>
+              <input type="text" required  readonly class="form-control readonly"  id="mdivisa" name=""  placeholder="divisa">
+  
+             
+            </div>
+          </div>
+  
+          <div class="form-row">
+         
+  
+  
+            <div class="form-group col-md-6">
+           
+                <label for="forma_pago"> descargar referencia </label>
+                <a href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
+                  </div>
+                  
 
-
+                      <div class="form-group">
+                        <label for="forma_pago"></label>
+                        <select class="form-control" id="mstatus" name="mstatus">
+                          @foreach ($statusPayment as $key => $item)
+                          <option   value="@foreach ($historial_pagos as  $historia)
+                             
+                              @if ($historia->comment == $item)
+                                {{$item}}
+                              @endif
+                          @endforeach"  > {{$item}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+  
+                      <div class="form-group col-md-6">
+           
+                        <label for="forma_pago">Tasa de cambio</label>
+                        <input type="text"  id="mtasa" class="form-control" name="mtasa" required="">
+          
+                          </div>
+                  <div class="form-group col-md-6">
+           
+                    <label for="forma_pago">Observación</label>
+                    <input type="text"  id="mobservacion" class="form-control"  name="" required="">
       
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                      </div>
+          </div>
+  
+  
         
-    
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+
+         
+            {{-- <button type="submit" class="btn btn-primary" >Editar</button> --}}
+
+        </div>
       </div>
-    </div>
+        
+    </form>
+    
   </div>
 </div>
 
@@ -1177,7 +1197,13 @@ function obtener_detalle_pago(id_pago){
 
            var data = returnedData.data;
 
-           $("#idpago").text(data.id)
+           console.log(data)
+
+           $("#idpago").val(data.id)
+           $("#order_id").val(data.order_id)
+
+
+           
             $("#mforma_pago").val(data.metodo)
             $("#mreferencia").val(data.referencia)
 
@@ -1188,7 +1214,7 @@ function obtener_detalle_pago(id_pago){
             $("#mdivisa").val(data.moneda)
             $("#mobservacion").val(data.comment)
             $("#mstatus").val(data.status)
-            $("#mtasa").val(data.mtasa)
+            $("#mtasa").val(data.tasa_cambio)
             $("#dcomprobante").attr('href', data.comprobante)
             
 

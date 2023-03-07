@@ -1285,14 +1285,20 @@ class HistorialPagosController extends RootAdminController
         
         $pago->comprobante=  sc_file( $pago->comprobante);
 
-      
-            
+       
 
         // return redirect()->back()
         // ->with(['success' => 'Accion completada']);
         return response()->json(['error' => 0, 'data' =>$pago]);
       
        
+    }
+
+    public function edit_pagos(Request $request){
+
+
+        dd($request->all());
+
     }
 
     public function postEstatusPago(Request $request){
