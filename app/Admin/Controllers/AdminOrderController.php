@@ -539,18 +539,20 @@ class  AdminOrderController extends RootAdminController
         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
         
 
+       
+        if($user_roles->rol == 'Vendedor'){
 
-        if(  $user_roles == 'Vendedor'){
-
-             $id_status=[1,2,3,4 , 11,13];
+             $id_status=[1,2,3,4 ,11,13];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
-        else if( $user_roles == 'Riesgo'){
+        else if($user_roles->rol == 'Riesgo'){
              $id_status=[1, 5, 6,7,8,14,15];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
-        else if( $user_roles == 'adminitracion'){
+        else if($user_roles->rol == 'Administrator'){
+
+            
 
             $id_status=[5,9,10,11,12,13,18,16,17];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
