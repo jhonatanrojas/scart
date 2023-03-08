@@ -1164,6 +1164,10 @@ class  AdminOrderController extends RootAdminController
         $rif='';
         $cedula='';
 
+
+
+        dd($order->subtotal);
+
         
         $nro_convenio = "No se ha creado un convenio";
         if($convenio){
