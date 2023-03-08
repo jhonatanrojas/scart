@@ -554,7 +554,7 @@ class  AdminOrderController extends RootAdminController
 
             
 
-            $id_status=[5,9,10,11,12,13,18,16,17];
+            $id_status=[1,5,9,10,11,12,13,18,16,17];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
