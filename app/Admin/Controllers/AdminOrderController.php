@@ -34,6 +34,7 @@ use App\Models\SC_admin_role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use FFI;
+use App\Models\Catalogo\MetodoPago;
 
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
@@ -626,13 +627,14 @@ class  AdminOrderController extends RootAdminController
         }
 
     
-
+       
         
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
+                'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
