@@ -5,7 +5,7 @@
       <div class="col-md-12">
          <div class="card">
                 <div class="card-header with-border">
-                    <h2 class="card-title">registrar Tasa</h2>
+                    <h2 class="card-title">Registrar Tasa</h2>
 
                     <div class="card-tools">
                         <div class="btn-group float-right mr-5">
