@@ -302,8 +302,14 @@ class  AdminOrderController extends RootAdminController
         foreach ($this->statusOrder as $key => $status) {
             $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
+
+        $ruta_busqueda= sc_route_admin('admin_order.index');
+
+        if( $perfil){
+            $ruta_busqueda=  sc_route_admin('admin_order.index')."/$perfil";
+        }
         $data['topMenuRight'][] = '
-                <form action="' . sc_route_admin('admin_order.index') . '" id="button_search">
+                <form action="' .  $ruta_busqueda . '" id="button_search">
                     <div class="input-group float-left">
                         <div class="col-md-3">
                             <div class="form-group">
