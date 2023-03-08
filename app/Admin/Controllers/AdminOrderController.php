@@ -1166,13 +1166,18 @@ class  AdminOrderController extends RootAdminController
 
 
 
-        dd($order->subtotal);
+        
 
         
-        $nro_convenio = "No se ha creado un convenio";
-        if($convenio){
-            $nro_convenio = $convenio->nro_convenio;
+        
+        if(empty($convenio)){
+            
+            return redirect()->back()
+                ->with(['error' => ' Convenio aun no se ah creado']);
+            
         }
+
+        $nro_convenio = $convenio->nro_convenio;
 
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
@@ -1238,7 +1243,7 @@ class  AdminOrderController extends RootAdminController
                         'qty' => $detail->qty, 
                         'price' => $detail->price, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $detail->total_price,
+                        'total_price' => $convenio->total,
                     ];
                 }
             }
