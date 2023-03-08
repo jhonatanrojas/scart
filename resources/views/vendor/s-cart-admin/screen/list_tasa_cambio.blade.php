@@ -25,24 +25,23 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Tasa</th>
                                 <th scope="col">Fecha</th>
-                          
+
                               </tr>
                             </thead>
                             <tbody>
                                 @foreach ( $tipocambio as  $key => $cambio)
-                                    
-                           
+
                               <tr>
                                 <th scope="row">{{$key}}</th>
                                 <td>{{ $cambio->valor }}</td>
                                 <td>{{ $cambio->fecha }}</td>
-                               
+
                               </tr>
                               @endforeach
-                             
+
                             </tbody>
                           </table>
-                     
+
 
                     </div>
                     <!-- /.card-body -->
