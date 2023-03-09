@@ -547,7 +547,7 @@ class  AdminOrderController extends RootAdminController
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[1, 5, 6,7,8,14,15];
+             $id_status=[1,5,6,7,8,14,15,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
@@ -628,9 +628,6 @@ class  AdminOrderController extends RootAdminController
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
 
-    
-       
-        
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
