@@ -34,6 +34,7 @@ use App\Models\SC_admin_role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use FFI;
+use App\Models\Catalogo\MetodoPago;
 
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Models\ShopLanguage;
@@ -301,8 +302,14 @@ class  AdminOrderController extends RootAdminController
         foreach ($this->statusOrder as $key => $status) {
             $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
+
+        $ruta_busqueda= sc_route_admin('admin_order.index');
+
+        if( $perfil){
+            $ruta_busqueda=  sc_route_admin('admin_order.index')."/$perfil";
+        }
         $data['topMenuRight'][] = '
-                <form action="' . sc_route_admin('admin_order.index') . '" id="button_search">
+                <form action="' .  $ruta_busqueda . '" id="button_search">
                     <div class="input-group float-left">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -538,20 +545,22 @@ class  AdminOrderController extends RootAdminController
         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
         
 
+       
+        if($user_roles->rol == 'Vendedor'){
 
-        if(  $user_roles == 'Vendedor'){
-
-             $id_status=[1,2,3,4 , 11,13];
+             $id_status=[1,2,3,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
-        else if( $user_roles == 'Riesgo'){
-             $id_status=[1, 5, 6,7,8,14,15];
+        else if($user_roles->rol == 'Riesgo'){
+             $id_status=[1,5,6,7,8,14,15,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
-        else if( $user_roles == 'adminitracion'){
+        else if($user_roles->rol == 'Administrator'){
 
-            $id_status=[5,9,10,11,12,13,18,16,17];
+            
+
+            $id_status=[1,5,9,10,11,12,13,18,16,17];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
@@ -625,14 +634,12 @@ class  AdminOrderController extends RootAdminController
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
 
-    
-
-        
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
                 "title" => sc_language_render('order.order_detail'),
                 "subTitle" => '',
+                'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
@@ -1162,11 +1169,20 @@ class  AdminOrderController extends RootAdminController
         $rif='';
         $cedula='';
 
+
+
         
-        $nro_convenio = "No se ha creado un convenio";
-        if($convenio){
-            $nro_convenio = $convenio->nro_convenio;
+
+        
+        
+        if(empty($convenio)){
+            
+            return redirect()->back()
+                ->with(['error' => ' Convenio aun no se ah creado']);
+            
         }
+
+        $nro_convenio = $convenio->nro_convenio;
 
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
@@ -1232,7 +1248,7 @@ class  AdminOrderController extends RootAdminController
                         'qty' => $detail->qty, 
                         'price' => $detail->price, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $detail->total_price,
+                        'total_price' => $convenio->total,
                     ];
                 }
             }
@@ -1301,6 +1317,20 @@ class  AdminOrderController extends RootAdminController
 
 
 
+    public static function fechaEs($fecha) {
+                $fecha = substr($fecha, 0, 10);
+                $numeroDia = date('d', strtotime($fecha));
+                $dia = date('l', strtotime($fecha));
+                $mes = date('F', strtotime($fecha));
+                $anio = date('Y', strtotime($fecha));
+                $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+                $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+                $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+                $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+                $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+                return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+    }
 
 
     public function borrador_pdf($id){
@@ -1366,6 +1396,7 @@ class  AdminOrderController extends RootAdminController
                 'phone' => $c['phone'],
                 'email' => $c['email'],
                 'address1' => $c['address1'],
+                'address2' => $c['address2'],
                 'cedula' => $c['cedula'],
                 'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
@@ -1445,11 +1476,13 @@ class  AdminOrderController extends RootAdminController
 
                   foreach($borrado_html as $replacee){
                     $dataFind = [
+                        '/\{\{\$numero_de_convenio\}\}/',
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
                         '/\{\{\$nombre\}\}/',
                         '/\{\{\$apellido\}\}/',
                         '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$estado\}\}/',
                         '/\{\{\$municipio\}\}/',
                         '/\{\{\$parroquia\}\}/',
@@ -1469,22 +1502,24 @@ class  AdminOrderController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
-                        '/\{\{\$numero_de_convenio\}\}/',
+                        
                     ];
 
-                    $nro_convenio = 'no aplica';
+         
+                  
                     
 
                     $dataReplace = [
+                        'numero_de_convenio'=>  "sin convenio",
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
                         'direccion' => $dato_usuario['address1'],
+                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
@@ -1504,15 +1539,11 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $dato_usuario['address1'],
-                        date('d-m-y'),
+                        $this->fechaEs(date('d-m-y')),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_Fecha_De_Hoy'=> date('d-m-y'),
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'numero_de_convenio'=>      $nro_convenio
-                        
 
                     ];
 

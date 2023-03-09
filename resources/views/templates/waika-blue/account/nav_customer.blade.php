@@ -29,7 +29,7 @@ $order_id = '';
 
 <li class="menu list-group-item" id="menu">
   <i class="fa fa-file" aria-hidden="true"></i>
-  referencias personales
+  Referencias personales
   <nav id="navega" class="nav2">
     <ul>
       

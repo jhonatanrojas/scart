@@ -1063,11 +1063,13 @@ class HistorialPagosController extends RootAdminController
                   foreach($borrado_html as $replacee){
                     $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
                     $dataFind = [
+                        '/\{\{\$numero_de_convenio\}\}/',
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
                         '/\{\{\$nombre\}\}/',
                         '/\{\{\$apellido\}\}/',
                         '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$estado\}\}/',
                         '/\{\{\$municipio\}\}/',
                         '/\{\{\$parroquia\}\}/',
@@ -1087,42 +1089,43 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
-                        '/\{\{\$numero_de_convenio\}\}/',
+                        
                     ];
                     $dataReplace = [
+                        'numero_de_convenio'=>  $nro_convenio,
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
                         'direccion' => $dato_usuario['address1'],
+                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
                         'cedula'=>$dato_usuario['cedula'],
                         'estado_civil'=>$dato_usuario['estado_civil'],
-                        'nacionalidad' => $Nacionalidad,
+                        'nacionalidad'=>$Nacionalidad,
                         $mesualQuinsena,
                         $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
                         number_format($number1, 2 ,',', ' '),
                          $letraconvertir_nuber->convertir2($number1),
                         $cod_diaMes ,
-                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? '123456',
+                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
                          $monto ,
                          $letraconvertir_nuber->convertir2($number2),
                          number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $dato_usuario['address1'],
-                        date('d-m-y'),
+                        $this->fechaEs(date('d-m-y')),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        $nro_convenio,
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
                     ];
                     $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
                     $dataView = [
@@ -1134,11 +1137,13 @@ class HistorialPagosController extends RootAdminController
 
                 foreach($file_html as $jurada){
                     $dataFind = [
+                        '/\{\{\$numero_de_convenio\}\}/',
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
                         '/\{\{\$nombre\}\}/',
                         '/\{\{\$apellido\}\}/',
                         '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$estado\}\}/',
                         '/\{\{\$municipio\}\}/',
                         '/\{\{\$parroquia\}\}/',
@@ -1158,11 +1163,10 @@ class HistorialPagosController extends RootAdminController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
-                        '/\{\{\$numero_de_convenio\}\}/',
+                       
                     ];
                         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
 
@@ -1172,35 +1176,37 @@ class HistorialPagosController extends RootAdminController
                
 
                     $dataReplaces = [
+                        'numero_de_convenio'=>  $nro_convenio,
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
                         'direccion' => $dato_usuario['address1'],
+                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
                         'cedula'=>$dato_usuario['cedula'],
                         'estado_civil'=>$dato_usuario['estado_civil'],
-                        'nacionalidad' => $Nacionalidad,
+                        'nacionalidad'=>$Nacionalidad,
                         $mesualQuinsena,
                         $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
                         number_format($number1, 2 ,',', ' '),
                          $letraconvertir_nuber->convertir2($number1),
                         $cod_diaMes ,
-                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? '123456',
+                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
                          $monto ,
                          $letraconvertir_nuber->convertir2($number2),
                          number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $dato_usuario['address1'],
-                        date('d-m-y'),
+                        $this->fechaEs(date('d-m-y')),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        $nro_convenio 
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
+                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
 
                     ];
 
@@ -1296,8 +1302,38 @@ class HistorialPagosController extends RootAdminController
 
     public function edit_pagos(Request $request){
 
+        $datos = $request->all();
 
-        dd($request->all());
+
+        request()->validate([
+            'metodo_pago_id' => 'required' ,
+            'importe_pagado' => 'required',
+            'moneda' => 'required' ,
+            'fecha_pago' => 'required',
+            'tasa_cambio' => 'required',
+            
+
+        ]);
+
+
+        HistorialPago::where('id',$datos['id'])->first()->update([
+            "metodo_pago_id" => $datos['metodo_pago_id'],
+            "importe_pagado" => $datos['importe_pagado'],
+            "moneda" => $datos['moneda'],
+            "fecha_pago" => $datos['fecha_pago'],
+            "payment_status" => $datos['payment_status'],
+            "tasa_cambio" => $datos['tasa_cambio'],
+
+           ]);
+
+           return redirect()->back()
+        ->with(['success' => 'Historial de pago  actualizado']);
+
+       
+
+
+      
+       
 
     }
 
@@ -1431,6 +1467,24 @@ class HistorialPagosController extends RootAdminController
         return view($this->templatePathAdmin.'component.notice')
         ->with("");
     }
+
+
+
+       public static function fechaEs($fecha) {
+        $fecha = substr($fecha, 0, 10);
+        $numeroDia = date('d', strtotime($fecha));
+        $dia = date('l', strtotime($fecha));
+        $mes = date('F', strtotime($fecha));
+        $anio = date('Y', strtotime($fecha));
+        $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+        $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+        $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+        $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+        return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+        }
+
 
 
     public function pago_diarios(){
@@ -1826,21 +1880,7 @@ class HistorialPagosController extends RootAdminController
         
     }
 
-        public static function fechaEs($fecha) {
-        $fecha = substr($fecha, 0, 10);
-        $numeroDia = date('d', strtotime($fecha));
-        $dia = date('l', strtotime($fecha));
-        $mes = date('F', strtotime($fecha));
-        $anio = date('Y', strtotime($fecha));
-        $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-        $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-        $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-        $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-        $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-        $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-        return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
-        }
-
+     
 
     public function historial_cliente(){
 

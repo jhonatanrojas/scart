@@ -968,6 +968,7 @@
   </div>
 </div>
 
+
  <!-- Modal detaalle pago -->
  <div class="modal fade" id="modal_detalle_pago" tabindex="-1" role="dialog" aria-labelledby="modal_detalle_pago" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -978,7 +979,7 @@
         
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Detalle de pago <span ></span> </h5>
-          <input type="hidden" name="idpago" id="idpago">
+          <input type="hidden" name="id" id="idpago">
            <input type="hidden" name="order_id" id="order_id">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -986,70 +987,93 @@
         </div>
         <div class="modal-body">
           <div class="form-row">
-            <div class="form-group col-md-6">
+            
+
+              <div  class="form-group col-md-6">
                 <label for="forma_pago">Forma de pago</label>
-                <input id="mforma_pago" name="mforma_pago" required class="form-control" readonly>
-     
+                <select id="mforma_pago"   name="metodo_pago_id" required class="form-control">
+                    @foreach($metodos_pagos as $key => $metodo)
+                    <option {{ $metodo->id == 5 ? 'selected':'' }}  value="{{ $metodo->id}}" >{{ $metodo->name}}</option>
+                  
+                   
+                    
+                  @endforeach
+                 
                 </select>  
               </div>
             <div class="form-group col-md-6">
               <label for="inputEmail4">Nro de referencia</label>
-              <input type="text" class="form-control"  required name="mreferencia" id="mreferencia" placeholder="referencia" readonly>
+              <input type="text" class="form-control"  required name="mreferencia" id="mreferencia" placeholder="referencia">
             </div>
   
           </div>
   
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputEmail4">Fecha de pago</label>
-              <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
+              <label for="monto">Fecha de pago: </label>
+              <input   value="{!!date('d-m-y')!!}" class="form-control   " type="date" name="fecha_pago" id="mfecha" placeholder="">
             </div>
+            
             <div class="form-group col-md-6">
               <label for="inputEmail4">Fecha de Vencimiento</label>
               <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
             </div>
+
+
+           
+           
             <div class="form-group col-md-6">
               <label for="forma_pago">Monto</label>
-              <input type="text" required class="form-control"  id="mmonto" name=""    placeholder="Monto">
+              <input type="text" required class="form-control"  id="mmonto" name="importe_pagado"    placeholder="Monto">
   
             </div>
+            
+            
             <div class="form-group col-md-6">
               <label for="forma_pago">Divisa</label>
-              <input type="text" required  readonly class="form-control readonly"  id="mdivisa" name=""  placeholder="divisa">
-  
-             
+              <select id="mdivisa" class="form-control" required name="moneda">
+                @foreach(sc_currency_all() as $moneda)
+                <option  value="{{$moneda->code}}"  {!! $moneda->code =='USD' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
+                @endforeach
+
+                
+              </select>      
+              @error('moneda')
+              <small style="color: red">{{$message}}</small>
+          @enderror
+            </div>
+
+
+           
+
+
+            <div class="form-group col-md-6">
+              <label for="forma_pago">Estatus</label>
+              <select id="mstatus" class="form-control"  name="payment_status">
+                @foreach ($statusPayment as $key => $item)
+                <option {{ $item == 5 ? 'selected':'' }}  value="{{$key}}" > {{$item}}</option>
+                @endforeach
+              </select>
             </div>
           </div>
   
           <div class="form-row">
          
+            
   
-  
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-12">
            
                 <label for="forma_pago"> descargar referencia </label>
-                <a href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
+                <a target="blank" href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
                   </div>
                   
 
-                      <div class="form-group">
-                        <label for="forma_pago"></label>
-                        <select class="form-control" id="mstatus" name="mstatus">
-                          @foreach ($statusPayment as $key => $item)
-                          <option   value="@foreach ($historial_pagos as  $historia)
-                             
-                              @if ($historia->comment == $item)
-                                {{$item}}
-                              @endif
-                          @endforeach"  > {{$item}}</option>
-                          @endforeach
-                        </select>
-                      </div>
+                     
   
                       <div class="form-group col-md-6">
            
                         <label for="forma_pago">Tasa de cambio</label>
-                        <input type="text"  id="mtasa" class="form-control" name="mtasa" required="">
+                        <input type="text"  id="mtasa" class="form-control" name="tasa_cambio" required="">
           
                           </div>
                   <div class="form-group col-md-6">
@@ -1068,7 +1092,7 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
 
          
-            {{-- <button type="submit" class="btn btn-primary" >Editar</button> --}}
+             <button type="submit" class="btn btn-primary" >Editar</button>
 
         </div>
       </div>
@@ -1197,23 +1221,23 @@ function obtener_detalle_pago(id_pago){
 
            var data = returnedData.data;
 
-           console.log(data)
+            let fechas =  data.fecha_pago.split(' ')
 
+           fechaInicio = new Date(document.getElementById('mfecha').value = fechas[0])
+          
            $("#idpago").val(data.id)
            $("#order_id").val(data.order_id)
 
 
            
-            $("#mforma_pago").val(data.metodo)
+            $("#mforma_pago").val(data.metodo_pago_id)
             $("#mreferencia").val(data.referencia)
-
-            $("#mfecha").val(data.fecha_pago)
             $("#mvencimiento").val(data.fecha_venciento)
             $("#mmonto").val(data.importe_pagado)
             $("#mreferencia").val(data.referencia)
             $("#mdivisa").val(data.moneda)
             $("#mobservacion").val(data.comment)
-            $("#mstatus").val(data.status)
+            $("#mstatus").val(data.payment_status)
             $("#mtasa").val(data.tasa_cambio)
             $("#dcomprobante").attr('href', data.comprobante)
             

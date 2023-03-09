@@ -5,7 +5,7 @@
       <div class="col-md-12">
          <div class="card">
                 <div class="card-header with-border">
-                    <h2 class="card-title">registrar Tasa</h2>
+                    <h2 class="card-title">Registrar Tasa</h2>
 
                     <div class="card-tools">
                         <div class="btn-group float-right mr-5">
@@ -25,24 +25,23 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Tasa</th>
                                 <th scope="col">Fecha</th>
-                          
+
                               </tr>
                             </thead>
                             <tbody>
                                 @foreach ( $tipocambio as  $key => $cambio)
-                                    
-                           
+
                               <tr>
                                 <th scope="row">{{$key}}</th>
                                 <td>{{ $cambio->valor }}</td>
                                 <td>{{ $cambio->fecha }}</td>
-                               
+
                               </tr>
                               @endforeach
-                             
+
                             </tbody>
                           </table>
-                     
+
 
                     </div>
                     <!-- /.card-body -->
