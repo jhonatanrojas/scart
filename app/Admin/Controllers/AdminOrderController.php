@@ -239,7 +239,7 @@ class  AdminOrderController extends RootAdminController
                 'Acción' =>  '
                 <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
                 '.$btn_pagos. $btn_reportar_pago.'
-                <!-- span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span -->
+                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span >
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
@@ -1039,7 +1039,10 @@ class  AdminOrderController extends RootAdminController
             if (!$order) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$orderId]), 'detail' => '']);
             }
+         
 
+         
+            
             $pId = $itemDetail->product_id;
             $qty = $itemDetail->qty;
             $itemDetail->delete(); //Remove item from shop order detail
@@ -1075,10 +1078,17 @@ class  AdminOrderController extends RootAdminController
             $arrID = explode(',', $ids);
             $arrDontPermission = [];
             foreach ($arrID as $key => $id) {
+
+            $convenio=Convenio::where('order_id',$id)->first();
+            if ($convenio) {
+                return response()->json(['error' => 1, 'msg' => 'No se puede eliminar esta solicitud por que ya tiene un convenio asociado', 'detail' => '']);
+            }
                 if (!$this->checkPermisisonItem($id)) {
                     $arrDontPermission[] = $id;
                 }
             }
+
+
             if (count($arrDontPermission)) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.remove_dont_permisison') . ': ' . json_encode($arrDontPermission)]);
             } else {
