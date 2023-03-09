@@ -1010,9 +1010,10 @@
   
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputEmail4"> Fecha de primer pago:  </label>
-              <input type="text" class="form-control" required value="" name="fecha" readonly id="mfecha" placeholder="referencia">
+              <label for="monto">Fecha de pago: </label>
+              <input   value="{!!date('d-m-y')!!}" class="form-control   " type="date" name="fecha_pago" id="mfecha" placeholder="">
             </div>
+            
             <div class="form-group col-md-6">
               <label for="inputEmail4">Fecha de Vencimiento</label>
               <input type="text" class="form-control" required value="" name="fecha"  readonly id="mvencimiento" placeholder="referencia">
@@ -1026,12 +1027,7 @@
               <input type="text" required class="form-control"  id="mmonto" name="importe_pagado"    placeholder="Monto">
   
             </div>
-            {{-- <div class="form-group col-md-6">
-              <label for="forma_pago">Divisa</label>
-              <input type="text" required  readonly class="form-control readonly"   name=""  placeholder="divisa">
-  
-             
-            </div> --}}
+            
             
             <div class="form-group col-md-6">
               <label for="forma_pago">Divisa</label>
@@ -1048,10 +1044,7 @@
             </div>
 
 
-            <div class="form-group col-md-6">
-              <label for="monto">Fecha de pago: </label>
-              <input   value="{!!date('d-m-y')!!}" class="form-control   " type="date" name="fecha_pago" id="mfecha" placeholder="">
-            </div>
+           
 
 
             <div class="form-group col-md-6">
@@ -1228,8 +1221,10 @@ function obtener_detalle_pago(id_pago){
 
            var data = returnedData.data;
 
-           console.log(data)
+            let fechas =  data.fecha_pago.split(' ')
 
+           fechaInicio = new Date(document.getElementById('mfecha').value = fechas[0])
+          
            $("#idpago").val(data.id)
            $("#order_id").val(data.order_id)
 
@@ -1237,8 +1232,6 @@ function obtener_detalle_pago(id_pago){
            
             $("#mforma_pago").val(data.metodo_pago_id)
             $("#mreferencia").val(data.referencia)
-
-            $("#mfecha").val(data.fecha_pago)
             $("#mvencimiento").val(data.fecha_venciento)
             $("#mmonto").val(data.importe_pagado)
             $("#mreferencia").val(data.referencia)
