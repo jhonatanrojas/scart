@@ -682,7 +682,13 @@ class  AdminOrderController extends RootAdminController
     public function getInfoUser()
     {
         $id = request('id');
-        return AdminCustomer::getCustomerAdminJson($id);
+        return response()->json([
+            'orden' => AdminOrder::getOrderAdminCustomer($id),
+            'cliente' => AdminCustomer:: getCustomerAdmin($id),
+        ]);
+
+
+      
     }
 
     /**

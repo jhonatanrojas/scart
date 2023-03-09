@@ -205,9 +205,7 @@
                                 <label for="status" class="col-sm-2 col-form-label">{{ sc_language_render('order.status') }}</label>
                                 <div class="col-sm-8">
                                     <select class="form-control status " style="width: 100%;" name="status">
-                                      @foreach ($orderStatus as $k => $v)
-                                            <option value="{{ $k }}" {{ (old('status') ==$k) ? 'selected':'' }}>{{ $v}}</option>
-                                        @endforeach
+                                        <option value="1">SOLICTUD REALIZADA</option>
                                     </select>
                                         @if ($errors->has('status'))
                                             <span class="text-sm">
@@ -258,6 +256,11 @@
 
                     <!-- /.card-footer -->
                 </form>
+
+                <div class="table-responsive tabla-solicitudes">
+
+
+                </div>
             </div>
         </div>
     </div>
@@ -304,7 +307,8 @@ function addInfo(){
                 $('#loading').show();
             },
             success: function(result){
-                var returnedData = JSON.parse(result);
+                console.log(result.cliente);
+                var returnedData = result.cliente;
                 $('[name="email"]').val(returnedData.email);
                 $('[name="first_name"]').val(returnedData.first_name);
                 $('[name="last_name"]').val(returnedData.last_name);
@@ -319,6 +323,63 @@ function addInfo(){
                 $('[name="fecha"]').val(returnedData.fecha);
                 $('[name="country"]').val(returnedData.country).change();
                 $('#loading').hide();
+
+        
+            if(result.orden.length>0){
+             var html =`
+             <table class="table table-sm">
+
+                <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Estatus</th>
+                <th scope="col">Producto</th>
+                <th scope="col">nro Coutas</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Fecha</th>
+                </tr>
+                </thead>
+            ` 
+
+            result.orden.forEach(orden => {
+
+                var product=''
+                var nro_coutas=''
+                var qty=''
+                console.log(orden.details[0])
+                
+                if(orden.details[0]){
+               product=orden.details[0].name;
+               nro_coutas=orden.details[0].nro_coutas;
+               qty=orden.details[0].qty;
+       
+                }
+
+            html +=` <tr> 
+                <td>  
+                    <a href="/sc_admin/order/detail/${orden.id}" ><span title="Ir al pedido" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                    ${orden.id}</td>
+                    <td>  ${orden.estatus} </td>
+                <td>  ${product} </td>
+                <td>  ${nro_coutas} </td>
+                <td>  ${qty} </td>
+                <td>  ${orden.created_at} </td>
+
+                
+                 </tr> `;
+  
+
+                
+            });
+
+
+            html +=`  </table> `;
+
+            $('.tabla-solicitudes').html(html)
+       
+            }
+
+       
             }
         });
        }else{
