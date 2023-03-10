@@ -877,7 +877,7 @@ class  AdminOrderController extends RootAdminController
     public function postAddItem()
     {
 
-        
+       
         $addIds = request('add_id');
         $add_price = request('add_price');
         $add_qty = request('add_qty');
@@ -886,8 +886,10 @@ class  AdminOrderController extends RootAdminController
         $add_att = request('add_att');
         $add_tax = request('add_tax');
         $orderId = request('order_id');
-
+        $add_serial_product = request('add_serial');
         $add_inicial = request('add_inicial');
+
+        
 
  
         $items = [];
@@ -919,6 +921,7 @@ class  AdminOrderController extends RootAdminController
                     'currency' => $order->currency,
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
+                    'serial_product' => $add_serial_product[$key],
                 );
             }
         }
@@ -931,6 +934,8 @@ class  AdminOrderController extends RootAdminController
                     'content' => "Producto agregado: <br>" . implode("<br>", array_column($items, 'name')),
                     'admin_id' => Admin::user()->id,
                     'order_status_id' => $order->status,
+                    
+                    
                 ];
                 (new AdminOrder)->addOrderHistory($dataHistory);
 

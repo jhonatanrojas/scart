@@ -299,18 +299,19 @@
      
           <div class="card collapsed-card">
           <div class="table-responsive">
-            <table class="table table-hover  box-body text-wrap table-bordered ">
+            <table class="table table-hover  table-bordered ">
                 <thead>
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
+                     <th >Serial del Articulo</th>
                     <th>Cuotas</th>
                     <th>Modalidad</th>
-                    <th class="product_qty">Inicial</th>
-                    <th class="product_qty">Monto cuota</th>
-                    <th class="product_qty">Cant</th>
-                    <th class="product_price">{{ sc_language_render('product.price') }}</th>
+                    <th >Inicial</th>
+                    <th >Monto cuotas</th>
+                    <th >Cant</th>
+                    <th>{{ sc_language_render('product.price') }}</th>
 
-                    <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
+                    {{-- <th class="product_tax">{{ sc_language_render('product.tax') }}</th> --}}
                     <th class="product_total">Total</th>
                       @if (!$order->modalidad_de_compra == 1)
                       <th>{{ sc_language_render('action.title') }}</th>
@@ -339,6 +340,12 @@
                               @endphp
                             {!! $html !!}
                             </td>
+
+                             <td>
+                              <a id="serial" data-index-number="{{  $item->serial_produtc }}" href="#" class="edit-item-detail" data-value="{{  $item->serial_product }}" data-name="serial_product" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                                data-title="serial_product">{{  $item->serial_product }}</a>
+                              
+                             </td>
                             <td>
                               <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
@@ -404,7 +411,7 @@
                               <a href="#" class="edit-item-detail" data-value="{{ $item->price }}" data-name="price" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('product.price') }}">{{ $item->price }}</a>
                             
                             </td>
-                            <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
+                            {{-- <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td> --}}
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
 
@@ -916,11 +923,16 @@
               </select>
               <span class="add_attr"></span>
             </td>
+
+            <td><input  type="text" name="add_serial[]"  class="add_id[] form-control"  value="0"></td>
+
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
 
+            
+
             <td>
-                <select class="add_id form-control select2" name="add_modalidad[]" style="width:100% !important;">
-                <option value="0"> Seleccionar Modalidad</option>';
+                <select required class="add_id form-control select2" name="add_modalidad[]" style="width:100% !important;">
+                ';
                 if(count($modalidad_pago)){
                   foreach ($modalidad_pago as $pId => $modalidad){
                   
@@ -933,7 +945,7 @@
             </td>
 
             <td>
-                <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
+                <select required class="add_id[] form-control select2" name="add_inicial[]" style="width:100% !important;">
                   '.$opcion_inicial.' 
                 ';
           
@@ -1480,11 +1492,11 @@ function update_total(e){
             },
             success: function(returnedData){
 
-
                 node.find('.add_sku').val(returnedData.sku);
                 node.find('.add_qty').eq(0).val(1);
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                
 
                 if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});
                   else node.find('.add_price').eq(0).val(returnedData.price_final)
@@ -1550,6 +1562,8 @@ $( "#decision_final" ).change(function(e) {
               
                
               $('#loading').hide();
+
+              console.log(respuestas)
               
 
                  

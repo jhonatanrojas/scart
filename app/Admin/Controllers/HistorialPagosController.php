@@ -2139,7 +2139,7 @@ class HistorialPagosController extends RootAdminController
         
 
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
+            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.serial_product', 'sc_shop_customer.address1 as Direccion')->get();
 
 
            
@@ -2161,10 +2161,7 @@ class HistorialPagosController extends RootAdminController
                 $subtotal = 0.00;
                 $lote= 0;
 
-        foreach ($REFERENCIA as $key => $row) {
-
-                
-
+        foreach ($REFERENCIA as $key => $row) { 
                 $pagados = [];
                 $order = AdminOrder::getOrderAdmin($row->id);
                 $cliente = $row->first_name .' '. $row->last_name ?? '';
@@ -2178,6 +2175,7 @@ class HistorialPagosController extends RootAdminController
                 $Cedula = $row->cedula;
                 $vendedor = $list_usuarios ?? '';
                 $subtotal = $row->cb_total ?? '';
+                $serial_product = $row->serial_product ?? 'xxxxxxx';
 
         }
 
@@ -2185,6 +2183,7 @@ class HistorialPagosController extends RootAdminController
 
             $data['cliente'] = $cliente ?? '';
             $data['vendedor'] = $vendedor ?? '';
+            $data['serial_product'] = $serial_product ?? 'xxxx';
             $data['cedula'] = $Cedula ?? '';
             $data['direccion'] = $direccion ?? '';
             $data['fecha_pago'] = $fecha_pago ?? '';
