@@ -43,6 +43,18 @@ class AdminOrder extends ShopOrder
         return $data->first();
     }
 
+    public static function getOrderAdminCustomer($id)
+    {
+        $data  = self::with(['details', 'orderTotal'])->
+        leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
+        ->leftjoin('sc_shop_order_status', 'sc_shop_order.status', '=', 'sc_shop_order_status.id')
+        ->select('sc_shop_order.*', 'sc_admin_user.name as usuario','sc_shop_order_status.name as estatus')
+
+        ->where('customer_id', $id);
+     
+        return $data->get();
+    }
+
     /**
      * Get list order in admin
      *
