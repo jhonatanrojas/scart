@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
@@ -397,13 +397,25 @@ class ShopAccountController extends RootFrontController
         $cId = $user->id;
         $data = request()->all();
 
-        $v =  $this->validator($data);
-        if ($v->fails()) {
+
+        $usuario = AdminCustomer::where('id' ,$cId )->update([
+            'first_name' => $data['first_name'] ?? '',
+            'last_name' => $data['last_name'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'postcode' => $data['postcode'] ?? '',
+            'address1' => $data['address1' ?? ''],
+            'address2' => $data['address2' ?? ''],
+            'sex' => $data['sex' ?? '']
+
+        ]);
+
+
+        if (!$usuario) {
             return redirect()->back()
                 ->withErrors($v)
                 ->withInput();
         }
-        $user = $this->updateCustomer($data, $cId);
+        
 
         return redirect(sc_route('customer.index'))
             ->with(['success' => sc_language_render('customer.update_success')]);
