@@ -45,13 +45,9 @@
      
         <tr class=" table-striped">
 
-        
-        
-           
-          
           <td><span class="item_21_id">{{ $n }}</span></td>
           <td><span class="item_21_sku">
-            {{$order->nro_convenio}}
+            {{$order->nro_convenio ?? 'xxxxx'}}
 
             
         </span>
