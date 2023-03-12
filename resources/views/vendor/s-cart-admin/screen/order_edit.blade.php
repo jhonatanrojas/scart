@@ -303,7 +303,6 @@
                 <thead>
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
-                     <th >Serial del Articulo</th>
                     <th>Cuotas</th>
                     <th>Modalidad</th>
                     <th >Inicial</th>
@@ -341,11 +340,7 @@
                             {!! $html !!}
                             </td>
 
-                             <td>
-                              <a id="serial" data-index-number="{{  $item->serial_produtc }}" href="#" class="edit-item-detail" data-value="{{  $item->serial_product }}" data-name="serial_product" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
-                                data-title="serial_product">{{  $item->serial_product }}</a>
-                              
-                             </td>
+                            
                             <td>
                               <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
@@ -924,7 +919,7 @@
               <span class="add_attr"></span>
             </td>
 
-            <td><input  type="text" name="add_serial[]"  class="add_id[] form-control"  value="0"></td>
+           
 
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
 

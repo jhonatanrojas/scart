@@ -126,6 +126,8 @@ class  AdminOrderController extends RootAdminController
         $from_to      = sc_clean(request('from_to') ?? '');
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
+
+
    
         $arrSort = [
             'id__desc'         => sc_language_render('filter_sort.id_desc'),
@@ -156,8 +158,13 @@ class  AdminOrderController extends RootAdminController
                 $dataStores = sc_get_list_store_of_order($arrId);
             } else {
                 $dataStores = [];
+
             }
         }
+
+       
+
+
 
         $estado = Estado::all();
         $municipio = Municipio::all();
@@ -167,14 +174,16 @@ class  AdminOrderController extends RootAdminController
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,4,11,13];
+            $id_status=[1,2,3,4,11];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-            // dd($this->statusOrder);
+
+            
+            
         }else if($perfil=='riesgo'){
             $id_status=[4,5,14,15];
         //    $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
-        }else if($perfil=='administracion'){
+        }else if($perfil=='dministracion' || $perfil=='Administracion'){
             $id_status=[6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else{
@@ -191,8 +200,7 @@ class  AdminOrderController extends RootAdminController
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
 
-            
-           
+ 
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
             
@@ -547,20 +555,19 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
+            
+            
 
              $id_status=[1,2,3,4];
-             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+             $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[1,5,6,7,8,14,15,4];
+             $id_status=[1,5,6,7,8,9,10,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
-
-            
-
-            $id_status=[1,5,9,10,11,12,13,18,16,17];
+            $id_status=[12,13,14,15,16,17,18,19,20,10];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
@@ -895,7 +902,7 @@ class  AdminOrderController extends RootAdminController
         $add_serial_product = request('add_serial');
         $add_inicial = request('add_inicial');
 
-        
+
 
  
         $items = [];
@@ -927,7 +934,7 @@ class  AdminOrderController extends RootAdminController
                     'currency' => $order->currency,
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
-                    'serial_product' => $add_serial_product[$key],
+                    
                 );
             }
         }
