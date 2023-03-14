@@ -82,12 +82,12 @@ class AdminOrder extends ShopOrder
         if ($perfil) {
 
             if($perfil=='ventas'){
-                $id_status=[1,2,3,4,10,11];
+                $id_status=[1,2,3,4,11];
 
             }else if($perfil=='riesgo'){
-                $id_status=[5,6,7,8,9,10,4];
-            }else if($perfil=='administracion'){
-                $id_status=[12,13,14,15,16,17,18,19,20,10];
+                $id_status=[4,5,14,15 ,17];
+            }else if($perfil=='administracion' || $perfil=='Administracion'){
+                $id_status=[2,6,7,8,9,10,12,15,16,17];
             }
 
             $orderList = $orderList->whereIn('status', $id_status);
