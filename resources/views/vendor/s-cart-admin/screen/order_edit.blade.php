@@ -67,18 +67,23 @@
                 </div>
                       
                   @endif
-                 
-                  @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
+                  @if(!$estatus_user == 'Vendedor')
+
+                   @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador Convenio</span></a>
                    
-                </div>
+                  </div>
                       
                   @endif
 
+                  @endif
+                 
+                 
+
               </div>
           </div>
-    
+           
 
           <div class="row" id="order-body">
             <div class="col-sm-6">
@@ -86,10 +91,10 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'Estatus' }}</a>
+                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'ESTATUS' }}</a>
                   </td>
                 </tr>
-
+                
                   
 
                   <tr>
@@ -339,17 +344,32 @@
                               @endphp
                             {!! $html !!}
                             </td>
+                              @php
+                                  
+                          
+                                  if($estatus_user == 'Vendedor'){
+                                    $edit = '';
+                                    $UpdateStatus = '';
 
+                                    
+                                  }else{
+                                    $edit = 'edit-item-detail';
+                                    $UpdateStatus = 'updateStatus';
+                                  }
+
+                                 
+
+                              @endphp
                             
                             <td>
-                              <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
                         
 
                              <td>
-                              <a href="#" class="updateStatus" data-name="id_modalidad_pago" data-type="select"
+                              <a href="#" class="{{$UpdateStatus}}" data-name="id_modalidad_pago" data-type="select"
                                data-source ="{{ json_encode($modalidad_pago) }}"  
                                data-pk="{{ $item->id }}" data-value="{!! $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica'  !!}"
                                  data-url="{{ route("admin_order.edit_item") }}" 
@@ -358,24 +378,24 @@
                              </td>
                              <td>
 
-                              <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
-                               data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
-                               data-pk="{{ $item->id }}"
-                                data-value=" @if  ($item->abono_inicial>0 )
-                                
-                                Con Inicial 30%
+                              <a href="#" class="{{$UpdateStatus}}" data-name="abono_inicial" data-type="select"
+                              data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
+                              data-pk="{{ $item->id }}"
+                               data-value=" @if  ($item->abono_inicial>0 )
+                               
+                               Con Inicial 30%
+                               @else
+                               Sin inicial   
+                               
+                               @endif"
+                                data-url="{{ route("admin_order.edit_item") }}" 
+                                data-title="Inicial"> @if  ($item->abono_inicial>0 )
+                               
+                                Con Inicial  {{$item->abono_inicial}}%
                                 @else
-                                Sin inicial   
+                                Sin inicial    
                                 
-                                @endif"
-                                 data-url="{{ route("admin_order.edit_item") }}" 
-                                 data-title="Inicial"> @if  ($item->abono_inicial>0 )
-                                
-                                 Con Inicial  {{$item->abono_inicial}}%
-                                 @else
-                                 Sin inicial    
-                                 
-                                 @endif"</a>
+                                @endif"</a>
 
                              </td>
 
@@ -410,7 +430,7 @@
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
 
-                            @if ($order->modalidad_de_compra == 1)
+                            @if ($order->modalidad_de_compra == 0)
                             <td>
                               <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
@@ -743,6 +763,7 @@
           <br>
          <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
           </span></td>
+          
           <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
      
         </tr>

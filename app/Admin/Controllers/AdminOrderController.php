@@ -102,7 +102,8 @@ class  AdminOrderController extends RootAdminController
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
-            'N°'          => 'N°',
+            'N°'          => 'Solicitud°',
+            'Articulo'          => 'Articulo',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -118,7 +119,6 @@ class  AdminOrderController extends RootAdminController
             $listTh['shop_store'] = '<i class="fab fa-shopify" aria-hidden="true" title="'.sc_language_render('front.store_list').'"></i>';
         }
         $listTh['created_at'] = sc_language_render('admin.created_at');
-        $listTh['action'] = sc_language_render('action.title');
 
         $sort_order   = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword      = sc_clean(request('keyword') ?? '');
@@ -162,9 +162,6 @@ class  AdminOrderController extends RootAdminController
             }
         }
 
-       
-
-
 
         $estado = Estado::all();
         $municipio = Municipio::all();
@@ -180,11 +177,10 @@ class  AdminOrderController extends RootAdminController
             
             
         }else if($perfil=='riesgo'){
-            $id_status=[4,5,14,15];
-        //    $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-            $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
-        }else if($perfil=='dministracion' || $perfil=='Administracion'){
-            $id_status=[6,7,8,9,10,12,15,16,17];
+            $id_status=[4,5,14,15 ,17];
+            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        }else if($perfil=='administracion' || $perfil=='Administracion'){
+            $id_status=[2,6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else{
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
@@ -200,7 +196,13 @@ class  AdminOrderController extends RootAdminController
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
 
- 
+
+            $Articulo = shop_order_detail::where('order_id', $row->id)->join('sc_shop_product', 'sc_shop_product.id', '=', 'product_id')->get();
+
+            foreach( $Articulo as $a){
+                $Articulos = $a->name;
+            };
+
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
             
@@ -251,6 +253,8 @@ class  AdminOrderController extends RootAdminController
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
+
+                'Articulo' => $Articulos,
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
@@ -555,19 +559,16 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
-            
-            
-
-             $id_status=[1,2,3,4];
+             $id_status=[1,2,3,4 ,10];
              $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[1,5,6,7,8,9,10,4];
+             $id_status=[5,6,7,8,9,10,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
-            $id_status=[12,13,14,15,16,17,18,19,20,10];
+            $id_status=[1,12,13,14,15,16,17,18,19,20,10];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
@@ -640,7 +641,7 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
-
+           
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -650,6 +651,7 @@ class  AdminOrderController extends RootAdminController
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
+                'estatus_user' => $user_roles->rol,
                 'list_usuarios' => $list_usuarios,
                 'convenio'=>$convenio,
                 'documento'=>$ducumentocliente,
