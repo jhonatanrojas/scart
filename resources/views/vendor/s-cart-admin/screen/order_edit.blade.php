@@ -50,16 +50,21 @@
                 <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                   <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadJuradada', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Declaracion jurada</span></a>
               </div>
-                    
+                   
                 @endif
 
+                  
+                @if($estatus_user == 'Riesgo')
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
                 </div>
+                 
                       
                   @endif
-      
+                   
+                @endif
+                @if($estatus_user == 'Riesgo')
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -67,7 +72,10 @@
                 </div>
                       
                   @endif
-                  @if(!$estatus_user == 'Vendedor')
+                  
+                  
+                @endif
+                  @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion')
 
                    @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
