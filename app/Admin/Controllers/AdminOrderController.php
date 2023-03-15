@@ -167,7 +167,6 @@ class  AdminOrderController extends RootAdminController
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
 
-        // dd( $user = Admin::user());
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
