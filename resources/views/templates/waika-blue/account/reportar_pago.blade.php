@@ -94,49 +94,41 @@ $layout_page = shop_profile
           @endif
         </h5>
 
-        <div class="text-center">
+        <div class="container">
+         
           
           @if (isset($lisPago))
           @if (sc_config('customer_Transferencia'))
-          <p>
-             {{ sc_language_render('customer.Transferencia') }}</p>
-            <p>
-               {{ sc_language_render('customer.cuenta') }}
-            </p>
-            <p>{{ sc_language_render('customer.rif') }}</p> 
+         
+          <div style="color: black
+          " class="row justify-content-center align-items-center">
+           
+            <div  class="col-12 col-md-6 p-1">
+                <ul class="border p-2">
+                  <li><h5 class="text-primary">{{sc_language_render('customer.banco1')}}</h5></li>
+                  <li><span style="font-size: 20px;" class="text-primary">{{ sc_language_render('customer.Transferencia') }}</span>:<strong class="h5">{{sc_language_render('customer.cuenta') }}</strong> </li>
+                  <li>   <span class="text-primary h5"><strong >{{ sc_language_render('customer.rif') }}</strong></span></li>
+                </ul>
+
+            </div>
+
+            <div  class="col-12  col-md-6 p-1 ">
+              @if (sc_config('customer_pago_movil'))
+              <ul class="border p-2">
+                <li><h5 class="text-primary">{{sc_language_render('customer.banco2')}}</h5></li>
+                  <li  ><span  style="font-size: 20px;" class="text-primary">{{ sc_language_render('customer.pago_movil') }}</span>:<strong class="h5">{{ sc_language_render('customer.telefono') }}</strong></li>
+                  <li>   <span class="text-primary h5"><strong >{{ sc_language_render('customer.rif') }}</strong></span></li>
+                </ul>
+             
+             
+             @endif
+            </div>
+          </div>
+         
           @endif
-          @else
           
-          <p>
-             {{ sc_language_render('customer.Transferencia') }}</p>
-            <p>
-               {{ sc_language_render('customer.cuenta') }}
-            </p>
-            <p>{{ sc_language_render('customer.rif') }}</p>
               
           @endif
-          
-          
-         @if (isset($lisPago))
-          @if (sc_config('customer_pago_movil'))
-          <p> {{ sc_language_render('customer.pago_movil') }}</p>
-          <p> {{ sc_language_render('customer.telefono') }}</p>
-          <p>
-            {{ sc_language_render('customer.rif') }}
-          </p>
-         
-         
-         @endif
-         @else
-         @if (sc_config('customer_pago_movil'))
-         <p> {{ sc_language_render('customer.pago_movil') }}</p>
-         <p> {{ sc_language_render('customer.telefono') }}</p>
-         <p>
-           {{ sc_language_render('customer.rif') }}
-       </p>
-       @endif
-         @endif
-         
 
         </div>
         <div class="card-body">
