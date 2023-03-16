@@ -783,9 +783,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
         }
         if (sc_config('customer_address1')) {
             if (sc_config('customer_address1_required')) {
-                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:200');
             } else {
-                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address1'])) {
                 $dataUpdate['address1'] = $dataRaw['address1'];
@@ -794,9 +794,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (sc_config('customer_address2')) {
             if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:200');
             } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address2'])) {
                 $dataUpdate['address2'] = $dataRaw['address2'];
@@ -805,9 +805,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (sc_config('customer_address3')) {
             if (sc_config('customer_address3_required')) {
-                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:100');
+                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:200');
             } else {
-                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:100');
+                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address3'])) {
                 $dataUpdate['address3'] = $dataRaw['address3'];
