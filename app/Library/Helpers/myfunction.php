@@ -25,9 +25,10 @@ function sc_event_order_success(ShopOrder $order)
         OrderSuccess::dispatch($order);
     }
 
-if (!function_exists('sc_customer_data_insert_mapping')) {
+
     function sc_customer_data_insert_mapping(array $dataRaw)
     {
+    
 
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
@@ -39,6 +40,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             'cod_municipio' => $dataRaw['cod_municipio'],
             'cod_parroquia' => $dataRaw['cod_parroquia'],
             'password' => bcrypt($dataRaw['password']),
+         
         ];
 
        
@@ -70,7 +72,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
         }
 
-        if (empty($dataRaw['phone2'])) {
+        if (!empty($dataRaw['phone2'])) {
             $dataInsert['phone2'] = $dataRaw['phone2'];
         }
 
@@ -109,9 +111,9 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
 
         if (sc_config('customer_address2')) {
             if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:240');
             } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:240');
             }
             if (!empty($dataRaw['address2'])) {
                 $dataInsert['address2'] = $dataRaw['address2'];
@@ -328,7 +330,7 @@ if (sc_config('customer_parroquias')) {
         return $dataMap;
     }
 
-}
+
 
 if (!function_exists('sc_customer_sendmail_reset_notification') && !in_array('sc_customer_sendmail_reset_notification', config('helper_except', []))) {
     function sc_customer_sendmail_reset_notification(string $token, string $emailReset)

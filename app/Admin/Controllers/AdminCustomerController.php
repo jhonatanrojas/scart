@@ -235,6 +235,7 @@ class AdminCustomerController extends RootAdminController
         $data['status'] = empty($data['status']) ? 0 : 1;
         $data['store_id'] = session('adminStoreId');
         $dataMapping = $this->mappingValidator($data);
+       
         $validator =  Validator::make($data, $dataMapping['validate'], $dataMapping['messages']);
 
         
