@@ -98,20 +98,6 @@ class AdminCustomerController extends RootAdminController
 
 
 
-       
-
-       
-
-        
-
-
-
-       
-
-
-        
-
-
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -423,6 +409,8 @@ class AdminCustomerController extends RootAdminController
                 ->withErrors($validator)
                 ->withInput();
         }
+
+       
 
         AdminCustomer::updateInfo($dataMapping['dataUpdate'], $id);
 

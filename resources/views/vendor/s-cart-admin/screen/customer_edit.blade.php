@@ -339,6 +339,8 @@
                                 <div class="form-group row ">
                                     <label for="phone" class="col-sm-2 col-form-label">Telefono /opcional</label>
 
+                                   
+
                                     <div class="col-sm-8">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -855,61 +857,7 @@
 
             </div>
 
-            <div class="card">
-                @if (!empty($addresses))
-                    <div class="card-header with-border">
-                        <h2 class="card-title">{{ sc_language_render('customer.address_list') }}</h2>
-                    </div>
-                    @foreach ($addresses as $address)
-                        <div class="list">
-                            @if (sc_config_admin('customer_lastname'))
-                                <b>{{ sc_language_render('customer.first_name') }}:</b> {{ $address['first_name'] }}<br>
-                                <b>{{ sc_language_render('customer.last_name') }}:</b> {{ $address['last_name'] }}<br>
-                            @else
-                                <b>{{ sc_language_render('customer.name') }}:</b> {{ $address['first_name'] }}<br>
-                            @endif
-
-                            @if (sc_config_admin('customer_phone'))
-                                <b>{{ sc_language_render('customer.phone') }}:</b> {{ $address['phone'] }}<br>
-                            @endif
-
-                            @if (sc_config_admin('customer_postcode'))
-                                <b>{{ sc_language_render('customer.postcode') }}:</b> {{ $address['postcode'] }}<br>
-                            @endif
-
-                            <b>{{ sc_language_render('customer.address1') }}:</b> {{ $address['address1'] }}<br>
-
-                            @if (sc_config_admin('customer_address2'))
-                                <b>{{ sc_language_render('customer.address2') }}:</b> {{ $address['address2'] }}<br>
-                            @endif
-
-                            @if (sc_config_admin('customer_address3'))
-                                <b>{{ sc_language_render('customer.address3') }}:</b> {{ $address['address3'] }}<br>
-                            @endif
-
-                            @if (sc_config_admin('customer_country'))
-                                <b>{{ sc_language_render('customer.country') }}:</b>
-                                {{ $countries[$address['country']] ?? $address['country'] }}<br>
-                            @endif
-
-                            <span class="btn">
-                                <a title="{{ sc_language_render('customer.addresses.edit') }}"
-                                    href="{{ sc_route_admin('admin_customer.update_address', ['id' => $address->id]) }}"><i
-                                        class="fa fa-edit"></i></a>
-                            </span>
-                            <span class="btn">
-                                <a href="#" title="{{ sc_language_render('customer.addresses.delete') }}"
-                                    class="delete-address" data-id="{{ $address->id }}"><i
-                                        class="fa fa-trash"></i></a>
-                            </span>
-                            @if ($address->id == $customer['address_id'])
-                                <span class="btn" title="{{ sc_language_render('customer.addresses.default') }}"><i
-                                        class="fa fa-university" aria-hidden="true"></i></span>
-                            @endif
-                        </div>
-                    @endforeach
-                @endif
-            </div>
+           
             @if (!empty($referencia))
                 <div class="card">
 
