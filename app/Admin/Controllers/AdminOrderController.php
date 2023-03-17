@@ -103,7 +103,10 @@ class  AdminOrderController extends RootAdminController
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
             'N°'          => 'Solicitud°',
+            'N°Convenio'          => 'N°Convenio',
+            'Vendedor Asignado' => 'Vendedor Asignado',
             'Articulo'          => 'Articulo',
+            'Cuotas' => 'Cuotas',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -170,7 +173,7 @@ class  AdminOrderController extends RootAdminController
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,4,11];
+            $id_status=[1,2,3,4];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             
@@ -195,12 +198,16 @@ class  AdminOrderController extends RootAdminController
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
 
+           
+            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
 
-            $Articulo = shop_order_detail::where('order_id', $row->id)->join('sc_shop_product', 'sc_shop_product.id', '=', 'product_id')->get();
+            $convenio = Convenio::where('order_id',$row->id)->first();
 
-            foreach( $Articulo as $a){
-                $Articulos = $a->name;
-            };
+           
+            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+
+            
+
 
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
@@ -252,8 +259,10 @@ class  AdminOrderController extends RootAdminController
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
-
-                'Articulo' => $Articulos ?? 'N/A',
+                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                 'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
+                'Articulo' => $Articulo->name ?? 'N/A',
+                'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
@@ -567,7 +576,7 @@ class  AdminOrderController extends RootAdminController
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
-            $id_status=[1,12,13,14,15,16,17,18,19,20,10];
+            $id_status=[12,13,14,15,16,17,18,19,20,10];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
