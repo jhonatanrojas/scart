@@ -25,9 +25,10 @@ function sc_event_order_success(ShopOrder $order)
         OrderSuccess::dispatch($order);
     }
 
-if (!function_exists('sc_customer_data_insert_mapping')) {
+
     function sc_customer_data_insert_mapping(array $dataRaw)
     {
+    
 
         $dataInsert = [
             'first_name' => $dataRaw['first_name'] ?? '',
@@ -39,6 +40,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
             'cod_municipio' => $dataRaw['cod_municipio'],
             'cod_parroquia' => $dataRaw['cod_parroquia'],
             'password' => bcrypt($dataRaw['password']),
+         
         ];
 
        
@@ -66,7 +68,7 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
         if (isset($dataRaw['estado_civil'])) {
             $dataInsert['estado_civil']  = $dataRaw['estado_civil'];
         }
-        if (!empty($dataRaw['nos_conocio'])) {
+        if (empty($dataRaw['nos_conocio'])) {
             $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
         }
 
@@ -98,9 +100,9 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
      
         if (sc_config('customer_address1')) {
             if (sc_config('customer_address1_required')) {
-                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:00');
             } else {
-                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address1'])) {
                 $dataInsert['address1'] = $dataRaw['address1'];
@@ -109,9 +111,9 @@ if (!function_exists('sc_customer_data_insert_mapping')) {
 
         if (sc_config('customer_address2')) {
             if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:240');
             } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:240');
             }
             if (!empty($dataRaw['address2'])) {
                 $dataInsert['address2'] = $dataRaw['address2'];
@@ -328,7 +330,7 @@ if (sc_config('customer_parroquias')) {
         return $dataMap;
     }
 
-}
+
 
 if (!function_exists('sc_customer_sendmail_reset_notification') && !in_array('sc_customer_sendmail_reset_notification', config('helper_except', []))) {
     function sc_customer_sendmail_reset_notification(string $token, string $emailReset)
@@ -534,6 +536,9 @@ if (!function_exists('sc_customer_sendmail_welcome') && !in_array('sc_customer_s
 if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_address_mapping', config('helper_except', []))) {
     function sc_customer_address_mapping(array $dataRaw)
     {
+
+
+       
         $dataAddress = [
             'first_name' => $dataRaw['first_name'] ?? '',
             'address1' => $dataRaw['address1'] ?? '',
@@ -570,7 +575,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
         }
 
         if (sc_config('customer_phone2')) {
-            $validate['phone2'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,12}$/');
+            $validate['phone2'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,14}$/');
             $dataAddress['phone2'] = $dataRaw['phone2']??'';
         }
         // if (sc_config('customer_cedula')) {
@@ -631,15 +636,18 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
     function sc_customer_data_edit_mapping(array $dataRaw)
     {
 
+
+
+      
+
         $dataUpdate = [
             'first_name' => $dataRaw['first_name'],
             'cedula' => $dataRaw['cedula'],
             'estado_civil' => $dataRaw['estado_civil'],
-            'nos_conocio' => $dataRaw['nos_conocio'] ,
             'natural_jurídica' => $dataRaw['natural_jurídica'],
             'rif' => $dataRaw['rif'] ?? '',
             'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
-            'phone2' => $dataRaw['phone2'] ?? "no aplica",
+            
         ];
      
         if (isset($dataRaw['status'])) {
@@ -652,8 +660,15 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
 
         if (isset($dataRaw['phone2'])) {
+
+            
             $dataUpdate['phone2'] = $dataRaw['phone2'];
+
+
+           
         }
+
+        
 
         if (!empty($dataRaw['estado_civil'])) {
             $dataUpdate['estado_civil'] = $dataRaw['estado_civil'];
@@ -781,9 +796,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
         }
         if (sc_config('customer_address1')) {
             if (sc_config('customer_address1_required')) {
-                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:200');
             } else {
-                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:100');
+                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address1'])) {
                 $dataUpdate['address1'] = $dataRaw['address1'];
@@ -792,9 +807,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (sc_config('customer_address2')) {
             if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:200');
             } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:100');
+                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address2'])) {
                 $dataUpdate['address2'] = $dataRaw['address2'];
@@ -803,9 +818,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
 
         if (sc_config('customer_address3')) {
             if (sc_config('customer_address3_required')) {
-                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:100');
+                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:200');
             } else {
-                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:100');
+                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:200');
             }
             if (!empty($dataRaw['address3'])) {
                 $dataUpdate['address3'] = $dataRaw['address3'];
@@ -934,6 +949,9 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
             'birthday.date'        => sc_language_render('validation.date', ['attribute'=> sc_language_render('customer.birthday')]),
             'birthday.date_format' => sc_language_render('validation.date_format', ['attribute'=> sc_language_render('customer.birthday')]),
         ];
+
+
+        
         $dataMap = [
             'validate' => $validate,
             'messages' => $messages,

@@ -43,6 +43,18 @@ class AdminOrder extends ShopOrder
         return $data->first();
     }
 
+    public static function getOrderAdminCustomer($id)
+    {
+        $data  = self::with(['details', 'orderTotal'])->
+        leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
+        ->leftjoin('sc_shop_order_status', 'sc_shop_order.status', '=', 'sc_shop_order_status.id')
+        ->select('sc_shop_order.*', 'sc_admin_user.name as usuario','sc_shop_order_status.name as estatus')
+
+        ->where('customer_id', $id);
+     
+        return $data->get();
+    }
+
     /**
      * Get list order in admin
      *
@@ -70,12 +82,12 @@ class AdminOrder extends ShopOrder
         if ($perfil) {
 
             if($perfil=='ventas'){
-                $id_status=[1,2,3,11,13];
+                $id_status=[1,2,3,4,11];
 
             }else if($perfil=='riesgo'){
-                $id_status=[1,2,3,11,13,4,5,14,15,6,7,8,9,10,12,16,17];
-            }else if($perfil=='administracion'){
-                $id_status=[6,7,8,9,10,12,16,17];
+                $id_status=[4,5,14,15 ,17];
+            }else if($perfil=='administracion' || $perfil=='Administracion'){
+                $id_status=[2,6,7,8,9,10,12,15,16,17];
             }
 
             $orderList = $orderList->whereIn('status', $id_status);

@@ -154,13 +154,13 @@ $layout_page = shop_profile
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
 
-                            <th>{{$item->nro_coutas}}</th>
+                            <td>{{$item->nro_coutas}}</th>
 
-
+                            
                             <td class="product_price">{{ $cuotas }}$</td>
                             <td class="product_total item_id_{{ $item->id }}">
-                              @if ($item->modalida_pago == 2)
-                              Quincen
+                              @if ($item->id_modalidad_pago == 2)
+                              Quincenal
                                   @else
                                   Mensual
                               @endif

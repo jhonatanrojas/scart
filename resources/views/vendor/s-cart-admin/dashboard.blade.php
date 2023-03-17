@@ -203,6 +203,8 @@
                     <tbody>
                     @if (count($topOrder))
                       @foreach ($topOrder as $order)
+
+    
                             <tr>
                               <td><a href="{{ route('admin_order.detail',['id'=>$order->id]) }}">#{{ $order->id }}</a></td>
                               <td>{{ $order->email }}</td>

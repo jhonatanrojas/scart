@@ -102,7 +102,8 @@ class  AdminOrderController extends RootAdminController
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
-            'N°'          => 'N°',
+            'N°'          => 'Solicitud°',
+            'Articulo'          => 'Articulo',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -118,7 +119,6 @@ class  AdminOrderController extends RootAdminController
             $listTh['shop_store'] = '<i class="fab fa-shopify" aria-hidden="true" title="'.sc_language_render('front.store_list').'"></i>';
         }
         $listTh['created_at'] = sc_language_render('admin.created_at');
-        $listTh['action'] = sc_language_render('action.title');
 
         $sort_order   = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword      = sc_clean(request('keyword') ?? '');
@@ -126,6 +126,8 @@ class  AdminOrderController extends RootAdminController
         $from_to      = sc_clean(request('from_to') ?? '');
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
+
+
    
         $arrSort = [
             'id__desc'         => sc_language_render('filter_sort.id_desc'),
@@ -156,26 +158,28 @@ class  AdminOrderController extends RootAdminController
                 $dataStores = sc_get_list_store_of_order($arrId);
             } else {
                 $dataStores = [];
+
             }
         }
+
 
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
 
-        // dd( $user = Admin::user());
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,4,11,13];
+            $id_status=[1,2,3,4,11];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-            // dd($this->statusOrder);
+
+            
+            
         }else if($perfil=='riesgo'){
-            $id_status=[4,5,14,15];
-        //    $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-            $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
-        }else if($perfil=='administracion'){
-            $id_status=[6,7,8,9,10,12,15,16,17];
+            $id_status=[4,5,14,15 ,17];
+            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        }else if($perfil=='administracion' || $perfil=='Administracion'){
+            $id_status=[2,6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else{
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
@@ -191,8 +195,13 @@ class  AdminOrderController extends RootAdminController
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
 
-            
-           
+
+            $Articulo = shop_order_detail::where('order_id', $row->id)->join('sc_shop_product', 'sc_shop_product.id', '=', 'product_id')->get();
+
+            foreach( $Articulo as $a){
+                $Articulos = $a->name;
+            };
+
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
             
@@ -239,10 +248,12 @@ class  AdminOrderController extends RootAdminController
                 'Acción' =>  '
                 <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
                 '.$btn_pagos. $btn_reportar_pago.'
-                <!-- span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span -->
+                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span >
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
+
+                'Articulo' => $Articulos,
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
@@ -547,20 +558,16 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
-
-             $id_status=[1,2,3,4];
-             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+             $id_status=[1,2,3,4 ,10];
+             $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[1,5,6,7,8,14,15,4];
+             $id_status=[5,6,7,8,9,10,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
-
-            
-
-            $id_status=[1,5,9,10,11,12,13,18,16,17];
+            $id_status=[1,12,13,14,15,16,17,18,19,20,10];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
@@ -633,7 +640,7 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
-
+           
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -643,6 +650,7 @@ class  AdminOrderController extends RootAdminController
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
                 'nro_convenio' =>$nro_convenio,
+                'estatus_user' => $user_roles->rol,
                 'list_usuarios' => $list_usuarios,
                 'convenio'=>$convenio,
                 'documento'=>$ducumentocliente,
@@ -682,7 +690,13 @@ class  AdminOrderController extends RootAdminController
     public function getInfoUser()
     {
         $id = request('id');
-        return AdminCustomer::getCustomerAdminJson($id);
+        return response()->json([
+            'orden' => AdminOrder::getOrderAdminCustomer($id),
+            'cliente' => AdminCustomer:: getCustomerAdmin($id),
+        ]);
+
+
+      
     }
 
     /**
@@ -877,7 +891,7 @@ class  AdminOrderController extends RootAdminController
     public function postAddItem()
     {
 
-        
+       
         $addIds = request('add_id');
         $add_price = request('add_price');
         $add_qty = request('add_qty');
@@ -886,8 +900,10 @@ class  AdminOrderController extends RootAdminController
         $add_att = request('add_att');
         $add_tax = request('add_tax');
         $orderId = request('order_id');
-
+        $add_serial_product = request('add_serial');
         $add_inicial = request('add_inicial');
+
+
 
  
         $items = [];
@@ -919,6 +935,7 @@ class  AdminOrderController extends RootAdminController
                     'currency' => $order->currency,
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
+                    
                 );
             }
         }
@@ -931,6 +948,8 @@ class  AdminOrderController extends RootAdminController
                     'content' => "Producto agregado: <br>" . implode("<br>", array_column($items, 'name')),
                     'admin_id' => Admin::user()->id,
                     'order_status_id' => $order->status,
+                    
+                    
                 ];
                 (new AdminOrder)->addOrderHistory($dataHistory);
 
@@ -1039,7 +1058,10 @@ class  AdminOrderController extends RootAdminController
             if (!$order) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#'.$orderId]), 'detail' => '']);
             }
+         
 
+         
+            
             $pId = $itemDetail->product_id;
             $qty = $itemDetail->qty;
             $itemDetail->delete(); //Remove item from shop order detail
@@ -1075,10 +1097,17 @@ class  AdminOrderController extends RootAdminController
             $arrID = explode(',', $ids);
             $arrDontPermission = [];
             foreach ($arrID as $key => $id) {
+
+            $convenio=Convenio::where('order_id',$id)->first();
+            if ($convenio) {
+                return response()->json(['error' => 1, 'msg' => 'No se puede eliminar esta solicitud por que ya tiene un convenio asociado', 'detail' => '']);
+            }
                 if (!$this->checkPermisisonItem($id)) {
                     $arrDontPermission[] = $id;
                 }
             }
+
+
             if (count($arrDontPermission)) {
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.remove_dont_permisison') . ': ' . json_encode($arrDontPermission)]);
             } else {

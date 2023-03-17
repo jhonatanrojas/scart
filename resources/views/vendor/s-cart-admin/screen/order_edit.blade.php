@@ -50,16 +50,21 @@
                 <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                   <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadJuradada', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Declaracion jurada</span></a>
               </div>
-                    
+                   
                 @endif
 
+                  
+                @if($estatus_user == 'Riesgo')
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
                 </div>
+                 
                       
                   @endif
-      
+                   
+                @endif
+                @if($estatus_user == 'Riesgo')
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -67,18 +72,26 @@
                 </div>
                       
                   @endif
-                 
-                  @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
+                  
+                  
+                @endif
+                  @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion')
+
+                   @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador Convenio</span></a>
                    
-                </div>
+                  </div>
                       
                   @endif
 
+                  @endif
+                 
+                 
+
               </div>
           </div>
-    
+           
 
           <div class="row" id="order-body">
             <div class="col-sm-6">
@@ -86,10 +99,10 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'Estatus' }}</a>
+                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'ESTATUS' }}</a>
                   </td>
                 </tr>
-
+                
                   
 
                   <tr>
@@ -299,18 +312,18 @@
      
           <div class="card collapsed-card">
           <div class="table-responsive">
-            <table class="table table-hover  box-body text-wrap table-bordered ">
+            <table class="table table-hover  table-bordered ">
                 <thead>
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
                     <th>Cuotas</th>
                     <th>Modalidad</th>
-                    <th class="product_qty">Inicial</th>
-                    <th class="product_qty">Monto cuota</th>
-                    <th class="product_qty">Cant</th>
-                    <th class="product_price">{{ sc_language_render('product.price') }}</th>
+                    <th >Inicial</th>
+                    <th >Monto cuotas</th>
+                    <th >Cant</th>
+                    <th>{{ sc_language_render('product.price') }}</th>
 
-                    <th class="product_tax">{{ sc_language_render('product.tax') }}</th>
+                    {{-- <th class="product_tax">{{ sc_language_render('product.tax') }}</th> --}}
                     <th class="product_total">Total</th>
                       @if (!$order->modalidad_de_compra == 1)
                       <th>{{ sc_language_render('action.title') }}</th>
@@ -339,15 +352,32 @@
                               @endphp
                             {!! $html !!}
                             </td>
+                              @php
+                                  
+                          
+                                  if($estatus_user == 'Vendedor'){
+                                    $edit = '';
+                                    $UpdateStatus = '';
+
+                                    
+                                  }else{
+                                    $edit = 'edit-item-detail';
+                                    $UpdateStatus = 'updateStatus';
+                                  }
+
+                                 
+
+                              @endphp
+                            
                             <td>
-                              <a id="cuotas_nro" data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
                         
 
                              <td>
-                              <a href="#" class="updateStatus" data-name="id_modalidad_pago" data-type="select"
+                              <a href="#" class="{{$UpdateStatus}}" data-name="id_modalidad_pago" data-type="select"
                                data-source ="{{ json_encode($modalidad_pago) }}"  
                                data-pk="{{ $item->id }}" data-value="{!! $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica'  !!}"
                                  data-url="{{ route("admin_order.edit_item") }}" 
@@ -356,24 +386,24 @@
                              </td>
                              <td>
 
-                              <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
-                               data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
-                               data-pk="{{ $item->id }}"
-                                data-value=" @if  ($item->abono_inicial>0 )
-                                
-                                Con Inicial 30%
+                              <a href="#" class="{{$UpdateStatus}}" data-name="abono_inicial" data-type="select"
+                              data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
+                              data-pk="{{ $item->id }}"
+                               data-value=" @if  ($item->abono_inicial>0 )
+                               
+                               Con Inicial 30%
+                               @else
+                               Sin inicial   
+                               
+                               @endif"
+                                data-url="{{ route("admin_order.edit_item") }}" 
+                                data-title="Inicial"> @if  ($item->abono_inicial>0 )
+                               
+                                Con Inicial  {{$item->abono_inicial}}%
                                 @else
-                                Sin inicial   
+                                Sin inicial    
                                 
-                                @endif"
-                                 data-url="{{ route("admin_order.edit_item") }}" 
-                                 data-title="Inicial"> @if  ($item->abono_inicial>0 )
-                                
-                                 Con Inicial  {{$item->abono_inicial}}%
-                                 @else
-                                 Sin inicial    
-                                 
-                                 @endif"</a>
+                                @endif"</a>
 
                              </td>
 
@@ -404,11 +434,11 @@
                               <a href="#" class="edit-item-detail" data-value="{{ $item->price }}" data-name="price" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('product.price') }}">{{ $item->price }}</a>
                             
                             </td>
-                            <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td>
+                            {{-- <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td> --}}
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
 
-                            @if ($order->modalidad_de_compra == 1)
+                            @if ($order->modalidad_de_compra == 0)
                             <td>
                               <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
@@ -741,6 +771,7 @@
           <br>
          <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
           </span></td>
+          
           <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
      
         </tr>
@@ -916,11 +947,16 @@
               </select>
               <span class="add_attr"></span>
             </td>
+
+           
+
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
 
+            
+
             <td>
-                <select class="add_id form-control select2" name="add_modalidad[]" style="width:100% !important;">
-                <option value="0"> Seleccionar Modalidad</option>';
+                <select required class="add_id form-control select2" name="add_modalidad[]" style="width:100% !important;">
+                ';
                 if(count($modalidad_pago)){
                   foreach ($modalidad_pago as $pId => $modalidad){
                   
@@ -933,7 +969,7 @@
             </td>
 
             <td>
-                <select class="add_id form-control select2" name="add_inicial[]" style="width:100% !important;">
+                <select required class="add_id[] form-control select2" name="add_inicial[]" style="width:100% !important;">
                   '.$opcion_inicial.' 
                 ';
           
@@ -1480,11 +1516,11 @@ function update_total(e){
             },
             success: function(returnedData){
 
-
                 node.find('.add_sku').val(returnedData.sku);
                 node.find('.add_qty').eq(0).val(1);
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                
 
                 if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});
                   else node.find('.add_price').eq(0).val(returnedData.price_final)
@@ -1550,6 +1586,8 @@ $( "#decision_final" ).change(function(e) {
               
                
               $('#loading').hide();
+
+              console.log(respuestas)
               
 
                  

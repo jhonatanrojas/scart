@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\SC__documento;
 use SCart\Core\Front\Controllers\RootFrontController;
@@ -397,13 +397,25 @@ class ShopAccountController extends RootFrontController
         $cId = $user->id;
         $data = request()->all();
 
-        $v =  $this->validator($data);
-        if ($v->fails()) {
+
+        $usuario = AdminCustomer::where('id' ,$cId )->update([
+            'first_name' => $data['first_name'] ?? '',
+            'last_name' => $data['last_name'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'postcode' => $data['postcode'] ?? '',
+            'address1' => $data['address1' ?? ''],
+            'address2' => $data['address2' ?? ''],
+            'sex' => $data['sex' ?? '']
+
+        ]);
+
+
+        if (!$usuario) {
             return redirect()->back()
                 ->withErrors($v)
                 ->withInput();
         }
-        $user = $this->updateCustomer($data, $cId);
+        
 
         return redirect(sc_route('customer.index'))
             ->with(['success' => sc_language_render('customer.update_success')]);
@@ -461,19 +473,16 @@ class ShopAccountController extends RootFrontController
         $order = AdminOrder::where('customer_id', $id)->get();
         $numeroCombenio = [];
         $Order_resultado = [];
+
+
        
-        $Name_product = [];
-        if (!empty($order)) {
+            $Name_product = [];
+       
             $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
 
-            $REFERENCIA=ShopOrder::where('sc_shop_order.customer_id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
+            $REFERENCIA=ShopOrder::where('customer_id' , $id)->leftJoin('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->leftJoin('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->leftJoin('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
             ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
 
-       
-        }
-
-           
-        
 
 
 

@@ -9,6 +9,9 @@ use SCart\Core\Admin\Models\AdminCustomer;
 use SCart\Core\Admin\Models\AdminOrder;
 use App\Models\HistorialPago;
 use App\Models\ShopOrder;
+use App\Models\SC_admin_role;
+use SCart\Core\Admin\Admin;
+use SCart\Core\Admin\Models\AdminUser;
 
 use Illuminate\Http\Request;
 
@@ -35,18 +38,28 @@ class DashboardController extends RootAdminController
         $data['totalCustomer']  = AdminCustomer::getTotalCustomer();
         $data['topCustomer']    = AdminCustomer::getTopCustomer();
         $data['topOrder']       = AdminOrder::getTopOrder();
-        
 
+        $dminUser = new AdminUser;
+        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+        $ademin = SC_admin_role::pluck('id' , 'name')->all();
+        $id_usuario_rol = Admin::user()->id;
 
+        $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+        ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+        ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
 
         $data['pago_pendiente'] =  HistorialPago::Join('sc_shop_order', 'order_id' , '=', 'sc_shop_order.id')->join('sc_shop_payment_status', 'sc_shop_payment_status.id', '=', 'sc_historial_pagos.payment_status')->select('sc_shop_order.*', 'sc_shop_order.phone' , 'sc_shop_order.payment_status as estatus' ,'sc_historial_pagos.payment_status as pago_revicion' ,'sc_historial_pagos.order_id as numero_order' , 'sc_shop_payment_status.name as payment_Estatus', 'sc_historial_pagos.created_at as creado' , 'sc_historial_pagos.fecha_pago as fecha_de_pago')
         ->get();
 
        
-
+       
+        
        
 
         $data['mapStyleStatus'] = AdminOrder::$mapStyleStatus;
+
+       
 
         if (config('admin.admin_dashboard.pie_chart_type') == 'country') {
             //Country statistics
@@ -88,11 +101,15 @@ class DashboardController extends RootAdminController
                     'sliced' => true,
                     'selected' => ($key == 0) ? true : false,
                 ];
+
+                
             }
             $arrDataPie = $arrDevice;
             $pieChartTitle = sc_language_render('admin.chart.static_device');
             //End Device statistics
         }
+
+        
 
         if (config('admin.admin_dashboard.pie_chart_type') == 'order') {
             //Count order in 12 months
@@ -116,6 +133,8 @@ class DashboardController extends RootAdminController
         $data['pieChartTitle'] = $pieChartTitle;
         $data['dataPie'] = json_encode($arrDataPie);
 
+        
+
 
 
         //Order in 30 days
@@ -133,6 +152,8 @@ class DashboardController extends RootAdminController
             $date = $day->format('m-d');
             $orderInMonth[$date] = $totalsInMonth[$date]['total_order'] ?? '';
             $amountInMonth[$date] = ($totalsInMonth[$date]['total_amount'] ?? 0);
+
+
         }
 
 
@@ -145,6 +166,20 @@ class DashboardController extends RootAdminController
         $totalMonth = AdminOrder::getSumOrderTotalInYear()
             ->pluck('total_amount', 'ym')->toArray();
         $dataInYear = [];
+
+
+        if($user_roles->rol == 'Vendedor'){
+           foreach($data['topOrder'] as $order){
+
+                $data['topOrder'] =AdminOrder::where('status' , 1)->get();
+
+           }
+            ;
+
+       }else if($user_roles->rol == 'Riesgo'){
+            $data['topOrder'] =AdminOrder::where('status' , 4)->get();
+
+       }
         for ($i = 12; $i >= 0; $i--) {
             $date = date("Y-m", strtotime(date('Y-m-01') . " -$i months"));
             $dataInYear[$date] = $totalMonth[$date] ?? 0;
