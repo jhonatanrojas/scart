@@ -679,6 +679,7 @@
                                     <option value="twitter" >Twitter</option>
                                     <option value="Amigo" >Amigo</option>
                                     
+                                    
                                 
                                     </select>
                                     @if ($errors->has('nos_conocio'))
