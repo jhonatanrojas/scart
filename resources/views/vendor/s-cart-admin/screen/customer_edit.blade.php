@@ -684,6 +684,7 @@
                             </div>
 
                             @if (sc_config('customer_nos_conocio'))
+                            
                                 <div class="form-group  row">
                                     <label for="cod_parroquia" class="col-sm-2  col-form-label">¿COMO NOS
                                         CONOCISTE?</label>
@@ -704,7 +705,7 @@
                                                     {{ $customer['nos_conocio'] == 'twitter' ? 'selected' : '' }}>Twitter
                                                 </option>
                                                 <option value="Amigo"
-                                                    {{ $customer['nos_conocio'] == 'amigo' ? 'selected' : '' }}>Amigo
+                                                {{ $customer['nos_conocio'] == 'Amigo' ? 'selected' : '' }}>Amigo
                                                 </option>
 
 
