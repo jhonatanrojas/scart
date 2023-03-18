@@ -670,6 +670,7 @@ class  AdminOrderController extends RootAdminController
                 "products" => $products,
                 "statusOrder" => $styleStatus ,
                 "statusOrdert" => $this->statusOrder ?? '',
+                "statu_en"=> ShopOrderStatus::pluck('name', 'id')->all(),
                 "statusPayment" => $this->statusPayment,
                 "statusShipping" => $this->statusShipping,
                 'dataTotal' => AdminOrder::getOrderTotal($id),
