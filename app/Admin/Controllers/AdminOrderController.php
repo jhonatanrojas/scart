@@ -912,10 +912,8 @@ class  AdminOrderController extends RootAdminController
         $orderId = request('order_id');
         $add_serial_product = request('add_serial');
         $add_inicial = request('add_inicial');
+        $serial = request('add_serial');
 
-
-
- 
         $items = [];
 
         $order = AdminOrder::getOrderAdmin($orderId);
@@ -945,6 +943,7 @@ class  AdminOrderController extends RootAdminController
                     'currency' => $order->currency,
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
+                    'serial' => $serial[0] ?? 'serial del articulo',
                     
                 );
             }
