@@ -318,6 +318,7 @@
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
                     <th>Cuotas</th>
+                    <th>Serial</th>
                     <th>Modalidad</th>
                     <th >Inicial</th>
                     <th >Monto cuotas</th>
@@ -373,6 +374,13 @@
                             <td>
                               <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
+                              
+                             </td>
+
+
+                             <td>
+                              <a  id="serial"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->serial }}" data-name="serial" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              data-title="serial">{{$item->serial ?? '' }}</a>
                               
                              </td>
                         
@@ -852,10 +860,15 @@
 
               <div class="row">
 
+
+
                 <div class="form-group col-md-6">
                   <label for="monto">Cuotas: </label>
                   <input  readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
                 </div>
+
+
+
                 <div class="form-group col-md-6">
                   <label for="monto">Modalidad: </label>
                   <input  readonly value="0" class="form-control   " type="text" name="c_modalidad" id="c_modalidad" placeholder="_nro_cuotas">
@@ -952,6 +965,9 @@
            
 
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
+
+
+            <td><input type="text" name="add_serial[]"   class="add_serial form-control"  value="0"></td>
 
             
 
@@ -1521,6 +1537,7 @@ function update_total(e){
                 node.find('.add_qty').eq(0).val(1);
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                node.find('.add_serial').eq(0).val(returnedData.serial);
                 
 
                 if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});

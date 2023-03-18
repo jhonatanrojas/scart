@@ -2139,7 +2139,8 @@ class HistorialPagosController extends RootAdminController
         
 
             $REFERENCIA=ShopOrder::where('sc_shop_order.id' , $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.serial_product', 'sc_shop_customer.address1 as Direccion')->get();
+            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.serial', 'sc_shop_customer.address1 as Direccion')->get();
+
 
 
            
@@ -2175,7 +2176,7 @@ class HistorialPagosController extends RootAdminController
                 $Cedula = $row->cedula;
                 $vendedor = $list_usuarios ?? '';
                 $subtotal = $row->cb_total ?? '';
-                $serial_product = $row->serial_product ?? 'xxxxxxx';
+                $serial_product = $row->serial?? 'xxxxxxx';
 
         }
 
