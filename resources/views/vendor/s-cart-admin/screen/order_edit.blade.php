@@ -379,7 +379,7 @@
 
 
                              <td>
-                              <a  id="serial"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->serial }}" data-name="serial" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              <a  id="serial"  data-index-number="{{  $item->nro_coutas }}" href="#" class="updateStatus" data-value="{{  $item->serial }}" data-name="serial" data-type="text"  data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="serial">{{$item->serial ?? '' }}</a>
                               
                              </td>
