@@ -567,7 +567,7 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
-             $id_status=[1,2,3,4 ,10];
+             $id_status=[1,2,3,4 ,14];
              $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
