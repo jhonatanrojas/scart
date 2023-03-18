@@ -92,6 +92,7 @@
               </div>
           </div>
            
+           
 
           <div class="row" id="order-body">
             <div class="col-sm-6">
@@ -99,7 +100,7 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'ESTATUS' }}</a>
+                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{$statusOrder[$order->status] ?? 'ESTATU EN:'. $statu_en[$order->status] }}</a>
                   </td>
                 </tr>
                 
