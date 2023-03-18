@@ -179,7 +179,7 @@ class  AdminOrderController extends RootAdminController
             
             
         }else if($perfil=='riesgo'){
-            $id_status=[4,5,14,15 ,17];
+            $id_status=[4,5,14,15,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else if($perfil=='administracion' || $perfil=='Administracion'){
             $id_status=[2,6,7,8,9,10,12,15,16,17];
