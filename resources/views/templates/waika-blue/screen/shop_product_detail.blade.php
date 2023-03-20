@@ -28,7 +28,7 @@ $layout_page = shop_product_detail
     background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
 
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
   }
 
   table{
@@ -414,7 +414,7 @@ table tfoot {
                   @endif
                   <div class="m-2">
 
-                    <button id="finansiamiento" onclick="validachecke2(); gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
+                    <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
 
                   </div>
 
@@ -609,7 +609,7 @@ table tfoot {
                 <div id="w-100">
                    {{ csrf_field() }}
                   <div class="header">
-                    <h4 class="text-center animate__animated animate__flipInX animate__delay-1s p-0">Calcular financiamiento</h4>
+                    <h4 class="text-center animate__animated animate__flipInX animate__delay-1s p-0">Convenio</h4>
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
@@ -642,85 +642,40 @@ table tfoot {
                                        
                       </select>
                         </div>
-                      </div>
 
-                      <div class="col-md-6">
-                        <div class="form-groud">
-                          <label for="plazo">Cuotas:
-                          </label>
-                                <select class="form-control w-100 select2" name="Cuotas" id="Cuotas">
-                                  @foreach ($cuotas as $cuotas )
-                                  @if ($cuotas)
-                                  <option value="{{$cuotas->numero_cuotas}}">{{$cuotas->numero_cuotas}}</option>
-                                  @endif
-                                  @endforeach
-                                </select>
-                         
-                        </div>
-                      </div>
-
+                        <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" id="">
+                     
                     </div>
                
                 
 
                     <div class="control">
-                      <label for="fecha">Fecha del primer pago:   </label>
-                        <input type="date" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
+                      
+                        <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
                       
                     
                     </div>
 
-                    @php
-                    $porcentaje_inicial=0;
-                    if( $product->monto_inicial > 0 ):
-                    $porcentaje_inicial=  number_format(($product->monto_inicial *100) /$product->price,2);
-                   endif;
                
-               
-                    @endphp
-                    <div class="mt-0">
+                    <div class="mt-0 col-md-6">
                       <label for="inicial">Inicial  </label>
-
-                     
-                         <select class="form-control w-100 select2"  name="inicial" id="inicial">
-                          @if($product->monto_inicial > 0 )
-                          <option value="{{ $porcentaje_inicial}}">Inicial({{$porcentaje_inicial}}%)</option>
-                          @else
+                         <select required class="form-control w-100 "  name="inicial" id="inicial">
+                          <option value="">Selecione un opcion</option>
                           <option value="0">sin inicial(0%)</option>
                           <option value="30">con inicial(30%)</option>
-                          @endif
+                         
                          </select>
                     </div>
 
-                    <div class="p-0 mt-0 mt-2">
-                      <label for="monto">Monto Inicial $:</label>
-                      <input  readonly value="{{ $product->monto_inicial }}" class="form-control   " type="text"  id="monto_Inicial" placeholder="" 
+                    <div class=" col-12">
+                      <label class="fs-5" for="monto">Monto Inicial$:</label>
+                      <input id="monto_Inicial"  value="0.00" class="form-control   " type="text"  id="" placeholder="" 
                        >
                     </div>
                 
-                    <button type="button" id="simular" onclick="gen_table()"> CALCULAR</button>
                   </div>
 
-                  <div class="table-1 table-responsive">
-                    <table style="width: 85%; margin: auto;" class="table "   >
-                    
-                      <tbody  id="tab">
-                        <thead>
-                          <tr>
-                            <td>NRO</td>
-                            <td id="cuotass">CUOTAS</td>
-                      
-                            <td>FECHA DE PAGO</td>
-                        </tr>
-                          
-                      </thead>
-                      </tbody>
-                      
-                  </table>
-
-                  <div class="fecha" id="FechaEntrega"></div>
                  
-                  </div>
                 </div>
              
               
@@ -732,8 +687,10 @@ table tfoot {
                       <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Continuar pedido</button>
                     </div>
             </div>
-            
-          </div><!-- /.modal-content -->
+                  <div class="m-auto" id="mensaje"></div>
+          </div>
+
+        </div>
         </div>
         <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
@@ -754,30 +711,37 @@ table tfoot {
 
 
      const user = {!! json_encode($fecha_entrega) !!};
- 
 
-    
+
+          let  inicial = document.getElementById("inicial")
+          inicial.addEventListener('click' , function(e){
+           var iniciale = e.target.value
+           gen_table(iniciale)
+
+           
+        })
  
-        // simulador de creditos 
-        function gen_table(){
-          document.getElementById("tab").innerHTML="";
-          let monto_Inicial = document.getElementById("monto_Inicial");
+        function gen_table(iniciale){
           document.getElementById("butto_modal").disabled = false;
           let monto=Number(document.getElementById("monto").value);
           let n2=Number(document.getElementById("Cuotas").value);
-          var n3=Number(document.getElementById("inicial").value);
-          let inicial = parseInt(n3);
+      
+  
+          let inicial = iniciale;
           const plazoMensual = document.getElementById('modalidad')
           var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
           var selectd2 = plazoMensual.options[plazoMensual.selectedIndex].text;
 
           if(inicial>0){
-            totalinicial=(inicial*monto)/100;
-            monto = monto -totalinicial;
+            let tola_inicial = (inicial *  monto) / 100;
+              document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2);
+              document.getElementById('mensaje').innerHTML= '<spa class="h3 text-primary animate__animated animate__bounce">Entrega con inicial: la Tercera a la cuarta cuota</spa>'
 
-            monto_Inicial.value = totalinicial.toFixed(2)
+           
           }else{
-            monto_Inicial.value =  0.00
+           
+            document.getElementById('monto_Inicial').value = 0.00
+            document.getElementById('mensaje').innerHTML= '<spa class="h3 text-primary animate__animated animate__bounce">Entrega Sin inicial: de la Quinta a la Octava cuota</spa>'
           }
        
       
@@ -790,35 +754,7 @@ table tfoot {
             // obtener la fecha de hoy en formato `MM/DD/YYYY`
           }
 
-        
 
-          // function fecha_cliente(fecha){
-          //   let fecha_cliente = fecha.replace('/',' ')
-          //   let result = fecha_cliente.split(" " , 2)
-          //   user.forEach(element => {
-
-          //     fecha1 = element.fecha_entrega.replace('-',' ')
-          //     let fecha2 = fecha1.replace('-',' ')
-          //     let formafecha = ""
-          //     fecha3 = fecha2.split(" " , 2)[1]
-              
-          //     if(fecha3.replace('0','') == result[1]){
-          //         let revercefecha = element.fecha_entrega.split("" , 11)
-          //         let dia , mes ,año ;
-          //         dia = revercefecha[8] + revercefecha[9]
-          //         mes = revercefecha[5] + revercefecha[6]
-          //         año = revercefecha[0] + revercefecha[1] + revercefecha[2] + revercefecha[3]
-
-
-          //         const FechaEntrega = document.getElementById("FechaEntrega")
-          //         FechaEntrega.innerHTML =`<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dia} ${mes} ${año}</h6> `
-                  
-
-          //     }
- 
-          //   });
-
-          // }
         function fecha_cliente(fecha) {
           let fecha_cliente = fecha.replace(/[/-]/g, ' ');
           let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
@@ -938,8 +874,6 @@ table tfoot {
               
               
 
-          }else{
-              alert("Falta ingresar un Número");
           }
 
         
@@ -1000,6 +934,9 @@ table tfoot {
 
 
       });
+
+
+
 
 
       </script>
