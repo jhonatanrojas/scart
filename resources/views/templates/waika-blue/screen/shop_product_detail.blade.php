@@ -743,6 +743,7 @@ table tfoot {
             document.getElementById('monto_Inicial').value = 0.00
             document.getElementById('mensaje').innerHTML= '<spa class="h5 text-primary ">Entrega Sin inicial: de la Quinta a la Octava cuota</spa>'
           }
+          
        
       
           fechaInicio = new Date(document.getElementById('fecha').value)
