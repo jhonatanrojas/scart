@@ -598,7 +598,7 @@ table tfoot {
       </section>
       @endif
       <div class="modal  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog   modal-lg" role="document">
+        <div class="modal-dialog   modal-header" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -682,9 +682,9 @@ table tfoot {
              
                     </div>
                     
-                    <div class="modal-footer mb-4">
-                      <button  type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                      <button id="butto_modal" disabled="true" type="submit" class="btn btn-primary">Continuar pedido</button>
+                    <div class="modal-footer mb-12">
+                     
+                      <button id="butto_modal"  type="submit" class="btn btn-primary">Continuar pedido</button>
                     </div>
             </div>
                   <div class="m-auto" id="mensaje"></div>
@@ -735,14 +735,15 @@ table tfoot {
           if(inicial>0){
             let tola_inicial = (inicial *  monto) / 100;
               document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2);
-              document.getElementById('mensaje').innerHTML= '<spa class="h3 text-primary animate__animated animate__bounce">Entrega con inicial: la Tercera a la cuarta cuota</spa>'
+              document.getElementById('mensaje').innerHTML= '<spa class="h5 text-primary animate__animated animate__bounce">Entrega con inicial: la Tercera a la cuarta cuota</spa>'
 
            
           }else{
            
             document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= '<spa class="h3 text-primary animate__animated animate__bounce">Entrega Sin inicial: de la Quinta a la Octava cuota</spa>'
+            document.getElementById('mensaje').innerHTML= '<spa class="h5 text-primary ">Entrega Sin inicial: de la Quinta a la Octava cuota</spa>'
           }
+          
        
       
           fechaInicio = new Date(document.getElementById('fecha').value)
