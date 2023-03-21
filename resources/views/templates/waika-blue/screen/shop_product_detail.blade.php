@@ -16,19 +16,43 @@ $layout_page = shop_product_detail
   font-size: 2em;
 }
 
-  .modal .modal-dialog{
+.pedido{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+   
+    gap: 10px;
+
     width: 100%;
-    margin-top: 20px;
-    padding: 5px;
+    height: 51px;
+
+    background: #0080B6;
+   color:white;
+    border-radius: 500px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+  .modal {
     border: solid 1px rgba(126, 126, 126, 0.534);
 
   }
 
   .modal .modal-body{
-    background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    /*background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
 
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover;*/
+
+
+    box-shadow: 0px 4px 50px 3px rgba(0, 0, 0, 0.25);
+border-radius: 20px;
   }
 
   table{
@@ -597,79 +621,115 @@ table tfoot {
         </div>
       </section>
       @endif
-      <div class="modal  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog   modal-header" role="document">
+      <div class="modal p-4  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog   modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
              
             </div>
-            <div class="modal-body p-0">
+            <div class="modal-body p-4">
               <form action="{{ sc_route('cart.add') }}" method="POST">
                 <div id="w-100">
                    {{ csrf_field() }}
-                  <div class="header">
-                    <h4 class="text-center animate__animated animate__flipInX animate__delay-1s p-0">Convenio</h4>
+                  <div class="">
+                    <h4 class="text-center text-dark text-capitalize animate__animated animate__flipInX animate__delay-1s p-0 text-uppercase">{{ sc_language_render('customer.title_caculadora') }}</h4>
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
                     <div class="p-0 mt-0 m-0">
        
-                      
+                     
                       <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
                        >
                     </div>
+                   
 
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label  for="periodo">Forma de pago:
+                          <label class="text-dark text-uppercase"  for="periodo">Forma de pago:
                             
                           </label>
-                          <select id="modalidad" class="form-control w-100 modalidad_pago select2"
+                          <select readonly id="modalidad" class="form-control w-100 modalidad_pago "
                           name="modalidad_pago">
-                          <?php
-                              if(isset($modalida_pago)){
-                                  foreach ($modalida_pago as $key => $pagos) {
-                                      if(isset($product->id_modalidad_pago) and $product->id_modalidad_pago == $pagos->id){
-                                          echo "<option selected value='".$pagos->id."'  data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";     
-                                      }else{
-                                          echo "<option value='".$pagos->id."' data-latitud=".$pagos->latitud."  data-longitud=".$pagos->longitud." >".$pagos->name."</option>";
-                                      }
-                                  }
-                              }
-                          ?>   
+                           
+
+                            @foreach($modalida_pago as $key => $pagos)
+                             @if($product->id_modalidad_pagos == $pagos->id)
+                           
+
+                              <option value="
+                              @if($product->id_modalidad_pagos == $pagos->id )
+
+                              @endif
+                              ">
+                              {{$pagos->name}}
+                            </option>
+
+                         
+                            
+                            @endif
+                            @endforeach
+                            
+
+
+
                                        
                       </select>
                         </div>
 
+
+
+
+
                         <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" id="">
                      
                     </div>
+
+
+                       <div class="mt-0 col-md-6">
+                      <label class="text-dark text-uppercase" for="inicial">Cuota</label>
+                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
+                    </div>
+
                
                 
 
-                    <div class="control">
+         
                       
                         <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
                       
                     
-                    </div>
-
                
                     <div class="mt-0 col-md-6">
-                      <label for="inicial">Inicial  </label>
+                      <label class="text-dark text-uppercase" for="inicial">Inicial  </label>
                          <select required class="form-control w-100 "  name="inicial" id="inicial">
                           <option value="">Selecione un opcion</option>
-                          <option value="0">sin inicial(0%)</option>
-                          <option value="30">con inicial(30%)</option>
+                          <option value="0">Sin inicial</option>
+                          <option value="30">Con inicial</option>
                          
                          </select>
                     </div>
 
-                    <div class=" col-12">
-                      <label class="fs-5" for="monto">Monto Inicial$:</label>
-                      <input id="monto_Inicial"  value="0.00" class="form-control   " type="text"  id="" placeholder="" 
+
+
+                       <div class="mt-0 col-md-6">
+                      <label class="text-dark text-uppercase" for="">Monto de la Cuota$</label>
+                         <input
+                         id="monto_de_la_cuota" readonly class="form-control" type="text">
+                    </div>
+
+
+
+
+                  
+
+                
+
+                    <div class=" col-12 mt-3">
+                      <label class="text-dark text-uppercase"  for="monto">Monto Inicial$:</label>
+                      <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
                        >
                     </div>
                 
@@ -684,10 +744,12 @@ table tfoot {
                     
                     <div class="modal-footer mb-12">
                      
-                      <button id="butto_modal"  type="submit" class="btn btn-primary">Continuar pedido</button>
+                      <button id="butto_modal"  type="submit" class="pedido text-uppercase">Continuar pedido</button>
                     </div>
             </div>
-                  <div class="m-auto" id="mensaje"></div>
+                  <div class="m-auto p-3 mt-3 " id="mensaje">
+                   
+                  </div>
           </div>
 
         </div>
@@ -710,13 +772,20 @@ table tfoot {
 
 
 
-     const user = {!! json_encode($fecha_entrega) !!};
+          const user = {!! json_encode($fecha_entrega) !!};
 
 
           let  inicial = document.getElementById("inicial")
           inicial.addEventListener('click' , function(e){
            var iniciale = e.target.value
-           gen_table(iniciale)
+
+           if(iniciale == '0' || iniciale == '30'){
+              gen_table(iniciale)
+           }else if(!iniciale == '0' || !iniciale == '30'){
+              alert('el campo inicial es obligatorio')
+           }
+
+           
 
            
         })
@@ -733,30 +802,39 @@ table tfoot {
           var selectd2 = plazoMensual.options[plazoMensual.selectedIndex].text;
 
           if(inicial>0){
-            let tola_inicial = (inicial *  monto) / 100;
-              document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2);
-              document.getElementById('mensaje').innerHTML= '<spa class="h5 text-primary animate__animated animate__bounce">Entrega con inicial: la Tercera a la cuarta cuota</spa>'
+
+              let precio_couta=  monto -(inicial* monto / 100 );
+              let precio_monto_cuota = precio_couta / n2
+            let tola_inicial = inicial * monto / 100
+            let monto_cuotas = monto/n2;
+              document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
+              document.getElementById('monto_de_la_cuota').value =`${precio_monto_cuota.toFixed(2)}$`
+              document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark animate__animated animate__bounce">Entrega con inicial:De la Tercera a la cuarta cuota</spa>'
 
            
           }else{
-           
-            document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= '<spa class="h5 text-primary ">Entrega Sin inicial: de la Quinta a la Octava cuota</spa>'
+              let monto_cuotass = monto/n2;
+               document.getElementById('monto_de_la_cuota').value = `${monto_cuotass.toFixed(2)}$`
+                document.getElementById('monto_Inicial').value = 0.00
+                document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark ">Entrega Sin inicial: De la Quinta a la Octava cuota</spa>'
+
+
+            
           }
-          
+
        
       
-          fechaInicio = new Date(document.getElementById('fecha').value)
-          fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
+            fechaInicio = new Date(document.getElementById('fecha').value)
+            fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
            
-          if(fechaInicio == "Invalid Date"){
+            if(fechaInicio == "Invalid Date"){
             var fechaInicio  = new Date();
             var fechaInicio = fechaInicio.toLocaleDateString('en-US');
             // obtener la fecha de hoy en formato `MM/DD/YYYY`
-          }
+            }
 
 
-        function fecha_cliente(fecha) {
+          function fecha_cliente(fecha) {
           let fecha_cliente = fecha.replace(/[/-]/g, ' ');
           let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
 
