@@ -644,7 +644,6 @@ table tfoot {
                        >
                     </div>
                    
-
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -656,6 +655,11 @@ table tfoot {
                            
 
                             @foreach($modalida_pago as $key => $pagos)
+
+
+                           
+
+
                              @if($product->id_modalidad_pagos == $pagos->id)
                            
 
@@ -665,6 +669,7 @@ table tfoot {
                               @endif
                               ">
                               {{$pagos->name}}
+                              
                             </option>
 
                          
@@ -808,13 +813,22 @@ table tfoot {
             let tola_inicial = inicial * monto / 100
             let monto_cuotas = monto/n2;
               document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-              document.getElementById('monto_de_la_cuota').value =`${precio_monto_cuota.toFixed(2)}$`
+              document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
               document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark animate__animated animate__bounce">Entrega con inicial:De la Tercera a la cuarta cuota</spa>'
+
+
+
+
+
+
+             
+
+          
 
            
           }else{
               let monto_cuotass = monto/n2;
-               document.getElementById('monto_de_la_cuota').value = `${monto_cuotass.toFixed(2)}$`
+               document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
                 document.getElementById('monto_Inicial').value = 0.00
                 document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark ">Entrega Sin inicial: De la Quinta a la Octava cuota</spa>'
 
