@@ -643,7 +643,7 @@ table tfoot {
                       <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
                        >
                     </div>
-                   
+
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -656,10 +656,6 @@ table tfoot {
 
                             @foreach($modalida_pago as $key => $pagos)
 
-
-                           
-
-
                              @if($product->id_modalidad_pagos == $pagos->id)
                            
 
@@ -668,7 +664,7 @@ table tfoot {
 
                               @endif
                               ">
-                              {{$pagos->name}}
+                              {{$pagos->name ?? 'si modalidad de pago'}}
                               
                             </option>
 
