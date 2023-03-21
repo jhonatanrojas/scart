@@ -163,6 +163,9 @@ class ShopProductController extends RootFrontController
                 ->setRandom()
                 ->getData();
 
+
+               
+
             sc_check_view($this->templatePath . '.screen.shop_product_detail');
             return view(
                 $this->templatePath . '.screen.shop_product_detail',

@@ -484,7 +484,7 @@
                     <select class="form-control input-sm modalidad_pago select2"
                         name="modalidad_pago">
                         @foreach ($modalidad_pago as $k => $v)
-                        <option value="{{ $k }}" {{ (old('modalidad_pago') ==$k) ? 'selected':'' }}>{{ $v->name }}
+                        <option value="{{ $v->id }}" {{ (old('modalidad_pago') ==$k) ? 'selected':'' }}>{{ $v->name }}
                         </option>
                         @endforeach
                     </select>

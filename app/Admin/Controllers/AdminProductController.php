@@ -423,9 +423,7 @@ class AdminProductController extends RootAdminController
     {
         $data = request()->all();
 
-        
 
-    
         $langFirst = array_key_first(sc_language_all()->toArray()); //get first code language active
         $data['alias'] = !empty($data['alias'])?$data['alias']:$data['descriptions'][$langFirst]['name'];
         $data['alias'] = sc_word_format_url($data['alias']);
