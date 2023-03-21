@@ -415,13 +415,8 @@
                                 @endif"</a>
 
                              </td>
-
-                        
                  
                              <td>
-
-
-                              
                               @php
                               
                               if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
