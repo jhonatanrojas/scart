@@ -664,7 +664,7 @@ table tfoot {
 
                               @endif
                               ">
-                              {{$pagos->name ?? ''}}
+                              {{$pagos->name ?? 'si modalidad de pago'}}
                               
                             </option>
 
