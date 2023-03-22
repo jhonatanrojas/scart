@@ -173,17 +173,17 @@ class  AdminOrderController extends RootAdminController
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,4,11];
+            $id_status=[1,2,3,4,11,20];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             
             
             
         }else if($perfil=='riesgo'){
-            $id_status=[4,5,14,15,17];
+            $id_status=[5,6,7,8,9,10,3];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else if($perfil=='administracion' || $perfil=='Administracion'){
-            $id_status=[2,6,7,8,9,10,12,15,16,17];
+            $id_status=[6,7,8,9,10,12,15,16,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else{
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
@@ -568,12 +568,12 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
-             $id_status=[1,2,3,4,11];
+             $id_status=[1,2,3,4,11,20];
              $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[5,6,7,8,9,10,11 ,4];
+             $id_status=[5,6,7,8,9,10,11 ,3];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
