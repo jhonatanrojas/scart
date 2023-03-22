@@ -173,7 +173,7 @@ class  AdminOrderController extends RootAdminController
         
      if(!empty($perfil)){
         if($perfil=='ventas'){
-            $id_status=[1,2,3,4,11];
+            $id_status=[1,2,3,11];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             
@@ -564,6 +564,7 @@ class  AdminOrderController extends RootAdminController
         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
+        
         
 
        

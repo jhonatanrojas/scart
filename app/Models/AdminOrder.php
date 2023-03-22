@@ -82,7 +82,7 @@ class AdminOrder extends ShopOrder
         if ($perfil) {
 
             if($perfil=='ventas'){
-                $id_status=[1,2,3,4,11];
+                $id_status=[1,2,3,11];
 
             }else if($perfil=='riesgo'){
                 $id_status=[5,6,7,9,4,21];
