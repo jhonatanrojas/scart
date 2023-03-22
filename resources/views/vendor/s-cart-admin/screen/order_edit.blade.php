@@ -92,6 +92,7 @@
               </div>
           </div>
            
+           
 
           <div class="row" id="order-body">
             <div class="col-sm-6">
@@ -99,7 +100,7 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $statusOrder[$order->status] ?? 'ESTATUS' }}</a>
+                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{$statusOrder[$order->status] ?? 'ESTATU EN:'. $statu_en[$order->status] }}</a>
                   </td>
                 </tr>
                 
@@ -317,6 +318,7 @@
                   <tr>
                     <th>{{ sc_language_render('product.name') }}</th>
                     <th>Cuotas</th>
+                    <th>Serial</th>
                     <th>Modalidad</th>
                     <th >Inicial</th>
                     <th >Monto cuotas</th>
@@ -374,6 +376,13 @@
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
+
+
+                             <td>
+                              <a  id="serial"  data-index-number="{{  $item->nro_coutas }}" href="#" class="updateStatus" data-value="{{  $item->serial }}" data-name="serial" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              data-title="serial">{{$item->serial ?? '' }}</a>
+                              
+                             </td>
                         
 
                              <td>
@@ -406,16 +415,14 @@
                                 @endif"</a>
 
                              </td>
-
-                        
                  
                              <td>
-
                               @php
                               
                               if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
                            
                               $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
+
                               echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
                              else :
@@ -437,6 +444,13 @@
                             {{-- <td class="product_tax"><a href="#" class="edit-item-detail" data-value="{{ $item->tax }}" data-name="tax" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" data-title="{{ sc_language_render('order.tax') }}"> {{ $item->tax }}</a></td> --}}
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
+
+                            @if ($order->modalidad_de_compra == 1  && empty($convenio))
+                            <td>
+                              <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                            </td>
+                                
+                            @endif
 
                             @if ($order->modalidad_de_compra == 0)
                             <td>
@@ -851,10 +865,15 @@
 
               <div class="row">
 
+
+
                 <div class="form-group col-md-6">
                   <label for="monto">Cuotas: </label>
                   <input  readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   " type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
                 </div>
+
+
+
                 <div class="form-group col-md-6">
                   <label for="monto">Modalidad: </label>
                   <input  readonly value="0" class="form-control   " type="text" name="c_modalidad" id="c_modalidad" placeholder="_nro_cuotas">
@@ -951,6 +970,9 @@
            
 
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
+
+
+            <td><input type="text" name="add_serial[]"   class="add_serial form-control"  value="0"></td>
 
             
 
@@ -1520,6 +1542,7 @@ function update_total(e){
                 node.find('.add_qty').eq(0).val(1);
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                node.find('.add_serial').eq(0).val(returnedData.serial);
                 
 
                 if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});

@@ -19,4 +19,5 @@ public/storage/.gitignore
 public/build
 public/hot
 public/data
+!/vendor/s-cart/core/src/Handlers/LfmConfigHandler.php
 

@@ -68,16 +68,11 @@ CREATE TABLE `sc_plantilla_convenio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE `sc_tipo_cambio_bcv` (
+CREATE TABLE `sc_rol_estatus_pedido` (
 `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
-   `valor` decimal(15,2) DEFAULT '0.00',
-  `moneda` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `fecha` timestamp NULL DEFAULT NULL,
-
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-
-    UNIQUE KEY `id` (`id`) 
+  `admin_role_id`  bigint(20), 
+  `shop_order_status_id`  bigint(20) ,
+  `modificar`   BOOLEAN NOT NULL DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -124,8 +119,8 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
  ALTER TABLE sc_shop_order ADD usuario_id char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT '0';
 
- ALTER TABLE sc_shop_customer ADD nivel VARCHAR(100) DEFAULT '';
-
+ ALTER TABLE sc_shop_order_status ADD area_trabajo VARCHAR(100) DEFAULT '';
+  ALTER TABLE sc_historial_pagos ADD COLUMN id_pago   varchar(150)  DEFAULT '';
  ALTER TABLE sc_shop_customer ADD estado_civil VARCHAR(100) DEFAULT 'SOLTERO(A)';
   ALTER TABLE sc_shop_order_status ADD COLUMN mensaje   varchar(255)  DEFAULT '';
   UPDATE sc_shop_order_status SET name=   'SOLICTUD REALIZADA' WHERE id =1;

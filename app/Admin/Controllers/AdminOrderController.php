@@ -103,7 +103,10 @@ class  AdminOrderController extends RootAdminController
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
             'N°'          => 'Solicitud°',
+            'N°Convenio'          => 'N°Convenio',
+            'Vendedor Asignado' => 'Vendedor Asignado',
             'Articulo'          => 'Articulo',
+            'Cuotas' => 'Cuotas',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Estado'          => 'Estado',
@@ -175,8 +178,9 @@ class  AdminOrderController extends RootAdminController
 
             
             
+            
         }else if($perfil=='riesgo'){
-            $id_status=[4,5,14,15 ,17];
+            $id_status=[4,5,14,15,17];
             $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
         }else if($perfil=='administracion' || $perfil=='Administracion'){
             $id_status=[2,6,7,8,9,10,12,15,16,17];
@@ -195,12 +199,16 @@ class  AdminOrderController extends RootAdminController
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
 
+           
+            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
 
-            $Articulo = shop_order_detail::where('order_id', $row->id)->join('sc_shop_product', 'sc_shop_product.id', '=', 'product_id')->get();
+            $convenio = Convenio::where('order_id',$row->id)->first();
 
-            foreach( $Articulo as $a){
-                $Articulos = $a->name;
-            };
+           
+            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+
+            
+
 
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
@@ -252,8 +260,10 @@ class  AdminOrderController extends RootAdminController
                 ',
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
-
-                'Articulo' => $Articulos,
+                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                 'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
+                'Articulo' => $Articulo->name ?? 'N/A',
+                'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
                 'Cedula'          => $cedula ?? 'N/A',
                 'Telefono'          => $phone ?? 'N/A',
                 'Estado'          =>$nombreEstado ?? 'N/A',
@@ -558,16 +568,16 @@ class  AdminOrderController extends RootAdminController
 
        
         if($user_roles->rol == 'Vendedor'){
-             $id_status=[1,2,3,4 ,10];
+             $id_status=[1,2,3,4,11];
              $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
         }
         else if($user_roles->rol == 'Riesgo'){
-             $id_status=[5,6,7,8,9,10,4];
+             $id_status=[5,6,7,8,9,10,11 ,4];
              $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
             }
         else if($user_roles->rol == 'Administrator'){
-            $id_status=[1,12,13,14,15,16,17,18,19,20,10];
+            $id_status=[12,13,14,15,16,17,18,19,20,10];
             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
             }
@@ -661,6 +671,7 @@ class  AdminOrderController extends RootAdminController
                 "products" => $products,
                 "statusOrder" => $styleStatus ,
                 "statusOrdert" => $this->statusOrder ?? '',
+                "statu_en"=> ShopOrderStatus::pluck('name', 'id')->all(),
                 "statusPayment" => $this->statusPayment,
                 "statusShipping" => $this->statusShipping,
                 'dataTotal' => AdminOrder::getOrderTotal($id),
@@ -902,10 +913,8 @@ class  AdminOrderController extends RootAdminController
         $orderId = request('order_id');
         $add_serial_product = request('add_serial');
         $add_inicial = request('add_inicial');
+        $serial = request('add_serial');
 
-
-
- 
         $items = [];
 
         $order = AdminOrder::getOrderAdmin($orderId);
@@ -935,6 +944,7 @@ class  AdminOrderController extends RootAdminController
                     'currency' => $order->currency,
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
+                    'serial' => $serial[0] ?? 'serial del articulo',
                     
                 );
             }
