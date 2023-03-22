@@ -565,6 +565,7 @@ class  AdminOrderController extends RootAdminController
         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
         
+        
 
        
         if($user_roles->rol == 'Vendedor'){
