@@ -177,7 +177,7 @@ class DashboardController extends RootAdminController
             ;
 
        }else if($user_roles->rol == 'Riesgo'){
-            $data['topOrder'] =AdminOrder::where('status' , 4)->get();
+            $data['topOrder'] =AdminOrder::where('status' , 3)->get();
 
        }
         for ($i = 12; $i >= 0; $i--) {
