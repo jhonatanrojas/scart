@@ -1,77 +1,4 @@
-<p align="center">
-    <img src="https://s-cart.org/logo.png?v=4" width="150">
-</p>
-<p align="center">Free open source e-commerce for business<br>
-    <code><b>composer create-project s-cart/s-cart</b></code></p>
-<p align="center">
- <a href="https://s-cart.org">Home</a> | <a href="https://demo.s-cart.org">Demo</a> | <a href="https://s-cart.org/en/docs/master">Document</a>  | <a href="https://s-cart.org/en/developer/master">Document for Developer</a> | <a href="https://s-cart.org/en/developer/master/about-api-scart.html">API document</a> | <a href="https://s-cart.org/en/about.html">Features in S-Cart</a> | <a href="https://www.facebook.com/groups/scart.opensource">Group FB</a>
-</p>
 
-<p align="center">
-<a href="https://packagist.org/packages/s-cart/s-cart"><img src="https://poser.pugx.org/s-cart/s-cart/d/total" alt="Packagist Downloads"></a>
-<a href="https://github.com/s-cart/s-cart"><img src="https://img.shields.io/github/downloads/s-cart/s-cart/total" alt="Git Downloads"></a>
-<a href="https://github.com/s-cart/s-cart/releases"><img src="https://poser.pugx.org/s-cart/s-cart/v/stable" alt="Latest Stable Version"></a>
-<a href="https://github.com/s-cart/s-cart/blob/master/LICENSE"><img src="https://poser.pugx.org/s-cart/s-cart/license" alt="License"></a>
-</p>
-
-<p align="center">
-    <a href="https://www.youtube.com/channel/UCR8kitefby3N6KvvawQVqdg"><img src="https://img.shields.io/youtube/channel/subscribers/UCR8kitefby3N6KvvawQVqdg?style=social"></a>
-</p>
-
-## About S-cart
-S-Cart is the best free e-commerce website project for individuals and businesses, built on top of Laravel Framework and the latest technologies.
-Our goal is "Efficient and friendly for everyone":
-- Efficiency: Meet even the smallest requirements of customers.
-- Friendly: Easy to use, easy to maintain, easy to develop.
-- Everyone: Businesses, individuals, developers, students.
-
-## IMAGES:
-<img src="https://static.s-cart.org/guide/info/s-cart-content.jpg">
-<img src="https://static.s-cart.org/guide/use/common/shop.jpg">
-<img src="https://static.s-cart.org/guide/use/common/dashboard.jpg">
-
-## S-Cart functions:
-
-<pre>
-💥S-Cart - FREE Laravel ecommerce for business💥:
-- Build plugin packages HMVC
-- Support to upgrade and patch S-Cart via command line
-- Full document for dev and client
-👉Full support for the functions of a professional sales website:
-- Multi-language, multi-currency
-- Multi-vendor
-- Make cart, manage orders, manage products, manage customers...
-- CMS news management: categories, news, news pages
-- Plugin: Payment, shipping, discounts, taxes ...
-- Plugin pro: multi-vendor, multi-store
-- Online library: plugin, template
-- API suppport and security for app, mobile
-👉Powerful admin page:
-- Roles, permission: admin, manager, maketing, ..
-- Security with log full, access, auth, captcha ...
-- Manage products, orders, customers ...
-- Charts, statistics
-- Backup, restore
-- Activity log
-- And many other functions.
-Demo API: <a href="https://s-cart.org/en/developer/master/about-api-scart.html">https://s-cart.org/en/developer/master/about-api-scart.html</a>
-👉Plugin pro:
-- Multi-vendor: <a href="https://s-cart.org/en/multi-vendor.html">https://s-cart.org/en/multi-vendor.html</a>
-- Multi-store: <a href="https://s-cart.org/en/multi-store.html">https://s-cart.org/en/multi-store.html</a>
-</pre>
-
-## Technology
-- Core <a href="https://laravel.com">Laravel Framework</a>
-
-## Laravel core:
-
-S-Cart 6.x
-
-> Core laravel framework 8.x 
-
-S-Cart 7.x
-
-> Core laravel framework 9.x 
 
 ## Requirements:
 
@@ -124,18 +51,13 @@ composer install
 
 **Step4: Install**
 
-Option 1: **Install automatic**
-```
-Access your-domain.com/install.php to install S-cart.
-```
-Then, remove or rename file *public/install.php*
 
 Option 2: **Manual installation**
 
 If installing with link "install.php" unsuccessful, you can install it manually below.
 ```
 1: Create new database, then import file /vendor/s-cart/core/src/DB/s-cart-yyyy-mm-dd.sql to database.
-2: Rename or delete file public/install.php
+
 3: Copy file .env.example to .env if file .env not exist.
 4: Generate API key if APP_KEY is null. 
 - Use command "php artisan key:generate"
@@ -166,11 +88,8 @@ To view S-Cart version information
 
 `php artisan sc:info`
 
-To update the core version of S-Cart:
 
-`composer update s-cart/core`
-
-Or you can use `php composer.phar update s-cart/core` if you don't have composer installed.
+d.
 
 To create a plugin:
 
@@ -211,14 +130,4 @@ If you discover a security vulnerability within S-Cart ecommerce, please send an
 
 ## License:
 
-`S-Cart` is licensed under [The MIT License (MIT)](LICENSE).
 
-## Demo:
-
-- Font-end : http://demo.s-cart.org
-- Back-end: http://demo.s-cart.org/sc_admin   <code>User/pass: test/123456</code>
-
-## Plugins pro:
-
-- Multi vendor : https://s-cart.org/en/multi-vendor.html
-- Multi store : https://s-cart.org/en/multi-store.html
