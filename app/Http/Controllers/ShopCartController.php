@@ -774,8 +774,8 @@ class ShopCartController extends RootFrontController
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
-            $financiamiento = $data['financiamiento'] ?? 0;
-            $modalidad_pago = $data['modalidad_pago'] ;
+            $financiamiento = $data['financiamiento'];
+            $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $Cuotas = $data['Cuotas'] ??0;
             $fecha = $data['fecha'] ?? '';
             $inicial = $data['inicial']?? 0;
@@ -784,12 +784,16 @@ class ShopCartController extends RootFrontController
 
         }else if(isset($data['financiamiento'])
             == '0'){
+
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $Cuotas = $data['Cuotas'] ?? 0;
             $modalidad_pago = isset($data['modalidad_pago'])? 0:1;
             $storeId   = $data['storeId'] ?? config('app.storeId');
         }
+
+
+
        
 
 
@@ -819,15 +823,19 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
+
+
+
             if(isset($data['financiamiento'])=="1"){
+
 
 
                 $options = $formAttr;
                 $dataCart = array(
                 'id'      => $productId,
                 'name'    => $product->name,
-                'financiamiento'    => $financiamiento ,
-                'modalidad_pago'    => $modalidad_pago,
+                'financiamiento'    => $financiamiento  ,
+                'modalidad_pago'    => $modalidad_pago ,
                 'Cuotas'    => $Cuotas,
                 'fecha'    => $fecha,
                 'inicial'    => $inicial,
@@ -844,7 +852,9 @@ class ShopCartController extends RootFrontController
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
                 );
-            }else if(isset($data['modalidad_pago'])== '0'){
+
+
+            }else if(isset($data['financiamiento'])== '0'){
                 $options = $formAttr;
                 $dataCart = array(
                     'id'      => $productId,
@@ -858,7 +868,6 @@ class ShopCartController extends RootFrontController
                 );
                 $dataCart['options'] = $options; 
                 Cart::add($dataCart);
-
                 return redirect(sc_route('cart'))
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
@@ -885,9 +894,7 @@ class ShopCartController extends RootFrontController
     public function addToCartAjax(Request $request)
   
     {
-        
-       
-        
+          
         if (!$request->ajax()) {
            
             return redirect(sc_route('cart'));
