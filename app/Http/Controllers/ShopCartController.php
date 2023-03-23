@@ -597,6 +597,7 @@ class ShopCartController extends RootFrontController
        
 
         foreach($dataCheckout as $card_detalle){
+
             
             
            $datos = [
@@ -687,6 +688,8 @@ class ShopCartController extends RootFrontController
 
         $arrCartDetail = [];
         foreach ($dataCheckout as $cartItem) {
+
+
 
 
             $arrDetail['product_id']  = $cartItem->id;
@@ -823,7 +826,6 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
-
 
 
             if(isset($data['financiamiento'])=="1"){
