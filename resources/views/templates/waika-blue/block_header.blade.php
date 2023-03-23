@@ -38,7 +38,7 @@
       <header class="section page-header">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap p-0 m-0">
-          <navz class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
             <div style="background: #409cff;"  class="rd-navbar-main-outer  p-0 m-0">
               <div class="rd-navbar-main p-0 m-0">
                 <!-- RD Navbar Panel-->
@@ -171,18 +171,18 @@
                   @if (sc_config('link_cart', null, 1))
                   <!-- RD Navbar Basket-->
                   <div class="rd-navbar-basket-wrap">
-                    {{-- <a href="{{ sc_route('cart') }}">
-                    <button class="rd-navbar-basket fl-bigmug-line-shopping202">
+                     <a href="{{ sc_route('cart') }}">
+                    <button class="rd-navbar-basket fl-bigmug-line-shopping202 text-warning">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
                     </button>
-                    </a> --}}
+                    </a> 
 
-                    <a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
+                      {{-- <a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
                      
                     </a>
                   </div>
-                  {{-- <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
+                <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
                     <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
                  </a> --}}
                 @endif
