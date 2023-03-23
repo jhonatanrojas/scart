@@ -28,7 +28,7 @@ img{
 
 </style>
 
-<article class="product wow fadeInRight ">
+<article class="product wow fadeInRight " onclick='ir_a("{{$product->getUrl()}}")'>
     <div class="product-body">
       <div class="product-figure wrapper">
           <a href="{{$product->getUrl()}}">
@@ -131,3 +131,15 @@ img{
       @endif
     </div>
 </article>
+
+
+<script>
+
+  function ir_a(ruta){
+
+    window.location.href = ruta;
+
+  }
+ 
+
+</script>
