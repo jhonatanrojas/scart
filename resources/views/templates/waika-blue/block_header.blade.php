@@ -177,10 +177,8 @@
                     </button>
                     </a> 
 
-                    {{--<a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
-                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
-                     
-                    </a> --}}
+
+                    
 
 
                   </div>
