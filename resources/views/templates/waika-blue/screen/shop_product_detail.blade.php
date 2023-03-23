@@ -676,8 +676,8 @@ table tfoot {
                       <label class="text-dark text-uppercase" for="inicial">CON Inicial  </label>
                          <select required class="form-control w-100 "  name="inicial" id="inicial">
                            <option value="">Seleccione una opcion</option>
-                          <option value="0">SI</option>
-                          <option value="30">NO</option>
+                          <option value="30">SI</option>
+                          <option value="0">NO</option>
                          
                          </select>
                     </div>
