@@ -751,10 +751,10 @@ table tfoot {
                     <div class="modal-footer ">
                       <div class="text-center mb-3 mt-1 p-2  w-100 " id="mensaje"></div>
                      
-                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"></button>
+                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"> {{sc_language_render('customer.c_solicitud')}}</button>
 
-                      {{sc_language_render('customer.c_solicitud')}}
-                      
+                     
+
                     </div>
             </div>
                   
@@ -768,22 +768,13 @@ table tfoot {
               <input  name="financiamiento" type="hidden"  value="1"  max="100">
       </form>
 
-  
-
-<h4 id="error"></h4>
-
-
 
 
 
       <script type="text/javascript">
 
-        const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
-
+          const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
           const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
-
-       
-
 
 
           let  inicial = document.getElementById("inicial")
