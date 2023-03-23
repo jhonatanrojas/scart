@@ -6,7 +6,7 @@
                 <tr style="background: #eaebec">
                     <th style="width: 50px;">No.</th>
                     <th>{{ sc_language_render('product.name') }}</th>
-             <th>{{ sc_language_render('product.price') }}</th> 
+             <th> Monto Couta</th> 
                     <th>Cuotas</th>
                     <th>Frecuencia de pago</th>
                     <th>Inicial</th>
