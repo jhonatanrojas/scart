@@ -828,8 +828,6 @@ class ShopCartController extends RootFrontController
 
             if(isset($data['financiamiento'])=="1"){
 
-
-
                 $options = $formAttr;
                 $dataCart = array(
                 'id'      => $productId,
