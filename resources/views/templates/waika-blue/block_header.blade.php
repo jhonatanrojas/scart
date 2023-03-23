@@ -172,16 +172,16 @@
                   <!-- RD Navbar Basket-->
                   <div class="rd-navbar-basket-wrap">
                      <a href="{{ sc_route('cart') }}">
-                    <button style="font-size: 25px;" class="rd-navbar-basket fl-bigmug-line-shopping202 text-danger ">
+                    <button style="font-size: 27px;" class="rd-navbar-basket fl-bigmug-line-shopping202 text-warning ">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
                     </button>
                     </a> 
 
 
                   </div>
-                <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
+                <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:18px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
                     <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
-                 </a> --}}
+                 </a>
                 @endif
                 </div>
               </div>
