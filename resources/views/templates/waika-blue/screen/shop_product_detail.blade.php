@@ -22,22 +22,29 @@ $layout_page = shop_product_detail
     flex-direction: row;
     justify-content: center;
     align-items: center;
-   
-    gap: 10px;
 
     width: 100%;
     height: 51px;
+    background: #409cff;
+    border-radius: 10px;
 
-    background: #0080B6;
-   color:white;
-    border-radius: 500px;
+    border:none;
 
     /* Inside auto layout */
     flex: none;
     order: 2;
     align-self: stretch;
     flex-grow: 0;
+    transition: 0.20s;
 }
+
+.pedido:hover{
+
+  background:#208bff;
+
+}
+
+
 
   .modal {
     border: solid 1px rgba(126, 126, 126, 0.534);
@@ -436,9 +443,9 @@ table tfoot {
                    
                   </div>
                   @endif
-                  <div class="m-2">
+                  <div class="m-2 col-md-12">
 
-                    <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="btn   btn-lg  btn-success p-3 fs-12" name="Financiamiento"  ><small  style="font-size: 12;">ADQUIRIR FINANCIADO</small></button>
+                    <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="pedido p-3  text-white " name="Financiamiento"  ><small  style="font-size: 15px;">REALIZAR SOLICITUD</small></button>
 
                   </div>
 
@@ -621,7 +628,7 @@ table tfoot {
         </div>
       </section>
       @endif
-      <div class="modal p-4  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal p-1  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog   modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -669,16 +676,38 @@ table tfoot {
                       <label class="text-dark text-uppercase" for="inicial">CON Inicial  </label>
                          <select required class="form-control w-100 "  name="inicial" id="inicial">
                            <option value="">Seleccione una opcion</option>
-                          <option value="0">NO</option>
-                          <option value="30">SI</option>
+                          <option value="0">SI</option>
+                          <option value="30">NO</option>
                          
                          </select>
                     </div>
 
 
 
+                        <div class=" col-md-6">
+                      <label class="text-dark text-uppercase"  for="monto">Monto de la Inicial$:</label>
+                      <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
+                       >
+                    </div>
 
-                      <div class="mt-0 col-md-6">
+
+
+
+
+                     
+                      
+
+
+                       <div class="mt-0 col-md-6">
+                      <label class="text-dark text-uppercase" for="inicial">Cuotas</label>
+                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
+                      </div>
+
+ 
+
+                  
+
+                     <div class="mt-0 col-md-6">
 
                       <label class="text-dark text-uppercase" for="monto_de_la_cuota">
                       Monto de la Cuota$
@@ -690,21 +719,6 @@ table tfoot {
                          type="text"
                          value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}"
                          >
-                    </div>
-                      
-
-
-                       <div class="mt-0 col-md-6">
-                      <label class="text-dark text-uppercase" for="inicial">Cuotas</label>
-                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
-                      </div>
-
- 
-
-                    <div class=" col-md-6">
-                      <label class="text-dark text-uppercase"  for="monto">Monto Inicial$:</label>
-                      <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
-                       >
                     </div>
 
 
@@ -749,9 +763,9 @@ table tfoot {
                     </div>
                     
                     <div class="modal-footer ">
-                      <div class="text-center mb-3 mt-1 p-2  w-100 " id="mensaje"></div>
+                      <div class="text-center mb-2  p-2  w-100 " id="mensaje"></div>
                      
-                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"> {{sc_language_render('customer.c_solicitud')}}</button>
+                      <button id="butto_modal"  type="submit" class="pedido text-white text-uppercase"> {{sc_language_render('customer.c_solicitud')}}</button>
 
                      
 
@@ -808,7 +822,7 @@ table tfoot {
 
               document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
               document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-              document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 shadow p-3  bg-body-tertiary rounded">${title_con_inicia}</spa>`
+              document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
 
 
 
@@ -817,7 +831,7 @@ table tfoot {
               let monto_cuotass = monto/n2;
                document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
                 document.getElementById('monto_Inicial').value = 0.00
-                document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 shadow p-3  bg-body-tertiary rounded">${title_sin_inicia}</spa>`
+                document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
 
 
             
