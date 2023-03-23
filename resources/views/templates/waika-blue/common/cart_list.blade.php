@@ -73,7 +73,7 @@
                
                     @endphp
                     <td>${!!  number_format($product->precio/$product->nro_coutas,2) !!}  </td> 
-                    <td>${{$item->Cuotas}}</td>
+                    <td>{{$item->Cuotas}}</td>
                     <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
                     @php
