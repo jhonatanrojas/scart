@@ -177,10 +177,10 @@
                     </button>
                     </a> 
 
-                    <a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
+                    {{--<a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
                      
-                    </a>
+                    </a> --}}
                   </div>
                   {{-- <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
                     <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
