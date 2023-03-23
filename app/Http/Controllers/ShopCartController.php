@@ -683,10 +683,12 @@ class ShopCartController extends RootFrontController
             $dataOrder['cedula']       = $shippingAddress['cedula'];
         }
       
-        
+       
 
         $arrCartDetail = [];
         foreach ($dataCheckout as $cartItem) {
+
+
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = sc_currency_value($cartItem->price);
@@ -766,10 +768,9 @@ class ShopCartController extends RootFrontController
 
         //Process escape
         $data      = sc_clean($data);
-        
-       
+        if(isset($data['financiamiento'])
+            == '1'){
 
-        if(isset($data['financiamiento'])){
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
@@ -779,7 +780,10 @@ class ShopCartController extends RootFrontController
             $fecha = $data['fecha'] ?? '';
             $inicial = $data['inicial']?? 0;
 
-        }else if(isset($data['modalidad_pago'])){
+          
+
+        }else if(isset($data['financiamiento'])
+            == '0'){
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $Cuotas = $data['Cuotas'] ?? 0;
@@ -815,7 +819,9 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
-            if(!empty($data['financiamiento']) =="1"){
+            if(isset($data['financiamiento'])=="1"){
+
+
                 $options = $formAttr;
                 $dataCart = array(
                 'id'      => $productId,
@@ -838,7 +844,7 @@ class ShopCartController extends RootFrontController
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
                 );
-            }else if(isset($data['modalidad_pago'])){
+            }else if(isset($data['modalidad_pago'])== '0'){
                 $options = $formAttr;
                 $dataCart = array(
                     'id'      => $productId,
