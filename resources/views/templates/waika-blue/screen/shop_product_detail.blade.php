@@ -751,9 +751,9 @@ table tfoot {
                     <div class="modal-footer ">
                       <div class="text-center mb-3 mt-1 p-2  w-100 " id="mensaje"></div>
                      
-                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"></button>
+                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"> {{sc_language_render('customer.c_solicitud')}}</button>
 
-                      {{sc_language_render('customer.c_solicitud')}}
+                     
                       
                     </div>
             </div>
