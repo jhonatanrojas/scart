@@ -676,26 +676,20 @@ table tfoot {
                       <label class="text-dark text-uppercase" for="inicial">CON Inicial  </label>
                          <select required class="form-control w-100 "  name="inicial" id="inicial">
                            <option value="">Seleccione una opcion</option>
-                          <option value="0">SI</option>
-                          <option value="30">NO</option>
+                          <option value="30">SI</option>
+                          <option value="0">NO</option>
                          
                          </select>
-                    </div>
+                      </div>
 
 
 
-                        <div class=" col-md-6">
+                      <div class=" col-md-6">
                       <label class="text-dark text-uppercase"  for="monto">Monto de la Inicial$:</label>
                       <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
                        >
                     </div>
 
-
-
-
-
-                     
-                      
 
 
                        <div class="mt-0 col-md-6">
