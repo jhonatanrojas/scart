@@ -37,27 +37,27 @@
       
       <header class="section page-header">
         <!-- RD Navbar-->
-        <div class="rd-navbar-wrap">
-          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
-            <div class="rd-navbar-main-outer">
-              <div class="rd-navbar-main">
+        <div class="rd-navbar-wrap p-0 m-0">
+          <navz class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div style="background: #409cff;"  class="rd-navbar-main-outer  p-0 m-0">
+              <div class="rd-navbar-main p-0 m-0">
                 <!-- RD Navbar Panel-->
-                <div class="rd-navbar-panel">
+                <div class="rd-navbar-panel p-1 m-0 ">
                   <!-- RD Navbar Toggle-->
                   <button type="button" class="rd-navbar-toggle text-white" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
-                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="150" height="60"/>
+                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark img-circle rounded-circle" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="100" height="20"/>
                   <img class="brand-logo-light" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="106" height="44"/></a>
                   </div>
                 </div>
                 <div class="rd-navbar-nav-wrap">
                   <!-- RD Navbar Nav-->
-                  <ul class="rd-navbar-nav">
+                  <ul class="rd-navbar-nav ">
                     @if (!empty($sc_layoutsUrl['menu']))
                     @foreach ($sc_layoutsUrl['menu'] as $url)
                     <li class="rd-nav-item">
-                        <a class="rd-nav-link " {{ ($url->target =='_blank')?'target=_blank':''  }}
+                        <a class="rd-nav-link text-white" {{ ($url->target =='_blank')?'target=_blank':''  }}
                             href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
                     </li>
                     @endforeach
@@ -65,7 +65,7 @@
 
                     @if (sc_config('link_account', null, 1))
                     @guest
-                    <li class="rd-nav-item"><a class="rd-nav-link " href="#"><i class="fa fa-lock"></i> {{ sc_language_render('front.account') }}</a>
+                    <li class="rd-nav-item"><a class="rd-nav-link text-white" href="#"><i class="fa fa-lock"></i> {{ sc_language_render('front.account') }}</a>
                         <ul class="rd-menu rd-navbar-dropdown ">
                             <li class="rd-dropdown-item">
                                 <a class="rd-dropdown-link" href="{{ sc_route('login') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.login') }}</a>
@@ -87,7 +87,7 @@
                     </li>
 
                     @else
-                    <li class="rd-nav-item"><a class="rd-nav-link text-white usuario" href="#">
+                    <li class="rd-nav-item"><a class="rd-nav-link text-white usuario text-white" href="#">
                        MI CUENTA
                        {{-- <span class="login"></span> --}}
                        
@@ -138,7 +138,7 @@
                     @if (sc_config('link_currency', null, 1))
                     @if (count($sc_currencies)>1)
                     <li class="rd-nav-item">
-                        <a class="rd-nav-link" href="#">
+                        <a class="rd-nav-link text-white" href="#">
                             {{ sc_currency_info()['name'] }} <i class="fas fa-caret-down"></i>
                         </a>
                         <ul class="rd-menu rd-navbar-dropdown">
@@ -177,7 +177,7 @@
                     </button>
                     </a> --}}
 
-                    <a class="rd-navbar-basket fas fa-heart"  href="{{ sc_route('wishlist') }}">
+                    <a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
                      
                     </a>

@@ -445,7 +445,7 @@ table tfoot {
                   @endif
                   <div class="m-2 col-md-12">
 
-                    <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="pedido p-3  text-white " name="Financiamiento"  ><small  style="font-size: 15px;">REALIZAR SOLICITUD</small></button>
+                    <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="pedido p-3  text-white " name="Financiamiento"  ><small  style="font-size: 15px;">CALCULAR SOLICITUD</small></button>
 
                   </div>
 
