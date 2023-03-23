@@ -39,15 +39,15 @@
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap p-0 m-0">
           <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
-            <div style="background: #409cff;"  class="rd-navbar-main-outer  p-0 m-0">
+            <div style="background: rgb(19.922, 95.751, 139.45);"  class="rd-navbar-main-outer  p-0 m-0">
               <div class="rd-navbar-main p-0 m-0">
                 <!-- RD Navbar Panel-->
-                <div class="rd-navbar-panel p-1 m-0 ">
+                <div class="rd-navbar-panel p-2 m-0 ">
                   <!-- RD Navbar Toggle-->
                   <button type="button" class="rd-navbar-toggle text-white" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
-                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark img-circle rounded-circle" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="100" height="20"/>
+                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark  " src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="100" height="20"/>
                   <img class="brand-logo-light" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="106" height="44"/></a>
                   </div>
                 </div>
@@ -172,15 +172,12 @@
                   <!-- RD Navbar Basket-->
                   <div class="rd-navbar-basket-wrap">
                      <a href="{{ sc_route('cart') }}">
-                    <button class="rd-navbar-basket fl-bigmug-line-shopping202 text-warning">
+                    <button style="font-size: 25px;" class="rd-navbar-basket fl-bigmug-line-shopping202 text-danger ">
                       <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
                     </button>
                     </a> 
 
-                      {{-- <a class="rd-navbar-basket fas fa-heart text-danger"  href="{{ sc_route('wishlist') }}">
-                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
-                     
-                    </a>
+
                   </div>
                 <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:10px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
                     <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
