@@ -632,52 +632,100 @@ table tfoot {
               <form action="{{ sc_route('cart.add') }}" method="POST">
                 <div id="w-100">
                    {{ csrf_field() }}
-                  <div class="">
+                  <div class=" d-sm-flex justify-content-around align-items-center">
+
+                    <img class="brand-logo-dark" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="logo" width="100" height="30"/>
                     <h4 class="text-center text-dark text-capitalize animate__animated animate__flipInX animate__delay-1s p-0 text-uppercase">{{ sc_language_render('customer.title_caculadora') }}</h4>
+
+                    <div>
+                        <div class="form-check">
+                    <input disabled  onclick="alert('Esta opcion aun no disponible')" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="ENTREGA_INMEDIATA" checked>
+                    <label class="form-check-label" for="exampleRadios1">
+                      {{sc_language_render('customer.title_ENTREGA INMEDIATA')}}
+                    </label>
+
+
+
+                  </div>
+
+                   <div class="form-check">
+                    <input checked class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="ENTREGA_PROGRAMADA">
+                    <label class="form-check-label" for="exampleRadios2">
+                      {{sc_language_render('customer.title_ENTREGA PROGRAMADA')}}
+                    </label>
+                  </div>
+                    </div>
+
                   </div>
                   <div name="frmPrestamo" id="frmPrestamo">
                 
                     <div class="p-0 mt-0 m-0">
        
-                     
-                      <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
-                       >
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6">
+
+                        <div class="mt-0 col-md-6">
+                      <label class="text-dark text-uppercase" for="inicial">CON Inicial  </label>
+                         <select required class="form-control w-100 "  name="inicial" id="inicial">
+                           <option value="">Seleccione una opcion</option>
+                          <option value="0">NO</option>
+                          <option value="30">SI</option>
+                         
+                         </select>
+                    </div>
+
+
+
+
+                      <div class="mt-0 col-md-6">
+
+                      <label class="text-dark text-uppercase" for="monto_de_la_cuota">
+                      Monto de la Cuota$
+                      </label>
+                         
+                         <input
+                         id="monto_de_la_cuota" 
+                         readonly class="form-control" 
+                         type="text"
+                         value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}"
+                         >
+                    </div>
+                      
+
+
+                       <div class="mt-0 col-md-6">
+                      <label class="text-dark text-uppercase" for="inicial">Cuotas</label>
+                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
+                      </div>
+
+ 
+
+                    <div class=" col-md-6">
+                      <label class="text-dark text-uppercase"  for="monto">Monto Inicial$:</label>
+                      <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
+                       >
+                    </div>
+
+
+                    <div class="col-md-12">
                         <div class="form-group">
-                          <label class="text-dark text-uppercase"  for="periodo">Forma de pago:
+                          <label class="text-dark text-uppercase"  for="periodo">frecuancia de pago 
                             
                           </label>
-                          <select readonly id="modalidad" class="form-control w-100 modalidad_pago "
-                          name="modalidad_pago">
-                           
 
                             @foreach($modalida_pago as $key => $pagos)
 
                              @if($product->id_modalidad_pagos == $pagos->id)
-                           
-
-                              <option value="
+                             
                               @if($product->id_modalidad_pagos == $pagos->id )
+                               <input data-valor={{$pagos->id}}  id="modalidad" readonly la value="{{$pagos->name ?? 'si modalidad de pago'}}" class="form-control  modalidad_pago" type="text" name="modalidad_pago"   >
 
                               @endif
-                              ">
-                              {{$pagos->name ?? 'si modalidad de pago'}}
                               
-                            </option>
-
-                         
-                            
                             @endif
                             @endforeach
-                            
-
-
-
-                                       
-                      </select>
+ 
                         </div>
 
 
@@ -685,54 +733,11 @@ table tfoot {
 
 
                         <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" id="">
-                     
-                    </div>
-
-
-                       <div class="mt-0 col-md-6">
-                      <label class="text-dark text-uppercase" for="inicial">Cuota</label>
-                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
-                    </div>
-
-               
-                
-
-         
-                      
-                        <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
-                      
-                    
-               
-                    <div class="mt-0 col-md-6">
-                      <label class="text-dark text-uppercase" for="inicial">Inicial  </label>
-                         <select required class="form-control w-100 "  name="inicial" id="inicial">
-                          <option value="">Selecione un opcion</option>
-                          <option value="0">Sin inicial</option>
-                          <option value="30">Con inicial</option>
-                         
-                         </select>
-                    </div>
-
-
-
-                       <div class="mt-0 col-md-6">
-                      <label class="text-dark text-uppercase" for="">Monto de la Cuota$</label>
-                         <input
-                         id="monto_de_la_cuota" readonly class="form-control" type="text">
-                    </div>
-
-
-
-
-                  
-
-                
-
-                    <div class=" col-12 mt-3">
-                      <label class="text-dark text-uppercase"  for="monto">Monto Inicial$:</label>
-                      <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="" 
+                        <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
                        >
-                    </div>
+
+                        <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
+                      </div>
                 
                   </div>
 
@@ -743,14 +748,16 @@ table tfoot {
              
                     </div>
                     
-                    <div class="modal-footer mb-12">
+                    <div class="modal-footer ">
+                      <div class="text-center mb-3 mt-1 p-2  w-100 " id="mensaje"></div>
                      
-                      <button id="butto_modal"  type="submit" class="pedido text-uppercase">Continuar pedido</button>
+                      <button id="butto_modal"  type="submit" class="pedido text-uppercase"></button>
+
+                      {{sc_language_render('customer.c_solicitud')}}
+                      
                     </div>
             </div>
-                  <div class="m-auto p-3 mt-3 " id="mensaje">
-                   
-                  </div>
+                  
           </div>
 
         </div>
@@ -771,9 +778,12 @@ table tfoot {
 
       <script type="text/javascript">
 
+        const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
 
+          const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
 
-          const user = {!! json_encode($fecha_entrega) !!};
+       
+
 
 
           let  inicial = document.getElementById("inicial")
@@ -787,7 +797,6 @@ table tfoot {
            }
 
            
-
            
         })
  
@@ -795,45 +804,35 @@ table tfoot {
           document.getElementById("butto_modal").disabled = false;
           let monto=Number(document.getElementById("monto").value);
           let n2=Number(document.getElementById("Cuotas").value);
-      
-  
           let inicial = iniciale;
-          const plazoMensual = document.getElementById('modalidad')
-          var selected = plazoMensual.options[plazoMensual.selectedIndex].value;
-          var selectd2 = plazoMensual.options[plazoMensual.selectedIndex].text;
+   
+         
 
           if(inicial>0){
 
               let precio_couta=  monto -(inicial* monto / 100 );
               let precio_monto_cuota = precio_couta / n2
-            let tola_inicial = inicial * monto / 100
-            let monto_cuotas = monto/n2;
+              let tola_inicial = inicial * monto / 100
+              let monto_cuotas = monto/n2;
+
               document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
               document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-              document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark animate__animated animate__bounce">Entrega con inicial:De la Tercera a la cuarta cuota</spa>'
+              document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 shadow p-3  bg-body-tertiary rounded">${title_con_inicia}</spa>`
 
 
-
-
-
-
-             
-
-          
 
            
           }else{
               let monto_cuotass = monto/n2;
                document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
                 document.getElementById('monto_Inicial').value = 0.00
-                document.getElementById('mensaje').innerHTML= '<spa class="h5 text-dark ">Entrega Sin inicial: De la Quinta a la Octava cuota</spa>'
+                document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 shadow p-3  bg-body-tertiary rounded">${title_sin_inicia}</spa>`
 
 
             
           }
 
        
-      
             fechaInicio = new Date(document.getElementById('fecha').value)
             fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
            
@@ -844,135 +843,10 @@ table tfoot {
             }
 
 
-          function fecha_cliente(fecha) {
-          let fecha_cliente = fecha.replace(/[/-]/g, ' ');
-          let [dia, mes] = fecha_cliente.split(' ').map(x => parseInt(x));
-
-          user.forEach(element => {
-          let [año, mesEntrega, diaEntrega] = element.fecha_entrega.split('-').map(x => parseInt(x));
-          
-         
-            if (mesEntrega === mes) {
-             
-            let date = new Date(año, mesEntrega - 1, diaEntrega);
-            let dateString = date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-
-            const FechaEntrega = document.getElementById("FechaEntrega");
-            FechaEntrega.innerHTML = `<h6 class="text-center text-info" >Prodra recibir el articulo seleccionado el dia: ${dateString}</h6> `
-          }
-        });
-      }
-
-
-          let periodo = selected;
-          let totalPagos ,  plazo ,fechaPago;
-          var primerFechaPago = true
-
-          if(monto>0){ 
-            document.getElementById("cuotass").innerHTML= `CUOTAS/${selectd2}`;
-            
-            if ( true ) {
-              plazo = n2
-            } else {
-              alert('No seleccionaste ningún tipo de plazo')
-            }
-            switch ( periodo ) {
-              case 'Semanal':
-                let fechaFin = new Date(fechaInicio)
-                fechaFin.setMonth(fechaFin.getMonth() + parseInt(plazo))
-                let tiempo = fechaFin.getTime() - fechaInicio.getTime()
-                let dias = Math.floor(tiempo / (1000 * 60 * 60 * 24))
-                totalPagos = Math.ceil(dias / 7)
-                break
-              case '2':
-                totalPagos = plazo * 2
-                break
-              case '3':
-                totalPagos = plazo
-                
-                break
-              default:
-                alert('No seleccionaste ningún periodo de pagos')
-                break
-            }
-            var cuotaTotal = monto / n2
-            let  montoTotal = monto
-            let Inicial = inicial * monto / 100
-            Inicial == Infinity ? Inicial = 0 : Inicial
-          
-             
-            let texto = 0;
-            for(i=1;i<=n2;i++){  
-              texto = (i + 1)
-
-              if ( primerFechaPago === true ) {
-                  fechaPago = new Date(fechaInicio)
-                  primerFechaPago = false
-                } else {
-                  if ( periodo === 'semanal' ) {
-                    fechaPago.setDate(fechaPago.getDate() + 7)
-                  } else if ( periodo === '2' ) {
-                    fechaPago.setDate(fechaPago.getDate() + 15)
-                  } else if ( periodo === '3' ) {
-                    fechaPago.setMonth(fechaPago.getMonth() + 1)
-                  }
-                }
-
-
-
-                
-                texto = fechaPago.toLocaleDateString()
-
-                if(Inicial > 0){
-                  if(i == 4)fecha_cliente(texto.replace('/' ,' '))
-                }else if(i == 7)fecha_cliente(texto.replace('/' ,' '))
-                  
-                
-
-
-                monto -= cuotaTotal
-                  ca=monto;
-                  d1=ca.toFixed(2) ;
-                  i2= Inicial.toFixed(2);
-                  d2=cuotaTotal.toFixed(2);
-                  r=ca;
-                  deudas = ((n2 + i2 - ca ) ) ;
-                  d3=r.toFixed(2);
-                  deuda=deudas.toFixed(1);
-                  document.getElementById("tab").innerHTML=document.getElementById("tab").innerHTML+
-                          `
-                          
-                          
-                          
-                          <tr class="animate__animated animate__fadeInUp animate__delay-1s">
-                              <td>${i}</td>
-                              <td>${d2}$</td>
-                      
-                              <td>${texto}</td>
-                          </tr>`;
-              }
-              n1= monto/n2;
-              t_i=i2*n2;
-              d4=t_i.toFixed(2);
-              t_p=r*n2;
-              d5=t_p.toFixed(2);
-              document.getElementById("t1").innerHTML=i3;
-          
-              document.getElementById("t4").innerHTML= texto ;       
-                
-              
-              
-
-          }
-
-        
-
       }
 
           var msg = document.getElementById('msg');
           const  Buyblock = document.getElementById("buy_block");
-          
-
           function validachecke1(){
             
               let msg = document.getElementById('msg').style.display = "none";
@@ -990,12 +864,9 @@ table tfoot {
           
           };
                  
-         document.getElementById('msg').style.display = "none";
-           document.getElementById("group").style.display = "none";
-
-          
+            document.getElementById('msg').style.display = "none";
+            document.getElementById("group").style.display = "none";
           function validachecke2(){
-           
               let msg = document.getElementById('msg').style.display = "none";
               const group = document.getElementById("group").style.display = "none";
               let finansiamiento = document.getElementById("finansiamiento");
@@ -1011,18 +882,9 @@ table tfoot {
 
 
 
-      Buyblock.addEventListener("submit" ,function(e){
-        e.preventDefault()
-
-    
-        if(true) {
-          Buyblock.submit()
-          
-        }
-          
-
-
-      });
+            Buyblock.addEventListener("submit" ,function(e){
+            e.preventDefault()
+            if(true) {Buyblock.submit()} });
 
 
 
