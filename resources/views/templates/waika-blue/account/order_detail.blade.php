@@ -104,7 +104,7 @@ $layout_page = shop_profile
                   <tr>
                     <th>Articulo</th>
                  
-                    @if (empty($order->details[0]->modalidad_de_compra == 1))
+                    @if (empty($order->details[0]->modalidad_de_compra == 0))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_price">Cuota</th>
@@ -150,7 +150,7 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                            @if (empty($order->details[0]->modalidad_de_compra == 1))
+                            @if (empty($order->details[0]->modalidad_de_compra == 0))
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
 
@@ -223,7 +223,7 @@ $layout_page = shop_profile
 
       @endif
       <div class="d-flex justify-content-end">
-           @if($order->modalidad_de_compra==0)
+           @if($order->modalidad_de_compra==1)
         <div class=" align-self-end ">        <a  class="btn btn-info" href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
         </div>
 
@@ -258,7 +258,7 @@ $layout_page = shop_profile
           @php
           $n = (isset($n)?$n:0);
           $n++;
-            if($order->modalidad_de_compra==0)
+            if($order->modalidad_de_compra==1)
               $n=$historial->nro_coutas;
           @endphp
         <td>
@@ -287,12 +287,12 @@ $layout_page = shop_profile
             {{ $historial->estatus->name }}
         </span>
       </td>
-            @if($order->modalidad_de_compra==1)
+            @if($order->modalidad_de_compra==0)
               <td colspan="1">
                 {{$historial->fecha_pago}}
               </td>
             @endif
-        @if($order->modalidad_de_compra==0)
+        @if($order->modalidad_de_compra==1)
         <td>
           <span class="item_21_sku">
             {{$historial->fecha_pago}}</span>
@@ -300,7 +300,7 @@ $layout_page = shop_profile
           @endif
       
 
-        @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
+        @if($order->modalidad_de_compra==0 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>   
 
          
@@ -330,7 +330,7 @@ $layout_page = shop_profile
              
             </div>
   
-            @if($order->modalidad_de_compra==1)
+            @if($order->modalidad_de_compra==0)
                   <div class="modal-body  d-flex justify-content-between">
                       <div class=" ">
                         <a onclick="bioPago({{$historial->id}})" id="bioPago"    class="btn btn-danger">
