@@ -66,16 +66,15 @@
                     </td>
                     
                     @php
-
-                    if($product->monto_inicial > "0"){
-                      $totalinicial= $product->monto_inicial *$product->price/100;
-                      $number1 = $product->price-($product->monto_inicial * $product->price /100);
-                      $Precio_cuotas = $number1 / product->nro_coutas;
+                    if($item->inicial>0){
+                      $totalinicial= $item->inicial *$product->price/100;
+                      $number1 = $product->price-($item->inicial * $product->price /100);
+                      $Precio_cuotas = number_format($number1 / product->nro_coutas,2);
 
 
                     }else{
 
-                        $Precio_cuotas = number_format($product->price / $product->nro_coutas);
+                        $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
 
                     }
                      
@@ -86,9 +85,6 @@
                     <td>
                         {{$Precio_cuotas}} 
                     </td> 
-
-
-
 
                     <td>{{$item->Cuotas}}</td>
                     <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
