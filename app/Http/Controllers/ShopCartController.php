@@ -611,9 +611,7 @@ class ShopCartController extends RootFrontController
         $received = (new ShopOrderTotal)->sumValueTotal('received', $dataTotal); //sum received
         $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
 
-
-
-             $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
+        //$total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
 
                $total=0;    
                 $cart = Cart::content();
@@ -642,12 +640,12 @@ class ShopCartController extends RootFrontController
         $dataOrder['fecha_primer_pago'] = $datos['fecha_primer_pago'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['cedula']     = $customer->cedula;
-        $dataOrder['subtotal']        = $subtotal;
+        $dataOrder['subtotal']        = $total;
         $dataOrder['shipping']        = $shipping;
         $dataOrder['discount']        = $discount;
         $dataOrder['other_fee']        = $otherFee;
-        $dataOrder['received']        = $received;
-        $dataOrder['tax']             = $tax;
+        $dataOrder['received']        = 0;
+        $dataOrder['tax']             =0 ;
         $dataOrder['payment_status']  = self::PAYMENT_UNPAID;
         $dataOrder['shipping_status'] = self::SHIPPING_NOTSEND;
         $dataOrder['status']          = self::ORDER_STATUS_NEW;
@@ -704,11 +702,11 @@ class ShopCartController extends RootFrontController
        
 
         $arrCartDetail = [];
-        foreach ($dataCheckout as $cartItem) {
+        foreach ($cart as $cartItem) {
 
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
-            $arrDetail['price']       = sc_currency_value($cartItem->price);
+            $arrDetail['price']       = $cartItem->price;
             $arrDetail['qty']         = $cartItem->qty;
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
@@ -717,7 +715,7 @@ class ShopCartController extends RootFrontController
             $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento ?? 0;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
-            $arrDetail['price']       = sc_currency_value($cartItem->price);
+            $arrDetail['total_price'] = $cartItem->price * $cartItem->qty;
             $arrCartDetail[]          = $arrDetail;
         }
       
