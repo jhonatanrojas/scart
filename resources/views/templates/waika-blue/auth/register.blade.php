@@ -20,13 +20,13 @@
                     <div class="col-md-6">
                     <div class="form-group {{ $errors->has('natural_jurídica') ? ' has-error' : '' }}">
                        
-                     
+                     <label for="natural_jurídica"> Tipo de persona</label>
                         <select required  
                         class="is_required validate account_input form-control {{ ($errors->has('natural_jurídica'))?"input-error":"" }}"
                         name="natural_jurídica" id="natural_jurídica">
-                        <option value="1">Tipo de Persona </option>
+        
 
-                        <option value="N">Natural</option>
+                        <option value="N"  selected>Natural</option>
 
                         <option value="J" >Juridica</option>
                         
@@ -47,12 +47,13 @@
                     @if (sc_config('customer_nacionalidad'))
                     <div class="col-md-6">
                         <div class="form-group{{ $errors->has('nacionalidad') ? ' has-error' : '' }}">
+                            <label for="nacionalidad">Nacionalidad</label>
                             <select  type="text"
                             class="is_required validate account_input form-control {{ ($errors->has('nacionalidad'))?"input-error":"" }}"
                             name="nacionalidad" id="nacionalidad">
     
                             <option value="">Seleccióna un nacionalidad</option>
-                            <option value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
+                            <option selected value="V" {{ (old('nacionalidad')) ? 'selected':'' }}>Venezolano(a)</option>
                             <option value="E" {{ (old('nacionalidad')) ? 'selected':'' }}>Extranjero(a)</option>
                             
                         
