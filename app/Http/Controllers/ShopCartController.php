@@ -715,6 +715,8 @@ class ShopCartController extends RootFrontController
 
 
 
+
+
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = $cartItem->price;
