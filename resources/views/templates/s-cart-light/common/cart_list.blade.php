@@ -2,6 +2,7 @@
     <div class="table-responsive">
         <table class="table box table-bordered">
             <thead>
+             
                 @if($cartItem[0]->financiamiento == "1")
                 <tr style="background: #eaebec">
                     <th style="width: 50px;">No.</th>
@@ -66,7 +67,7 @@
                     </td>
   
                     {{-- <td>{!! $product->showPrice() !!}</td> --}}
-                    <td>${{$item->Cuotas}}</td>
+                    <td>{{$item->Cuotas}}</td>
                     <td>{{$item->modalidad_pago  == "2" ? "Quincenal ":"Mensual"}}</td>
                     <td>{{$item->inicial}}%</td>
   

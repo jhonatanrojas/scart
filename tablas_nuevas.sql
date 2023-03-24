@@ -72,7 +72,10 @@ CREATE TABLE `sc_rol_estatus_pedido` (
 `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
   `admin_role_id`  bigint(20), 
   `shop_order_status_id`  bigint(20) ,
-  `modificar`   BOOLEAN NOT NULL DEFAULT 'false'
+  `modificar`   BOOLEAN NOT NULL DEFAULT 'false',
+    `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -141,3 +144,6 @@ ENTRGA DE SU PRODUCTO ');
         INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('11','SOLICITUD DE COMPRA CANCELADA','');
          INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('12','PAGO PENDIENTE','EN ESPERA DE PAGO');
           INSERT INTO `sc_shop_order_status`(`id`, `name`,`mensaje`) VALUES ('13','PEDIDO ENVIADO','SU PEDIDO A SIDO ENVIADA');
+
+          CREATE TABLE `sc_rol_estatus_pedido` ( `admin_role_id` bigint(20), 
+          `shop_order_status_id` bigint(20) , `modificar` BOOLEAN NOT NULL DEFAULT false, `created_at` timestamp NULL DEFAULT NULL, `updated_at` timestamp NULL DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
