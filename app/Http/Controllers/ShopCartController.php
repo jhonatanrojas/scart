@@ -791,6 +791,7 @@ class ShopCartController extends RootFrontController
         if(isset($data['financiamiento'])
             == '1'){
 
+
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
