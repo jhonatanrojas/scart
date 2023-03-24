@@ -33,13 +33,14 @@ use App\Models\ShopOrder;
 use App\Models\SC_admin_role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use FFI;
+
 use App\Models\Catalogo\MetodoPago;
 
-use SCart\Core\Front\Models\ShopCustomFieldDetail;
+
 use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\SC_referencia_personal;
 use SCart\Core\Admin\Models\AdminUser;
+use App\Models\AdminRole;
 class  AdminOrderController extends RootAdminController
 {
     public $statusPayment;
@@ -153,7 +154,18 @@ class  AdminOrderController extends RootAdminController
             'order_status' => $order_status,
             'perfil'=> $perfil,
         ];
-        $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch);
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+         
+         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+        $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch,$this->statusOrder);
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
             $arrId = $dataTmp->pluck('id')->toArray();
             // Only show store info if store is root
@@ -170,8 +182,8 @@ class  AdminOrderController extends RootAdminController
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
 
-        
-     if(!empty($perfil)){
+     
+     /*if(!empty($perfil)){
         if($perfil=='ventas'){
             $id_status=[1,2,3,11];
             $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
@@ -188,9 +200,10 @@ class  AdminOrderController extends RootAdminController
         }else{
             $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
         }
-        
+
+   
        
-     }
+     }*/
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
@@ -559,16 +572,19 @@ class  AdminOrderController extends RootAdminController
         $list_usuarios=  $dminUser->pluck('name', 'id')->all();
         $ademin = SC_admin_role::pluck('id' , 'name')->all();
         $id_usuario_rol = Admin::user()->id;
+    
 
+       
         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol' )->first();
+        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+        $role = AdminRole::find($user_roles->role_id);
         
-        
+       $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
-       
-        if($user_roles->rol == 'Vendedor'){
+    /*    if($user_roles->rol == 'Vendedor'){
              $id_status=[1,2,3,4,11];
              $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
 
@@ -586,12 +602,14 @@ class  AdminOrderController extends RootAdminController
 
                 $estatus=  $this->statusOrder   = ShopOrderStatus::pluck('name', 'id')->all();
     
-                }
+                }*/
+
 
             $styleStatus = $this->statusOrder;
 
 
 
+        
         $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
 
         if(!empty($clasificacion)){

@@ -100,7 +100,18 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                    <a  href="#" class="updateStatus" data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{$statusOrder[$order->status] ?? 'ESTATU EN:'. $statu_en[$order->status] }}</a>
+                      {{ $statu_en[$order->status]}}
+                      @php 
+                    $liststatus=array_keys($statusOrder);                                                                                         
+                      @endphp
+                      @if(in_array($order->status,$liststatus))
+                      <a  href="#" class="updateStatus"
+                      data-name="status" data-type="select" data-source ="{{ json_encode($statusOrder) }}"
+                      data-pk="{{ $order->id }}" data-value="{!! $order->status !!}" data-url="{{ route("admin_order.update") }}"
+                       data-title="{{ sc_language_render('order.order_status') }}" 
+                      ><span title="editar estatus" type="button" class="btn btn-flat btn-sm btn-primary ">*<i class="fa fa-edit"></i></span></a>
+                      @endif
+           
                   </td>
                 </tr>
                 

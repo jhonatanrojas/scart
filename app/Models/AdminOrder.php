@@ -62,7 +62,7 @@ class AdminOrder extends ShopOrder
      *
      * @return  [type]               [return description]
      */
-    public static function getOrderListAdmin(array $dataSearch)
+    public static function getOrderListAdmin(array $dataSearch,$estatus=[])
     {
         $keyword      = $dataSearch['keyword'] ?? '';
         $email        = $dataSearch['email'] ?? '';
@@ -79,7 +79,9 @@ class AdminOrder extends ShopOrder
             $orderList = $orderList->where('store_id', $storeId);
         }
 
-        if ($perfil) {
+      
+        
+     /*   if ($perfil) {
 
             if($perfil=='ventas'){
                 $id_status=[1,2,3,11];
@@ -91,7 +93,7 @@ class AdminOrder extends ShopOrder
             }
 
             $orderList = $orderList->whereIn('status', $id_status);
-        }
+        }*/
 
         if ($order_status) {
             $orderList = $orderList->where('status', $order_status);
@@ -105,7 +107,8 @@ class AdminOrder extends ShopOrder
         if ($email) {
             $orderList = $orderList->where(function ($sql) use ($email) {
                 $sql->Where('cedula', 'like', '%'.$email.'%')
-                ->orWhere('last_name', 'like','%'.$email.'%');;
+                ->orWhere('last_name', 'like','%'.$email.'%')
+                ->orWhere('id', 'like','%'.$email.'%');
             });
         }
 
