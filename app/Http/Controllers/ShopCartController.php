@@ -580,7 +580,7 @@ class ShopCartController extends RootFrontController
         
         
 
-       
+
         if (!$data) {
             return redirect(sc_route('cart'));
         } else {
@@ -597,6 +597,7 @@ class ShopCartController extends RootFrontController
        
 
         foreach($dataCheckout as $card_detalle){
+
             
             
            $datos = [
@@ -607,8 +608,8 @@ class ShopCartController extends RootFrontController
         }
 
     
-
-
+    
+      
         //Process total
         $subtotal = (new ShopOrderTotal)->sumValueTotal('subtotal', $dataTotal); //sum total
         $tax      = (new ShopOrderTotal)->sumValueTotal('tax', $dataTotal); //sum tax
@@ -616,20 +617,43 @@ class ShopCartController extends RootFrontController
         $discount = (new ShopOrderTotal)->sumValueTotal('discount', $dataTotal); //sum discount
         $otherFee = (new ShopOrderTotal)->sumValueTotal('other_fee', $dataTotal); //sum other_fee
         $received = (new ShopOrderTotal)->sumValueTotal('received', $dataTotal); //sum received
-        $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
-        //end total
+      //  $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
 
+
+  
+       $total=0;    
+        //end total
+        $cart = Cart::content();
+       //  $itemscart=$cart->items;
+       
+            foreach ($cart as  $product) {
+                $total += $product->price *  $product->qty;
+            }
+       $arrsubtotal = array_keys(array_column($dataTotal, 'code'),'subtotal');
+       foreach ($arrsubtotal as $object) {
+        $dataTotal[$object]['value']= $total ;
+        $dataTotal[$object]['text']= $total ;
+        
+    }
+    $arrsubtotal = array_keys(array_column($dataTotal, 'code'),'total');
+    foreach ($arrsubtotal as $object) {
+     $dataTotal[$object]['value']= $total ;
+     $dataTotal[$object]['text']= $total ;
+     
+ }
+      
+  
         $dataOrder['store_id']        = $storeCheckout;
         $dataOrder['modalidad_de_compra']        = $datos['modalidad_de_compra'];
         $dataOrder['fecha_primer_pago']        = $datos['fecha_primer_pago'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['cedula']     = $customer->cedula;
-        $dataOrder['subtotal']        = $subtotal;
+        $dataOrder['subtotal']        = $total;
         $dataOrder['shipping']        = $shipping;
         $dataOrder['discount']        = $discount;
         $dataOrder['other_fee']        = $otherFee;
-        $dataOrder['received']        = $received;
-        $dataOrder['tax']             = $tax;
+        $dataOrder['received']        = 0;
+        $dataOrder['tax']             =0 ;
         $dataOrder['payment_status']  = self::PAYMENT_UNPAID;
         $dataOrder['shipping_status'] = self::SHIPPING_NOTSEND;
         $dataOrder['status']          = self::ORDER_STATUS_NEW;
@@ -645,7 +669,7 @@ class ShopCartController extends RootFrontController
         $dataOrder['device_type']      = $agent->deviceType();
         $dataOrder['ip']              = $request->ip();
         $dataOrder['created_at']      = sc_time_now();
-
+       
         if (!empty($shippingAddress['last_name'])) {
             $dataOrder['last_name']       = $shippingAddress['last_name'];
         }
@@ -686,12 +710,14 @@ class ShopCartController extends RootFrontController
        
 
         $arrCartDetail = [];
-        foreach ($dataCheckout as $cartItem) {
+        foreach ($cart  as $cartItem) {
+
+
 
 
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
-            $arrDetail['price']       = sc_currency_value($cartItem->price);
+            $arrDetail['price']       = $cartItem->price;
             $arrDetail['qty']         = $cartItem->qty;
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
@@ -700,18 +726,19 @@ class ShopCartController extends RootFrontController
             $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento ?? 0;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
-            $arrDetail['total_price'] = sc_currency_value($cartItem->price) * $cartItem->qty;
+            $arrDetail['total_price'] = $cartItem->price * $cartItem->qty;
             $arrCartDetail[]          = $arrDetail;
         }
       
       
 
-       
+  
 
         //Set session info order
         session(['dataOrder' => $dataOrder]);
         session(['arrCartDetail' => $arrCartDetail]);
 
+       
         //Create new order
         $newOrder = (new ShopOrder)->createOrder($dataOrder, $dataTotal, $arrCartDetail);
 
@@ -823,7 +850,6 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
-
 
 
             if(isset($data['financiamiento'])=="1"){
