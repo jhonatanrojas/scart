@@ -204,6 +204,8 @@ class  AdminOrderController extends RootAdminController
    
        
      }*/
+
+     
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';

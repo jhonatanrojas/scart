@@ -119,8 +119,6 @@
 
                                                     {{$Precio_cuotas}}
 
-                                              
-                                       
                                                 @else
                                                 {!! $product->showPrice() !!}
                                               
