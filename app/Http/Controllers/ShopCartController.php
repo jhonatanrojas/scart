@@ -612,6 +612,28 @@ class ShopCartController extends RootFrontController
         $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
 
 
+
+             $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
+
+               $total=0;    
+                $cart = Cart::content();
+                    foreach ($cart as  $product) {
+                        $total += $product->price *  $product->qty;
+                    }
+               $arrsubtotal = array_keys(array_column($dataTotal, 'code'),'subtotal');
+               foreach ($arrsubtotal as $object) {
+                $dataTotal[$object]['value']= $total ;
+                $dataTotal[$object]['text']= $total ;
+
+            }
+            $arrsubtotal = array_keys(array_column($dataTotal, 'code'),'total');
+            foreach ($arrsubtotal as $object) {
+             $dataTotal[$object]['value']= $total ;
+             $dataTotal[$object]['text']= $total ;
+
+         }
+
+
       
         //end total
 
@@ -689,13 +711,13 @@ class ShopCartController extends RootFrontController
             $arrDetail['price']       = sc_currency_value($cartItem->price);
             $arrDetail['qty']         = $cartItem->qty;
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
-            $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
+            $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago ?? 0;
             $arrDetail['abono_inicial']  = $cartItem->inicial;
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
             $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
-            $arrDetail['total_price'] = sc_currency_value($cartItem->price) * $cartItem->qty;
+            $arrDetail['price']       = sc_currency_value($cartItem->price);
             $arrCartDetail[]          = $arrDetail;
         }
       
@@ -774,7 +796,7 @@ class ShopCartController extends RootFrontController
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
-            $financiamiento = $data['financiamiento'];
+            $financiamiento = $data['financiamiento'] ?? 0;
             $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $Cuotas = $data['Cuotas'] ??0;
             $fecha = $data['fecha'] ?? '';
@@ -829,8 +851,8 @@ class ShopCartController extends RootFrontController
                 $dataCart = array(
                 'id'      => $productId,
                 'name'    => $product->name,
-                'financiamiento'    => $financiamiento  ,
-                'modalidad_pago'    => $modalidad_pago ,
+                'financiamiento'    => $data['financiamiento'] ?? 0,
+                'modalidad_pago'    => $data['modalidad_pago'] ,
                 'Cuotas'    => $Cuotas,
                 'fecha'    => $fecha,
                 'inicial'    => $inicial,
@@ -855,7 +877,7 @@ class ShopCartController extends RootFrontController
                     'id'      => $productId,
                     'name'    => $product->name,
                     'Cuotas'    => $Cuotas,
-                    'modalidad_pago'    => $modalidad_pago,
+                    'modalidad_pago'    => $data['modalidad_pago'],
                     'qty'     => $qty,
                     'price'   => $product->getFinalPrice() + $optionPrice,
                     'tax'     => $product->getTaxValue(),
