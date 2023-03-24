@@ -122,17 +122,25 @@ $layout_page = shop_profile
                     @foreach ($order->details as $item)
                     @php
                      $cuotas = $item->nro_coutas;
-                    if($item->abono_inicial > "0.00"){
-                      $totalinicial=(number_format($item->abono_inicial)*$item->total_price)/100;
-                      $monto = $item->total_price - $totalinicial;
-                      $number1 =$monto;
-                      if($item->nro_coutas>0)
-                      $number1 =  $monto/$item->nro_coutas;
-                    
+                    if($item->abono_inicial > "0"){
+                      $totalinicial= $item->abono_inicial *$item->price/100;
 
-                      $cuotas = number_format($number1,2 ,',', ' ') ;
+                      $number1 = $item->price -($item->abono_inicial * $item->price /100);
+
+
+                      $Precio_cuotas = $number1 / $item->nro_coutas;
+
+
+                    }else{
+
+                        $Precio_cuotas = $item->price / $item->nro_coutas;
 
                     }
+
+                    //number_format(
+
+
+                     
                      
                     @endphp
                     
@@ -157,7 +165,7 @@ $layout_page = shop_profile
                             <td>{{$item->nro_coutas}}</th>
 
                             
-                            <td class="product_price">{{ $cuotas }}$</td>
+                            <td class="product_price">{{ $Precio_cuotas ?? '0' }}$</td>
                             <td class="product_total item_id_{{ $item->id }}">
                               @if ($item->id_modalidad_pago == 2)
                               Quincenal
