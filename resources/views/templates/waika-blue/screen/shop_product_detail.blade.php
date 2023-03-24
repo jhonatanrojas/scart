@@ -25,7 +25,7 @@ $layout_page = shop_product_detail
 
     width: 100%;
     height: 51px;
-    background: #409cff;
+    background-color: rgb(19.922, 95.751, 139.45);
     border-radius: 10px;
 
     border:none;
