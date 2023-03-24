@@ -164,7 +164,8 @@ class  AdminOrderController extends RootAdminController
          $role = AdminRole::find($user_roles->role_id);
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
-         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
+         ->all();
         $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch, $id_status);
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
             $arrId = $dataTmp->pluck('id')->toArray();
@@ -582,7 +583,11 @@ class  AdminOrderController extends RootAdminController
         $role = AdminRole::find($user_roles->role_id);
         
        $id_status= $role ? $role->status->pluck('id')->toArray() :[];
-       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
+       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)
+       ->orderBy('orden')
+       ->pluck('name', 'id')
+      
+       ->all();
 
     /*    if($user_roles->rol == 'Vendedor'){
              $id_status=[1,2,3,4,11];
