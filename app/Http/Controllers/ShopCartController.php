@@ -59,7 +59,6 @@ class ShopCartController extends RootFrontController
         
         $cart = Cart::content();
         // dd($this->templatePath);
-        
 
         // dd(ShopAttributeGroup::pluck('name', 'id')  |);
 
@@ -560,12 +559,6 @@ class ShopCartController extends RootFrontController
         $customer = auth()->user();
         $uID = $customer->id ?? 0;
 
-    
-
-     
-
-        
-
         //if cart empty
         if (count(session('dataCheckout', [])) == 0) {
             return redirect()->route('home');
@@ -596,13 +589,13 @@ class ShopCartController extends RootFrontController
         }
        
 
-        foreach($dataCheckout as $card_detalle){
-            
+        foreach($dataCheckout as $card_detalle){  
             
            $datos = [
             'modalidad_de_compra' => $card_detalle->financiamiento,
             'fecha_primer_pago' => $card_detalle->fecha ,
            ];
+
 
         }
 
@@ -617,11 +610,14 @@ class ShopCartController extends RootFrontController
         $otherFee = (new ShopOrderTotal)->sumValueTotal('other_fee', $dataTotal); //sum other_fee
         $received = (new ShopOrderTotal)->sumValueTotal('received', $dataTotal); //sum received
         $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
+
+
+      
         //end total
 
         $dataOrder['store_id']        = $storeCheckout;
-        $dataOrder['modalidad_de_compra']        = $datos['modalidad_de_compra'];
-        $dataOrder['fecha_primer_pago']        = $datos['fecha_primer_pago'];
+        $dataOrder['modalidad_de_compra'] = $datos['modalidad_de_compra'];
+        $dataOrder['fecha_primer_pago'] = $datos['fecha_primer_pago'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['cedula']     = $customer->cedula;
         $dataOrder['subtotal']        = $subtotal;
@@ -683,10 +679,11 @@ class ShopCartController extends RootFrontController
             $dataOrder['cedula']       = $shippingAddress['cedula'];
         }
       
-        
+       
 
         $arrCartDetail = [];
         foreach ($dataCheckout as $cartItem) {
+
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = sc_currency_value($cartItem->price);
@@ -695,7 +692,7 @@ class ShopCartController extends RootFrontController
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
             $arrDetail['abono_inicial']  = $cartItem->inicial;
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
-            $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento ?? 0;
+            $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
             $arrDetail['total_price'] = sc_currency_value($cartItem->price) * $cartItem->qty;
@@ -703,12 +700,11 @@ class ShopCartController extends RootFrontController
         }
       
       
-
-       
-
         //Set session info order
         session(['dataOrder' => $dataOrder]);
         session(['arrCartDetail' => $arrCartDetail]);
+
+
 
         //Create new order
         $newOrder = (new ShopOrder)->createOrder($dataOrder, $dataTotal, $arrCartDetail);
@@ -761,35 +757,46 @@ class ShopCartController extends RootFrontController
     public function addToCart()
     {
         $data      = request()->all();
+
+
+
+
+
+
      
         $this->clearCartStore();
 
         //Process escape
         $data      = sc_clean($data);
-        
-       
+        if(isset($data['financiamiento'])
+            == '1'){
 
-        if(isset($data['financiamiento'])){
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
-            $financiamiento = $data['financiamiento'] ?? 0;
-            $modalidad_pago = $data['modalidad_pago'] ;
+            $financiamiento = $data['financiamiento'];
+            $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $Cuotas = $data['Cuotas'] ??0;
             $fecha = $data['fecha'] ?? '';
             $inicial = $data['inicial']?? 0;
 
-        }else if(isset($data['modalidad_pago'])){
+
+
+
+          
+
+        }else if(isset($data['financiamiento'])
+            == '0'){
+
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $Cuotas = $data['Cuotas'] ?? 0;
             $modalidad_pago = isset($data['modalidad_pago'])? 0:1;
             $storeId   = $data['storeId'] ?? config('app.storeId');
         }
-       
 
 
-       
+
 
         //Process attribute price
         $formAttr = $data['form_attr'] ?? [];
@@ -815,13 +822,15 @@ class ShopCartController extends RootFrontController
         
 
         if ($product->allowSale()) {
-            if(!empty($data['financiamiento']) =="1"){
+
+            if(isset($data['financiamiento'])=="1"){
+
                 $options = $formAttr;
                 $dataCart = array(
                 'id'      => $productId,
                 'name'    => $product->name,
-                'financiamiento'    => $financiamiento ,
-                'modalidad_pago'    => $modalidad_pago,
+                'financiamiento'    => $financiamiento  ,
+                'modalidad_pago'    => $modalidad_pago ,
                 'Cuotas'    => $Cuotas,
                 'fecha'    => $fecha,
                 'inicial'    => $inicial,
@@ -838,7 +847,9 @@ class ShopCartController extends RootFrontController
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
                 );
-            }else if(isset($data['modalidad_pago'])){
+
+
+            }else if(isset($data['financiamiento'])== '0'){
                 $options = $formAttr;
                 $dataCart = array(
                     'id'      => $productId,
@@ -852,7 +863,6 @@ class ShopCartController extends RootFrontController
                 );
                 $dataCart['options'] = $options; 
                 Cart::add($dataCart);
-
                 return redirect(sc_route('cart'))
                 ->with(
                     ['success' => sc_language_render('cart.add_to_cart_success', ['instance' => 'cart'])]
@@ -879,9 +889,7 @@ class ShopCartController extends RootFrontController
     public function addToCartAjax(Request $request)
   
     {
-        
-       
-        
+          
         if (!$request->ajax()) {
            
             return redirect(sc_route('cart'));
