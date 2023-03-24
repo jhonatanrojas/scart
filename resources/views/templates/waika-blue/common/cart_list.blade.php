@@ -74,14 +74,11 @@
 
 
                     }else{
-
                         $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
 
                     }
                      
                     @endphp
-
-
 
                     <td>
                         {{$Precio_cuotas}} 
