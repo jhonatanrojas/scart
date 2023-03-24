@@ -810,6 +810,7 @@ table tfoot {
           if(inicial>0){
 
               let precio_couta=  monto -(inicial* monto / 100 );
+              
               let precio_monto_cuota = precio_couta / n2
               let tola_inicial = inicial * monto / 100
               let monto_cuotas = monto/n2;

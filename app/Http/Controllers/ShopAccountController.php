@@ -1087,13 +1087,36 @@ class ShopAccountController extends RootFrontController
             ]
         );;
     }
+
+
+       public static function fechaEs($fecha) {
+                $fecha = substr($fecha, 0, 10);
+                $numeroDia = date('d', strtotime($fecha));
+                $dia = date('l', strtotime($fecha));
+                $mes = date('F', strtotime($fecha));
+                $anio = date('Y', strtotime($fecha));
+                $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+                $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+                $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+                $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+                $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+                return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+    }
+
+    
     public function borrador_pdf($id){
+
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
-
         $order = ShopOrder::where('id',$id)->get();
         $letraconvertir_nuber = new NumeroLetra;
+
+        if (!$order) {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
 
         $convenio = Convenio::where('order_id',$id)->first();
         
@@ -1142,6 +1165,7 @@ class ShopAccountController extends RootFrontController
                 'phone' => $c['phone'],
                 'email' => $c['email'],
                 'address1' => $c['address1'],
+                'address2' => $c['address2'],
                 'cedula' => $c['cedula'],
                 'cod_estado' => $nombreEstado ,
                 'cod_municipio' => $nombremunicipos,
@@ -1217,16 +1241,17 @@ class ShopAccountController extends RootFrontController
 
                   
                   $number2 =  $monto*$cod_bolibares;
-                  $nro_convenio = 'no aplica';
                     
 
                   foreach($borrado_html as $replacee){
                     $dataFind = [
+                        '/\{\{\$numero_de_convenio\}\}/',
                         '/\{\{\$razon_social\}\}/',
                         '/\{\{\$rif\}\}/',
                         '/\{\{\$nombre\}\}/',
                         '/\{\{\$apellido\}\}/',
                         '/\{\{\$direccion\}\}/',
+                        '/\{\{\$direccion2\}\}/',
                         '/\{\{\$estado\}\}/',
                         '/\{\{\$municipio\}\}/',
                         '/\{\{\$parroquia\}\}/',
@@ -1246,22 +1271,24 @@ class ShopAccountController extends RootFrontController
                         '/\{\{\$nombre_de_producto\}\}/',
                         '/\{\{\$telefono\}\}/',
                         '/\{\{\$email\}\}/',
-                        '/\{\{\$direccion\}\}/',
                         '/\{\{\$fecha_de_hoy\}\}/',
                         '/\{\{\$logo_waika\}\}/',
                         '/\{\{\$logo_global\}\}/',
-                        '/\{\{\$numero_de_convenio\}\}/',
+                        
                     ];
 
-                    
+         
+                  
                     
 
                     $dataReplace = [
+                        'numero_de_convenio'=>  "sin convenio",
                         'razon_social' => $dato_usuario['razon_social'],
                         'rif' => $dato_usuario['rif'],
                         'nombre' => $dato_usuario['first_name'],
                         'apellido' =>$dato_usuario['last_name'],
                         'direccion' => $dato_usuario['address1'],
+                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
                         'estado'=> $dato_usuario['cod_estado'],
                         'municipio'=>$dato_usuario['cod_municipio'],
                         'parroquia'=>$dato_usuario['cod_parroquia'],
@@ -1274,24 +1301,18 @@ class ShopAccountController extends RootFrontController
                         number_format($number1, 2 ,',', ' '),
                          $letraconvertir_nuber->convertir2($number1),
                         $cod_diaMes ,
-                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? '...',
-                         $monto,
+                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
+                         $monto ,
                          $letraconvertir_nuber->convertir2($number2),
                          number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $dato_usuario['address1'],
-                        date('d-m-y'),
+                        $this->fechaEs(date('d-m-y')),
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'cod_Fecha_De_Hoy'=> '_______',
-                        'logo_waika' =>sc_file(sc_store('logo',
-                        ($storeId ?? null))),
+                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
                         'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        $nro_convenio => '0',
-                        
-                        
 
                     ];
 
@@ -1306,6 +1327,8 @@ class ShopAccountController extends RootFrontController
 
 
                 }
+
+
 
 
 
