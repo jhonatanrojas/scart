@@ -597,11 +597,6 @@ class ShopCartController extends RootFrontController
            ];
 
 
-
-
-
-
-
         }
 
     
@@ -617,7 +612,7 @@ class ShopCartController extends RootFrontController
         $total    = (new ShopOrderTotal)->sumValueTotal('total', $dataTotal);
 
 
-       
+      
         //end total
 
         $dataOrder['store_id']        = $storeCheckout;
@@ -689,9 +684,6 @@ class ShopCartController extends RootFrontController
         $arrCartDetail = [];
         foreach ($dataCheckout as $cartItem) {
 
-
-
-
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = sc_currency_value($cartItem->price);
@@ -700,7 +692,7 @@ class ShopCartController extends RootFrontController
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
             $arrDetail['abono_inicial']  = $cartItem->inicial;
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
-            $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento ?? 0;
+            $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento;
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
             $arrDetail['total_price'] = sc_currency_value($cartItem->price) * $cartItem->qty;
@@ -708,16 +700,11 @@ class ShopCartController extends RootFrontController
         }
       
       
-
-       
-
         //Set session info order
         session(['dataOrder' => $dataOrder]);
         session(['arrCartDetail' => $arrCartDetail]);
 
 
-
-        dd($arrDetail);
 
         //Create new order
         $newOrder = (new ShopOrder)->createOrder($dataOrder, $dataTotal, $arrCartDetail);
