@@ -68,12 +68,13 @@
                     
                     @php
                     if($item->inicial>0){
-                      $totalinicial= $item->inicial *$product->price/100;
+                      $totalinicial= $item->inicial * $product->price/100;
                       $number1 = $product->price-($item->inicial * $product->price /100);
-                      $Precio_cuotas = number_format($number1 / product->nro_coutas,2);
+                      $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
 
 
                     }else{
+
                         $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
 
                     }
