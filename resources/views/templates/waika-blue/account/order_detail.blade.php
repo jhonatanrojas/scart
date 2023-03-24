@@ -128,20 +128,14 @@ $layout_page = shop_profile
                       $number1 = $item->price -($item->abono_inicial * $item->price /100);
 
 
-                      $Precio_cuotas = $number1 / $item->nro_coutas;
+                      $Precio_cuotas = number_format($number1 / $item->nro_coutas,2);
 
 
                     }else{
 
-                        $Precio_cuotas = $item->price / $item->nro_coutas;
+                        $Precio_cuotas = number_format($item->price / $item->nro_coutas,2);
 
                     }
-
-                    //number_format(
-
-
-                     
-                     
                     @endphp
                     
 
