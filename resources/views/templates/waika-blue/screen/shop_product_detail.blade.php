@@ -773,7 +773,7 @@ table tfoot {
         <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
               <input  name="qty" type="hidden"  value="1" min="1" max="100">
-              <input  name="financiamiento" type="hidden"  value="0"  max="100">
+              <input  name="financiamiento" type="hidden"  value="1"  max="100">
       </form>
 
 
