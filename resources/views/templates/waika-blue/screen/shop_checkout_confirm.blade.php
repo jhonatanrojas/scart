@@ -46,7 +46,7 @@
 
                                         <th>Articulo</th>
                                         <th>{{ sc_language_render('product.quantity') }}</th>
-                                        <th>{{ sc_language_render('product.price') }}</th>
+                                        <th>Monto de la cuotas</th>
                                         @if ($cart[0]->financiamiento == '1')
                                             <th>Nro de cuotas</th>
                                             <th>Inicial</th>
@@ -101,9 +101,25 @@
                                    
                                             <td>{{ $item->qty }}</td>
                                             <td>
+                                                @php
+                                                if($item->inicial>0){
+                                                $totalinicial= $item->inicial * $product->price/100;
+                                                $number1 = $product->price-($item->inicial * $product->price /100);
+                                                $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+
+
+                                                }else{
+
+                                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
+
+                                                }
+                                                @endphp
 
                                                 @if( $product->precio_de_cuota )
-                                                ${!!  number_format($product->precio/$product->nro_coutas,2) !!}  
+
+                                                    {{$Precio_cuotas}}
+
+                                              
                                        
                                                 @else
                                                 {!! $product->showPrice() !!}
