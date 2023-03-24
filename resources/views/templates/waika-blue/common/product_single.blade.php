@@ -8,7 +8,7 @@ img{
    
     object-fit: cover;
 }
-.wrapper::before{
+.wrapper1::before{
     transition: all .5s ease-in;
     background-color: rgba(0, 0, 0, 0.459);
     position: absolute;
@@ -20,7 +20,7 @@ img{
     opacity: 0;
     cursor: pointer;
 }
-.wrapper:hover::before{
+.wrapper1:hover::before{
     opacity: .6 ;
 }
 
@@ -31,7 +31,7 @@ img{
 <article class="product wow fadeInRight ">
     <div class="product-body">
       <div class="product-figure wrapper">
-          <a href="{{$product->getUrl()}}">
+          <a class="wrapper1" href="{{$product->getUrl()}}">
             <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}"/>
           </a>
       </div>
