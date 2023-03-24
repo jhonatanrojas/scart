@@ -165,7 +165,7 @@ class  AdminOrderController extends RootAdminController
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
          $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-        $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch,$this->statusOrder);
+        $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch, $id_status);
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
             $arrId = $dataTmp->pluck('id')->toArray();
             // Only show store info if store is root

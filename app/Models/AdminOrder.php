@@ -94,7 +94,10 @@ class AdminOrder extends ShopOrder
 
             $orderList = $orderList->whereIn('status', $id_status);
         }*/
-
+            if(!empty($estatus)){
+                
+            $orderList = $orderList->whereIn('status', $estatus);
+            }
         if ($order_status) {
             $orderList = $orderList->where('status', $order_status);
         }
