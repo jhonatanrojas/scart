@@ -1,6 +1,15 @@
 <?php
 namespace App\Admin\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
+
+
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Admin;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -81,6 +90,8 @@ class  AdminOrderController extends RootAdminController
 
           $arr_pach= explode('/',request()->path());
           $perfil =$arr_pach[2] ?? false;
+
+          
         
         $data = [
             'title'         => sc_language_render('order.admin.list'),
@@ -141,6 +152,8 @@ class  AdminOrderController extends RootAdminController
             'created_at__desc' => sc_language_render('filter_sort.value_desc', ['value' => 'Date']),
             'created_at__asc'  => sc_language_render('filter_sort.value_asc', ['value' => 'Date']),
         ];
+
+
         $dataSearch = [
             'keyword'      => $keyword,
             'email'        => $email,
@@ -167,6 +180,8 @@ class  AdminOrderController extends RootAdminController
          $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
          ->all();
         $dataTmp = (new AdminOrder)->getOrderListAdmin($dataSearch, $id_status);
+
+
         if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
             $arrId = $dataTmp->pluck('id')->toArray();
             // Only show store info if store is root
@@ -179,32 +194,13 @@ class  AdminOrderController extends RootAdminController
         }
 
 
+   
+
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
 
-     
-     /*if(!empty($perfil)){
-        if($perfil=='ventas'){
-            $id_status=[1,2,3,11];
-            $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-
-            
-            
-            
-        }else if($perfil=='riesgo'){
-            $id_status=[5,6,7,9,4,3];
-            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-        }else if($perfil=='administracion' || $perfil=='Administracion'){
-            $id_status=[8,10,12,13,16,17,19,22];
-            $this->statusOrder    = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-        }else{
-            $this->statusOrder    = ShopOrderStatus::pluck('name', 'id')->all();
-        }
-
-   
-       
-     }*/
 
      
         $styleStatus = $this->statusOrder;
@@ -313,10 +309,23 @@ class  AdminOrderController extends RootAdminController
             $dataTr[$row['id']] = $dataMap;
         }
 
+        
+
+        $data['dataSearchs'] = $dataSearch;
+        $data['page'] =  request()->all()['page'] ?? '';
+
+       
+
+
+        
+
         $data['listTh'] = $listTh;
         $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+
+
+       
 
 
         //menuRight
@@ -344,6 +353,8 @@ class  AdminOrderController extends RootAdminController
 
         if( $perfil){
             $ruta_busqueda=  sc_route_admin('admin_order.index')."/$perfil";
+
+           
         }
         $data['topMenuRight'][] = '
                 <form action="' .  $ruta_busqueda . '" id="button_search">
@@ -1980,6 +1991,200 @@ class  AdminOrderController extends RootAdminController
         return view($this->templatePathAdmin.'screen.declaracion_jurada')
             ->with($data);
     }
+
+
+
+
+    public function exporte($perfil=false){
+        $arr_pach= explode('/',request()->path());
+        $perfil =$arr_pach[2] ?? false;
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
+        $search = request()->all();
+
+      
+        $dataSearch = [
+            'keyword'      =>  $search['keyword'] ?? '',
+            'email'        => $search['email'] ?? '',
+            'Cedula'        => $search['Cedula'] ?? '',
+            'Telefono'        => $search['Telefono'] ?? '',
+            'Estado'        => $search['Estado'] ?? '',
+            'from_to'      => $search['from_to'] ?? '',
+            'end_to'       => $search['end_to'] ?? '',
+            'order_status' => $search['order_status'] ?? '',
+            'perfil'=>$search['perfil'] ?? '',
+        ];
+
+
+            $data_array=[];
+            $data_array [] = array(
+            "Nombre&Apellido",
+            "Solicitud",
+            "N°Convenio",
+            "Vendedor Asignado",
+            "Articulo",
+            "Cuotas",
+            "Cedula",
+            "Telefono",
+            "Estado",
+            "Municipio",
+            "Parroquia",
+            "Total",
+            "Estatus",
+            "Modalidad",
+            "Creado en",
+            );
+
+
+
+
+      
+
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+         
+         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
+         ->all();
+
+
+         
+        $dataTmp = (new AdminOrder)->excel_export($dataSearch, $id_status);
+        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+            $arrId = $dataTmp->pluck('id')->toArray();
+            // Only show store info if store is root
+            if (function_exists('sc_get_list_store_of_order')) {
+                $dataStores = sc_get_list_store_of_order($arrId);
+            } else {
+                $dataStores = [];
+
+            }
+        }
+
+
+
+
+            foreach ($dataTmp as $key => $row) {
+        
+            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
+
+            $convenio = Convenio::where('order_id',$row->id)->first();
+
+           
+            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+
+            if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
+                else $AlContado = "Financiamiento" ;
+            
+            $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
+            $colection = $usuario->all();
+
+            $cedula =[];
+            $phone =[];
+            $nombremunicipos =[];
+            $nombreparroquias =[];
+            $nombreEstado =[];
+            foreach($colection as $key => $usu){
+                $cedula = $usu['cedula'];
+                $phone = $usu['phone'];
+                foreach($estado as $estados){
+                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}
+                         foreach($municipio as $municipos){
+                             if($municipos->codigomunicipio ==  $usu['cod_municipio']){
+                                 $nombremunicipos = $municipos->nombre;
+                             }
+                         }
+                         foreach($parroquia as $parroquias){
+                             if($parroquias->codigomunicipio == $usu['cod_municipio']){
+                                 $nombreparroquias = $parroquias->nombre;
+                                 
+                             }
+                            
+                         }
+                       
+                     }
+
+
+            }
+
+            
+      
+                $data_array[] = array(
+                'Nombre&Apellido' => $row->first_name . $row->last_name,
+                'Solicitud' => $row->id,
+                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                'Vendedor Asignado' => $user_roles->name ?? 'N/A',
+                'Articulo' =>$Articulo->name ?? 'N/A',
+                'Cuotas' =>$Articulo->nro_coutas ?? '0',
+                'Cedula' => $row->cedula,
+                'Telefono' => $row->phone,
+                'Estado' => $nombreEstado ?? 'N/A',
+                'Municipio' => $nombremunicipos ?? 'N/A',
+                'Parroquia' =>$nombreparroquias ?? 'N/A',
+                'Total' =>sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
+                'Estatus' => $styleStatus[$row['status']] ?? $row['status'],
+                'Modalidad' => $AlContado ?? 'N/A',
+                'Creado en' => $row->created_at,
+                
+            );
+
+            
+
+        }
+
+        
+
+            ini_set('max_execution_time', 0);
+            ini_set('memory_limit', '4000M');
+
+            try {
+                $Excel_writer = null;
+                $chunk_size = 1000;
+                $offset = 0;
+
+                do {
+                    $chunk_data = array_slice($data_array, $offset, $chunk_size);
+                    $offset += $chunk_size;
+
+                    if (!empty($chunk_data)) {
+                        $spreadSheet = new Spreadsheet();
+                        $spreadSheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+                        $spreadSheet->getActiveSheet()->fromArray($chunk_data);
+                        
+                        if (!$Excel_writer) {
+                            $Excel_writer = new Xls($spreadSheet);
+                            header('Content-Type: application/vnd.ms-excel');
+                            header('Content-Disposition: attachment;filename="Customer_ExportedData.xls"');
+                            header('Cache-Control: max-age=0');
+                            ob_end_clean();
+                        } else {
+                            $Excel_writer->addSheet($spreadSheet);
+                        }
+                    }
+                } while (!empty($chunk_data));
+
+                $Excel_writer->save('php://output');
+                
+
+                
+            } catch (Exception $e) {
+                return;
+            }
+
+
+            //return redirect()->sc_route_admin('admin_order.index');
+        }
+
+
+
+    
 
 
 
