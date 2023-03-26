@@ -207,6 +207,9 @@ class  AdminOrderController extends RootAdminController
         array_walk($styleStatus, function (&$v, $k) {
             $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
         });
+
+
+        
         $dataTr = [];
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
@@ -2069,15 +2072,21 @@ class  AdminOrderController extends RootAdminController
         }
 
 
+        $styleStatus = $this->statusOrder;
+        array_walk($styleStatus, function (&$v, $k) {
+            $v =  $v ;
+        });
+
+
+       
+
+
 
 
             foreach ($dataTmp as $key => $row) {
-        
+                
             $Articulo = shop_order_detail::where('order_id', $row->id)->first();
-
             $convenio = Convenio::where('order_id',$row->id)->first();
-
-           
             $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
 
             if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
@@ -2115,7 +2124,7 @@ class  AdminOrderController extends RootAdminController
             }
 
             
-      
+            
                 $data_array[] = array(
                 'Nombre&Apellido' => $row->first_name . $row->last_name,
                 'Solicitud' => $row->id,
