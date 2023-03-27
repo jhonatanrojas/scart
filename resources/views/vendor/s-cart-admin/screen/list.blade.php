@@ -1,9 +1,30 @@
+<style>
+  .loading{
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    top:0;
+    z-index: 100;
+
+    
+  }
+</style>
 @extends($templatePathAdmin.'layout')
 
 @section('main')
-<div class="row">
+<div class="row" >
+
+
   <div class="col-12">
     <div class="card" >
+      <div class="m-auto text-center " id="loading-spinner" style="display:none;">
+        <div class="text-center" >
+          <div class="" >
+            <span style="font-size: 30px;" class="text-danger fs-12 animate__animated animate__bounce"> Por favor espere....</span>
+          </div>
+        </div>
+      </div>
       <div class="card-header with-border">
         <div class="">
           @if (!empty($topMenuRight) && count($topMenuRight))
@@ -111,6 +132,38 @@
             @endforeach
           @endif
 
+        </div>
+
+
+        <div class="menu-left" style="position: relative">
+          <div class="input-group float-right ml-1" style="width: 150px;">
+            <div class="btn-group">
+
+              <form action="{{route('export')}}"
+              method="GET" accept-charset="UTF-8" >
+              @if (!empty($dataSearchs))
+
+              <input type="hidden" name="page" value="{{$page}}">
+              <input type="hidden" name="keyword" value="{{$dataSearchs['keyword']}}">
+              <input type="hidden" name="email" value="{{$dataSearchs['email']}}">
+              <input type="hidden" name="Cedula" value="{{$dataSearchs['Cedula']}}">
+              <input type="hidden" name="Telefono" value="{{$dataSearchs['Telefono']}}">
+              <input type="hidden" name="Estado" value="{{$dataSearchs['Estado']}}">
+                <input type="hidden" name="from_to" value="{{$dataSearchs['from_to']}}">
+                <input type="hidden" name="end_to" value="{{$dataSearchs['end_to']}}">
+                <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
+                <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
+                <input type="hidden" name="perfil" value="{{$dataSearchs['perfil']}}">
+
+                <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
+                
+              @endif
+            
+            </form>
+            
+            </div>
+           
+          </div>
         </div>
 
       </div>
@@ -377,7 +430,47 @@ function cloneProduct(id){
 {{--/ sweetalert2 --}}
 
 
+
+$('#boton-descarga').click(function() {
+    document.getElementById('loading-spinner').style.display='block'
+    document.getElementById('boton-descarga').style.display='none'
+    
+  
+  $.ajax({
+    url: '{{ route('export') }}',
+    type: 'GET',
+    success: function(response) {
+      if(response){
+        document.getElementById('loading-spinner').style.display='none'
+        alertMsg('success', 'Excel Descargado con exito');
+        var timeout = 2000
+
+       setTimeout(() => {
+        location.reload()   
+        
+       }, timeout);      
+                      
+
+      }
+      
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      alertMsg('error', 'Erro al Descargado  Excel');
+      //location.reload()
+      
+      
+    }
+    
+  });
+});
+
+
+
+
 </script>
 
 {!! $js ?? '' !!}
 @endpush
+
+
+

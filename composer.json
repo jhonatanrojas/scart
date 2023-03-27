@@ -12,6 +12,8 @@
     ],
     "type" : "project",
     "require": {
+        "maatwebsite/excel": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.28",
         "predis/predis": "^2.1",
         "s-cart/core": "~7.1.20"
     },

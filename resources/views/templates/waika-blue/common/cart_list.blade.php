@@ -1,4 +1,5 @@
 <div class="col-md-12">
+
     <div class="table-responsive">
         <table class="table box table-bordered">
             <thead>
@@ -6,7 +7,7 @@
                 <tr style="background: #eaebec">
                     <th style="width: 50px;">No.</th>
                     <th>{{ sc_language_render('product.name') }}</th>
-             <th> Monto Couta</th> 
+                    <th> Monto de la  Coutas</th> 
                     <th>Cuotas</th>
                     <th>Frecuencia de pago</th>
                     <th>Inicial</th>
@@ -64,15 +65,26 @@
                             </span>
                         </a>
                     </td>
+                    
                     @php
-                    $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-                    if( $product->precio_de_cuota > 0 ):
-                    $product->precio=  $product->price-$product->monto_inicial;
-                   endif;
-               
-               
+                    if($item->inicial>0){
+                      $totalinicial= $item->inicial * $product->price/100;
+                      $number1 = $product->price-($item->inicial * $product->price /100);
+                      $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+
+
+                    }else{
+
+                        $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
+
+                    }
+                     
                     @endphp
-                    <td>${!!  number_format($product->precio/$product->nro_coutas,2) !!}  </td> 
+
+                    <td>
+                        {{$Precio_cuotas}} 
+                    </td> 
+
                     <td>{{$item->Cuotas}}</td>
                     <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  

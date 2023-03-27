@@ -25,7 +25,7 @@ $layout_page = shop_product_detail
 
     width: 100%;
     height: 51px;
-    background: #409cff;
+    background-color: rgb(19.922, 95.751, 139.45);
     border-radius: 10px;
 
     border:none;
@@ -751,7 +751,7 @@ table tfoot {
 
                  
                 </div>
-             
+              <input type="hidden" name="financiamineto" value="1" >
               
              
                     </div>
@@ -773,7 +773,7 @@ table tfoot {
         <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
               <input  name="qty" type="hidden"  value="1" min="1" max="100">
-              <input  name="financiamiento" type="hidden"  value="0"  max="100">
+              <input  name="financiamiento" type="hidden"  value="1"  max="100">
       </form>
 
 
@@ -810,6 +810,7 @@ table tfoot {
           if(inicial>0){
 
               let precio_couta=  monto -(inicial* monto / 100 );
+              
               let precio_monto_cuota = precio_couta / n2
               let tola_inicial = inicial * monto / 100
               let monto_cuotas = monto/n2;
