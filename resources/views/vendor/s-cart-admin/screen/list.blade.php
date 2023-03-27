@@ -246,19 +246,12 @@
 
   const selectElement = document.querySelector('select');
 
-selectElement.addEventListener('change', (event) => {
-  const selectedOption = event.target.value;
-  console.log(`La opción seleccionada es ${selectedOption}`);
-});
 
-    $('.grid-refresh').click(function(){
-      $.pjax.reload({container:'#pjax-container'});
-    });
+
 
       $(document).on('submit', '#button_search', function(event) {
 
-        console.log(event)
-        $.pjax.submit(event, '#pjax-container')
+        $.pjax.submit(event)
       })
 
     $(document).on('pjax:send', function() {
