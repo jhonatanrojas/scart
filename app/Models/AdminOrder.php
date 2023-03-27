@@ -216,7 +216,7 @@ class AdminOrder extends ShopOrder
 
 
         
-        $orderList = $orderList->paginate(30);
+        $orderList = $orderList->paginate(35);
 
     
         

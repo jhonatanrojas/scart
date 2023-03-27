@@ -139,27 +139,15 @@
           <div class="input-group float-right ml-1" style="width: 150px;">
             <div class="btn-group">
 
-              <form action="{{route('export')}}"
-              method="GET" accept-charset="UTF-8" >
-              @if (!empty($dataSearchs))
-
-              <input type="hidden" name="page" value="{{$page}}">
-              <input type="hidden" name="keyword" value="{{$dataSearchs['keyword']}}">
-              <input type="hidden" name="email" value="{{$dataSearchs['email']}}">
-              <input type="hidden" name="Cedula" value="{{$dataSearchs['Cedula']}}">
-              <input type="hidden" name="Telefono" value="{{$dataSearchs['Telefono']}}">
-              <input type="hidden" name="Estado" value="{{$dataSearchs['Estado']}}">
-                <input type="hidden" name="from_to" value="{{$dataSearchs['from_to']}}">
-                <input type="hidden" name="end_to" value="{{$dataSearchs['end_to']}}">
-                <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
-                <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
-                <input type="hidden" id="perfil" name="perfil" value="{{$dataSearchs['perfil']}}">
-
-                <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
-                
-              @endif
-            
-            </form>
+              <form action="{{ route('descargar.excel') }}" method="GET" accept-charset="UTF-8">
+                @csrf
+                @if (!empty($dataSearchs))
+                  @foreach ($dataSearchs as $key => $value)
+                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                  @endforeach
+                @endif
+                <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
+              </form>
             
             </div>
            
@@ -252,6 +240,16 @@
    <script src="{{ sc_file('admin/plugin/jquery.pjax.js')}}"></script>
 
   <script type="text/javascript">
+
+    
+
+
+  const selectElement = document.querySelector('select');
+
+selectElement.addEventListener('change', (event) => {
+  const selectedOption = event.target.value;
+  console.log(`La opción seleccionada es ${selectedOption}`);
+});
 
     $('.grid-refresh').click(function(){
       $.pjax.reload({container:'#pjax-container'});
@@ -437,13 +435,13 @@ $('#boton-descarga').click(function() {
     
   
   $.ajax({
-    url: '{{ route('export') }}',
+    url: '{{ route('descargar.excel') }}',
     type: 'GET',
    
     success: function(response) {
       if(response){
         
-        var timeout = 500
+        var timeout = 1000
 
        setTimeout(() => {
         document.getElementById('loading-spinner').style.display='none'
@@ -464,7 +462,7 @@ $('#boton-descarga').click(function() {
       
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alertMsg('error', 'Erro al Descargado  Excel');
+      alertMsg('error', 'Erro ');
       //location.reload()
       
       
