@@ -1,7 +1,21 @@
+<style>
+  .loading{
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    top:0;
+    z-index: 100;
+  }
+</style>
 @extends($templatePathAdmin.'layout')
 
 @section('main')
-<div class="row">
+<div class="row" >
+
+
+
+
   <div class="col-12">
     <div class="card" >
       <div class="card-header with-border">
@@ -111,6 +125,47 @@
             @endforeach
           @endif
 
+        </div>
+
+
+        <div class="menu-left" style="position: relative">
+          <div class="input-group float-right ml-1" style="width: 150px;">
+            <div class="btn-group">
+
+              <form action="{{route('export')}}"
+              method="GET" accept-charset="UTF-8" >
+
+
+              <input type="hidden" name="page" value="{{$page}}">
+              <input type="hidden" name="keyword" value="{{$dataSearchs['keyword']}}">
+              <input type="hidden" name="email" value="{{$dataSearchs['email']}}">
+              <input type="hidden" name="Cedula" value="{{$dataSearchs['Cedula']}}">
+              <input type="hidden" name="Telefono" value="{{$dataSearchs['Telefono']}}">
+              <input type="hidden" name="Estado" value="{{$dataSearchs['Estado']}}">
+                <input type="hidden" name="from_to" value="{{$dataSearchs['from_to']}}">
+                <input type="hidden" name="end_to" value="{{$dataSearchs['end_to']}}">
+                <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
+                <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
+                <input type="hidden" name="perfil" value="{{$dataSearchs['perfil']}}">
+       
+
+              
+
+              <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
+
+              
+            
+            </form>
+            <div class="m-auto text-center loading" id="loading-spinner" style="display:none ;">
+              <div class="text-center" id="loader">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only text-danger bg-red">Loading...</span>
+                </div>
+              </div>
+            </div>
+            </div>
+           
+          </div>
         </div>
 
       </div>
@@ -377,7 +432,36 @@ function cloneProduct(id){
 {{--/ sweetalert2 --}}
 
 
+
+$('#boton-descarga').click(function() {
+  $('#loading-spinner').show();
+  
+  $.ajax({
+    url: '{{ route('export') }}',
+    type: 'GET',
+    dataType: 'binary',
+    success: function(response) {
+      $('#loading-spinner').hide();
+
+      console.log(response)
+      
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $('#loading-spinner').hide();
+      
+      
+    }
+    
+  });
+});
+
+
+
+
 </script>
 
 {!! $js ?? '' !!}
 @endpush
+
+
+

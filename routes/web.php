@@ -38,6 +38,9 @@ Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJurad
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
 Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
 
+
+
+
 Route::get('/borrador_pdf/{id}', 'ShopAccountController@borrador_pdf')->name('borrador_cliente');
 
 
@@ -87,7 +90,7 @@ Route::get('sc_admin/historial_cliente', [HistorialPagosController::class,'histo
 Route::get('sc_admin/notas_d_entrega', [HistorialPagosController::class,'notas_d_entrega'])->name('notas.entrega');
 
 
-
+Route::get('sc_admin/export', [AdminOrderController::class,'exporte'])->name('export');
 
 
 
