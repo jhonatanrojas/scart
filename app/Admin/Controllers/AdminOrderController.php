@@ -1,15 +1,8 @@
 <?php
 namespace App\Admin\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-
-
-
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Admin;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -314,7 +307,7 @@ class  AdminOrderController extends RootAdminController
 
         
 
-        $data['dataSearchs'] = $dataSearch;
+        $data['dataSearchs'] = $dataSearch ?? '';
         $data['page'] =  request()->all()['page'] ?? '';
 
        
@@ -2060,22 +2053,11 @@ class  AdminOrderController extends RootAdminController
 
          
         $dataTmp = (new AdminOrder)->excel_export($dataSearch, $id_status);
-        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
-            $arrId = $dataTmp->pluck('id')->toArray();
-            // Only show store info if store is root
-            if (function_exists('sc_get_list_store_of_order')) {
-                $dataStores = sc_get_list_store_of_order($arrId);
-            } else {
-                $dataStores = [];
-
-            }
-        }
+        
 
 
         $styleStatus = $this->statusOrder;
-        array_walk($styleStatus, function (&$v, $k) {
-            $v =  $v ;
-        });
+       
 
 
        
@@ -2126,13 +2108,13 @@ class  AdminOrderController extends RootAdminController
             
             
                 $data_array[] = array(
-                'Nombre&Apellido' => $row->first_name . $row->last_name,
-                'Solicitud' => $row->id,
+                'Nombre&Apellido' => $row->first_name . $row->last_name ?? '',
+                'Solicitud' => $row->id ?? '',
                 'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
                 'Vendedor Asignado' => $user_roles->name ?? 'N/A',
                 'Articulo' =>$Articulo->name ?? 'N/A',
                 'Cuotas' =>$Articulo->nro_coutas ?? '0',
-                'Cedula' => $row->cedula,
+                'Cedula' => $row->cedula ?? '',
                 'Telefono' => $row->phone,
                 'Estado' => $nombreEstado ?? 'N/A',
                 'Municipio' => $nombremunicipos ?? 'N/A',
@@ -2140,7 +2122,7 @@ class  AdminOrderController extends RootAdminController
                 'Total' =>sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'Estatus' => $styleStatus[$row['status']] ?? $row['status'],
                 'Modalidad' => $AlContado ?? 'N/A',
-                'Creado en' => $row->created_at,
+                'Creado en' => $row->created_at ?? '',
                 
             );
 
@@ -2188,7 +2170,7 @@ class  AdminOrderController extends RootAdminController
             }
 
 
-            //return redirect()->sc_route_admin('admin_order.index');
+          
         }
 
 
