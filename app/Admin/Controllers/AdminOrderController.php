@@ -218,8 +218,13 @@ class  AdminOrderController extends RootAdminController
             
 
 
-            if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
-                else $AlContado = "Financiamiento" ;
+            if($row->modalidad_de_compra == 0){
+                $AlContado = "Al contado";
+            }else if($row->modalidad_de_compra ==2){
+                $AlContado = "Financiamiento/Entrega Inmediata" ;
+            }else{
+                $AlContado = "Financiamiento" ;
+            }
             
             $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
             $colection = $usuario->all();
@@ -2066,8 +2071,16 @@ class  AdminOrderController extends RootAdminController
             $convenio = Convenio::where('order_id',$row->id)->first();
             $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
 
-            if($row->modalidad_de_compra == 0)$AlContado = "Al contado";
-                else $AlContado = "Financiamiento" ;
+          
+
+                
+            if($row->modalidad_de_compra == 0){
+                $AlContado = "Al contado";
+            }else if($row->modalidad_de_compra ==2){
+                $AlContado = "Financiamiento/Entrega Inmediata" ;
+            }else{
+                $AlContado = "Financiamiento" ;
+            }
             
             $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
             $colection = $usuario->all();

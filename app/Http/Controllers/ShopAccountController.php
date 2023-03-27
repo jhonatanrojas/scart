@@ -215,7 +215,7 @@ class ShopAccountController extends RootFrontController
             foreach ($order as $odenr) {
                 $Order_resultado = $odenr;
                 $convenio = Convenio::where('order_id', $odenr->id)->get();
-                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
+                if (!empty($convenio) && $odenr->modalidad_de_compra >= 1) $Combenio = $convenio;
             }
         }
 
@@ -558,8 +558,7 @@ class ShopAccountController extends RootFrontController
             $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
 
             
-        }
-         if ($order->modalidad_de_compra == 1) {
+        }else{
             $historial_pagos =   HistorialPago::where('order_id', $id)
             ->where('fecha_venciento','<' ,$fech_p)
             ->orWhere('payment_status', 5)->where('order_id', $id)
@@ -1070,7 +1069,7 @@ class ShopAccountController extends RootFrontController
             foreach ($order as $odenr) {
                 $Order_resultado = $odenr;
                 $convenio = Convenio::where('order_id', $odenr->id)->get();
-                if (!empty($convenio) && $odenr->modalidad_de_compra == 1) $Combenio = $convenio;
+                if (!empty($convenio) && $odenr->modalidad_de_compra >= 1) $Combenio = $convenio;
             }
         }
         return view($this->templatePath . '.account.lista_referencia')->with(

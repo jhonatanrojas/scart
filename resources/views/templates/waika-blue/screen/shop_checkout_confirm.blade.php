@@ -215,7 +215,7 @@
                                 {{-- // Display address --}}
 
                                 <div class="col-12 col-sm-12 col-md-6">
-                                    @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
+                                    @if ( $cart[0]->financiamiento != "1")
                                  
                                     {{-- Total --}}
                                     <h3 class="control-label"><br></h3>
