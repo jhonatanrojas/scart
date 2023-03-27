@@ -22,6 +22,10 @@
   <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/summernote/summernote-bs4.css')}}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/iCheck/square/blue.css')}}">
