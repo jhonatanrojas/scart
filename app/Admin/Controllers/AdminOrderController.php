@@ -35,15 +35,15 @@ use App\Models\ShopOrder;
 use App\Models\SC_admin_role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-
 use App\Models\Catalogo\MetodoPago;
-
-
 use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\SC_referencia_personal;
 use SCart\Core\Admin\Models\AdminUser;
 use App\Models\AdminRole;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet as PhpSpreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class  AdminOrderController extends RootAdminController
 {
@@ -159,6 +159,19 @@ class  AdminOrderController extends RootAdminController
             'end_to'       => $end_to,
             'sort_order'   => $sort_order,
             'arrSort'      => $arrSort,
+            'order_status' => $order_status,
+            'perfil'=> $perfil,
+        ];
+
+         $dataSearch2 = [
+            'keyword'      => $keyword,
+            'email'        => $email,
+            'Cedula'        => $email,
+            'Telefono'        => $email,
+            'Estado'        => $email,
+            'from_to'      => $from_to,
+            'end_to'       => $end_to,
+            'sort_order'   => $sort_order,
             'order_status' => $order_status,
             'perfil'=> $perfil,
         ];
@@ -314,14 +327,9 @@ class  AdminOrderController extends RootAdminController
 
         
 
-        $data['dataSearchs'] = $dataSearch ?? '';
-        $data['page'] =  request()->all()['page'] ?? '';
-
-       
-
-
         
 
+       
         $data['listTh'] = $listTh;
         $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
@@ -353,6 +361,9 @@ class  AdminOrderController extends RootAdminController
             $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
 
+
+       
+
         $ruta_busqueda= sc_route_admin('admin_order.index');
 
         if( $perfil){
@@ -383,7 +394,7 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>'.sc_language_render('order.admin.status').':</label>
                                 <div class="input-group">
-                                <select  class="form-control rounded-0" name="order_status">
+                                <select id="order_status"  class="form-control rounded-0" name="order_status">
                                 <option value="">'.sc_language_render('order.admin.search_order_status').'</option>
                                 ' . $optionStatus . '
                                 </select>
@@ -404,6 +415,9 @@ class  AdminOrderController extends RootAdminController
                     </div>
                 </form>';
         //=menuSearch
+
+        $data['dataSearchs'] = $dataSearch2 ?? '';
+        $data['page'] =  request()->all()['page'] ?? '';
 
 
         return view($this->templatePathAdmin.'screen.list')
@@ -2000,12 +2014,13 @@ class  AdminOrderController extends RootAdminController
 
 
 
+    public function descargar()
+    {
 
-    public  function exporte(Request $request){
-
-
-        $search = $request->all();
-
+        $search = request()->all();
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
         $dataSearch = [
             'keyword'      =>  $search['keyword'] ?? '',
             'email'        => $search['email'] ?? '',
@@ -2031,73 +2046,57 @@ class  AdminOrderController extends RootAdminController
          $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
          ->all();
 
+         $spreadsheet = new Spreadsheet();
 
-         
-        $dataTmp = (new AdminOrder)->excel_export($dataSearch, $id_status);
+         // Obtener la hoja activa
+         $hoja = $spreadsheet->getActiveSheet();
 
-        
-           return  $this->excel_dowareng($dataTmp);
+        // Agregar el encabezado de las columnas
+        $hoja->setCellValue('A1', 'Nombre&Apellido1');
+        $hoja->setCellValue('B1', 'Solicitud');
+        $hoja->setCellValue('C1', 'N°Convenio');
+        $hoja->setCellValue('D1', 'Vendedor Asignado');
+        $hoja->setCellValue('E1', 'Articulo');
+        $hoja->setCellValue('F1', 'Cedula');
+        $hoja->setCellValue('G1', 'Telefono');
+        $hoja->setCellValue('H1', 'Estado');
+        $hoja->setCellValue('I1', 'Municipio');
+        $hoja->setCellValue('J1', 'Parroquia');
+        $hoja->setCellValue('K1', 'Total');
+        $hoja->setCellValue('L1', 'Estatus');
+        $hoja->setCellValue('M1', 'Modalidad');
+        $hoja->setCellValue('N1', 'Creado en');
        
+
+        // Obtener los datos de la base de datos
+        $datos = (new AdminOrder)->excel_export($dataSearch, $id_status);
+
+        // Establecer los datos de la tabla
+        $fila = 2;
+
+        $cedula =[];
+        $phone =[];
+        $nombreEstado = [];
+        $nombremunicipos =[];
+        $nombreparroquias =[];
+        $Articulo = [];
+        $convenio = [];
+        $user_roles= [];
+
+        $styleStatus = $this->statusOrder;
         
+        foreach ($datos as $dato) {
+            $Articulo = shop_order_detail::where('order_id', $dato->id)->first();
+            $convenio = Convenio::where('order_id',$dato->id)->first();
+            $user_roles = AdminUser::where('id' ,$dato->vendedor_id)->first();
 
-        }
+            if($dato->modalidad_de_compra == 0)$AlContado = "Al contado";
+                else $AlContado = "Financiamiento" ;
 
-
-        public  function  excel_dowareng($dataTmp){
-             $estado = Estado::all();
-            $municipio = Municipio::all();
-            $parroquia = Parroquia::all();
-
-            $data_array=[];
-            $data_array [] = array(
-            "Nombre&Apellido",
-            "Solicitud",
-            "N°Convenio",
-            "Vendedor Asignado",
-            "Articulo",
-            "Cuotas",
-            "Cedula",
-            "Telefono",
-            "Estado",
-            "Municipio",
-            "Parroquia",
-            "Total",
-            "Estatus",
-            "Modalidad",
-            "Creado en",
-            );
-
-
-            $styleStatus = $this->statusOrder;
-
-            foreach ($dataTmp as $key => $row) {
-                
-            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
-            $convenio = Convenio::where('order_id',$row->id)->first();
-            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
-
-          
-
-                
-            if($row->modalidad_de_compra == 0){
-                $AlContado = "Al contado";
-            }else if($row->modalidad_de_compra ==2){
-                $AlContado = "Financiamiento/Entrega Inmediata" ;
-            }else{
-                $AlContado = "Financiamiento" ;
-            }
             
-            $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
+            $usuario =  SC_shop_customer::where('id', $dato->customer_id)->get();
             $colection = $usuario->all();
-
-            $cedula =[];
-            $phone =[];
-            $nombremunicipos =[];
-            $nombreparroquias =[];
-            $nombreEstado =[];
             foreach($colection as $key => $usu){
-                $cedula = $usu['cedula'];
-                $phone = $usu['phone'];
                 foreach($estado as $estados){
                     if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}
                          foreach($municipio as $municipos){
@@ -2118,84 +2117,38 @@ class  AdminOrderController extends RootAdminController
 
             }
 
-            
-            
-                $data_array[] = array(
-                'Nombre&Apellido' => $row->first_name . $row->last_name ?? '',
-                'Solicitud' => $row->id ?? '',
-                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
-                'Vendedor Asignado' => $user_roles->name ?? 'N/A',
-                'Articulo' =>$Articulo->name ?? 'N/A',
-                'Cuotas' =>$Articulo->nro_coutas ?? '0',
-                'Cedula' => $row->cedula ?? '',
-                'Telefono' => $row->phone,
-                'Estado' => $nombreEstado ?? 'N/A',
-                'Municipio' => $nombremunicipos ?? 'N/A',
-                'Parroquia' =>$nombreparroquias ?? 'N/A',
-                'Total' =>sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
-                'Estatus' => $styleStatus[$row['status']] ?? $row['status'],
-                'Modalidad' => $AlContado ?? 'N/A',
-                'Creado en' => $row->created_at ?? '',
-                
-            );
 
 
-           
-
-            
-
+            $hoja->setCellValue('A' . $fila, $dato->first_name . $dato->last_name);
+            $hoja->setCellValue('B' . $fila, $dato->id);
+            $hoja->setCellValue('C' . $fila, $convenio->nro_convenio ?? 'N/A');
+            $hoja->setCellValue('D' . $fila, $user_roles->name ?? 'N/A');
+            $hoja->setCellValue('E' . $fila,  $Articulo->name ?? 'N/A');
+            $hoja->setCellValue('F' . $fila, $dato->cedula);
+            $hoja->setCellValue('G' . $fila, $dato->phone);
+            $hoja->setCellValue('H' . $fila, $nombreEstado ?? 'N/A');
+            $hoja->setCellValue('I' . $fila, $nombremunicipos ?? 'N/A');
+            $hoja->setCellValue('J' . $fila, $nombreparroquias);
+            $hoja->setCellValue('K' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
+            $hoja->setCellValue('L' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
+            $hoja->setCellValue('M' . $fila, $AlContado ?? 'N/A');
+            $hoja->setCellValue('N' . $fila, $dato->created_at);
+            $fila++;
         }
 
-        ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '4000M');
-        
-        try {
-            $Excel_writer = null;
-            $chunk_size = 1000;
-            $offset = 0;
-        
-            do {
-                $chunk_data = array_slice($data_array, $offset, $chunk_size);
-                $offset += $chunk_size;
-        
-                if (!empty($chunk_data)) {
-                    $spreadSheet = new Spreadsheet();
-                    $spreadSheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
-                    $spreadSheet->getActiveSheet()->fromArray($chunk_data);
-                    
-                    if (!$Excel_writer) {
-                        $Excel_writer = new Xls($spreadSheet);
-                        header('Content-Type: application/vnd.ms-excel');
-                        header('Content-Disposition: attachment;filename="Customer_ExportedData.xls"');
-                        header('Cache-Control: max-age=0');
-                        ob_end_clean();
+        // Configurar la descarga del archivo
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="mi_archivo.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
 
-                        $Excel_writer->save('php://output');
-                        return true ; 
-                    } else {
-                        $Excel_writer->addSheet($spreadSheet);
-                    }
-                }
-            } while (!empty($chunk_data));
-        
-            
-        
-           
-        
-            
-        } catch (Exception $e) {
-            return;
-        }
-        
+        exit;
+    }
 
 
 
 
-        }
-
-
-
-    
 
 
 
