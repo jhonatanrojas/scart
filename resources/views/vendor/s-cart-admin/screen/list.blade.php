@@ -134,7 +134,7 @@
 
               <form action="{{route('export')}}"
               method="GET" accept-charset="UTF-8" >
-
+              @if (!empty($dataSearchs))
 
               <input type="hidden" name="page" value="{{$page}}">
               <input type="hidden" name="keyword" value="{{$dataSearchs['keyword']}}">
@@ -147,11 +147,17 @@
                 <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
                 <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
                 <input type="hidden" name="perfil" value="{{$dataSearchs['perfil']}}">
+
+                <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
+                
+              @endif
+
+             
        
 
               
 
-              <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
+             
 
               
             
