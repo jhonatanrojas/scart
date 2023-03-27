@@ -78,8 +78,6 @@ class AdminOrder extends ShopOrder
         if ($storeId) {
             $orderList = $orderList->where('store_id', $storeId);
         }
-
-      
         
      /*   if ($perfil) {
 
@@ -149,9 +147,19 @@ class AdminOrder extends ShopOrder
         $sort_order   = $dataSearch['sort_order'] ?? '';
         $arrSort      = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
-        $storeId      = $dataSearch['storeId'] ?? 1;
+        $storeId      = $dataSearch['storeId'] ?? '';
         $perfil      = $dataSearch['perfil'] ?? '';
         $orderList = (new ShopOrder);
+
+        
+       
+       
+        if ($order_status) {
+           
+             $orderList = $orderList->where('status', $order_status);
+            
+
+        }
 
 
         
@@ -161,13 +169,8 @@ class AdminOrder extends ShopOrder
 
         }
 
-        if(!empty($estatus)){
-                
-            $orderList = $orderList->whereIn('status', $estatus);
-            }
-        if ($order_status) {
-            $orderList = $orderList->where('status', $order_status);
-        }
+  
+       
         if ($keyword) {
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('id', $keyword);
@@ -201,9 +204,26 @@ class AdminOrder extends ShopOrder
         } else {
             $orderList = $orderList->sort('created_at', 'desc');
         }
+
+             if(!empty($estatus)){
+    
+            
+            $orderList = $orderList->whereIn('status', $estatus);
+            
+                
+
+        }
+
+
+        
         $orderList = $orderList->paginate(30);
 
-        return $orderList;
+    
+        
+ 
+        return  $orderList;
+
+        
     }
 
     /**

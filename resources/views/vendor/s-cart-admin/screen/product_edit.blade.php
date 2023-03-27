@@ -523,6 +523,29 @@
                                 </div>
                             </div>
 
+
+                            <div class="form-group row kind   {{ $errors->has('cuotas_inmediatas') ? ' text-red' : '' }}">
+                                <label for="cuotas_inmediatas" class="col-sm-2 col-form-label">Cuotas Inmediatas</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-cash-register	"></i></span>
+                                        </div>
+                                        <input type="number" step="0.01" style="width: 100px;" id="nro_coutas"
+                                            name="cuotas_inmediatas" value="{!! old('nro_coutas', $product->cuotas_inmediatas) !!}"
+                                            class="form-control input-sm cuotas_inmediatas" placeholder="" />
+                                    </div>
+                                    @if ($errors->has('cuotas_inmediatas'))
+                                        <span class="form-text">
+                                            <i class="fa fa-info-circle"></i> {{ $errors->first('cuotas_inmediatas') }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                          
+
+                          
+
                             <div class="form-group row kind   {{ $errors->has('modalidad_pago') ? ' text-red' : '' }}">
                                 <label for="modalidad_pago" class="col-sm-2 col-form-label"> Modalidad de pagos
                                 </label>

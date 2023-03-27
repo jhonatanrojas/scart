@@ -646,8 +646,8 @@ table tfoot {
 
                     <div>
                         <div class="form-check">
-                    <input disabled  onclick="alert('Esta opcion aun no disponible')" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="ENTREGA_INMEDIATA" checked>
-                    <label class="form-check-label" for="exampleRadios1">
+                    <input    class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta" value="2" >
+                    <label class="form-check-label" for="tipo_venta">
                       {{sc_language_render('customer.title_ENTREGA INMEDIATA')}}
                     </label>
 
@@ -656,8 +656,8 @@ table tfoot {
                   </div>
 
                    <div class="form-check">
-                    <input checked class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="ENTREGA_PROGRAMADA">
-                    <label class="form-check-label" for="exampleRadios2">
+                    <input checked class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta2" value="1">
+                    <label class="form-check-label" for="tipo_venta">
                       {{sc_language_render('customer.title_ENTREGA PROGRAMADA')}}
                     </label>
                   </div>
@@ -694,7 +694,7 @@ table tfoot {
 
                        <div class="mt-0 col-md-6">
                       <label class="text-dark text-uppercase" for="inicial">Cuotas</label>
-                         <input readonly class="form-control" type="text"  id="" value="{{$product->nro_coutas}}">
+                         <input readonly class="form-control" type="text"  id="m_nro_cuotas" value="{{$product->nro_coutas}}">
                       </div>
 
  
@@ -740,7 +740,10 @@ table tfoot {
 
 
 
-                        <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" id="">
+                        <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" >
+                        <input id="cuotas_inmediatas" type="hidden" value="{{$product->cuotas_inmediatas}}" name="cuotas_inmediatas" >
+
+                        
                         <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto" 
                        >
 
@@ -751,7 +754,7 @@ table tfoot {
 
                  
                 </div>
-              <input type="hidden" name="financiamineto" value="1" >
+              <input type="hidden" name="financiamineto" value="1"  >
               
              
                     </div>
@@ -773,124 +776,12 @@ table tfoot {
         <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
               <input  name="qty" type="hidden"  value="1" min="1" max="100">
-              <input  name="financiamiento" type="hidden"  value="1"  max="100">
+              <input  name="financiamiento" type="hidden"  value="1" id="financiamiento" >
       </form>
 
 
 
 
-      <script type="text/javascript">
-
-          const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
-          const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
-
-
-          let  inicial = document.getElementById("inicial")
-          inicial.addEventListener('click' , function(e){
-           var iniciale = e.target.value
-
-           if(iniciale == '0' || iniciale == '30'){
-              gen_table(iniciale)
-           }else if(!iniciale == '0' || !iniciale == '30'){
-              alert('el campo inicial es obligatorio')
-           }
-
-           
-           
-        })
- 
-        function gen_table(iniciale){
-          document.getElementById("butto_modal").disabled = false;
-          let monto=Number(document.getElementById("monto").value);
-          let n2=Number(document.getElementById("Cuotas").value);
-          let inicial = iniciale;
-   
-         
-
-          if(inicial>0){
-
-              let precio_couta=  monto -(inicial* monto / 100 );
-              
-              let precio_monto_cuota = precio_couta / n2
-              let tola_inicial = inicial * monto / 100
-              let monto_cuotas = monto/n2;
-
-              document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-              document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-              document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
-
-
-
-           
-          }else{
-              let monto_cuotass = monto/n2;
-               document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
-                document.getElementById('monto_Inicial').value = 0.00
-                document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
-
-
-            
-          }
-
-       
-            fechaInicio = new Date(document.getElementById('fecha').value)
-            fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
-           
-            if(fechaInicio == "Invalid Date"){
-            var fechaInicio  = new Date();
-            var fechaInicio = fechaInicio.toLocaleDateString('en-US');
-            // obtener la fecha de hoy en formato `MM/DD/YYYY`
-            }
-
-
-      }
-
-          var msg = document.getElementById('msg');
-          const  Buyblock = document.getElementById("buy_block");
-          function validachecke1(){
-            
-              let msg = document.getElementById('msg').style.display = "none";
-              const group = document.getElementById("group").style.display = "block"
-              
-              var stylies = document.getElementById("descotado")
-              
-              stylies.classList.replace("btn-primary", "btn-success")
-
-              var finansiamiento = document.getElementById("finansiamiento");
-
-              finansiamiento.classList.replace("btn-success", "btn-primary")
-              
-          
-          
-          };
-                 
-            document.getElementById('msg').style.display = "none";
-            document.getElementById("group").style.display = "none";
-          function validachecke2(){
-              let msg = document.getElementById('msg').style.display = "none";
-              const group = document.getElementById("group").style.display = "none";
-              let finansiamiento = document.getElementById("finansiamiento");
-              finansiamiento.classList.replace("btn-primary", "btn-success")
-
-              var stylies = document.getElementById("descotado")
-              
-              stylies.classList.replace("btn-success", "btn-primary")
-             
-            
-        
-          };
-
-
-
-            Buyblock.addEventListener("submit" ,function(e){
-            e.preventDefault()
-            if(true) {Buyblock.submit()} });
-
-
-
-
-
-      </script>
 @endsection
 {{-- block_main --}}
 
@@ -901,5 +792,167 @@ table tfoot {
 @push('scripts')
 
 
+<script type="text/javascript">
+
+  const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
+  const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+
+
+var radios_tipo_venta = document.getElementsByName('tipo_venta');
+const input_financamiento =document.getElementById("financiamiento");
+var select_inicial = document.getElementById("inicial");
+// Agregar un evento onchange a cada botón de radio
+for (var i = 0; i < radios_tipo_venta.length; i++) {
+radios_tipo_venta[i].onchange = function() {
+// Obtener el valor del botón de radio seleccionado
+
+
+var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+
+if(seleccionado==1){
+  input_financamiento.value=1;
+  select_inicial.querySelector('option[value="30"]').removeAttribute("selected");
+  select_inicial.removeAttribute("readonly");
+  document.getElementById('monto_Inicial').value =0;
+
+ 
+        document.getElementById('monto_Inicial').value = 0.00
+        gen_table(0)
+
+
+}else{
+
+
+    var option = select_inicial.querySelector('option[value="30"]');
+    select_inicial.querySelector('option[value="0"]').removeAttribute("selected");
+if (option) {
+option.setAttribute("selected", "selected");
+select_inicial.setAttribute("readonly", "readonly");
+gen_table(30)
+
+}
+input_financamiento.value=2;
+}
+// Hacer algo con el valor seleccionado
+console.log('El botón de radio seleccionado es: ' + seleccionado);
+}
+}
+
+  let  inicial = document.getElementById("inicial")
+  inicial.addEventListener('click' , function(e){
+   var iniciale = e.target.value
+
+   if(iniciale == '0' || iniciale == '30'){
+      gen_table(iniciale)
+   }else if(!iniciale == '0' || !iniciale == '30'){
+      alert('el campo inicial es obligatorio')
+   }
+
+   
+   
+})
+
+function gen_table(iniciale){
+  document.getElementById("butto_modal").disabled = false;
+  var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+  if(seleccionado==1)
+  var n2=Number(document.getElementById("Cuotas").value);
+  else
+  var n2=Number(document.getElementById("cuotas_inmediatas").value);
+
+  let monto=Number(document.getElementById("monto").value);
+
+  let inicial = iniciale;
+  if(n2>1)
+  document.getElementById("m_nro_cuotas").value=n2;
+  
+
+ 
+
+  if(inicial>0){
+
+      let precio_couta=  monto -(inicial* monto / 100 );
+      
+      let precio_monto_cuota = precio_couta / n2
+      let tola_inicial = inicial * monto / 100
+      let monto_cuotas = monto/n2;
+
+      document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
+      document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
+      document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
+
+
+
+   
+  }else{
+      let monto_cuotass = monto/n2;
+       document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+        document.getElementById('monto_Inicial').value = 0.00
+        document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
+
+
+    
+  }
+
+
+    fechaInicio = new Date(document.getElementById('fecha').value)
+    fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
+   
+    if(fechaInicio == "Invalid Date"){
+    var fechaInicio  = new Date();
+    var fechaInicio = fechaInicio.toLocaleDateString('en-US');
+    // obtener la fecha de hoy en formato `MM/DD/YYYY`
+    }
+
+
+}
+
+  var msg = document.getElementById('msg');
+  const  Buyblock = document.getElementById("buy_block");
+  function validachecke1(){
+    
+      let msg = document.getElementById('msg').style.display = "none";
+      const group = document.getElementById("group").style.display = "block"
+      
+      var stylies = document.getElementById("descotado")
+      
+      stylies.classList.replace("btn-primary", "btn-success")
+
+      var finansiamiento = document.getElementById("finansiamiento");
+
+      finansiamiento.classList.replace("btn-success", "btn-primary")
+      
+  
+  
+  };
+         
+    document.getElementById('msg').style.display = "none";
+    document.getElementById("group").style.display = "none";
+  function validachecke2(){
+      let msg = document.getElementById('msg').style.display = "none";
+      const group = document.getElementById("group").style.display = "none";
+      let finansiamiento = document.getElementById("finansiamiento");
+      finansiamiento.classList.replace("btn-primary", "btn-success")
+
+      var stylies = document.getElementById("descotado")
+      
+      stylies.classList.replace("btn-success", "btn-primary")
+     
+    
+
+  };
+
+
+
+    Buyblock.addEventListener("submit" ,function(e){
+    e.preventDefault()
+    if(true) {Buyblock.submit()} });
+
+
+
+
+
+</script>
     
 @endpush
