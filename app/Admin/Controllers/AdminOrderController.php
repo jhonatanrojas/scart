@@ -1991,9 +1991,7 @@ class  AdminOrderController extends RootAdminController
 
 
 
-    public function exporte($perfil=false){
-        $arr_pach= explode('/',request()->path());
-        $perfil =$arr_pach[2] ?? false;
+    public function exporte(){
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -2033,11 +2031,6 @@ class  AdminOrderController extends RootAdminController
             );
 
 
-
-
-      
-
-
         $id_usuario_rol = Admin::user()->id;
         $dminUser = new AdminUser;
          $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
@@ -2057,13 +2050,6 @@ class  AdminOrderController extends RootAdminController
 
 
         $styleStatus = $this->statusOrder;
-       
-
-
-       
-
-
-
 
             foreach ($dataTmp as $key => $row) {
                 
