@@ -452,7 +452,7 @@ $('#boton-descarga').click(function() {
     },
     error: function(jqXHR, textStatus, errorThrown) {
       alertMsg('error', 'Erro al Descargado  Excel');
-      //location.reload()
+      location.reload()
       
       
     }
