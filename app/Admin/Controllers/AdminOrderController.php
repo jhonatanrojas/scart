@@ -1991,10 +1991,19 @@ class  AdminOrderController extends RootAdminController
 
 
 
-    public function exporte(){
+    public function exporte($perfil=false){
+
+        $arr_pach= explode('/',request()->path());
+        $perfil =$arr_pach[2] ?? false;
+
+
+
+
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
+
+
         $search = request()->all();
 
       
@@ -2116,43 +2125,48 @@ class  AdminOrderController extends RootAdminController
 
         }
 
+      
+
         
 
-            ini_set('max_execution_time', 0);
-            ini_set('memory_limit', '4000M');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '4000M');
+        
+        try {
+            $Excel_writer = null;
+            $chunk_size = 1000;
+            $offset = 0;
+        
+            do {
+                $chunk_data = array_slice($data_array, $offset, $chunk_size);
+                $offset += $chunk_size;
+        
+                if (!empty($chunk_data)) {
+                    $spreadSheet = new Spreadsheet();
+                    $spreadSheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+                    $spreadSheet->getActiveSheet()->fromArray($chunk_data);
+                    
+                    if (!$Excel_writer) {
+                        $Excel_writer = new Xls($spreadSheet);
+                        header('Content-Type: application/vnd.ms-excel');
+                        header('Content-Disposition: attachment;filename="Customer_ExportedData.xls"');
+                        header('Cache-Control: max-age=0');
+                        ob_end_clean();
 
-            try {
-                $Excel_writer = null;
-                $chunk_size = 1000;
-                $offset = 0;
-
-                do {
-                    $chunk_data = array_slice($data_array, $offset, $chunk_size);
-                    $offset += $chunk_size;
-
-                    if (!empty($chunk_data)) {
-                        $spreadSheet = new Spreadsheet();
-                        $spreadSheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
-                        $spreadSheet->getActiveSheet()->fromArray($chunk_data);
-                        
-                        if (!$Excel_writer) {
-                            $Excel_writer = new Xls($spreadSheet);
-                            header('Content-Type: application/vnd.ms-excel');
-                            header('Content-Disposition: attachment;filename="Customer_ExportedData.xls"');
-                            header('Cache-Control: max-age=0');
-                            $Excel_writer->save('php://output');
-
-                            return true;
-                        } else {
-                            $Excel_writer->addSheet($spreadSheet);
-                        }
+                        $Excel_writer->save('php://output');
+                        return true;
+                    } else {
+                        $Excel_writer->addSheet($spreadSheet);
                     }
-                } while (!empty($chunk_data));
-
-
-            } catch (Exception $e) {
-                return false;
-            }
+                }
+            } while (!empty($chunk_data));
+        
+            
+        
+           
+        } catch (Exception $e) {
+            return;
+        }
 
            
 
