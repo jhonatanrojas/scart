@@ -443,8 +443,12 @@ $('#boton-descarga').click(function() {
       if(response){
         document.getElementById('loading-spinner').style.display='none'
         alertMsg('success', 'Excel Descargado con exito');
+        var timeout = 2000
 
-       location.reload()         
+       setTimeout(() => {
+        location.reload()   
+        
+       }, timeout);      
                       
 
       }
@@ -452,7 +456,7 @@ $('#boton-descarga').click(function() {
     },
     error: function(jqXHR, textStatus, errorThrown) {
       alertMsg('error', 'Erro al Descargado  Excel');
-      location.reload()
+      //location.reload()
       
       
     }
