@@ -7,7 +7,7 @@ $layout_page = shop_cart
 - $attributesGroup: array
 */
 @endphp
-{{-- <?= dd($cart)?> --}}
+
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')

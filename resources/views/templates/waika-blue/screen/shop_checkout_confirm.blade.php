@@ -47,7 +47,7 @@
                                         <th>Articulo</th>
                                         <th>{{ sc_language_render('product.quantity') }}</th>
                                         <th>Monto de la cuotas</th>
-                                        @if ($cart[0]->financiamiento == '1')
+                                        @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                             <th>Nro de cuotas</th>
                                             <th>Inicial</th>
                                             <th>Frecuencia de pago</th>
@@ -56,7 +56,7 @@
                                     
                                 
 
-                                        @if ($cart[0]->financiamiento != '1')
+                                        @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
                                             <th>{{ sc_language_render('product.subtotal') }}</th>
                                         @endif
                                     </tr>
@@ -71,7 +71,10 @@
                                             $n = isset($n) ? $n : 0;
                                             $n++;
                                             $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
-
+                                                if($cart[0]->financiamiento==2){
+                                                $product->nro_coutas=$product->cuotas_inmediatas;
+                                                $item->Cuotas=$product->cuotas_inmediatas;
+                                                }
                                             $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                                     if( $product->precio_de_cuota > 0 ):
                                     $product->precio=  $product->price-$product->monto_inicial;
@@ -124,7 +127,7 @@
                                               
                                                 @endif
                                             </td>
-                                            @if ($cart[0]->financiamiento == '1')
+                                            @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                                 <td>{{ $item->Cuotas }}</td>
                                                 @php
                                                     $inicial = '0.00';
@@ -138,7 +141,7 @@
                                             @endif
                                             
                                         
-                                            @if ($cart[0]->financiamiento != '1')
+                                            @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
                                                 <td align="right">{{ sc_currency_render($item->subtotal) }}</td>
                                             @endif
                                         </tr>
@@ -212,7 +215,7 @@
                                 {{-- // Display address --}}
 
                                 <div class="col-12 col-sm-12 col-md-6">
-                                    @if ( $cart[0]->financiamiento != "1")
+                                    @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
                                  
                                     {{-- Total --}}
                                     <h3 class="control-label"><br></h3>

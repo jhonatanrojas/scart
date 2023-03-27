@@ -542,6 +542,7 @@ class AdminProductController extends RootAdminController
         $subImages       = $data['sub_image'] ?? [];
         $downloadPath    = $data['download_path'] ?? '';
         $dataCreate = [
+            'cuotas_inmediatas' => $data['cuotas_inmediatas']?? 0,
             'nro_coutas' => $data['nro_coutas'],
             'id_modalidad_pagos' => $data['modalidad_pago'],
             'brand_id'       => $data['brand_id'] ?? "",
@@ -902,6 +903,7 @@ class AdminProductController extends RootAdminController
         $subImages       = $data['sub_image'] ?? [];
         $downloadPath    = $data['download_path'] ?? '';
         $dataUpdate = [
+            'cuotas_inmediatas' => $data['cuotas_inmediatas']?? 0,
             'nro_coutas'     => $data['nro_coutas'] ?? 0 ,
             'id_modalidad_pagos'     => $data['modalidad_pagos'] ?? '',
             'image'        => $data['image'] ?? '',
