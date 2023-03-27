@@ -37,7 +37,7 @@
                                   
                   
                   @php  $dblockconvenio="display:none;";   @endphp
-                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==5 )
+                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra >= 1  && $order->status==5 )
                   @php  $dblockconvenio="display:block;";   @endphp
                   @endif
                   <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;   @php echo $dblockconvenio  @endphp">
@@ -77,7 +77,7 @@
                 @endif
                   @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion')
 
-                   @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio))
+                   @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador Convenio</span></a>
                    
@@ -120,7 +120,13 @@
                   <tr>
                     <td> Modalidad de compra</td>
                     <td>
-                      {{ ($order->modalidad_de_compra) ? 'Financiamiento' :'Al contado'; }}
+                      @if ($order->modalidad_de_compra==1)
+                      {{'Financiamiento' }}
+                      @elseif ($order->modalidad_de_compra==2)
+                      {{'Financiamiento/Entrega Inmediata' }}
+                      @else
+                      {{'Al contado' }}
+                      @endif
                     </td>
                   </tr>
                   <tr>
@@ -169,7 +175,7 @@
                 </tr>
                 </table>
                <table class="table table-hover box-body text-wrap table-bordered">
-                @if (!$order['modalidad_de_compra'] == 1)
+                @if (!$order['modalidad_de_compra'] >= 1)
                   <tr>
                     <td class="td-title"><i class="far fa-money-bill-alt nav-icon"></i> {{ sc_language_render('order.currency') }}:</td>
                     <td>{{ $order->currency }}</td>
@@ -338,7 +344,7 @@
 
                     {{-- <th class="product_tax">{{ sc_language_render('product.tax') }}</th> --}}
                     <th class="product_total">Total</th>
-                      @if (!$order->modalidad_de_compra == 1)
+                      @if (!$order->modalidad_de_compra >= 1)
                       <th>{{ sc_language_render('action.title') }}</th>
                           
                       @endif
@@ -456,7 +462,7 @@
 
                             <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
 
-                            @if ($order->modalidad_de_compra == 1  && empty($convenio))
+                            @if ($order->modalidad_de_compra >= 1  && empty($convenio))
                             <td>
                               <span  onclick="deleteItem('{{ $item->id }}');" class="btn btn-danger btn-xs" data-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </td>
@@ -474,7 +480,7 @@
 
                     <tr  id="add-item" class="not-print">
                       <td colspan="9">
-                        @if ($order->total <= 0  && empty($convenio)  &&  $order->modalidad_de_compra == 1 )
+                        @if ($order->total <= 0  && empty($convenio)  &&  $order->modalidad_de_compra >= 1 )
                         <button  type="button" class="btn btn-flat btn-success" id="add-item-button"  title="{{sc_language_render('action.add') }}"><i class="fa fa-plus"></i> {{ sc_language_render('action.add') }}</button>  
                         @endif
                         @if ($order->modalidad_de_compra == 0)
@@ -575,7 +581,7 @@
             <div class="card">
          
 
-             @if ($order->modalidad_de_compra == 1)
+             @if ($order->modalidad_de_compra >= 1)
              <table class="table table-hover box-body text-wrap table-bordered">
              <tr>
               <td>Evaluación</td>

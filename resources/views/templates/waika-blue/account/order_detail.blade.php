@@ -104,7 +104,7 @@ $layout_page = shop_profile
                   <tr>
                     <th>Articulo</th>
                  
-                    @if (empty($order->details[0]->modalidad_de_compra == 1))
+                    @if (empty($order->details[0]->modalidad_de_compra >= 1))
                    
                     <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                     <th class="product_price">Cuota</th>
@@ -152,7 +152,7 @@ $layout_page = shop_profile
                               @endphp
                             {!! $html !!}
                             </td>
-                            @if (empty($order->details[0]->modalidad_de_compra == 1))
+                            @if (empty($order->details[0]->modalidad_de_compra >= 1))
                            
                             <td class="product_qty">x  {{ $item->qty }}</td>
 
@@ -213,7 +213,7 @@ $layout_page = shop_profile
 
                 @endforeach
 
-                @if(!$order->modalidad_de_compra==1)
+                @if(!$order->modalidad_de_compra>=1)
                 <tr class="data-balance"><td>{{ sc_language_render('order.totals.balance') }}:</td><td style="text-align:right">{{ sc_currency_format($order->balance) }}</td></tr>
                 @endif
             </table>
@@ -246,7 +246,7 @@ $layout_page = shop_profile
               {{ sc_language_render('common.created_at') }}
             </th>
               @endif
-            @if($order->modalidad_de_compra==1)
+            @if($order->modalidad_de_compra>=1)
             <th class="text-center">Fecha de Pago</th>
             @endif
             <th>Accione</th>
@@ -289,7 +289,7 @@ $layout_page = shop_profile
             {{ $historial->estatus->name }}
         </span>
       </td>
-            @if($order->modalidad_de_compra==1)
+            @if($order->modalidad_de_compra>=1)
               <td colspan="1">
                 {{$historial->fecha_pago}}
               </td>
@@ -302,7 +302,7 @@ $layout_page = shop_profile
           @endif
       
 
-        @if($order->modalidad_de_compra==1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
+        @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
         <td>   
 
          
@@ -332,7 +332,7 @@ $layout_page = shop_profile
              
             </div>
   
-            @if($order->modalidad_de_compra==1)
+            @if($order->modalidad_de_compra>=1)
                   <div class="modal-body  d-flex justify-content-between">
                       <div class=" ">
                         <a onclick="bioPago({{$historial->id}})" id="bioPago"    class="btn btn-danger">

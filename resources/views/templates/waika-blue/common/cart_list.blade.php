@@ -1,9 +1,12 @@
 <div class="col-md-12">
+@php
 
+
+@endphp
     <div class="table-responsive">
         <table class="table box table-bordered">
             <thead>
-                @if($cartItem[0]->financiamiento == "1")
+                @if($cartItem[0]->financiamiento == "1" || $cartItem[0]->financiamiento==2)
                 <tr style="background: #eaebec">
                     <th style="width: 50px;">No.</th>
                     <th>{{ sc_language_render('product.name') }}</th>
@@ -32,9 +35,10 @@
             </thead>
 
             <tbody>
-                @if($cartItem[0]->financiamiento == "1")
+                @if($cartItem[0]->financiamiento == "1" || $cartItem[0]->financiamiento==2)
                 @foreach($cartItem as $item)
                     @php
+             
                         $n = (isset($n)?$n:0);
                         $n++;
                         // Check product in cart
@@ -67,6 +71,12 @@
                     </td>
                     
                     @php
+                           if($cartItem[0]->financiamiento==2){
+                            $product->nro_coutas=$product->cuotas_inmediatas;
+                            $item->Cuotas=$product->cuotas_inmediatas;
+                           }
+              
+                       
                     if($item->inicial>0){
                       $totalinicial= $item->inicial * $product->price/100;
                       $number1 = $product->price-($item->inicial * $product->price /100);
@@ -85,7 +95,7 @@
                         {{$Precio_cuotas}} 
                     </td> 
 
-                    <td>{{$item->Cuotas}}</td>
+                    <td>{{$item->Cuotas}} </td>
                     <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
                     @php
