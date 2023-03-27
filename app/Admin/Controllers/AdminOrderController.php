@@ -43,6 +43,8 @@ use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\SC_referencia_personal;
 use SCart\Core\Admin\Models\AdminUser;
 use App\Models\AdminRole;
+use Illuminate\Http\Request;
+
 class  AdminOrderController extends RootAdminController
 {
     public $statusPayment;
@@ -341,6 +343,7 @@ class  AdminOrderController extends RootAdminController
 
         //menuSearch
         $optionStatus = '';
+    
         foreach ($this->statusOrder as $key => $status) {
             $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
@@ -375,8 +378,8 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>'.sc_language_render('order.admin.status').':</label>
                                 <div class="input-group">
-                                <select class="form-control rounded-0" name="order_status">
-                                <option value="1">'.sc_language_render('order.admin.search_order_status').'</option>
+                                <select  class="form-control rounded-0" name="order_status">
+                                <option value="">'.sc_language_render('order.admin.search_order_status').'</option>
                                 ' . $optionStatus . '
                                 </select>
                                 </div>
@@ -455,6 +458,8 @@ class  AdminOrderController extends RootAdminController
     public function postCreate()
     {
         $data = request()->all();
+
+       
 
         
 
@@ -1991,22 +1996,11 @@ class  AdminOrderController extends RootAdminController
 
 
 
-    public function exporte($perfil=false){
-
-        $arr_pach= explode('/',request()->path());
-        $perfil =$arr_pach[2] ?? false;
+    public  function exporte(Request $request){
 
 
+        $search = $request->all();
 
-
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
-
-
-        $search = request()->all();
-
-      
         $dataSearch = [
             'keyword'      =>  $search['keyword'] ?? '',
             'email'        => $search['email'] ?? '',
@@ -2019,6 +2013,35 @@ class  AdminOrderController extends RootAdminController
             'perfil'=>$search['perfil'] ?? '',
         ];
 
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+         
+         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
+         ->all();
+
+
+         
+        $dataTmp = (new AdminOrder)->excel_export($dataSearch, $id_status);
+
+        
+           return  $this->excel_dowareng($dataTmp);
+       
+        
+
+        }
+
+
+        public  function  excel_dowareng($dataTmp){
+             $estado = Estado::all();
+            $municipio = Municipio::all();
+            $parroquia = Parroquia::all();
 
             $data_array=[];
             $data_array [] = array(
@@ -2040,25 +2063,7 @@ class  AdminOrderController extends RootAdminController
             );
 
 
-        $id_usuario_rol = Admin::user()->id;
-        $dminUser = new AdminUser;
-         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
-         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
-         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
-         $role = AdminRole::find($user_roles->role_id);
-         
-         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
-         $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
-         ->all();
-
-
-         
-        $dataTmp = (new AdminOrder)->excel_export($dataSearch, $id_status);
-        
-
-
-        $styleStatus = $this->statusOrder;
+            $styleStatus = $this->statusOrder;
 
             foreach ($dataTmp as $key => $row) {
                 
@@ -2121,13 +2126,12 @@ class  AdminOrderController extends RootAdminController
                 
             );
 
+
+           
+
             
 
         }
-
-      
-
-        
 
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '4000M');
@@ -2154,7 +2158,7 @@ class  AdminOrderController extends RootAdminController
                         ob_end_clean();
 
                         $Excel_writer->save('php://output');
-                        return true;
+                        return true ; 
                     } else {
                         $Excel_writer->addSheet($spreadSheet);
                     }
@@ -2164,14 +2168,16 @@ class  AdminOrderController extends RootAdminController
             
         
            
+        
+            
         } catch (Exception $e) {
             return;
         }
+        
 
-           
 
 
-          
+
         }
 
 

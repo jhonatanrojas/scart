@@ -153,7 +153,7 @@
                 <input type="hidden" name="end_to" value="{{$dataSearchs['end_to']}}">
                 <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
                 <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
-                <input type="hidden" name="perfil" value="{{$dataSearchs['perfil']}}">
+                <input type="hidden" id="perfil" name="perfil" value="{{$dataSearchs['perfil']}}">
 
                 <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
                 
@@ -439,14 +439,23 @@ $('#boton-descarga').click(function() {
   $.ajax({
     url: '{{ route('export') }}',
     type: 'GET',
+   
     success: function(response) {
       if(response){
-        document.getElementById('loading-spinner').style.display='none'
-        alertMsg('success', 'Excel Descargado con exito');
-        var timeout = 2000
+        
+        var timeout = 500
 
        setTimeout(() => {
-        location.reload()   
+        document.getElementById('loading-spinner').style.display='none'
+        alertMsg('success', 'Excel Descargado con exito');
+        
+        if($('#perfil').val() == 'riesgo' || $('#perfil').val() == 'riesgo'){
+          window.location.href = "{{ sc_route_admin('admin_order.index') }}"+"/"+$('#perfil').val()
+
+        }else{
+          window.location.href = "{{ sc_route_admin('admin_order.index') }}"
+
+        }
         
        }, timeout);      
                       
