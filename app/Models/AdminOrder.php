@@ -149,18 +149,19 @@ class AdminOrder extends ShopOrder
         $sort_order   = $dataSearch['sort_order'] ?? '';
         $arrSort      = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
-        $storeId      = $dataSearch['storeId'] ?? '';
+        $storeId      = $dataSearch['storeId'] ?? 1;
         $perfil      = $dataSearch['perfil'] ?? '';
         $orderList = (new ShopOrder);
+
+
+        
         
         if ($storeId) {
             $orderList = $orderList->where('store_id', $storeId);
+
         }
 
-      
-        
-
-            if(!empty($estatus)){
+        if(!empty($estatus)){
                 
             $orderList = $orderList->whereIn('status', $estatus);
             }
