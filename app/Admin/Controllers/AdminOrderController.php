@@ -376,8 +376,7 @@ class  AdminOrderController extends RootAdminController
                                 <label>'.sc_language_render('order.admin.status').':</label>
                                 <div class="input-group">
                                 <select class="form-control rounded-0" name="order_status">
-                                <option value="">'.sc_language_render('order.admin.search_order_status').'</option>
-                                ' . $optionStatus . '
+                                '.$optionStatus.'
                                 </select>
                                 </div>
                             </div>
@@ -2154,20 +2153,21 @@ class  AdminOrderController extends RootAdminController
                             header('Content-Type: application/vnd.ms-excel');
                             header('Content-Disposition: attachment;filename="Customer_ExportedData.xls"');
                             header('Cache-Control: max-age=0');
-                            ob_end_clean();
+                            $Excel_writer->save('php://output');
+
+                            return true;
                         } else {
                             $Excel_writer->addSheet($spreadSheet);
                         }
                     }
                 } while (!empty($chunk_data));
 
-                $Excel_writer->save('php://output');
-                
 
-                
             } catch (Exception $e) {
-                return;
+                return false;
             }
+
+           
 
 
           

@@ -6,6 +6,8 @@
 
     top:0;
     z-index: 100;
+
+    
   }
 </style>
 @extends($templatePathAdmin.'layout')
@@ -14,10 +16,15 @@
 <div class="row" >
 
 
-
-
   <div class="col-12">
     <div class="card" >
+      <div class="m-auto text-center " id="loading-spinner" style="display:none;">
+        <div class="text-center" >
+          <div class="" >
+            <span style="font-size: 30px;" class="text-danger fs-12 animate__animated animate__bounce"> Por favor espere....</span>
+          </div>
+        </div>
+      </div>
       <div class="card-header with-border">
         <div class="">
           @if (!empty($topMenuRight) && count($topMenuRight))
@@ -151,24 +158,9 @@
                 <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
                 
               @endif
-
-             
-       
-
-              
-
-             
-
-              
             
             </form>
-            <div class="m-auto text-center loading" id="loading-spinner" style="display:none ;">
-              <div class="text-center" id="loader">
-                <div class="spinner-border" role="status">
-                  <span class="sr-only text-danger bg-red">Loading...</span>
-                </div>
-              </div>
-            </div>
+            
             </div>
            
           </div>
@@ -440,20 +432,27 @@ function cloneProduct(id){
 
 
 $('#boton-descarga').click(function() {
-  $('#loading-spinner').show();
+    document.getElementById('loading-spinner').style.display='block'
+    document.getElementById('boton-descarga').style.display='none'
+    
   
   $.ajax({
     url: '{{ route('export') }}',
     type: 'GET',
-    dataType: 'binary',
     success: function(response) {
-      $('#loading-spinner').hide();
+      if(response){
+        document.getElementById('loading-spinner').style.display='none'
+        alertMsg('success', 'Excel Descargado con exito');
 
-      console.log(response)
+       location.reload()         
+                      
+
+      }
       
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      $('#loading-spinner').hide();
+      alertMsg('error', 'Erro al Descargado  Excel');
+      location.reload()
       
       
     }
