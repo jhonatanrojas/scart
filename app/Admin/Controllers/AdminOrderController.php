@@ -376,7 +376,8 @@ class  AdminOrderController extends RootAdminController
                                 <label>'.sc_language_render('order.admin.status').':</label>
                                 <div class="input-group">
                                 <select class="form-control rounded-0" name="order_status">
-                                '.$optionStatus.'
+                                <option value="1">'.sc_language_render('order.admin.search_order_status').'</option>
+                                ' . $optionStatus . '
                                 </select>
                                 </div>
                             </div>
