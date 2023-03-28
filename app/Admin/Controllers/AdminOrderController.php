@@ -356,10 +356,20 @@ class  AdminOrderController extends RootAdminController
 
         //menuSearch
         $optionStatus = '';
+        $inpuExcel = '' ;
     
         foreach ($this->statusOrder as $key => $status) {
             $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
         }
+
+        
+
+
+                $ruta_exel= route('descargar.excel');
+                foreach ($dataSearch2 as $key => $value){
+                    $inpuExcel .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';}
+                     
+                           
 
 
        
@@ -413,10 +423,27 @@ class  AdminOrderController extends RootAdminController
                             </div>
                         </div>
                     </div>
-                </form>';
-        //=menuSearch
+                </form>
 
-        $data['dataSearchs'] = $dataSearch2 ?? '';
+
+
+                    <div class="m-auto" >
+                    <div class=" ml-1" style="width: 150px;">
+                        <form action="'.$ruta_exel.'" method="GET" accept-charset="UTF-8">
+
+                         '.$inpuExcel.'
+                        <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
+                        </form>
+                    
+                    </div>
+                </div>
+                
+                
+                
+                ';
+
+                
+        //=menuSearch
         $data['page'] =  request()->all()['page'] ?? '';
 
 
@@ -2057,15 +2084,16 @@ class  AdminOrderController extends RootAdminController
         $hoja->setCellValue('C1', 'N°Convenio');
         $hoja->setCellValue('D1', 'Vendedor Asignado');
         $hoja->setCellValue('E1', 'Articulo');
-        $hoja->setCellValue('F1', 'Cedula');
-        $hoja->setCellValue('G1', 'Telefono');
-        $hoja->setCellValue('H1', 'Estado');
-        $hoja->setCellValue('I1', 'Municipio');
-        $hoja->setCellValue('J1', 'Parroquia');
-        $hoja->setCellValue('K1', 'Total');
-        $hoja->setCellValue('L1', 'Estatus');
-        $hoja->setCellValue('M1', 'Modalidad');
-        $hoja->setCellValue('N1', 'Creado en');
+        $hoja->setCellValue('F1', 'Cuotas');
+        $hoja->setCellValue('G1', 'Cedula');
+        $hoja->setCellValue('H1', 'Telefono');
+        $hoja->setCellValue('I1', 'Estado');
+        $hoja->setCellValue('J1', 'Municipio');
+        $hoja->setCellValue('K1', 'Parroquia');
+        $hoja->setCellValue('L1', 'Total');
+        $hoja->setCellValue('M1', 'Estatus');
+        $hoja->setCellValue('N1', 'Modalidad');
+        $hoja->setCellValue('O1', 'Creado en');
        
 
         // Obtener los datos de la base de datos
@@ -2124,15 +2152,17 @@ class  AdminOrderController extends RootAdminController
             $hoja->setCellValue('C' . $fila, $convenio->nro_convenio ?? 'N/A');
             $hoja->setCellValue('D' . $fila, $user_roles->name ?? 'N/A');
             $hoja->setCellValue('E' . $fila,  $Articulo->name ?? 'N/A');
-            $hoja->setCellValue('F' . $fila, $dato->cedula);
-            $hoja->setCellValue('G' . $fila, $dato->phone);
-            $hoja->setCellValue('H' . $fila, $nombreEstado ?? 'N/A');
-            $hoja->setCellValue('I' . $fila, $nombremunicipos ?? 'N/A');
-            $hoja->setCellValue('J' . $fila, $nombreparroquias);
-            $hoja->setCellValue('K' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
-            $hoja->setCellValue('L' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
-            $hoja->setCellValue('M' . $fila, $AlContado ?? 'N/A');
-            $hoja->setCellValue('N' . $fila, $dato->created_at);
+            $hoja->setCellValue('F' . $fila,  $Articulo->nro_coutas ?? 'N/A');
+            $hoja->setCellValue('G' . $fila, $dato->cedula);
+            $hoja->setCellValue('H' . $fila, $dato->phone);
+            $hoja->setCellValue('I' . $fila, $nombreEstado ?? 'N/A');
+            $hoja->setCellValue('J' . $fila, $nombremunicipos ?? 'N/A');
+            $hoja->setCellValue('K' . $fila, $nombreparroquias);
+            $hoja->setCellValue('L' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
+            $hoja->setCellValue('M' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
+            $hoja->setCellValue('N' . $fila, $AlContado ?? 'N/A');
+            $hoja->setCellValue('O' . $fila, $dato->created_at);
+
             $fila++;
         }
 
