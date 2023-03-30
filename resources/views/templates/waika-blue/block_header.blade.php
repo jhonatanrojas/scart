@@ -1,191 +1,98 @@
-      <!-- Page Header-->
-      <style>
-        .usuario{
-          position: relative;
-          padding-right: 22px;
-      
-        }
-        .login{
-          width: 19px;
-          height: 19px;
-          border-radius: 50%;
-          background-color: greenyellow;
-          border: solid 3px white;
-          position: absolute;
-          opacity: 0;
-          right: auto;
-          
-          animation: animate 1s infinite ease-in-out ;
-        }
+<header class="section page-header">
 
-        @keyframes animate{
-          0%{
-            border: solid 4px rgb(246, 248, 246);
-            opacity: 1;
-           
-
-          }
-          100%{
-            border: solid 4px greenyellow;
-            opacity: 0;
-           
-            
-
-          }
-        }
-      </style>
-      
-      <header class="section page-header">
-        <!-- RD Navbar-->
-        <div class="rd-navbar-wrap p-0 m-0">
-          <nav class="rd-navbar rd-navbar-classic" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="100px" data-xl-stick-up-offset="100px" data-xxl-stick-up-offset="100px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
-            <div style="background: rgb(19.922, 95.751, 139.45);"  class="rd-navbar-main-outer  p-0 m-0">
-              <div class="rd-navbar-main p-0 m-0">
-                <!-- RD Navbar Panel-->
-                <div class="rd-navbar-panel p-2 m-0 ">
-                  <!-- RD Navbar Toggle-->
-                  <button type="button" class="rd-navbar-toggle text-white" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
-                  <!-- RD Navbar Brand-->
-                  <div class="rd-navbar-brand">
-                <!--Brand--><a class="brand" href="{{ sc_route('home') }}"><img class="brand-logo-dark  " src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="100" height="20"/>
-                  <img class="brand-logo-light" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="" width="106" height="44"/></a>
-                  </div>
-                </div>
-                <div class="rd-navbar-nav-wrap">
-                  <!-- RD Navbar Nav-->
-                  <ul class="rd-navbar-nav ">
-                    @if (!empty($sc_layoutsUrl['menu']))
-                    @foreach ($sc_layoutsUrl['menu'] as $url)
-                    <li class="rd-nav-item">
-                        <a class="rd-nav-link text-white" {{ ($url->target =='_blank')?'target=_blank':''  }}
-                            href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
-                    </li>
-                    @endforeach
-                    @endif
-
-                    @if (sc_config('link_account', null, 1))
-                    @guest
-                    <li class="rd-nav-item"><a class="rd-nav-link text-white" href="#"><i class="fa fa-lock"></i> {{ sc_language_render('front.account') }}</a>
-                        <ul class="rd-menu rd-navbar-dropdown ">
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('login') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.login') }}</a>
-                            </li>
-
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('wishlist') }}"><i class="fas fa-heart"></i> {{ sc_language_render('front.wishlist') }} 
-                                    <span class="count sc-wishlist"
-                                    id="shopping-wishlist">{{ Cart::instance('wishlist')->count() }}</span>
-                                </a>
-                            </li>
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('compare') }}"><i class="fa fa-exchange"></i> {{ sc_language_render('front.compare') }} 
-                                    <span class="count sc-compare"
-                                    id="shopping-compare">{{ Cart::instance('compare')->count() }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    @else
-                    <li class="rd-nav-item"><a class="rd-nav-link text-white usuario text-white" href="#">
-                       MI CUENTA
-                       {{-- <span class="login"></span> --}}
-                       
-                      </a>
-                        <ul class="rd-menu rd-navbar-dropdown">
-                            <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('customer.index') }}"><i class="fa fa-user"></i> {{ sc_language_render('front.my_profile') }}</a></li>
-                            <li class="rd-dropdown-item"><a class="rd-dropdown-link text-white" href="{{ sc_route('logout') }}" rel="nofollow" onclick="event.preventDefault();
-                               document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ sc_language_render('front.logout') }}</a></li>
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link text-white" href="{{ sc_route('wishlist') }}"><i class="fas fa-heart"></i> {{ sc_language_render('front.wishlist') }} 
-                                    <span class="count sc-wishlist"
-                                    id="shopping-wishlist">{{ Cart::instance('wishlist')->count() }}</span>
-                                </a>
-                            </li>
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link text-white" href="{{ sc_route('compare') }}"><i class="fa fa-exchange"></i> {{ sc_language_render('front.compare') }} 
-                                    <span class="count sc-compare"
-                                    id="shopping-compare">{{ Cart::instance('compare')->count() }}</span>
-                                </a>
-                            </li>
-                            <form id="logout-form" action="{{ sc_route('logout') }}" method="POST" style="display: none;">
-                              @csrf
-                            </form>
-                        </ul>
-                    </li>
-                    @endguest
-                    @endif
-
-                    @if (sc_config('link_language', null, 1))
-                    @if (count($sc_languages)>1)
-                    <li class="rd-nav-item">
-                        <a class="rd-nav-link" href="#">
-                            <img src="{{ sc_file($sc_languages[app()->getLocale()]['icon']) }}" style="height: 25px;" alt="icon"> <i class="fas fa-caret-down"></i>
-                        </a>
-                        <ul class="rd-menu rd-navbar-dropdown">
-                            @foreach ($sc_languages as $key => $language)
-                            <li class="rd-dropdown-item">
-                                <a class="rd-dropdown-link" href="{{ sc_route('locale', ['code' => $key]) }}">
-                                    <img alt="icon" src="{{ sc_file($language['icon']) }}" style="height: 25px;"> {{ $language['name'] }}
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endif
-                    @endif
-
-                    @if (sc_config('link_currency', null, 1))
-                    @if (count($sc_currencies)>1)
-                    <li class="rd-nav-item">
-                        <a class="rd-nav-link text-white" href="#">
-                            {{ sc_currency_info()['name'] }} <i class="fas fa-caret-down"></i>
-                        </a>
-                        <ul class="rd-menu rd-navbar-dropdown">
-                            @foreach ($sc_currencies as $key => $currency)
-                            <li class="rd-dropdown-item" {{ ($currency->code ==  sc_currency_info()['code']) ? 'disabled': '' }}>
-                                <a class="rd-dropdown-link" href="{{ sc_route('currency', ['code' => $currency->code]) }}">
-                                    {{ $currency->name }}
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endif
-                    @endif
-
-                  </ul>
-                </div>
-
-                <div class="rd-navbar-main-element">
-                  <!-- RD Navbar Search-->
-                  <div class="rd-navbar-search rd-navbar-search-2">
-                    <button class="text-white rd-navbar-search-toggle rd-navbar-fixed-element-3" data-rd-navbar-toggle=".rd-navbar-search"><span></span></button>
-                    <form class="rd-search" action="{{ sc_route('search') }}"  method="GET">
-                      <div class="form-wrap">
-                        <input class="rd-navbar-search-form-input form-input"  type="text" name="keyword"  placeholder="{{ sc_language_render('search.placeholder') }}"/>
-                        <button class="rd-search-form-submit" type="submit"></button>
-                      </div>
-                    </form>
-                  </div>
-                  @if (sc_config('link_cart', null, 1))
-                  <!-- RD Navbar Basket-->
-                  <div class="rd-navbar-basket-wrap">
-                     <a href="{{ sc_route('cart') }}">
-                    <button style="font-size: 27px;" class="rd-navbar-basket fl-bigmug-line-shopping202 text-warning ">
-                      <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('default')->count() }}</span>
-                    </button>
-                    </a> 
-
-
-                  </div>
-                <a title="{{ sc_language_render('cart.page_title') }}" style="margin-top:18px;" class="rd-navbar-basket rd-navbar-basket-mobile fl-bigmug-line-shopping202 rd-navbar-fixed-element-2" href="{{ sc_route('cart') }}">
-                    <span class="count sc-cart">{{ Cart::instance('default')->count() }}</span>
-                 </a>
-                @endif
-                </div>
-              </div>
+  {{-- NAVBAR 1 --}}
+  <nav class="navbar navbar-expand-lg bg-white">
+    <div class="container gap-5">
+          {{-- LOGO --}}
+          <a class="navbar-brand" href="{{ sc_route('home') }}">
+            <img class="" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{$title??sc_store('title')}}"/>
+          </a>
+          {{-- BOTON RESPONSIVE --}}
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          {{-- FORM HEADER --}}
+          <form class="d-flex flex-fill mb-0" action="{{ sc_route('search') }}"  method="GET" role="search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="{{ sc_language_render('search.placeholder') }}" aria-label="{{ sc_language_render('search.placeholder') }}" aria-describedby="button-Search">
+              <button class="btn btn-outline-secondary" type="button" id="button-Search"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-          </nav>
-        </div>
-      </header>
+          </form>
+
+          {{-- MENÚ RIGHT --}}
+          <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              @if (sc_config('link_account', null, 1))
+                @guest
+                  <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="{{ sc_route('register') }}">{{ sc_language_render('customer.signup') }}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="{{ sc_route('login') }}">{{ sc_language_render('front.login') }}</a>
+                  </li>
+                @else
+                  <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="{{ sc_route('customer.index') }}">{{ sc_language_render('customer.my_account') }}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="{{ sc_route('logout') }}">{{ sc_language_render('front.logout') }}</a>
+                  </li>
+                @endguest
+              @endif
+            </ul>
+          </div>
+    </div>
+  </nav>
+
+  {{-- NAVBAR 2 --}}
+  <nav class="navbar navbar-expand-lg" style="background: #E6F3F8;">
+    <div class="container">
+
+      {{-- categorias --}}
+      <div class="dropdown">
+        <button class="btn btn-light rounded-pill btn-sm px-4 gap-2 d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ sc_language_render('front.categories') }}
+          <i class="fa-solid fa-angle-down" style="margin-top: 4px;"></i>
+        </button>
+        
+        @php
+          $categoriesTop = $modelCategory->start()->getCategoryTop()->getData();
+        @endphp
+        
+        @if ($categoriesTop->count())
+            <ul class="dropdown-menu">
+              @foreach ($categoriesTop as $key => $category)
+              <li class="">
+                <a class="dropdown-item" href="{{ $category->getUrl() }}"> {{ $category->title }}</a>
+              </li>
+              @endforeach
+            </ul>
+        @endif
+      </div>
+
+      <div class="" id="">
+        <ul class="nav me-auto mb-2 mb-lg-0">
+          {{-- menu dinamico --}}
+          @if (!empty($sc_layoutsUrl['menu']))
+              @foreach ($sc_layoutsUrl['menu'] as $url)
+                <li class="rd-nav-item">
+                    <a class="nav-link text-capitalize" {{ ($url->target =='_blank')?'target=_blank':''  }}
+                        href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
+                </li>
+              @endforeach 
+          @endif
+          {{-- wishlist y compare --}}
+          {{-- <li class="nav-item">
+            <a class="nav-link text-capitalize" href="{{ sc_route('wishlist') }}">{{ sc_language_render('front.wishlist') }} {{ Cart::instance('wishlist')->count() }}</a>
+          </li>
+          <li class="nav-item text-capitalize">
+            <a class="nav-link" href="{{ sc_route('compare') }}">{{ sc_language_render('front.compare') }} {{ Cart::instance('compare')->count() }}</a>
+          </li> --}}
+          
+        </ul>
+      </div>
+      
+    </div>
+  </nav>
+
+</header>

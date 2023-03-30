@@ -4,33 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700%7CLato%7CKalam:300,400,700">
     <link rel="canonical" href="{{ request()->url() }}" />
     <meta name="description" content="{{ $description??sc_store('description') }}">
     <meta name="keyword" content="{{ $keyword??sc_store('keyword') }}">
     <title>{{$title??sc_store('title')}}</title>
-    <link rel="icon" href="{{ sc_file(sc_store('icon', null, 'images/icon.png')) }}" type="image/png" sizes="16x16">
     <meta property="og:image" content="{{ !empty($og_image)?sc_file($og_image):sc_file('images/org.jpg') }}" />
     <meta property="og:url" content="{{ \Request::fullUrl() }}" />
     <meta property="og:type" content="Website" />
     <meta property="og:title" content="{{ $title??sc_store('title') }}" />
     <meta property="og:description" content="{{ $description??sc_store('description') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700%7CLato%7CKalam:300,400,700">
+    <link rel="icon" href="{{ sc_file(sc_store('icon', null, 'images/icon.png')) }}" type="image/png" sizes="16x16">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RHXF116X"></script>
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-21RHXF116X"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-21RHXF116X');
-</script>
-
-
+    gtag('config', 'G-21RHXF116X');
+    </script>
 
     <!-- css default for item s-cart -->
     @include($sc_templatePath.'.common.css')
@@ -40,10 +37,25 @@
     @includeIf($sc_templatePath.'.common.render_block', ['positionBlock' => 'header'])
     <!--//Module header -->
 
-    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
+    {{-- <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/iconoAlert.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/fonts.css')}}">
- <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}"> 
+    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}">  --}}
+
+    <link rel="stylesheet" href="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/css/bootstrap.min.css')}}">
+
+    {{-- fontawesome --}}
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/fontawesome.css')}}" rel="stylesheet">
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/brands.css')}}" rel="stylesheet">
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/solid.css')}}" rel="stylesheet">
+
+    {{-- google fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    {{-- Sobre escribiendo estilos --}}
+    <link href="{{asset('templates/waika-blue/assets/css/style.css')}}" rel="stylesheet">
 
     <style>
         {!! sc_store_css() !!}
@@ -154,7 +166,7 @@
     <script src="{{ sc_file($sc_templateFile.'/js/script.js')}}"></script>
     <script src="{{ sc_file($sc_templateFile.'/js/jquery.paroller.js')}}"></script>
 
-
+    <script src="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js')}}"></script>
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')
