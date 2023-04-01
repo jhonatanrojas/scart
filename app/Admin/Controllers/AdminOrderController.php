@@ -1287,25 +1287,22 @@ class  AdminOrderController extends RootAdminController
         $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
+
         $convenio=Convenio::where('order_id',$orderId)->first();
+
         $constacia_trabajo='';
         $rif='';
         $cedula='';
+       
+        $nro_convenio = 'A/N';
+
+        if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
 
 
+       
 
-        
-
-        
-        
-        if(empty($convenio)){
+   
             
-            return redirect()->back()
-                ->with(['error' => ' Convenio aun no se ah creado']);
-            
-        }
-
-        $nro_convenio = $convenio->nro_convenio;
 
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
@@ -1322,7 +1319,7 @@ class  AdminOrderController extends RootAdminController
             $data['email']           = $order['email'];
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
-            $data['nro_convenio'] =  $nro_convenio;
+            $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
             $data['cedula'] =  $cedula;
@@ -1354,6 +1351,8 @@ class  AdminOrderController extends RootAdminController
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
+
+                
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1371,7 +1370,7 @@ class  AdminOrderController extends RootAdminController
                         'qty' => $detail->qty, 
                         'price' => $detail->price, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $convenio->total,
+                        'total_price' => $detail->total_price ?? '',
                     ];
                 }
             }
