@@ -41,14 +41,17 @@
               <div class="col-sm-6 col-lg-3">
                 <h4 class="footer-classic-title">{{ sc_language_render('about.page_title') }}</h4>
                 <ul class="nav flex-column">
-                  <li>
-                      <a class="nav-link px-0" href="#">{{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }}</a>
+                  <li class="d-flex gap-2">
+                      <i class="fa-solid fa-location-dot py-2 lh-sm"></i>
+                      <a class="nav-link px-0 text-body" href="#">{{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }}</a>
                   </li>
-                  <li>
-                    <a class="nav-link px-0" href="tel:#">{{ sc_language_render('store.hotline') }}: {{ sc_store('long_phone', ($storeId ?? null)) }}</a>
+                  <li class="d-flex gap-2">
+                    <i class="fa-solid fa-phone py-2 lh-sm"></i>
+                    <a class="nav-link px-0 text-body" href="tel:#">{{ sc_language_render('store.hotline') }}: {{ sc_store('long_phone', ($storeId ?? null)) }}</a>
                   </li>
-                  <li>
-                    <a class="nav-link px-0" href="mailto:#{{ sc_store('email', ($storeId ?? null)) }}">{{ sc_language_render('store.email') }}: {{ sc_store('email', ($storeId ?? null)) }}</a>
+                  <li class="d-flex gap-2">
+                    <i class="fa-solid fa-envelope py-2 lh-sm"></i>
+                    <a class="nav-link px-0 text-body" href="mailto:#{{ sc_store('email', ($storeId ?? null)) }}">{{ sc_language_render('store.email') }}: {{ sc_store('email', ($storeId ?? null)) }}</a>
                   </li>
                 </ul>
               </div>
@@ -60,21 +63,21 @@
                     @if (!empty($sc_layoutsUrl['footer']))
                     @foreach ($sc_layoutsUrl['footer'] as $url)
                     <li>
-                        <a {{ ($url->target =='_blank')?'target=_blank':''  }} class="nav-link px-0"
+                        <a {{ ($url->target =='_blank')?'target=_blank':''  }} class="nav-link px-0 text-body"
                             href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
                     </li>
                     @endforeach
                     @endif
                 </ul>
 
-                <h5>{{ sc_language_render('subscribe.title') }}</h5>
+                {{-- <h5>{{ sc_language_render('subscribe.title') }}</h5>
                 <form class="rd-form-inline rd-form-inline-2"  method="post" action="{{ sc_route('subscribe') }}">
                   @csrf
                   <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="{{ sc_language_render('subscribe.email') }}" aria-label="{{ sc_language_render('subscribe.email') }}" aria-describedby="button-addon2" id="subscribe-form-2-email" type="email" name="subscribe_email" required>
                     <button class="btn btn-outline-primary" type="submit" id="button-addon2">{{ sc_language_render('action.submit') }}</button>
                   </div>
-                </form>
+                </form> --}}
               </div>
             </div>
           </div>

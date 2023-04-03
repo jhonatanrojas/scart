@@ -57,6 +57,8 @@
     {{-- Sobre escribiendo estilos --}}
     <link href="{{asset('templates/waika-blue/assets/css/style.css')}}" rel="stylesheet">
 
+    <link href="{{asset('templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.carousel.min.css')}}" rel="stylesheet">
+
     <style>
         {!! sc_store_css() !!}
     </style>
@@ -167,6 +169,8 @@
     <script src="{{ sc_file($sc_templateFile.'/js/jquery.paroller.js')}}"></script>
 
     <script src="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js')}}"></script>
+
+    <script src="{{asset('templates/waika-blue/assets/owlcarousel2-2.3.4/dist/owl.carousel.min.js')}}"></script>
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')
