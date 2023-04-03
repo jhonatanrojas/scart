@@ -1,4 +1,5 @@
 @extends($templatePathAdmin.'layout')
+@php $storeId  = session('adminStoreId') ?? 1; @endphp
 
 @section('main')
    <div class="row">
