@@ -82,10 +82,10 @@
               @endforeach 
           @endif
           {{-- wishlist y compare --}}
-          {{-- <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link text-capitalize" href="{{ sc_route('wishlist') }}">{{ sc_language_render('front.wishlist') }} {{ Cart::instance('wishlist')->count() }}</a>
           </li>
-          <li class="nav-item text-capitalize">
+         {{--  <li class="nav-item text-capitalize">
             <a class="nav-link" href="{{ sc_route('compare') }}">{{ sc_language_render('front.compare') }} {{ Cart::instance('compare')->count() }}</a>
           </li> --}}
           

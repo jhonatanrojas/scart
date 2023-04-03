@@ -1,3 +1,64 @@
 *{
     font-family: 'Roboto', sans-serif;
 }
+
+body{
+    background-color: #F6F6F6;
+}
+
+
+/* CARD PRODUCT */
+.img-featured{
+    width: 100%;
+    height: 190px;
+    border-bottom: 1px solid #E8E8E8;
+}
+.img-featured a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.img-featured img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.product-card .product-price {
+    font-size: 20px;
+    line-height: 23px;
+    font-weight: 400;
+    color: #000;
+}
+
+.product-card .product-cuotas{
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 400;
+    color: rgba(0, 128, 182, 1);
+
+}
+
+.product-card .card-title, .product-card .card-title a{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 14px;
+    color: #494949;
+    text-decoration: none;
+}
+
+.product-button-wrap{
+    position: absolute;
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.product-button-wrap .button-like{
+    color: rgba(226, 226, 226, 1);
+    cursor: pointer;
+}

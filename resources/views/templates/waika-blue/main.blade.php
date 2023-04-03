@@ -97,7 +97,7 @@
         @section('block_main')
             <section class="section section-xxl bg-default text-md-left">
                 <div class="container">
-                    <div class="row row-50">
+                    <div class="row">
                         @section('block_main_content')
 
                         @if (empty($hiddenBlockLeft))
