@@ -337,7 +337,7 @@
                     <th>Cuotas</th>
                     <th>Serial</th>
                     <th>Modalidad</th>
-                    <th >Inicial</th>
+                    <th >Inicial %</th>
                     <th >Monto cuotas</th>
                     <th >Cant</th>
                     <th>{{ sc_language_render('product.price') }}</th>
@@ -586,8 +586,8 @@
              <tr>
               <td>Evaluación</td>
               <td>Observación</td>
-              <td>Porcentaje</td>
-              <td>Confiabilidad</td>
+              <td>% Interes Comercial</td>
+              <td>% Confiabilidad</td>
              </tr>
               <tr>
                 <td  class="td-title"><span >Evaluación comercial</span></td>
@@ -1008,18 +1008,19 @@
             </td>
 
             <td>
-                <select required class="add_id[] form-control select2" name="add_inicial[]" style="width:100% !important;">
-                  '.$opcion_inicial.' 
+            <input  type="number" min="0" class="add_inicial form-control add_id[]" name="add_inicial[]" value="0"></td>
+
+              
                 ';
           
          
             $htmlSelectProduct .='
-                </select>
+              
                 <span class="add_attr"></span>
               </td>
             
             
-              <td></td>
+              <td> <span class="monto_cuota_text"></span> </td>
 
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
@@ -1554,14 +1555,26 @@ function update_total(e){
                 $('#loading').show();
             },
             success: function(returnedData){
+              console.log(returnedData)
 
                 node.find('.add_sku').val(returnedData.sku);
                 node.find('.add_qty').eq(0).val(1);
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
                 node.find('.add_serial').eq(0).val(returnedData.serial);
-                
+                node.find('.add_serial').eq(0).val(returnedData.serial);
+              
+                var inicial=0;
+            
 
+                if (parseFloat(returnedData.monto_inicial)>0){
+                  inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
+                  
+                }    
+                var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
+                node.find('.monto_cuota_text').eq(0).text("$"+monto_iniciaL.toFixed(2));
+                
+                node.find('.add_inicial ').eq(0).val(inicial.toFixed(2));
                 if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});
                   else node.find('.add_price').eq(0).val(returnedData.price_final)
 

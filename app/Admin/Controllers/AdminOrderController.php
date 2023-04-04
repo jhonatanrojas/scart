@@ -1302,15 +1302,16 @@ class  AdminOrderController extends RootAdminController
        
 
    
+      
             
-
+        $doc_cedula="";
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             if($documento){
                 $constacia_trabajo= $documento->carta_trabajo ;
                 $rif= $documento->rif ;
-                $cedula= $documento->cedula ;
+                $doc_cedula= $documento->cedula;
             }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
@@ -1322,7 +1323,7 @@ class  AdminOrderController extends RootAdminController
             $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
-            $data['cedula'] =  $cedula;
+            $data['doc_cedula'] =  $doc_cedula;
 
             $data['order'] =  $order;
       
@@ -1369,6 +1370,7 @@ class  AdminOrderController extends RootAdminController
                         'name' => $name, 
                         'qty' => $detail->qty, 
                         'price' => $detail->price, 
+                        'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
                         'total_price' => $detail->total_price ?? '',
                     ];

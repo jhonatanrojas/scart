@@ -141,7 +141,7 @@
                         <a class="rd-nav-link text-white" href="#">
                             {{ sc_currency_info()['name'] }} <i class="fas fa-caret-down"></i>
                         </a>
-                        <ul class="rd-menu rd-navbar-dropdown">
+                    ul class="rd-menu rd-navbar-dropdown">
                             @foreach ($sc_currencies as $key => $currency)
                             <li class="rd-dropdown-item" {{ ($currency->code ==  sc_currency_info()['code']) ? 'disabled': '' }}>
                                 <a class="rd-dropdown-link" href="{{ sc_route('currency', ['code' => $currency->code]) }}">

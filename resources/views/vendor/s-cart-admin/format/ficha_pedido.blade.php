@@ -50,7 +50,7 @@
                     <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
                         <div class="text-grey-m2">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero del pedido:</span> #{{ $id }}</div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de solicitud:</span> #{{ $id }}</div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
 
@@ -71,22 +71,41 @@
                                   <th>Cant</th>
                                   <th>Numero de cuotas</th>
                                   <th>Monto Cuota</th>
+                                  <th>Monto Inicial </th>
                                   <th>Total</th>
                           
                                 </tr>
                               </thead>
+                              
+                              @php 
                        
+                            
+                                  
+                                  @endphp
                               @foreach ($details as $detail)
                           
                             <tbody>
     
-                               
+                                @php 
+                                $inicial=0;
+                                $precio=$detail['price'];
+                                if($detail['abono_inicial']>0){
+                                    $inicial= $detail['abono_inicial']* $detail['price']/100;
+                                }
+                                $precio= $precio-$inicial;
+                                $monto_cuota=number_format( ( $precio *$detail['qty'] ) / $detail['nro_coutas'],2 );
+                                    
+                         
+                                    
+                                    @endphp
                                 <td>{{$detail['no']}}</td>
                                 <td>{{$detail['name']}}</td>
                                 <td>{{$detail['qty'] }}</td>
                                 <td>{{$detail['nro_coutas'] }}</td>      
-                                <td> ${{ number_format( ($detail['price'] *$detail['qty'] ) / $detail['nro_coutas'],2 ) }}</td>      
-                                <td>${{ number_format($detail['total_price']) }}</td>      
+                                <td>${{ $monto_cuota }}</td>  
+                                <td>${{ number_format( $inicial) }}</td>    
+                                <td>${{ number_format($detail['total_price']) }}</td>   
+                                
                             
                                         
                                  
@@ -158,14 +177,14 @@
                 <hr>
                 <br>
                 
-               <h5 class="text-center"> Evaluación del pedido</h5>
+               <h5 class="text-center"> Evaluación del solicitud</h5>
 
                 <table class="table table-hover box-body text-wrap table-bordered"   style="margin-left: 5%">
                     <tr>
                      <td>Evaluación</td>
                      <td>Observación</td>
-                     <td>Porcentaje</td>
-                     <td>Confiabilidad</td>
+                     <td>% Interes Comercial</td>
+                     <td>% Confiabilidad</td>
                     </tr>
                      <tr>
                        <td  class="td-title"><span >Evaluación comercial</span></td>
@@ -302,10 +321,10 @@
 
     <div class="view view-first ">  
     
-        <img  width="100%" class="img-fluid" src="/{!! $cedula !!}" />  
+        <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
 
       
-        <img  width="100%" class="img-fluid" src="/{!! $rif !!}" />  
+        <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
         <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
            
     </div>
