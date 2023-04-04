@@ -90,7 +90,8 @@ Route::get('sc_admin/historial_cliente', [HistorialPagosController::class,'histo
 Route::get('sc_admin/notas_d_entrega', [HistorialPagosController::class,'notas_d_entrega'])->name('notas.entrega');
 
 
-Route::get('sc_admin/export', [AdminOrderController::class,'exporte'])->name('export');
+Route::get('sc_admin/descargar-excel', [AdminOrderController::class,'descargar'])->name('descargar.excel');
+
 
 
 

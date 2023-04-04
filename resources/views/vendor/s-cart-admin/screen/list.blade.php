@@ -25,6 +25,8 @@
           </div>
         </div>
       </div>
+
+   
       <div class="card-header with-border">
         <div class="">
           @if (!empty($topMenuRight) && count($topMenuRight))
@@ -34,14 +36,25 @@
                       $arrCheck = explode('view::', $item);
                   @endphp
                   @if (count($arrCheck) == 2)
+                 
                     @if (view()->exists($arrCheck[1]))
                       @include($arrCheck[1])
+                     
+                    
                     @endif
+                   
                   @else
                     {!! trim($item) !!}
+                   
                   @endif
                 </div>
+
+                
             @endforeach
+
+
+
+       
           @endif
         </div>
         <div class="float-left">
@@ -60,8 +73,15 @@
                   @endif
                 </div>
             @endforeach
+          
           @endif
          </div>
+
+       
+
+
+
+
         <!-- /.box-tools -->
       </div>
 
@@ -76,12 +96,16 @@
                   @if (count($arrCheck) == 2)
                     @if (view()->exists($arrCheck[1]))
                       @include($arrCheck[1])
+                    
                     @endif
+
                   @else
                     {!! trim($item) !!}
+                  
                   @endif
                  </div>
              @endforeach
+             
            @endif
          </div>
 
@@ -98,6 +122,8 @@
           <div class="menu-left">
             <span class="btn btn-flat btn-primary grid-refresh" title="{{ sc_language_render('action.refresh') }}"><i class="fas fa-sync-alt"></i></span>
           </div>
+
+          
           @endif
 
           @if (!empty($buttonSort))
@@ -111,7 +137,13 @@
               <div class="input-group-append">
                   <button id="button_sort" type="submit" class="btn btn-primary"><i class="fas fa-sort-amount-down-alt"></i></button>
               </div>
+
+            
             </div>
+
+
+
+
           </div>
           @endif
 
@@ -130,47 +162,20 @@
                   @endif
                 </div>
             @endforeach
+
+            
           @endif
 
         </div>
 
 
-        <div class="menu-left" style="position: relative">
-          <div class="input-group float-right ml-1" style="width: 150px;">
-            <div class="btn-group">
-
-              <form action="{{route('export')}}"
-              method="GET" accept-charset="UTF-8" >
-              @if (!empty($dataSearchs))
-
-              <input type="hidden" name="page" value="{{$page}}">
-              <input type="hidden" name="keyword" value="{{$dataSearchs['keyword']}}">
-              <input type="hidden" name="email" value="{{$dataSearchs['email']}}">
-              <input type="hidden" name="Cedula" value="{{$dataSearchs['Cedula']}}">
-              <input type="hidden" name="Telefono" value="{{$dataSearchs['Telefono']}}">
-              <input type="hidden" name="Estado" value="{{$dataSearchs['Estado']}}">
-                <input type="hidden" name="from_to" value="{{$dataSearchs['from_to']}}">
-                <input type="hidden" name="end_to" value="{{$dataSearchs['end_to']}}">
-                <input type="hidden" name="sort_order" value="{{$dataSearchs['sort_order']}}">
-                <input type="hidden" name="order_status" value="{{$dataSearchs['order_status']}}">
-                <input type="hidden" id="perfil" name="perfil" value="{{$dataSearchs['perfil']}}">
-
-                <button id="boton-descarga" type="submit" class="btn btn-primary"  >DESCARGA EXCEL</button>
-                
-              @endif
-            
-            </form>
-            
-            </div>
-           
-          </div>
-        </div>
 
       </div>
 
 
       <!-- /.card-header -->
       <div class="card-body p-0" id="pjax-container">
+    
         @php
             $urlSort = $urlSort ?? '';
         @endphp
@@ -253,14 +258,17 @@
 
   <script type="text/javascript">
 
-    $('.grid-refresh').click(function(){
-      $.pjax.reload({container:'#pjax-container'});
-    });
+    
+
+
+  const selectElement = document.querySelector('select');
+
+
+
 
       $(document).on('submit', '#button_search', function(event) {
 
-        console.log(event)
-        $.pjax.submit(event, '#pjax-container')
+        $.pjax.submit(event)
       })
 
     $(document).on('pjax:send', function() {
@@ -437,15 +445,12 @@ $('#boton-descarga').click(function() {
     
   
   $.ajax({
-    url: '{{ route('export') }}',
+    url: '{{ route('descargar.excel') }}',
     type: 'GET',
    
     success: function(response) {
       if(response){
         
-        var timeout = 500
-
-       setTimeout(() => {
         document.getElementById('loading-spinner').style.display='none'
         alertMsg('success', 'Excel Descargado con exito');
         
@@ -457,14 +462,14 @@ $('#boton-descarga').click(function() {
 
         }
         
-       }, timeout);      
+           
                       
 
       }
       
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alertMsg('error', 'Erro al Descargado  Excel');
+      alertMsg('error', 'Erro ');
       //location.reload()
       
       
