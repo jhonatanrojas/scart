@@ -349,7 +349,7 @@
                 jsPDF: {
                     unit: 'in',
                     format: 'letter',
-                    orientation:'landscape' //'portrait'
+                    orientation:'portrait' //'portrait'
                 }
             };
 
