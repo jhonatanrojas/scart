@@ -500,24 +500,25 @@
                             </div>
 
                     </div>
+                     
+                    <div class="invoice-footer">
+                        Documento generado a través del sistema de Waika Import
+                    </div>
                     <div class="col-12">
 
-                        <div class="view view-first ">  
-                            <div style="page-break-after:always">
+                        <div class="view view-first "  style="page-break-after:always">  
+                            <div>
                             <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
                             </div>
                             <div style="page-break-after:always">
                             <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
                         </div>
-                        <div style="page-break-after:always">
+                        <div style="">
                             <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
                         </div>
                         </div>
                     </div>
-                    
-                        <div class="invoice-footer">
-                            Documento generado a través del sistema de Waika Import
-                        </div>
+                   
                     </div>
                 </div>
             </div>
