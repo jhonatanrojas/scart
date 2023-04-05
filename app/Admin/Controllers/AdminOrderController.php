@@ -1276,15 +1276,16 @@ class  AdminOrderController extends RootAdminController
 
         if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
 
-
-       
-
-   
-      
             
         $doc_cedula="";
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+
+            $conocio = AdminCustomer::where('id', $order->customer_id)->first();
+
+            $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
+
+
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
@@ -1303,6 +1304,9 @@ class  AdminOrderController extends RootAdminController
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
+            $data['phone2']           = $conocio->phone2 ?? '';
+            $data['conocio']           = $conocio->nos_conocio ?? '';
+            $data['vendedor']           = $user_roles->name ?? '';
             $data['email']           = $order['email'];
             
  
@@ -1341,6 +1345,8 @@ class  AdminOrderController extends RootAdminController
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
+
+                    
 
                 
                     $arrAtt = json_decode($detail->attribute, true);

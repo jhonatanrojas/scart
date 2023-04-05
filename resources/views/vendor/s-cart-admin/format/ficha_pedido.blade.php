@@ -36,33 +36,34 @@
 
                 <hr class="row mx-n1 mb-4" />
 
-                <div class="row">
+                <div style="color: black; font-size: 18px" class="row">
                     <div class="col-sm-8">
                         <div>
-                            <span class="text-md  align-middle">Cliente:{{ $name }}</span> <br>
-                            <span class="text-md  align-middle">Cedula:{{ $cedula }}</span>
+                            <span class="text-md font-bold align-middle">Cliente:{{ $name }}</span> <br>
+                            <span class="text-md font-bold align-middle">Cedula:{{ $cedula }}</span>
                         </div>
                         <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> {{  $datos_cliente->estado  }},{{  $datos_cliente->municipio  }}, {{  $datos_cliente->parroquia  }}.  {{ $datos_cliente->address1 }}.
+                              <i class="fas fa-map-marker-alt"></i> <b>{{ $datos_cliente->estado }},{{ $datos_cliente->municipio }}, {{ $datos_cliente->parroquia }}.</b> {{ $datos_cliente->address1 }}.
                             </div>
-                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
-                            <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
+                            <div class="my-1\"><i class="fas fa-phone-alt"></i> <b>{{ $phone }}</b></div>
+                            <div class="my-1\"><i class="far fa-envelope"></i> <b>{{ $email }}</b></div>
                         </div>
                     </div>
                     <!-- /.col -->
-
+                
                     <div class="text-95 col-sm-4 align-self-start d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
                         <div class="">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de solicitud:</span> #{{ $id }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
-
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">Numero de solicitud:</span> <b>#{{ $id }}</b></div>
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">{{ sc_language_render('order.date') }}:</span> <b>{{ sc_datetime_to_date($created_at, 'Y-m-d') }}</b></div>
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">Numero de convenio:</span> <b>#{{ $nro_convenio }}</b></div>
+                
                         </div>
                     </div>
                     <!-- /.col -->
                 </div>
+                
 
                  
                 <div class="row d-flex justify-content-center " style="margin-left: 10%">
