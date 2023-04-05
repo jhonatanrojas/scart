@@ -187,11 +187,15 @@
                                             <div class="page-tools">
                                                 <div class="action-buttons">
                                                     <a class=" btn btn-primary mx-1px text-95 dont-print"
-                                                        onclick="order_print()" data-title="Print">
+                                                        onclick="order_print_pdf()" data-title="Print">
                                                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
-                                                        Imprimir
+                                                        PDF
                                                     </a>
-
+                                                    <a class=" btn btn-info mx-1px text-95 dont-print"
+                                                    onclick="order_print()" data-title="Print">
+                                                    <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
+                                                    IMPRIMIR
+                                                </a>
 
                                                 </div>
                                             </div>
@@ -541,7 +545,7 @@
     <script src="{{ sc_file('admin/LTE/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ sc_file('admin/LTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script>
-        function order_print() {
+        function order_print_pdf() {
             $('.dont-print').hide();
 
 
@@ -570,4 +574,10 @@
             html2pdf().set(opt).from(contenidoPDF).save();
             $('.dont-print').show();
         }
+
+        function order_print(){
+    $('.dont-print').hide();
+    window.print();
+    $('.dont-print').show();
+  }
     </script>
