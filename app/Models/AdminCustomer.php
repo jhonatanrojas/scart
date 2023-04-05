@@ -58,8 +58,8 @@ class AdminCustomer extends ShopCustomer
         $customerList = self::select('sc_shop_customer.*', 'estado.nombre as estado', 'municipio.nombre as municipio')
         ->where('store_id', session('adminStoreId'))
         ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-        ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
-        ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia');
+        ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+        ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia');
     
     if ($keyword) {
         $customerList->where(function ($query) use ($keyword) {

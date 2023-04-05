@@ -162,7 +162,7 @@ class  AdminOrderController extends RootAdminController
             'order_status' => $order_status,
             'perfil'=> $perfil,
         ];
-
+    
          $dataSearch2 = [
             'keyword'      => $keyword,
             'email'        => $email,
@@ -181,7 +181,7 @@ class  AdminOrderController extends RootAdminController
          $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
          ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
          ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -237,9 +237,9 @@ class  AdminOrderController extends RootAdminController
                  
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$row->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-            ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
-            ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
 
 
          
@@ -401,7 +401,7 @@ class  AdminOrderController extends RootAdminController
 
                     <div class="m-auto" >
                     <div class=" ml-1" style="width: 150px;">
-                        <form action="'.$ruta_exel.'" method="GET" accept-charset="UTF-8">
+                        <form action="'.$ruta_exel.'?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'" method="GET" accept-charset="UTF-8">
 
                          '.$inpuExcel.'
                         <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
@@ -611,7 +611,7 @@ class  AdminOrderController extends RootAdminController
         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+        ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
         $role = AdminRole::find($user_roles->role_id);
         
        $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -1262,8 +1262,8 @@ class  AdminOrderController extends RootAdminController
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-            ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
-            ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
             ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
 
   
@@ -1278,6 +1278,8 @@ class  AdminOrderController extends RootAdminController
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
             $data['email']           = $order['email'];
+            
+ 
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
             $data['nro_convenio'] =  $nro_convenio  ;
@@ -1330,6 +1332,8 @@ class  AdminOrderController extends RootAdminController
                         'sku' => $detail->sku, 
                         'name' => $name, 
                         'qty' => $detail->qty, 
+                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1343,7 +1347,7 @@ class  AdminOrderController extends RootAdminController
                 return \Export::export($action, $data, $options);
             }
             
-            return view($this->templatePathAdmin.'format.ficha_pedido')
+            return view($this->templatePathAdmin.'format.ficha_solicitud')
             ->with($data);
         } else {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
@@ -1436,8 +1440,8 @@ class  AdminOrderController extends RootAdminController
         
         $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
         ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-        ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
-        ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia')
+        ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+        ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
         ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
 
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
@@ -2015,7 +2019,7 @@ class  AdminOrderController extends RootAdminController
          $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
          ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
          ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -2068,8 +2072,8 @@ class  AdminOrderController extends RootAdminController
         
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$dato->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-        ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
-        ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
             ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio')->first();
       
           

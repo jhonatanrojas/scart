@@ -82,16 +82,20 @@
                                 </tr>
                               </thead>
                               
-                              @php 
-                       
-                            
-                                  
-                                  @endphp
-                              @foreach ($details as $detail)
                           
-                            <tbody>
-    
+                        
+                          
+                            <tbody>        
+                                @foreach ($details as $detail)
+                                <tr> 
                                 @php 
+
+$AlContado = "Financiamiento" ;
+                                if($detail->id_modalidad_pago == 0){
+                                    $AlContado = "Al contado";
+                                }else if($detail->id_modalidad_pago ==2){
+                                    $AlContado = "Financiamiento/Entrega Inmediata" ;
+                                }
                                 $inicial=0;
                                 $precio=$detail['price'];
                                 if($detail['abono_inicial']>0){
@@ -114,11 +118,11 @@
                             
                                         
                                  
-                                    
-    
-                            </tbody>
-                            @endforeach
+                            </tr>
+                                @endforeach
             
+                            </tbody>
+                
             
                        
                     </table>
@@ -135,7 +139,7 @@
 
                     <div class="col-12 "  style="margin-left: 10%">
                
-                        <h5 class="">Refencias personales</h5>
+                        <h5 class="text-center">Refencias personales</h5>
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
