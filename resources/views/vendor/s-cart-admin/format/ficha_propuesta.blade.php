@@ -1,483 +1,360 @@
-<!-- Font Awesome -->
-<link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/fontawesome-free/css/all.min.css')}}">
-<link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <style>
     body {
-        color:#000;
+        margin-top: 20px;
+        color: #2e323c;
+        background: #f5f6fa;
+        position: relative;
+        height: 100%;
     }
-    </style>
 
-<div class="page-content container">
-    <div class="page-header text-blue-d2">
-      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:100px;">
-        <div class="page-tools">
-            <div class="action-buttons">
-                <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
-                    <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
-                    Imprimir
-                </a>
-            
-               
-            </div>
-        </div>
-    </div>
+    .invoice-container {
+        padding: 1rem;
+    }
 
-    <div class="container px-0">
-        <div class="row mt-4">
-            <div class="col-12 col-lg-10 offset-lg-1">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center h4">
-                            <span class="text-dark">{{ sc_store('title') }}</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- .row -->
+    .invoice-container .invoice-header .invoice-logo {
+        margin: 0.8rem 0 0 0;
+        display: inline-block;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2e323c;
+    }
 
-                <hr class="row mx-n1 mb-4" />
+    .invoice-container .invoice-header .invoice-logo img {
+        max-width: 130px;
+    }
 
-                <div class="row">
-                    <div class="col-sm-8">
-                        <div>
-                            <span class="text-md  align-middle">Cliente:{{ $name }}</span> <br>
-                            <span class="text-md  align-middle">Cedula:{{ $cedula }}</span>
-                        </div>
-                        <div class="">
-                            <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> {{  $datos_cliente->estado  }},{{  $datos_cliente->municipio  }}, {{  $datos_cliente->parroquia  }}.  {{ $datos_cliente->address1 }}.
-                            </div>
-                            <div class="my-1">
-                                <i class="fas fa-map-marker-alt"></i> {{ $address2}}
-                              </div>
-                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
-                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone2 }}</div>
-                            <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
-                            <div class="my-1"><i class=" fas fa-users"></i>Nos conocio: {{ $Nosconocio }}</div>
-                        </div>
-                    </div>
-                    <!-- /.col -->
+    .invoice-container .invoice-header address {
+        font-size: 1rem;
+        color: #2f3133;
+        margin: 0;
+    }
 
-                    <div class="text-95 col-sm-4 align-self-start d-sm-flex justify-content-end">
-                        <hr class="d-sm-none" />
-                        <div class="">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de solicitud:</span> #{{ $id }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
+    .invoice-container .invoice-details {
+        margin: 1rem 0 0 0;
+        padding: 1rem;
+        line-height: 180%;
+        background: #f5f6fa;
+    }
 
-                        </div>
-                    </div>
-                    <!-- /.col -->
-                </div>
+    .invoice-container .invoice-details .invoice-num {
+        text-align: right;
+        font-size: 1rem;
+    }
 
-                 
-                <div class="row d-flex justify-content-center " style="margin-left: 10%">
-                    <div class="col-12 mt-5 align-self-center  order-sm-last ">
-                   
-                        <table class="table table-responsive text-grey-m2">
-                            <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Producto</th>
-                                  <th>Cant</th>
-                                  <th>Numero de cuotas</th>
-                                  <th>Monto Cuota</th>
-                                  <th>Monto Inicial </th>
-                                  <th>Total</th>
-                          
-                                </tr>
-                              </thead>
-                              
-                          
-                        
-                          
-                            <tbody>        
-                                @foreach ($details as $detail)
-                                <tr> 
-                                @php 
+    .invoice-container .invoice-body {
+        padding: 1rem 0 0 0;
+    }
 
-$AlContado = "Financiamiento" ;
-                                if($detail->id_modalidad_pago == 0){
-                                    $AlContado = "Al contado";
-                                }else if($detail->id_modalidad_pago ==2){
-                                    $AlContado = "Financiamiento/Entrega Inmediata" ;
-                                }
-                                $inicial=0;
-                                $precio=$detail['price'];
-                                if($detail['abono_inicial']>0){
-                                    $inicial= $detail['abono_inicial']* $detail['price']/100;
-                                }
-                                $precio= $precio-$inicial;
-                                $monto_cuota=number_format( ( $precio *$detail['qty'] ) / $detail['nro_coutas'],2 );
-                                    
-                         
-                                    
-                                    @endphp
-                                <td>{{$detail['no']}}</td>
-                                <td>{{$detail['name']}}</td>
-                                <td>{{$detail['qty'] }}</td>
-                                <td>{{$detail['nro_coutas'] }}</td>      
-                                <td>${{ $monto_cuota }}</td>  
-                                <td>${{ number_format( $inicial) }}</td>    
-                                <td>${{ number_format($detail['total_price']) }}</td>   
-                                
-                            
-                                        
-                                 
-                            </tr>
-                                @endforeach
-            
-                            </tbody>
-                
-            
-                       
-                    </table>
-                    
-                    
-                </div>
-            </div>
-          
-                <div class="mt-4">
-                
+    .invoice-container .invoice-footer {
+        text-align: center;
+        font-size: 0.7rem;
+        margin: 5px 0 0 0;
+    }
 
-                    <hr>
-                    <div class="row border-b-2 "></div>
+    .invoice-status {
+        text-align: center;
+        padding: 1rem;
+        background: #ffffff;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
 
-                    <div class="col-12 text-grey-m2 "  style="margin-left: 10%">
-               
-                        <h3 class="text-grey-m2">Refencias personales</h3>
-                        <table class="table table-responsive text-grey-m2">
-                            <thead>
-                                <tr>
-                                  <th>Nombre</th>
-                                  <th>Apellido</th>
-                                  <th>Cedula</th>
-                                  <th>Telefono</th>
-                                  <th>Parentesco</th>
-                                  <th>Nota</th>
-                          
-                                </tr>
-                              </thead>
-                       
-                              @foreach ($referencias as $ref)
-                          
-                            <tbody>
-    
-                                   
-    
-                                <td>{{$ref->nombre_ref}}</td>
-                                <td>{{$ref->apellido_ref}}</td>
-                                <td>{{$ref->cedula_ref}}</td>
-                                <td>{{$ref->telefono}}</td>      
-                                <td>{{$ref->parentesco}}</td>      
-                                <td>{{$ref->nota}}</td>      
-                            
-                                        
-                                 
-                                    
-    
-                            </tbody>
-                            @endforeach
-            
-            
-                       
-                    </table>
-                    
-                    
-                </div>
-    
+    .invoice-status h2.status {
+        margin: 0 0 0.8rem 0;
+    }
 
-                </div>
+    .invoice-status h5.status-title {
+        margin: 0 0 0.8rem 0;
+        color: #9fa8b9;
+    }
 
-                <hr>
-                <br>
-                
-               <h5 class="text-center"> Evaluación del solicitud</h5>
+    .invoice-status p.status-type {
+        margin: 0.5rem 0 0 0;
+        padding: 0;
+        line-height: 150%;
+    }
 
-                <table class="table table-hover box-body text-wrap table-bordered text-grey-m2"   style="margin-left: 5%">
-                    <tr>
-                     <td>Evaluación</td>
-                     <td>Observación</td>
-                     <td>% Interes Comercial</td>
-                     <td>% Confiabilidad</td>
-                    </tr>
-                     <tr>
-                       <td  class="td-title"><span >Evaluación comercial</span></td>
-                       <td>
-                             @if (!empty($order->nota_evaluacion_comercial ))
-                                 {{$order->nota_evaluacion_comercial }} 
-                             @endif
-                      
-                     </td>
-                       <td>
-                         
-                           @if (!empty($order->evaluacion_comercial ))
-                               {{$order->evaluacion_comercial }} 
-                           @endif
-                   
-                      
-                     </td>
-       
-                     <td>
-                         
-                        
-                         @if (!empty($order->confiabilidad ))
-                             {{$order->confiabilidad }} 
-                         @endif
-                  
-                  
-                   </td>
-                     </tr>
-       
-                     {{-- Evaluacion_comercial --}}
-       
-       
-                     {{-- nota_evaluacion_financiera --}}
-       
-                     <tr>
-                       <td  class="td-title"><span >Evaluación financiera</span></td>
-                       <td>
-                         
-                           @if (!empty($order->nota_evaluacion_financiera ))
-                            
-                                 {{$order->nota_evaluacion_financiera }} 
-                             @endif
-                        
-                     </td>
-                       <td>
-                         
-                           @if (!empty($order->evaluacion_comercial ))
-                               {{$order->evaluacion_comercial }} 
-                           @endif
-                   
-                       
-                     </td>
-                     <td>
-                         
-                        
-                                     
-                         @if (!empty($order->confiabilidad2 ))
-                             {{$order->confiabilidad2 }} 
-                         @endif
-                  
-                   </td>
-                     </tr>
-                     {{-- nota_evaluacion_financiera --}}
-       
-                     <tr>
-                       <td  class="td-title"><span >Evaluación legal</span></td>
-                       <td>
-                           
-                           @if (!empty($order->nota_evaluacion_legal ))
-                                
-                                 {{$order->nota_evaluacion_legal }} 
-                             @endif
-                       
-                     </td>
-                       <td>
-                         
-                        
-                           @if (!empty($order->evaluacion_comercial ))
-                               {{$order->evaluacion_comercial }} 
-                           @endif
-                    
-                       
-                     </td>
-                     <td>
-                         
-                        
-                         @if (!empty($order->confiabilidad3 ))
-                             {{$order->confiabilidad3 }} 
-                         @endif
-                    
-                   </td>
-                     </tr>
-       
-       
-                     
-       
-       
-                     <tr>
-                       <td  class="td-title"><span >Decisión final</span></td>
-                       <td>
-                           @if (!empty($order->nota_decision_final ))
-                           {{$order->nota_decision_final }} 
-                       @endif
-                        
-                     </td>
-                       <td>
-                         
-                
-                            <span value="0"  >  {{ $order['decision_final'] == 0 ? 'Pendiente':'' }}  </span>
-                           <span value="1"   > {{ $order['decision_final'] == 1 ? 'Negado ':'' }}</span>
-                           <span value="2"   > {{ $order['decision_final'] ==2  ? 'Aprobado':'' }}</span>
-                           <span value="3"   >  {{ $order['decision_final'] ==3  ? 'Diferido':'' }}</span>
-                           <span value="3"   > {{ $order['decision_final'] >3  ? 'Otro':'' }}</span>
-                 
-                     </td>
-                     </tr>
-                   </table>
-            </div>
-        </div>
+    .invoice-status i {
+        font-size: 1.5rem;
+        margin: 0 0 1rem 0;
+        display: inline-block;
+        padding: 1rem;
+        background: #f5f6fa;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        border-radius: 50px;
+    }
 
-        <div class="row align-content-center m-auto">
-<div class="col-8">
-
-    <div class="text-grey-m2">
-        <p>Notas:</p>
-        <i class="text-grey-m2">{!! $comment !!}</i>
-    </div>
-
-     
-</div>
+    .invoice-status .badge {
+        text-transform: uppercase;
+    }
 
 
-<div class="col-6">
-
-    <div class="view view-first ">  
-        <div style="page-break-after:always">
-        <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
-        </div>
-        <div style="page-break-after:always">
-        <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
-    </div>
-    <div style="page-break-after:always">
-        <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
-    </div>
-    </div>
-</div>
-
-        </div>
-    </div>
-</div>
-
-<!-- jQuery -->
-<script src="{{ sc_file('admin/LTE/plugins/jquery/jquery.min.js')}}"></script>
-<script src="{{ sc_file('admin/LTE/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<script>
-  function order_print(){
-    $('.dont-print').hide();
-    window.print();
-    $('.dont-print').show();
-  }
-</script>
-<style>
-  body{
-    margin-top:20px;
-    color: #484b51;
-}
-.text-secondary-d1 {
-    color: #728299!important;
-}
-.page-header {
-    margin: 0 0 1rem;
-    padding-bottom: 1rem;
-    padding-top: .5rem;
-    border-bottom: 1px dotted #e2e2e2;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    -ms-flex-align: center;
-    align-items: center;
-}
-.page-title {
-    padding: 0;
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 300;
-}
-.brc-default-l1 {
-    border-color: #dce9f0!important;
-}
-
-.ml-n1, .mx-n1 {
-    margin-left: -.25rem!important;
-}
-.mr-n1, .mx-n1 {
-    margin-right: -.25rem!important;
-}
-.mb-4, .my-4 {
-    margin-bottom: 1.5rem!important;
-}
-
-hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(0,0,0,.1);
-}
+    @media (max-width: 767px) {
+        .invoice-container {
+            padding: 1rem;
+        }
+    }
 
 
+    .custom-table {
+        border: 1px solid #e0e3ec;
+    }
 
-.text-success-m2 {
-    color: #86bd68!important;
-}
+    .custom-table thead {
+        background: #007ae1;
+    }
 
-.font-bolder, .text-600 {
-    font-weight: 600!important;
-}
+    .custom-table thead th {
+        border: 0;
+        color: #ffffff;
+    }
 
-.text-110 {
-    font-size: 110%!important;
-}
-.text-blue {
-    color: #478fcc!important;
-}
-.pb-25, .py-25 {
-    padding-bottom: .75rem!important;
-}
+    .custom-table>tbody tr:hover {
+        background: #fafafa;
+    }
 
-.pt-25, .py-25 {
-    padding-top: .75rem!important;
-}
-.bgc-default-tp1 {
-    background-color: rgba(121,169,197,.92)!important;
-}
-.bgc-default-l4, .bgc-h-default-l4:hover {
-    background-color: #f3f8fa!important;
-}
-.page-header .page-tools {
-    -ms-flex-item-align: end;
-    align-self: flex-end;
-}
+    .custom-table>tbody tr:nth-of-type(even) {
+        background-color: #ffffff;
+    }
 
-.btn-light {
-    color: #000103;
-    background-color: #f5f6f9;
-    border-color: #dddfe4;
-}
-.w-2 {
-    width: 1rem;
-}
+    .custom-table>tbody td {
+        border: 1px solid #e6e9f0;
+    }
 
-.text-120 {
-    font-size: 120%!important;
-}
-.text-primary-m1 {
-    color: #4087d4!important;
-}
 
-.text-danger-m1 {
-    color: #dd4949!important;
-}
-.text-blue-m2 {
-    color: #68a3d5!important;
-}
-.text-150 {
-    font-size: 150%!important;
-}
-.text-60 {
-    font-size: 60%!important;
-}
-.text-grey-m1 {
-    color: #000103!important;
-}
-.align-bottom {
-    vertical-align: bottom!important;
-}
-.high-light {
-  background: #eaedef;
-    font-weight: bold;
-    color: #000;
-}
+    .card {
+        background: #ffffff;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        border: 0;
+        margin-bottom: 1rem;
+    }
+
+    .text-success {
+        color: #00bb42 !important;
+    }
+
+    .text-muted {
+        color: #9fa8b9 !important;
+    }
+
+    .custom-actions-btns {
+        margin: auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .custom-actions-btns .btn {
+        margin: .3rem 0 .3rem .3rem;
+    }
+
+    #address2 {
+        font-size: 0.8rem;
+        color: #525557;
+    }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div class="container contenedor-html">
+    <div class="row gutters">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="invoice-container">
+                        <div class="invoice-header">
+                            <!-- Row start -->
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <div class="custom-actions-btns m">
+                                        <div class="page-header text-blue-d2 mr-auto">
+                                            <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
+                                            <div class="page-tools">
+                                                <div class="action-buttons">
+                                                    <a class=" btn btn-primary mx-1px text-95 dont-print"
+                                                        onclick="order_print()" data-title="Print">
+                                                        <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
+                                                        Imprimir
+                                                    </a>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                            <!-- Row start -->
+                            <div class="row gutters">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                    <a href="index.html" class="invoice-logo">
+                                        Waika Import
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <address class="text-right address2 " id="address2">
+                                        {{ sc_store('address') }}
+                                        <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
+                                                class="text-90">Nro solicitud:</span> #{{ $id }}</div>
+                                    </address>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                            <!-- Row start -->
+                            <div class="row gutters">
+                                <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                                    <div class="invoice-details">
+                                        <address>
+                                            <span class="">Cliente:{{ $name }} - Cedula:{{ $cedula }}</span> <br>
+                                            <span class=""></span><br>
+                                            <i class="fas fa-map-marker-alt"></i> {{ $datos_cliente->estado }}
+                                            {{ $datos_cliente->municipio }}, {{ $datos_cliente->parroquia }}.
+                                            {{ $datos_cliente->address1 }}.
+
+                                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }} email:{{ $email }}
+                                            </div>
+                                         
+                                        </address>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                                    <div class="invoice-details">
+                                        <div class="invoice-num">
+
+                                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>
+                                                <span class="text-90">Fecha:</span>
+                                                {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
+                                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>
+                                                <span class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                        </div>
+                        <div class="invoice-body">
+                            <!-- Row start -->
+                            <div class="row gutters">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="table-responsive">
+                                        <table class="table custom-table m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Producto</th>
+                                                    <th>Cant</th>
+                                                    <th>Nro cuotas</th>
+                                                    <th>Inicial $</th>
+                                                    <th>Cuota $</th>
+
+                                                   
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                               @php $monto_total=0;
+                                               $monto_cuota_total=0;
+                                               @endphp
+                                                @foreach ($details as $detail)
+                                                    <tr>
+                                                        @php
+                                                                
+                                                $AlContado = "Quincenal" ;
+                                                if($detail['id_modalidad_pago'] == 3){
+                                                $AlContado = "Mensual";
+                                                }
+                                                            $inicial = 0;
+                                                            $precio = $detail['price'];
+                                                            if ($detail['abono_inicial'] > 0) {
+                                                                $inicial = ($detail['abono_inicial'] * $detail['price']) / 100;
+                                                            }
+                                                            $precio = $precio - $inicial;
+                                                            $monto_cuota = number_format(($precio * $detail['qty']) / $detail['nro_coutas'], 2);
+                                                            
+                                                        @endphp
+                                                        <td>{{ $detail['no'] }}</td>
+                                                        <td>{{ $detail['name'] }}</td>
+                                                        <td>{{ $detail['qty'] }}</td>
+                                                        <td>{{ $detail['nro_coutas'] }}</td>
+                                                        <td>${{ number_format($inicial) }}</td>
+                                                        <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
+
+                                                       
+
+                                                        @php $monto_total+=$detail['total_price'] ;
+                                                             $monto_cuota_total+=$monto_cuota;
+                                                        
+                                                        @endphp
+
+
+                                                    </tr>
+                                                @endforeach
+                                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row end -->
+                        </div>
+                        <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+                            <p>Notas:</p> <i>{!! $comment !!}</i>
+                        </div>
+                    <br>
+                         
+                       
+            
+                     
+                            </div>
+
+                    </div>
+                     
+                 
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ sc_file('admin/LTE/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ sc_file('admin/LTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        function order_print() {
+            $('.dont-print').hide();
+
+
+            // Iterar a través de cada etiqueta <fieldset> y agregar su contenido a la variable
+            var contenidoPDF = $('.contenedor-html').html();
+
+
+            var opt = {
+                margin: 0.1,
+                filename: '{{ $id }}.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'letter',
+                    orientation:'landscape' //'portrait'
+                }
+            };
+
+            // New Promise-based usage:
+            html2pdf().set(opt).from(contenidoPDF).save();
+            $('.dont-print').show();
+        }
+    </script>

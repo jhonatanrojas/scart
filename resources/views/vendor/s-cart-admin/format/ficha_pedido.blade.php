@@ -27,8 +27,8 @@
             <div class="col-12 col-lg-10 offset-lg-1">
                 <div class="row">
                     <div class="col-12">
-                        <div class="text-center h4">
-                            <span class="text-dark">{{ sc_store('title') }}</span>
+                        <div class="text-center text-150">
+                            <span class="text-default-d3">{{ sc_store('title') }}</span>
                         </div>
                     </div>
                 </div>
@@ -46,13 +46,8 @@
                             <div class="my-1">
                               <i class="fas fa-map-marker-alt"></i> {{  $datos_cliente->estado  }},{{  $datos_cliente->municipio  }}, {{  $datos_cliente->parroquia  }}.  {{ $datos_cliente->address1 }}.
                             </div>
-                            <div class="my-1">
-                                <i class="fas fa-map-marker-alt"></i> {{ $address2}}
-                              </div>
                             <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
-                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone2 }}</div>
                             <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
-                            <div class="my-1"><i class=" fas fa-users"></i>Nos conocio: {{ $Nosconocio }}</div>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -73,7 +68,7 @@
                 <div class="row d-flex justify-content-center " style="margin-left: 10%">
                     <div class="col-12 mt-5 align-self-center  order-sm-last ">
                    
-                        <table class="table table-responsive text-grey-m2">
+                        <table class="table table-responsive">
                             <thead>
                                 <tr>
                                   <th>#</th>
@@ -140,12 +135,12 @@ $AlContado = "Financiamiento" ;
                 
 
                     <hr>
-                    <div class="row border-b-2 "></div>
+                    <div class="row border-b-2 brc-default-l2"></div>
 
-                    <div class="col-12 text-grey-m2 "  style="margin-left: 10%">
+                    <div class="col-12 "  style="margin-left: 10%">
                
-                        <h3 class="text-grey-m2">Refencias personales</h3>
-                        <table class="table table-responsive text-grey-m2">
+                        <h5 class="text-center">Refencias personales</h5>
+                        <table class="table table-responsive">
                             <thead>
                                 <tr>
                                   <th>Nombre</th>
@@ -193,7 +188,7 @@ $AlContado = "Financiamiento" ;
                 
                <h5 class="text-center"> Evaluación del solicitud</h5>
 
-                <table class="table table-hover box-body text-wrap table-bordered text-grey-m2"   style="margin-left: 5%">
+                <table class="table table-hover box-body text-wrap table-bordered"   style="margin-left: 5%">
                     <tr>
                      <td>Evaluación</td>
                      <td>Observación</td>
@@ -319,12 +314,12 @@ $AlContado = "Financiamiento" ;
             </div>
         </div>
 
-        <div class="row align-content-center m-auto">
-<div class="col-8">
+        <div class="row">
+<div class="col-12 ml-5">
 
-    <div class="text-grey-m2">
+    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
         <p>Notas:</p>
-        <i class="text-grey-m2">{!! $comment !!}</i>
+        <i>{!! $comment !!}</i>
     </div>
 
      
@@ -407,7 +402,9 @@ hr {
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
-
+. {
+    color: #888a8d!important;
+}
 
 .text-success-m2 {
     color: #86bd68!important;
@@ -442,7 +439,7 @@ hr {
 }
 
 .btn-light {
-    color: #000103;
+    color: #757984;
     background-color: #f5f6f9;
     border-color: #dddfe4;
 }
@@ -470,7 +467,7 @@ hr {
     font-size: 60%!important;
 }
 .text-grey-m1 {
-    color: #000103!important;
+    color: #7b7d81!important;
 }
 .align-bottom {
     vertical-align: bottom!important;
