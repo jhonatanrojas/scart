@@ -213,16 +213,15 @@
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
                                         <address>
-                                            <span class="">Cliente:{{ $name }}</span> <br>
-                                            <span class="">Cedula:{{ $cedula }}</span><br>
+                                            <span class="">Cliente:{{ $name }} - Cedula:{{ $cedula }}</span> <br>
+                                            <span class=""></span><br>
                                             <i class="fas fa-map-marker-alt"></i> {{ $datos_cliente->estado }}
                                             {{ $datos_cliente->municipio }}, {{ $datos_cliente->parroquia }}.
                                             {{ $datos_cliente->address1 }}.
 
-                                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}
+                                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }} email:{{ $email }}
                                             </div>
-                                            <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}
-                                            </div>
+                                         
                                         </address>
                                     </div>
                                 </div>
@@ -510,13 +509,13 @@
 
                         <div class="view view-first " >  
                             <div>
-                            <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
+                            <img  style=" max-width: 500px; height: auto;" class="img-fluid" src="/{!! $doc_cedula!!}" />  
                             </div>
                             <div style="page-break-after:always">
-                            <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
+                            <img  style=" max-width: 500px; height: auto;" class="img-fluid" src="/{!! $rif !!}"/>  
                         </div>
                         <div style="">
-                            <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
+                            <img  style=" max-width: 500px; height: auto;"class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
                         </div>
                         </div>
                     </div>
