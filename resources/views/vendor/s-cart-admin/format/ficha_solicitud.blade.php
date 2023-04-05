@@ -110,7 +110,7 @@
 
 
     .custom-table {
-        border: 1px solid #e0e3ec;
+        border: 1px solid #000000;
     }
 
     .custom-table thead {
@@ -119,7 +119,7 @@
 
     .custom-table thead th {
         border: 0;
-        color: #ffffff;
+        color: #000000;
     }
 
     .custom-table>tbody tr:hover {
@@ -131,7 +131,7 @@
     }
 
     .custom-table>tbody td {
-        border: 1px solid #e6e9f0;
+        border: 1px solid #202020;
     }
 
 
@@ -266,6 +266,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Producto</th>
+                                                    <th>Marca</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
@@ -298,6 +299,7 @@
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>
                                                         <td>{{ $detail['name'] }}</td>
+                                                        <td>{{ $marca }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
@@ -509,6 +511,58 @@
                                                  </td>
                                                  </tr>
                                                </table>
+                                        </div>
+                                    </div>
+
+
+                                   
+                                    <div class=" col-lg-12 col-md-12 col-sm-12 ">
+
+                                       
+                                        <div class="d-flex justify-content-end align-items-center ">
+
+                                                   <div class="table-responsive">
+                        
+
+                                          
+
+
+                                                <div class="table-responsive">
+                                                  <table class="table custom-table mt-5">
+                                                    <thead>
+                                                      <tr>
+                                                        <th scope="col"></th> <!-- Nueva columna agregada -->
+                                                        <th scope="col">Evacuación comercial(Vendedor)</th>
+                                                        <th scope="col">Evaluación financiera y legal (riesgo)</th>
+                                                        <th scope="col">Decisión Final (comité Evaluación)</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr>
+                                                        <td>Nombre y Apellido</td> <!-- Nombre y Apellido agregados -->
+                                                        <td><p class="p-3"></p></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                      </tr>
+                                                      <tr class="table-light">
+                                                        
+                                                      </tr>
+                                                      <tr>
+                                                        <td>Firma</td> <!-- Nombre y Apellido agregados -->
+                                                        <td><p class="p-3"></p></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                </div>
+
+
+
+                                        </div>
+                                           
+
+                                            
                                         </div>
                                     </div>
                                 </div>

@@ -1285,6 +1285,17 @@ class  AdminOrderController extends RootAdminController
 
             $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
 
+            $Articulo = shop_order_detail::where('order_id', $order->id)->first();
+
+            $resul =AdminProduct::where('id', $Articulo->product_id)->first();
+
+
+            
+
+            //dd($resul->alias);
+
+            
+
 
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
@@ -1306,6 +1317,8 @@ class  AdminOrderController extends RootAdminController
             $data['phone']           = $order['phone'];
             $data['phone2']           = $conocio->phone2 ?? '';
             $data['conocio']           = $conocio->nos_conocio ?? '';
+            $data['marca']           = $resul->property ?? '';
+            $data['nombre_produt']           = $resul->property ?? '';
             $data['vendedor']           = $user_roles->name ?? '';
             $data['email']           = $order['email'];
             
