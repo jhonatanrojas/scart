@@ -52,24 +52,34 @@ class AdminCustomer extends ShopCustomer
         $sort_order       = $dataSearch['sort_order'] ?? '';
         $arrSort          = $dataSearch['arrSort'] ?? '';
 
-        $customerList = (new ShopCustomer)
-            ->where('store_id', session('adminStoreId'));
+    
+ 
+      
+        $customerList = self::select('sc_shop_customer.*', 'estado.nombre as estado', 'municipio.nombre as municipio')
+        ->where('store_id', session('adminStoreId'))
+        ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+        ->leftJoin('municipio', 'municipio.codigoestado', '=', 'sc_shop_customer.cod_municipio')
+        ->leftJoin('parroquia', 'parroquia.codigomunicipio', '=', 'sc_shop_customer.cod_parroquia');
+    
+    if ($keyword) {
+        $customerList->where(function ($query) use ($keyword) {
+            $query->where('email', 'like', '%' . $keyword . '%')
+                ->orWhere('last_name', 'like', '%' . $keyword . '%')
+                ->orWhere('cedula', 'like', '%' . $keyword . '%')
+                ->orWhere('first_name', 'like', '%' . $keyword . '%');
+        });
+    }
+    
+    if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+        [$field, $sort_field] = explode('__', $sort_order);
+        $customerList->orderBy($field, $sort_field);
+    } else {
+        $customerList->orderBy('sc_shop_customer.id', 'desc');
+    }
+    $customerList->distinct('sc_shop_customer.id');
 
-        if ($keyword) {
-            $customerList->where('email', 'like', '%' . $keyword . '%')
-            ->orWhere('last_name', 'like', '%' . $keyword . '%')
-            ->orWhere('cedula', 'like', '%' . $keyword . '%')
-            ->orWhere('first_name', 'like', '%' . $keyword . '%');
-        }
+    $customerList = $customerList->paginate(20);
 
-        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
-            $field = explode('__', $sort_order)[0];
-            $sort_field = explode('__', $sort_order)[1];
-            $customerList = $customerList->orderBy($field, $sort_field);
-        } else {
-            $customerList = $customerList->orderBy('id', 'desc');
-        }
-        $customerList = $customerList->paginate(10);
 
         return $customerList;
     }

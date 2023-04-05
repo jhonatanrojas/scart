@@ -54,7 +54,7 @@
                 @endif
 
                   
-                @if($estatus_user == 'Riesgo')
+                @if($estatus_user == 'Riesgo ' || $estatus_user == 'Administrator' )
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                     <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
@@ -64,7 +64,7 @@
                   @endif
                    
                 @endif
-                @if($estatus_user == 'Riesgo')
+                @if($estatus_user == 'Riesgo' || $estatus_user == 'Administrator')
 
                   @if ($order->total >0  && !empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -75,7 +75,7 @@
                   
                   
                 @endif
-                  @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion')
+                  @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion' || $estatus_user == 'Administrator')
 
                    @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
@@ -411,13 +411,21 @@
 
                              </td>
                              <td>
-
+                                   @php
+                                   $data_json_inicial="";
+                                   $monto_inicial=0.0;
+                                      if  ($item->abono_inicial>0 ){
+                                        $monto_inicial = round($item->abono_inicial* ($item->price*$item->qty)/100);
+                                        $data_json_inicial=',"'.$item->abono_inicial.'":"Inicial '.$item->abono_inicial.'%"';
+                                      }
+                                      
+                                    @endphp;             
                               <a href="#" class="{{$UpdateStatus}}" data-name="abono_inicial" data-type="select"
-                              data-source ='{"0":"Sin inicial","30":"Con inicial  30%"}'  
+                              data-source ='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial!!} }'  
                               data-pk="{{ $item->id }}"
                                data-value=" @if  ($item->abono_inicial>0 )
-                               
-                               Con Inicial 30%
+                            
+                               Con Inicial ${{$monto_inicial}}
                                @else
                                Sin inicial   
                                
@@ -425,11 +433,11 @@
                                 data-url="{{ route("admin_order.edit_item") }}" 
                                 data-title="Inicial"> @if  ($item->abono_inicial>0 )
                                
-                                Con Inicial  {{$item->abono_inicial}}%
+                                Con Inicial  ${{$monto_inicial}}
                                 @else
                                 Sin inicial    
                                 
-                                @endif"</a>
+                                @endif</a>
 
                              </td>
                  
@@ -1562,7 +1570,7 @@ function update_total(e){
 
                 node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
                 node.find('.add_serial').eq(0).val(returnedData.serial);
-                node.find('.add_serial').eq(0).val(returnedData.serial);
+
               
                 var inicial=0;
             
