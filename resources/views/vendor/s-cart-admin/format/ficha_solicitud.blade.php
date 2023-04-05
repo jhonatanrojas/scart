@@ -504,6 +504,8 @@
                     <div class="invoice-footer">
                         Documento generado a través del sistema de Waika Import
                     </div>
+                    <h5 class="text-center"  style="page-break-after:always"> </h5>
+
                     <div class="col-12">
 
                         <div class="view view-first "  style="page-break-after:always">  
