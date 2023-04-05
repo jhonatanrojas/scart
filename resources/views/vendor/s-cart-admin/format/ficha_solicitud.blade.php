@@ -313,9 +313,9 @@
                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
                             <p>Notas:</p> <i>{!! $comment !!}</i>
                         </div>
-                    
+                    <br>
                          
-                        <h5 class="text-center">Referencias Personales</h5>
+                        <h5 class="text-center">Referencias Personales <small class="text-muted">Nro solicitud {{ $id }}</small ></h5>
                         <div class="invoice-body">
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
