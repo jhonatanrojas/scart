@@ -506,9 +506,9 @@
                     </div>
                     <h5 class="text-center"  style="page-break-after:always"> </h5>
 
-                    <div class="col-12">
+                    <div class="col-12"  style="page-break-after:always">
 
-                        <div class="view view-first "  style="page-break-after:always">  
+                        <div class="view view-first " >  
                             <div>
                             <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
                             </div>
