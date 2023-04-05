@@ -267,6 +267,7 @@
                                                     <th>#</th>
                                                     <th>Producto</th>
                                                     <th>Marca</th>
+                                                    <th>Moodelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
@@ -299,7 +300,8 @@
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>
                                                         <td>{{ $detail['name'] }}</td>
-                                                        <td>{{ $marca }}</td>
+                                                        <td>{{ $detail['marca'] }}</td>
+                                                        <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
@@ -316,7 +318,7 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="4">&nbsp;</td><td>
+                                                    <td colspan="6">&nbsp;</td><td>
            <p> <strong>Total</strong></p></td>
                                                         
                                                        <td>${{$monto_cuota_total}}</td> <td><strong>${{ $monto_total }}</strong></h5></td></tr>
