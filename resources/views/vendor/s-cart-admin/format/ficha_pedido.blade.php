@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
 
 <div class="page-content container">
-    <div class="page-header text-blue-d2">
-      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:60px;">
+    <div class="row justify-content-around text-blue-d2">
+      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:100px;">
         <div class="page-tools">
             <div class="action-buttons">
                 <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
@@ -22,8 +22,8 @@
             <div class="col-12 col-lg-10 offset-lg-1">
                 <div class="row">
                     <div class="col-12">
-                        <div class="text-center text-150">
-                            <span class="text-default-d3">{{ sc_store('title') }}</span>
+                        <div class="text-center h4">
+                            <span class="text-dark">{{ sc_store('title') }}</span>
                         </div>
                     </div>
                 </div>
@@ -34,15 +34,20 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div>
-                            <span class="text-sm text-grey-m2 align-middle">Cliente:{{ $name }}</span> <br>
-                            <span class="text-sm text-grey-m2 align-middle">Cedula:{{ $cedula }}</span>
+                            <span class=" text-grey-m2 align-middle">Cliente:{{ $name }}</span> <br>
+                            <span class=" text-grey-m2 align-middle">Cedula:{{ $cedula }}</span>
                         </div>
                         <div class="text-grey-m2">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> {{ $address }}, {{ $country }}
+                              <i class="fas fa-map-marker-alt"></i> {{ $address }}
                             </div>
+                            <div class="my-1">
+                                <i class="fas fa-map-marker-alt"></i> {{ $address2}}
+                              </div>
                             <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
+                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone2 }}</div>
                             <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
+                            <div class="my-1"><i class=" fas fa-users"></i>Nos conocio: {{ $Nosconocio }}</div>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -50,7 +55,7 @@
                     <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
                         <div class="text-grey-m2">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero del pedido:</span> #{{ $id }}</div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero del la Solicitud:</span> #{{ $id }}</div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
 
@@ -63,7 +68,7 @@
                 <div class="row d-flex justify-content-center " style="margin-left: 10%">
                     <div class="col-12 mt-5 align-self-center  order-sm-last ">
                    
-                        <table class="table table-responsive">
+                        <table class="table table-responsive text-grey-m2">
                             <thead>
                                 <tr>
                                   <th>#</th>
@@ -71,22 +76,23 @@
                                   <th>Cant</th>
                                   <th>Numero de cuotas</th>
                                   <th>Monto Cuota</th>
-                                  <th>Total</th>
+                                  <th>Inicial</th>
                           
                                 </tr>
                               </thead>
                        
                               @foreach ($details as $detail)
                           
-                            <tbody>
+                              <tbody>
     
                                
                                 <td>{{$detail['no']}}</td>
                                 <td>{{$detail['name']}}</td>
                                 <td>{{$detail['qty'] }}</td>
                                 <td>{{$detail['nro_coutas'] }}</td>      
-                                <td> ${{ number_format( ($detail['price'] *$detail['qty'] ) / $detail['nro_coutas'],2 ) }}</td>      
-                                <td>${{ number_format($detail['total_price']) }}</td>      
+                                <td> ${{number_format( $detail['monto_cuotas'] ,2)}}</td> 
+                                     
+                                <td>{{number_format( $detail['total_price'],2)}}$</td>      
                             
                                         
                                  
@@ -107,12 +113,12 @@
                 
 
                     <hr>
-                    <div class="row border-b-2 brc-default-l2"></div>
+                    <div class="row border-b-2 "></div>
 
-                    <div class="col-12 "  style="margin-left: 10%">
+                    <div class="col-12 text-grey-m2 "  style="margin-left: 10%">
                
-                        <h5 class="">Refencias personales</h5>
-                        <table class="table table-responsive">
+                        <h3 class="text-grey-m2">Refencias personales</h3>
+                        <table class="table table-responsive text-grey-m2">
                             <thead>
                                 <tr>
                                   <th>Nombre</th>
@@ -158,9 +164,9 @@
                 <hr>
                 <br>
                 
-               <h5 class="text-center"> Evaluación del pedido</h5>
+               <h4 class="text-center text-dark"> Evaluación del pedido</h4>
 
-                <table class="table table-hover box-body text-wrap table-bordered"   style="margin-left: 5%">
+                <table class="table table-hover box-body text-wrap table-bordered text-grey-m2"   style="margin-left: 5%">
                     <tr>
                      <td>Evaluación</td>
                      <td>Observación</td>
@@ -286,12 +292,12 @@
             </div>
         </div>
 
-        <div class="row">
-<div class="col-12 ml-5">
+        <div class="row align-content-center m-auto">
+<div class="col-8">
 
-    <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+    <div class="text-grey-m2">
         <p>Notas:</p>
-        <i>{!! $comment !!}</i>
+        <i class="text-grey-m2">{!! $comment !!}</i>
     </div>
 
      
@@ -373,7 +379,8 @@ hr {
 }
 
 .text-grey-m2 {
-    color: #888a8d!important;
+    color: #000205!important;
+    font-size: 20px;
 }
 
 .text-success-m2 {
@@ -409,7 +416,7 @@ hr {
 }
 
 .btn-light {
-    color: #757984;
+    color: #000103;
     background-color: #f5f6f9;
     border-color: #dddfe4;
 }
@@ -437,7 +444,7 @@ hr {
     font-size: 60%!important;
 }
 .text-grey-m1 {
-    color: #7b7d81!important;
+    color: #000103!important;
 }
 .align-bottom {
     vertical-align: bottom!important;

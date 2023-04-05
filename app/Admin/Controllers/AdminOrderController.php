@@ -237,8 +237,12 @@ class  AdminOrderController extends RootAdminController
                 $AlContado = "Al contado";
             }else if($row->modalidad_de_compra ==2){
                 $AlContado = "Financiamiento/Entrega Inmediata" ;
-            }else{
+            }else if($row->modalidad_de_compra ==1){
                 $AlContado = "Financiamiento" ;
+            }else{
+
+                $AlContado = "Propuesta" ;
+
             }
             
             $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
@@ -845,13 +849,30 @@ class  AdminOrderController extends RootAdminController
         }
 
 
+        if ($code == 'modalidad_de_compra') {
+            $options = [
+                'Financiamento' => 1,
+                'Al contado' => 0,
+                'Entraga inmediata' => 2,
+                'Propuesta' => 3,
+            ];
+            $esTatus = $options[$value] ?? null;
+            $value=$esTatus;
+        }
+        
 
+
+      
+
+        
       
 
         if(!empty($Email)){
         //    estatus_del_pedido($Email);
             
         }
+
+      
 
 
         $datavalor = [];
@@ -929,6 +950,8 @@ class  AdminOrderController extends RootAdminController
             }
         }
 
+    
+
         
         if($code=='vendedor_id'){
             $userad = new AdminUser;
@@ -952,6 +975,9 @@ class  AdminOrderController extends RootAdminController
             'admin_id' => Admin::user()->id,
             'order_status_id' => $order->status,
         ];
+
+
+        
         (new AdminOrder)->addOrderHistory($dataHistory);
 
         $orderUpdated = AdminOrder::getOrderAdmin($orderId);
@@ -1306,16 +1332,24 @@ class  AdminOrderController extends RootAdminController
 
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+            $usuario = AdminCustomer::where('id', $order->customer_id)->first();
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             if($documento){
                 $constacia_trabajo= $documento->carta_trabajo ;
                 $rif= $documento->rif ;
                 $cedula= $documento->cedula ;
+                $telefono2 = $usuario->phone2 ;
+                $address1 = $usuario->address1 ;
+                $address2 = $usuario->address2 ;
+                $nos_conocio = $usuario->nos_conocio ;
             }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
-            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
+            $data['address']         = $address1 ?? '';
             $data['phone']           = $order['phone'];
+            $data['address2']        = $address2 ?? '';
+            $data['phone2']           = $telefono2 ?? '';
+            $data['Nosconocio']        = $nos_conocio ?? '' ;
             $data['email']           = $order['email'];
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
@@ -1353,6 +1387,18 @@ class  AdminOrderController extends RootAdminController
                 foreach ($order->details as $key => $detail) {
 
                 
+                    $totalinicial = 0.00;
+                    
+                    $number1 =  $detail->total_price/$detail->nro_coutas;
+                    if($detail->abono_inicial>0){
+                        $monto = $detail->total_price;
+                        $totalinicial=($detail->abono_inicial*$detail->total_price)/100;
+                        $monto = $monto - $totalinicial;
+                        $number1 =  $monto/$detail->nro_coutas;
+                      }
+
+                     
+
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1370,7 +1416,8 @@ class  AdminOrderController extends RootAdminController
                         'qty' => $detail->qty, 
                         'price' => $detail->price, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $detail->total_price ?? '',
+                        'total_price' => $totalinicial ?? '',
+                        'monto_cuotas' => $number1 ?? '',
                     ];
                 }
             }
@@ -1381,6 +1428,136 @@ class  AdminOrderController extends RootAdminController
             }
             
             return view($this->templatePathAdmin.'format.ficha_pedido')
+            ->with($data);
+        } else {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+    }
+
+    public function ficha_propuesta()
+    {
+        $orderId = request('order_id') ?? null;
+        $action = request('action') ?? '';
+        $order = AdminOrder::getOrderAdmin($orderId);
+
+        $convenio=Convenio::where('order_id',$orderId)->first();
+
+        $constacia_trabajo='';
+        $rif='';
+        $cedula='';
+       
+        $nro_convenio = 'A/N';
+
+        if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
+
+
+       
+
+      
+            
+
+        if ($order) {
+
+
+           
+
+            $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+            $usuario = AdminCustomer::where('id', $order->customer_id)->first();
+            $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            if($documento){
+                $constacia_trabajo= $documento->carta_trabajo ;
+                $rif= $documento->rif ;
+                $cedula= $documento->cedula ;
+                $telefono2 = $usuario->phone2 ;
+                $address1 = $usuario->address1 ;
+                $address2 = $usuario->address2 ;
+                $nos_conocio = $usuario->nos_conocio ;
+               
+            }
+            $data                    = array();
+            $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
+            $data['address']         = $address1 ?? '';
+            $data['address2']        = $address2 ?? '';
+            $data['phone2']           = $telefono2 ?? '';
+            $data['Nosconocio']        = $nos_conocio ?? '' ;
+            $data['phone']           = $order['phone'];
+            
+            $data['email']           = $order['email'];
+            $data['referencias']           = $referencias;
+            $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
+            $data['nro_convenio'] =  $nro_convenio  ;
+            $data['constacia_trabajo'] =  $constacia_trabajo;
+            $data['rif'] =  $rif;
+            $data['cedula'] =  $cedula;
+
+            $data['order'] =  $order;
+      
+            $data['cedula']           = $order['cedula'];
+            $data['comment']         = $order['comment'];
+            $data['payment_method']  = $order['payment_method'];
+            $data['shipping_method'] = $order['shipping_method'];
+            $data['created_at']      = $order['created_at'];
+            $data['currency']        = $order['currency'];
+            $data['exchange_rate']   = $order['exchange_rate'];
+            $data['subtotal']        = $order['subtotal'];
+            $data['tax']             = $order['tax'];
+            $data['shipping']        = $order['shipping'];
+            $data['discount']        = $order['discount'];
+            $data['total']           = $order['total'];
+            $data['received']        = $order['received'];
+            $data['balance']         = $order['balance'];
+            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['comment']         = $order['comment'];
+            $data['country']         = $order['country'];
+            $data['id']              = $order->id;
+            $data['details'] = [];
+
+            $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
+        
+
+            if ($order->details) {
+                foreach ($order->details as $key => $detail) {
+
+                    $totalinicial = 0.00;
+                    
+                    $number1 =  $detail->total_price/$detail->nro_coutas;
+                    if($detail->abono_inicial>0){
+                        $monto = $detail->total_price;
+                        $totalinicial=($detail->abono_inicial*$detail->total_price)/100;
+                        $monto = $monto - $totalinicial;
+                        $number1 =  $monto/$detail->nro_coutas;
+                      }
+
+                    $arrAtt = json_decode($detail->attribute, true);
+                    if ($arrAtt) {
+                        $htmlAtt = '';
+                        foreach ($arrAtt as $groupAtt => $att) {
+                            $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
+                        }
+                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                    } else {
+                        $name = $detail->name;
+                    }
+                    $data['details'][] = [
+                        'no' => $key + 1, 
+                        'sku' => $detail->sku, 
+                        'name' => $name, 
+                        'qty' => $detail->qty, 
+                        'price' => $detail->price, 
+                        'nro_coutas' => $detail->nro_coutas, 
+                        'total_price' => $totalinicial ?? '',
+                        'monto_cuotas' => $number1 ?? '',
+                        'comment' => $detail->comment ?? '',
+                    ];
+                }
+            }
+
+            if ($action =='invoice_excel') {
+                $options = ['filename' => 'Order ' . $orderId];
+                return \Export::export($action, $data, $options);
+            }
+            
+            return view($this->templatePathAdmin.'format.ficha_propuesta')
             ->with($data);
         } else {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);

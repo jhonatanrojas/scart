@@ -18,19 +18,34 @@
        <div class="card">
 
           <div class="card-header with-border">
+             
+
+              @if ($order->modalidad_de_compra == 1 ||$order->modalidad_de_compra == 0 ||$order->modalidad_de_compra == 2)
               <h3 class="card-title">{{ sc_language_render('order.order_detail') }} #{{ $order->id }}</h3>
+              @elseif ($order->modalidad_de_compra == 3)
+              <h3>PROPUESTA#{{ $order->id }}</h3>
+
+                  
+              @endif
               <div class="card-tools not-print">
                   <div class="btn-group float-right" style="margin-right: 0px">
                       <a href="{{ sc_route_admin('admin_order.index') }}" class="btn btn-flat btn-default"><i class="fa fa-list"></i>&nbsp;{{ sc_language_render('admin.back_list') }}</a>
                   </div>
-                  
+                  @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2 )
                   <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
                       <a class="btn btn-flat" target=_new title="Invoice" href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs"> {{ sc_language_render('order.invoice') }}</span></a>
                   </div>
                   
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                    <a class="btn btn-flat" target=_new title="Descargar exp" href="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar exp </span></a>
-                </div>
+                 
+                 <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                  <a class="btn btn-flat" target=_new title="Descargar exp" href="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar exp </span></a>
+              </div>
+              @elseif ($order->modalidad_de_compra == 3)
+              <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
+                <a class="btn btn-flat" target=_new title="Descargar propuesta" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar propuesta </span></a>
+            </div>
+                     
+                 @endif
                 
                
 
@@ -97,6 +112,7 @@
           <div class="row" id="order-body">
             <div class="col-sm-6">
               <table  class="table table-bordered">
+                  @if ($order->modalidad_de_compra == 1 ||$order->modalidad_de_compra == 0 ||$order->modalidad_de_compra == 2)
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
@@ -114,8 +130,35 @@
            
                   </td>
                 </tr>
+                  @endif
+
+                @if ($order->modalidad_de_compra==3)
+
+                <tr>
+                  <td  class="td-title">Modalidad de compra:</td>
+                  <td>
+                    {{ 'MODALIDAD'}}
+                   
+                   
+                    <a  href="#" class="updateStatus"
+                    data-name="modalidad_de_compra" data-type="select" data-source ="{{json_encode([
+                      0 => "Al contado",
+                      1 => "Financiamento",
+                      2 => "Propuesta",
+                      3 => "Entraga inmediata"
+                     
+                    ]) }}"
+                    data-pk="{{ $order->id }}" data-value="" data-url="{{ route("admin_order.update") }}"
+                     data-title="{{ sc_language_render('order.order_status') }}" 
+                    ><span title="editar Modalidad" type="button" class="btn btn-flat btn-sm btn-primary ">*<i class="fa fa-edit"></i></span></a>
+                    
+         
+                </td>
+              </tr>
+                    
+                @endif
                 
-                  
+                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2 )
 
                   <tr>
                     <td> Modalidad de compra</td>
@@ -124,13 +167,18 @@
                       {{'Financiamiento' }}
                       @elseif ($order->modalidad_de_compra==2)
                       {{'Financiamiento/Entrega Inmediata' }}
+
+                      @elseif ($order->modalidad_de_compra==3)
+                      {{'propuesta' }}
                       @else
                       {{'Al contado' }}
                       @endif
                     </td>
                   </tr>
+
+                  
                   <tr>
-                    @if (!$order->modalidad_de_compra == 0)
+                   
                     <td> Convenio</td>
                     <td>
 
@@ -138,10 +186,10 @@
                         {{ ($convenio) ? str_pad($convenio->nro_convenio,6,"0",STR_PAD_LEFT)  :'No se ha parametrizado el convenio'}}
 
                     </td>
-                    @endif
+                   
                   </tr>
                   <tr>
-                    @if (!$order->modalidad_de_compra == 0)
+                   
                     <td>Fecha  primer pago</td>
                     <td><a href="#" class="updateStatus" data-name="fecha_primer_pago" data-type="date" data-source ="{{ json_encode($order->fecha_primer_pago) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_primer_pago))
                       {{$order->fecha_primer_pago}}
@@ -150,8 +198,10 @@
                       {{$order->fecha_primer_pago}}
                         
                     @endif</a> </td>
-                    @endif
+                   
                   </tr>
+
+                   @endif
 
                   
                   @if ($order->modalidad_de_compra==0)
@@ -163,9 +213,13 @@
                   <tr><td>{{ sc_language_render('order.shipping_method') }}:</td><td><a href="#" class="updateStatus" data-name="shipping_method" data-type="select" data-source ="{{ json_encode($shippingMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->shipping_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.shipping_method') }}">{{ $order->shipping_method }}</a></td></tr>
                   <tr><td>{{ sc_language_render('order.payment_method') }}:</td><td><a href="#" class="updateStatus" data-name="payment_method" data-type="select" data-source ="{{ json_encode($paymentMethod) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_method !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_method') }}">{{ $order->payment_method }}</a></td></tr>
                   @endif
+                  @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
                   <tr><td> Estatus de pago Global:</td><td><a href="#" class="updateStatus" data-name="payment_status" data-type="select" data-source ="{{ json_encode($statusPayment) }}"  data-pk="{{ $order->id }}" data-value="{!! $order->payment_status !!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.payment_status') }}">{{ $statusPayment[$order->payment_status]??$order->payment_status }}</a></td></tr>
+                      
+                  @endif
 
                   <tr><td></i> {{ sc_language_render('admin.created_at') }}:</td><td>{{ $order->created_at }}</td></tr>
+                  @if ($order->modalidad_de_compra == 1 ||$order->modalidad_de_compra== 0  || $order->modalidad_de_compra == 2)
                   <tr>
                     <td  class="td-title">
                       Vendedor Asignado:</td>
@@ -173,6 +227,8 @@
                     <a  href="#" class="updateStatus" data-name="vendedor_id" data-type="select" data-source ="{{ json_encode($list_usuarios) }}"   data-pk="{{ $order->id }}" data-value="{!! $order->vendedor_id!!}" data-url="{{ route("admin_order.update") }}" data-title="{{ sc_language_render('order.order_status') }}">{{ $list_usuarios[$order->vendedor_id] ?? $order->vendedor_id }}</a>
                   </td>
                 </tr>
+                      
+                  @endif
                 </table>
                <table class="table table-hover box-body text-wrap table-bordered">
                 @if (!$order['modalidad_de_compra'] >= 1)
@@ -509,6 +565,7 @@
   </td>
   </tr>
 </table>
+@if ($order->modalidad_de_compra == 1 ||$order->modalidad_de_compra == 0 ||$order->modalidad_de_compra == 2)
 <div class="accordion" id="accordionExample">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -566,253 +623,257 @@
     </div>
   </div>
   
-  <div class="card">
-    <div class="card-header" id="headingevaluacion">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-     HISTORIAL DE EVALUACIONES
-        </button>
-      </h2>
-    </div>
-    <div id="collapseThree" class="collapse show" aria-labelledby="headingevaluacion" data-parent="#accordionExample">
-      <div class="card-body">
-          {{-- evaluacion --}}
-          <div class="col-sm-12">
-            <div class="card">
-         
+   
 
-             @if ($order->modalidad_de_compra >= 1)
-             <table class="table table-hover box-body text-wrap table-bordered">
-             <tr>
-              <td>Evaluación</td>
-              <td>Observación</td>
-              <td>Porcentaje</td>
-              <td>Confiabilidad</td>
-             </tr>
-              <tr>
-                <td  class="td-title"><span >Evaluación comercial</span></td>
-                <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                      @if (!empty($order->nota_evaluacion_comercial ))
-                          {{$order->nota_evaluacion_comercial }} 
-                      @endif
-                  </a>
-              </td>
-                <td>
-                  
-                  <a href="#" class="updateInfo" data-name="evaluacion_comercial " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                    @if (!empty($order->evaluacion_comercial ))
-                        {{$order->evaluacion_comercial }} 
-                    @endif
-                </a>
-               
-              </td>
-
-              <td>
-                  
-                 
-                <a href="#" class="updateInfo" data-name="confiabilidad " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad ))
-                      {{$order->confiabilidad }} 
-                  @endif
-              </a>
+    <div class="card">
+      <div class="card-header" id="headingevaluacion">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+       HISTORIAL DE EVALUACIONES
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse show" aria-labelledby="headingevaluacion" data-parent="#accordionExample">
+        <div class="card-body">
+            {{-- evaluacion --}}
+            <div class="col-sm-12">
+              <div class="card">
            
-            </td>
-              </tr>
-
-              {{-- Evaluacion_comercial --}}
-
-
-              {{-- nota_evaluacion_financiera --}}
-
-              <tr>
-                <td  class="td-title"><span >Evaluación financiera</span></td>
-                <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota F" >
-                  
-                    @if (!empty($order->nota_evaluacion_financiera ))
-                     
-                          {{$order->nota_evaluacion_financiera }} 
+  
+               @if ($order->modalidad_de_compra >= 1)
+               <table class="table table-hover box-body text-wrap table-bordered">
+               <tr>
+                <td>Evaluación</td>
+                <td>Observación</td>
+                <td>Porcentaje</td>
+                <td>Confiabilidad</td>
+               </tr>
+                <tr>
+                  <td  class="td-title"><span >Evaluación comercial</span></td>
+                  <td>
+                    <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                        @if (!empty($order->nota_evaluacion_comercial ))
+                            {{$order->nota_evaluacion_comercial }} 
+                        @endif
+                    </a>
+                </td>
+                  <td>
+                    
+                    <a href="#" class="updateInfo" data-name="evaluacion_comercial " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                      @if (!empty($order->evaluacion_comercial ))
+                          {{$order->evaluacion_comercial }} 
                       @endif
                   </a>
-              </td>
-                <td>
-                  
-                  <a href="#" class="updateInfo" data-name="evaluacion_financiera " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                    @if (!empty($order->evaluacion_financiera ))
-                        {{$order->evaluacion_financiera }} 
-                    @endif
-                </a>
-                
-              </td>
-              <td>
-                  
                  
-                              
-                <a href="#" class="updateInfo" data-name="confiabilidad2 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad2 ))
-                      {{$order->confiabilidad2 }} 
-                  @endif
-              </a>
-            </td>
-              </tr>
-              {{-- nota_evaluacion_financiera --}}
-
-              <tr>
-                <td  class="td-title"><span >Evaluación legal</span></td>
+                </td>
+  
                 <td>
-                  <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
                     
                    
-                         
-                          {{$order->nota_evaluacion_legal }} 
-                   
-                  </a>
-              </td>
-                <td>
-                  
-                 
-                  <a href="#" class="updateInfo" data-name="evaluacion_legal" data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                    @if (!empty($order->evaluacion_legal ))
-                        {{$order->evaluacion_legal }} 
+                  <a href="#" class="updateInfo" data-name="confiabilidad " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->confiabilidad ))
+                        {{$order->confiabilidad }} 
                     @endif
                 </a>
-                
+             
               </td>
-              <td>
-                  
-                 
-                <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
-                  @if (!empty($order->confiabilidad3 ))
-                      {{$order->confiabilidad3 }} 
-                  @endif
-              </a>
-            </td>
-              </tr>
-
-
-              
-
-
-              <tr>
-                <td  class="td-title"><span >Decisión final</span></td>
-                <td>
-                  <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
-                    @if (!empty($order->nota_decision_final ))
-                    {{$order->nota_decision_final }} 
-                @endif
+                </tr>
+  
+                {{-- Evaluacion_comercial --}}
+  
+  
+                {{-- nota_evaluacion_financiera --}}
+  
+                <tr>
+                  <td  class="td-title"><span >Evaluación financiera</span></td>
+                  <td>
+                    <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota F" >
+                    
+                      @if (!empty($order->nota_evaluacion_financiera ))
+                       
+                            {{$order->nota_evaluacion_financiera }} 
+                        @endif
+                    </a>
+                </td>
+                  <td>
+                    
+                    <a href="#" class="updateInfo" data-name="evaluacion_financiera " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                      @if (!empty($order->evaluacion_financiera ))
+                          {{$order->evaluacion_financiera }} 
+                      @endif
                   </a>
-              </td>
-                <td>
                   
-                 
-                  <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
-                    <option value="0"   {{ $order['decision_final'] == 0 ? 'selected':'' }}>Pendiente </option>
-                    <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Negado </option>
-                    <option value="2"   {{ $order['decision_final'] ==2  ? 'selected':'' }}>Aprobado </option>
-                    <option value="3"   {{ $order['decision_final'] ==3  ? 'selected':'' }}>Diferido </option>
-                    <option value="3"   {{ $order['decision_final'] >3  ? 'selected':'' }}>Otro </option>
-                </select>
+                </td>
+                <td>
+                    
+                   
+                                
+                  <a href="#" class="updateInfo" data-name="confiabilidad2 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->confiabilidad2 ))
+                        {{$order->confiabilidad2 }} 
+                    @endif
+                </a>
               </td>
-              </tr>
-            </table>
-                 
-             @endif
-
-             
-        
-            </div>
-
-
-
-          </div>
-          {{-- //End evaluacion --}}
-      </div>
-    </div>
-
-    <div class="card-header" id="headingThree">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        HISTORIAL DE PAGOS
-        </button>
-      </h2>
-    </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-      <div class="card-body">
-        <table class="table box table-bordered" width="100%">
-          <thead>
-            <tr>
-        
-              <th>Acciones</th>
-      
-              <th>Cuota </th>
-
-              <th>Reportado</th>
-              <th>Divisa</th>
-              <th>Conversion</th>
-    
-              <th>estatus </th>
-              
-              <th>Fecha de vencimiento</th>
-      
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($historial_pagos as $historial)
-            <tr>
-
-     
-<td>        
-@if( $historial->payment_status ==2)      
-    <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
-    @endif
-@if($historial->payment_status == 2 || $historial->payment_status ==5)
-<a href="#" onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
-@endif
-@if($historial->payment_status != 2 && $historial->payment_status !=5)
-
-
-<a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
-@endif
-</td>
-     
-
-          <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
-          <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
-          @php
-         $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1;
-
-              
-          @endphp
-              <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
-             
-          <td>
-            @if ($historial->moneda == 'USD')
-            <span class="item_21_sku">{!! round($historial->importe_pagado *$tasa_cambio , 2) !!} bs</span>
-
-            @else
-            <span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio , 2) !!} $</span>
-
+                </tr>
+                {{-- nota_evaluacion_financiera --}}
+  
+                <tr>
+                  <td  class="td-title"><span >Evaluación legal</span></td>
+                  <td>
+                    <a href="#" class="updateInfo" data-name="nota_evaluacion_legal" data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                      
+                     
+                           
+                            {{$order->nota_evaluacion_legal }} 
+                     
+                    </a>
+                </td>
+                  <td>
+                    
+                   
+                    <a href="#" class="updateInfo" data-name="evaluacion_legal" data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                      @if (!empty($order->evaluacion_legal ))
+                          {{$order->evaluacion_legal }} 
+                      @endif
+                  </a>
+                  
+                </td>
+                <td>
+                    
+                   
+                  <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Confiabilidad" >
+                    @if (!empty($order->confiabilidad3 ))
+                        {{$order->confiabilidad3 }} 
+                    @endif
+                </a>
+              </td>
+                </tr>
+  
+  
                 
-            @endif
-          </td>
+  
+  
+                <tr>
+                  <td  class="td-title"><span >Decisión final</span></td>
+                  <td>
+                    <a href="#" class="updateInfo" data-name="nota_decision_final " data-type="textarea" data-pk="{{ $order->id }}" data-url="{{ route("admin_order.update") }}" data-title="Nota" >
+                      @if (!empty($order->nota_decision_final ))
+                      {{$order->nota_decision_final }} 
+                  @endif
+                    </a>
+                </td>
+                  <td>
+                    
+                   
+                    <select   id="decision_final"  onChange="selectProduct2($(this));"  class="decision_final form-control select2 " name="decision_final">
+                      <option value="0"   {{ $order['decision_final'] == 0 ? 'selected':'' }}>Pendiente </option>
+                      <option value="1"   {{ $order['decision_final'] == 1 ? 'selected':'' }}>Negado </option>
+                      <option value="2"   {{ $order['decision_final'] ==2  ? 'selected':'' }}>Aprobado </option>
+                      <option value="3"   {{ $order['decision_final'] ==3  ? 'selected':'' }}>Diferido </option>
+                      <option value="3"   {{ $order['decision_final'] >3  ? 'selected':'' }}>Otro </option>
+                  </select>
+                </td>
+                </tr>
+              </table>
+                   
+               @endif
+  
+               
+          
+              </div>
+  
+  
+  
+            </div>
+            {{-- //End evaluacion --}}
+        </div>
+      </div>
+  
+      <div class="card-header" id="headingThree">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          HISTORIAL DE PAGOS
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+        <div class="card-body">
+          <table class="table box table-bordered" width="100%">
+            <thead>
+              <tr>
+          
+                <th>Acciones</th>
+        
+                <th>Cuota </th>
+  
+                <th>Reportado</th>
+                <th>Divisa</th>
+                <th>Conversion</th>
       
-          <td><span class="item_21_sku">{{ $historial->estatus->name }}
-          
-          <br>
-         <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
-          </span></td>
-          
-          <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
-     
-        </tr>
-  @endforeach
-          </tbody>
-        </table>
-
+                <th>estatus </th>
+                
+                <th>Fecha de vencimiento</th>
+        
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($historial_pagos as $historial)
+              <tr>
+  
+       
+  <td>        
+  @if( $historial->payment_status ==2)      
+      <a href="#" data-id="{{ $historial->id }}"><span  data-id=" {{ $historial->id }}" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>
+      @endif
+  @if($historial->payment_status == 2 || $historial->payment_status ==5)
+  <a href="#" onclick="obtener_detalle_pago({{$historial->id}})" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+  @endif
+  @if($historial->payment_status != 2 && $historial->payment_status !=5)
+  
+  
+  <a href='{!! sc_route_admin("historial_pagos.reportar", ['id' => $order->id ,'id_pago'=>$historial->id ],['id_pago'=>$historial->id ]  ) !!}' ><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>
+  @endif
+  </td>
+       
+  
+            <td><span class="item_21_sku">{{ $historial->importe_couta}} $</span></td>
+            <td><span class="item_21_sku">{{ $historial->importe_pagado}}</span></td>
+            @php
+           $tasa_cambio=  $historial->tasa_cambio ? $historial->tasa_cambio : 1;
+  
+                
+            @endphp
+                <td><span class="item_21_sku">{{ $historial->moneda}}</span></td>
+               
+            <td>
+              @if ($historial->moneda == 'USD')
+              <span class="item_21_sku">{!! round($historial->importe_pagado *$tasa_cambio , 2) !!} bs</span>
+  
+              @else
+              <span class="item_21_sku">{!! round($historial->importe_pagado / $tasa_cambio , 2) !!} $</span>
+  
+                  
+              @endif
+            </td>
+        
+            <td><span class="item_21_sku">{{ $historial->estatus->name }}
+            
+            <br>
+           <small> @if($historial->referencia !='' ) {{$historial->referencia }} @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name :'' !!}  </small>
+            </span></td>
+            
+            <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>
+       
+          </tr>
+    @endforeach
+            </tbody>
+          </table>
+  
+        </div>
       </div>
     </div>
-  </div>
+        
+ 
 
   <div class="card">
     <div class="card-header" id="headingTwo">
@@ -853,6 +914,8 @@
       </div>
     </div>
   </div>
+
+  @endif
 
 </div>
 <div class="modal fade mt-3" id="modal_convenio" tabindex="-1" role="dialog">
@@ -1136,12 +1199,15 @@
          
             
   
-            <div class="form-group col-md-12">
+                @if ($order->modalidad_de_compra == 1 ||$order->modalidad_de_compra == 0  || $order->modalidad_de_compra == 2)
+                <div class="form-group col-md-12">
            
                 <label for="forma_pago"> descargar referencia </label>
                 <a target="blank" href="#" data-id="" id="dcomprobante"><span  data-id=" " title="Descargar referencia" type="button" class="btn btn-flat  btn-sm btn-primary"><i class="fa fa-file"></i></span></a>
                   </div>
                   
+                    
+                  @endif
 
                      
   
@@ -1581,6 +1647,13 @@ function update_total(e){
 
     }
 
+$("#modalidad_de_compra" ).change(function(e) {
+  let name = "modalidad_de_compra"
+  let valor = $('#modalidad_de_compra').val()
+  selectProduct2(name , valor)
+
+});
+
 $( "#evaluacion_comercial" ).change(function(e) {
   let name = "evaluacion_comercial"
   let valor = $('#evaluacion_comercial').val()
@@ -1620,14 +1693,17 @@ $( "#decision_final" ).change(function(e) {
           type: "post",
           beforeSend: function(){
                 $('#loading').show();
+                
+                
             },
   
             success: function (respuestas) {
+             
               
                
               $('#loading').hide();
 
-              console.log(respuestas)
+             
               
 
                  
