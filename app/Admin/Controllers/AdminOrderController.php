@@ -1292,6 +1292,153 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia ,postcode ' )->first();
+
+
+          
+
+  
+            if($documento){
+                $constacia_trabajo= $documento->carta_trabajo ;
+                $rif= $documento->rif ;
+                $doc_cedula= $documento->cedula;
+
+            }
+            $data                    = array();
+            $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
+            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
+            $data['phone']           = $order['phone'];
+            $data['phone2']           = $datos_cliente->phone2 ?? '';
+            $data['conocio']           = $datos_cliente->nos_conocio ?? '';
+
+            $data['vendedor']           = $user_roles->name ?? '';
+            $data['email']           = $order['email'];
+            
+ 
+            $data['referencias']           = $referencias;
+            $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
+            $data['nro_convenio'] =  $nro_convenio  ;
+            $data['constacia_trabajo'] =  $constacia_trabajo;
+            $data['rif'] =  $rif;
+            $data['doc_cedula'] =  $doc_cedula;
+
+
+           
+
+            $data['order'] =  $order;
+            
+            $data['datos_cliente']    =  $datos_cliente;
+            $data['cedula']           = $order['cedula'];
+            $data['comment']         = $order['comment'];
+            $data['payment_method']  = $order['payment_method'];
+            $data['shipping_method'] = $order['shipping_method'];
+            $data['created_at']      = $order['created_at'];
+            $data['currency']        = $order['currency'];
+            $data['exchange_rate']   = $order['exchange_rate'];
+            $data['subtotal']        = $order['subtotal'];
+            $data['tax']             = $order['tax'];
+            $data['shipping']        = $order['shipping'];
+            $data['discount']        = $order['discount'];
+            $data['total']           = $order['total'];
+            $data['received']        = $order['received'];
+            $data['balance']         = $order['balance'];
+            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['comment']         = $order['comment'];
+            $data['country']         = $order['country'];
+            $data['id']              = $order->id;
+            $data['details'] = [];
+
+            $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
+            $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
+
+            if ($order->details) {
+                foreach ($order->details as $key => $detail) {
+
+                    
+                    //cosultamos la marca y modelo del producto
+                    $producto = AdminProduct::getProductAdmin($detail->product_id);
+                    $modelo='';
+                    if(  $producto->attributes->count()){                     
+                            //obtener el atributo modelo por el id de $producto->attributes con $id_attribute_modelo
+                        $first_attributes = $producto->attributes->where('attribute_group_id',$id_attribute_modelo)->first();
+                        $modelo = $first_attributes->name ?? '';
+                        
+                    }
+                
+             
+                    $arrAtt = json_decode($detail->attribute, true);
+                    if ($arrAtt) {
+                        $htmlAtt = '';
+                        foreach ($arrAtt as $groupAtt => $att) {
+                            $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
+                        }
+                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                    } else {
+                        $name = $detail->name;
+                    }
+
+          
+                    $data['details'][] = [
+                        'no' => $key + 1, 
+                        'sku' => $detail->sku, 
+                        'name' => $name, 
+                        'qty' => $detail->qty, 
+                        'marca'=>$producto->brand->name ?? '',
+                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        'modelo'=>$modelo ?? '',
+                        
+                        'price' => $detail->price, 
+                        'abono_inicial' => $detail->abono_inicial, 
+                        'nro_coutas' => $detail->nro_coutas, 
+                        'total_price' => $detail->total_price ?? '',
+                    ];
+                }
+            }
+
+            if ($action =='invoice_excel') {
+                $options = ['filename' => 'Order ' . $orderId];
+                return \Export::export($action, $data, $options);
+            }
+            
+            return view($this->templatePathAdmin.'format.ficha_solicitud')
+            ->with($data);
+        } else {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+    }
+
+    public function ficha_propuesta()
+    {
+         $orderId = request('order_id') ?? null;
+        $action = request('action') ?? '';
+        $order = AdminOrder::getOrderAdmin($orderId);
+
+        $convenio=Convenio::where('order_id',$orderId)->first();
+
+        $constacia_trabajo='';
+        $rif='';
+        $cedula='';
+       
+        $nro_convenio = 'A/N';
+
+        if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
+
+            
+        $doc_cedula="";
+        if ($order) {
+            $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+
+
+            $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
+
+           
+
+
+            $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
             ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
 
   
@@ -1343,7 +1490,7 @@ class  AdminOrderController extends RootAdminController
             $data['details'] = [];
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
-            $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id;
+            $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
@@ -1379,121 +1526,7 @@ class  AdminOrderController extends RootAdminController
                         'qty' => $detail->qty, 
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
-                        'modelo'=>$modelo,
-                        
-                        'price' => $detail->price, 
-                        'abono_inicial' => $detail->abono_inicial, 
-                        'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $detail->total_price ?? '',
-                    ];
-                }
-            }
-
-            if ($action =='invoice_excel') {
-                $options = ['filename' => 'Order ' . $orderId];
-                return \Export::export($action, $data, $options);
-            }
-            
-            return view($this->templatePathAdmin.'format.ficha_solicitud')
-            ->with($data);
-        } else {
-            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
-        }
-    }
-
-    public function ficha_propuesta()
-    {
-         $orderId = request('order_id') ?? null;
-        $action = request('action') ?? '';
-        $order = AdminOrder::getOrderAdmin($orderId);
-
-        $convenio=Convenio::where('order_id',$orderId)->first();
-
-        $constacia_trabajo='';
-        $rif='';
-        $cedula='';
-       
-        $nro_convenio = 'A/N';
-
-        if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
-  
-        $doc_cedula="";
-        if ($order) {
-            $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
-            $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
-            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
-            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
-            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
-
-  
-            if($documento){
-                $constacia_trabajo= $documento->carta_trabajo ;
-                $rif= $documento->rif ;
-                $doc_cedula= $documento->cedula;
-
-            }
-            $data                    = array();
-            $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
-            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
-            $data['phone']           = $order['phone'];
-            $data['email']           = $order['email'];
-            
- 
-            $data['referencias']           = $referencias;
-            $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
-            $data['nro_convenio'] =  $nro_convenio  ;
-            $data['constacia_trabajo'] =  $constacia_trabajo;
-            $data['rif'] =  $rif;
-            $data['doc_cedula'] =  $doc_cedula;
-
-            $data['order'] =  $order;
-            
-            $data['datos_cliente']    =  $datos_cliente;
-            $data['cedula']           = $order['cedula'];
-            $data['comment']         = $order['comment'];
-            $data['payment_method']  = $order['payment_method'];
-            $data['shipping_method'] = $order['shipping_method'];
-            $data['created_at']      = $order['created_at'];
-            $data['currency']        = $order['currency'];
-            $data['exchange_rate']   = $order['exchange_rate'];
-            $data['subtotal']        = $order['subtotal'];
-            $data['tax']             = $order['tax'];
-            $data['shipping']        = $order['shipping'];
-            $data['discount']        = $order['discount'];
-            $data['total']           = $order['total'];
-            $data['received']        = $order['received'];
-            $data['balance']         = $order['balance'];
-            $data['other_fee']       = $order['other_fee'] ?? 0;
-            $data['comment']         = $order['comment'];
-            $data['country']         = $order['country'];
-            $data['id']              = $order->id;
-            $data['details'] = [];
-
-            $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
-        
-
-            if ($order->details) {
-                foreach ($order->details as $key => $detail) {
-
-                
-                    $arrAtt = json_decode($detail->attribute, true);
-                    if ($arrAtt) {
-                        $htmlAtt = '';
-                        foreach ($arrAtt as $groupAtt => $att) {
-                            $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
-                        }
-                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
-                    } else {
-                        $name = $detail->name;
-                    }
-                    $data['details'][] = [
-                        'no' => $key + 1, 
-                        'sku' => $detail->sku, 
-                        'name' => $name, 
-                        'qty' => $detail->qty, 
-                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        'modelo'=>$modelo ?? '',
                         
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
