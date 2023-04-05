@@ -132,7 +132,7 @@ class AdminOrder extends ShopOrder
         } else {
             $orderList = $orderList->sort('created_at', 'desc');
         }
-        $orderList = $orderList->paginate(30);
+        $orderList = $orderList->paginate(15);
 
         return $orderList;
     }

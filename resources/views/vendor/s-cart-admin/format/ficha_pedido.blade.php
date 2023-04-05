@@ -1,10 +1,15 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/fontawesome-free/css/all.min.css')}}">
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
+<style>
+    body {
+        color:#000;
+    }
+    </style>
 
 <div class="page-content container">
     <div class="page-header text-blue-d2">
-      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:60px;">
+      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:100px;">
         <div class="page-tools">
             <div class="action-buttons">
                 <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
@@ -29,35 +34,36 @@
                 </div>
                 <!-- .row -->
 
-                <hr class="row brc-default-l1 mx-n1 mb-4" />
+                <hr class="row mx-n1 mb-4" />
 
-                <div class="row">
-                    <div class="col-sm-6">
+                <div style="color: black; font-size: 18px" class="row">
+                    <div class="col-sm-8">
                         <div>
-                            <span class="text-sm text-grey-m2 align-middle">Cliente:{{ $name }}</span> <br>
-                            <span class="text-sm text-grey-m2 align-middle">Cedula:{{ $cedula }}</span>
+                            <span class="text-md font-bold align-middle">Cliente:{{ $name }}</span> <br>
+                            <span class="text-md font-bold align-middle">Cedula:{{ $cedula }}</span>
                         </div>
-                        <div class="text-grey-m2">
+                        <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> {{ $address }}, {{ $country }}
+                              <i class="fas fa-map-marker-alt"></i> <b>{{ $datos_cliente->estado }},{{ $datos_cliente->municipio }}, {{ $datos_cliente->parroquia }}.</b> {{ $datos_cliente->address1 }}.
                             </div>
-                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
-                            <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
+                            <div class="my-1\"><i class="fas fa-phone-alt"></i> <b>{{ $phone }}</b></div>
+                            <div class="my-1\"><i class="far fa-envelope"></i> <b>{{ $email }}</b></div>
                         </div>
                     </div>
                     <!-- /.col -->
-
-                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
+                
+                    <div class="text-95 col-sm-4 align-self-start d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
-                        <div class="text-grey-m2">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero del pedido:</span> #{{ $id }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
-
+                        <div class="">
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">Numero de solicitud:</span> <b>#{{ $id }}</b></div>
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">{{ sc_language_render('order.date') }}:</span> <b>{{ sc_datetime_to_date($created_at, 'Y-m-d') }}</b></div>
+                            <div class="my-1\"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90 font-bold">Numero de convenio:</span> <b>#{{ $nro_convenio }}</b></div>
+                
                         </div>
                     </div>
                     <!-- /.col -->
                 </div>
+                
 
                  
                 <div class="row d-flex justify-content-center " style="margin-left: 10%">
@@ -71,30 +77,53 @@
                                   <th>Cant</th>
                                   <th>Numero de cuotas</th>
                                   <th>Monto Cuota</th>
+                                  <th>Monto Inicial </th>
                                   <th>Total</th>
                           
                                 </tr>
                               </thead>
-                       
-                              @foreach ($details as $detail)
+                              
                           
-                            <tbody>
-    
-                               
+                        
+                          
+                            <tbody>        
+                                @foreach ($details as $detail)
+                                <tr> 
+                                @php 
+
+$AlContado = "Financiamiento" ;
+                                if($detail->id_modalidad_pago == 0){
+                                    $AlContado = "Al contado";
+                                }else if($detail->id_modalidad_pago ==2){
+                                    $AlContado = "Financiamiento/Entrega Inmediata" ;
+                                }
+                                $inicial=0;
+                                $precio=$detail['price'];
+                                if($detail['abono_inicial']>0){
+                                    $inicial= $detail['abono_inicial']* $detail['price']/100;
+                                }
+                                $precio= $precio-$inicial;
+                                $monto_cuota=number_format( ( $precio *$detail['qty'] ) / $detail['nro_coutas'],2 );
+                                    
+                         
+                                    
+                                    @endphp
                                 <td>{{$detail['no']}}</td>
                                 <td>{{$detail['name']}}</td>
                                 <td>{{$detail['qty'] }}</td>
                                 <td>{{$detail['nro_coutas'] }}</td>      
-                                <td> ${{ number_format( ($detail['price'] *$detail['qty'] ) / $detail['nro_coutas'],2 ) }}</td>      
-                                <td>${{ number_format($detail['total_price']) }}</td>      
+                                <td>${{ $monto_cuota }}</td>  
+                                <td>${{ number_format( $inicial) }}</td>    
+                                <td>${{ number_format($detail['total_price']) }}</td>   
+                                
                             
                                         
                                  
-                                    
-    
-                            </tbody>
-                            @endforeach
+                            </tr>
+                                @endforeach
             
+                            </tbody>
+                
             
                        
                     </table>
@@ -111,7 +140,7 @@
 
                     <div class="col-12 "  style="margin-left: 10%">
                
-                        <h5 class="">Refencias personales</h5>
+                        <h5 class="text-center">Refencias personales</h5>
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
@@ -158,14 +187,14 @@
                 <hr>
                 <br>
                 
-               <h5 class="text-center"> Evaluación del pedido</h5>
+               <h5 class="text-center"> Evaluación del solicitud</h5>
 
                 <table class="table table-hover box-body text-wrap table-bordered"   style="margin-left: 5%">
                     <tr>
                      <td>Evaluación</td>
                      <td>Observación</td>
-                     <td>Porcentaje</td>
-                     <td>Confiabilidad</td>
+                     <td>% Interes Comercial</td>
+                     <td>% Confiabilidad</td>
                     </tr>
                      <tr>
                        <td  class="td-title"><span >Evaluación comercial</span></td>
@@ -301,13 +330,15 @@
 <div class="col-6">
 
     <div class="view view-first ">  
-    
-        <img  width="100%" class="img-fluid" src="/{!! $cedula !!}" />  
-
-      
-        <img  width="100%" class="img-fluid" src="/{!! $rif !!}" />  
+        <div style="page-break-after:always">
+        <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
+        </div>
+        <div style="page-break-after:always">
+        <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
+    </div>
+    <div style="page-break-after:always">
         <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
-           
+    </div>
     </div>
 </div>
 
@@ -372,7 +403,7 @@ hr {
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
-.text-grey-m2 {
+. {
     color: #888a8d!important;
 }
 

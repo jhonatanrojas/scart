@@ -162,7 +162,7 @@ class  AdminOrderController extends RootAdminController
             'order_status' => $order_status,
             'perfil'=> $perfil,
         ];
-
+    
          $dataSearch2 = [
             'keyword'      => $keyword,
             'email'        => $email,
@@ -181,7 +181,7 @@ class  AdminOrderController extends RootAdminController
          $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
          ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
          ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -203,13 +203,6 @@ class  AdminOrderController extends RootAdminController
 
 
    
-
-
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
-
-
      
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
@@ -237,40 +230,23 @@ class  AdminOrderController extends RootAdminController
                 $AlContado = "Al contado";
             }else if($row->modalidad_de_compra ==2){
                 $AlContado = "Financiamiento/Entrega Inmediata" ;
-            }else{
+            }else if($row->modalidad_de_compra ==1){
                 $AlContado = "Financiamiento" ;
+            }else{
+
+                $AlContado = "Propuesta" ;
+
             }
             
-            $usuario =  SC_shop_customer::where('id', $row->customer_id)->get();
-            $colection = $usuario->all();
-
-            $cedula =[];
-            $phone =[];
-            $nombremunicipos =[];
-            $nombreparroquias =[];
-            $nombreEstado =[];
-            foreach($colection as $key => $usu){
-                $cedula = $usu['cedula'];
-                $phone = $usu['phone'];
-                foreach($estado as $estados){
-                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}
-                         foreach($municipio as $municipos){
-                             if($municipos->codigomunicipio ==  $usu['cod_municipio']){
-                                 $nombremunicipos = $municipos->nombre;
-                             }
-                         }
-                         foreach($parroquia as $parroquias){
-                             if($parroquias->codigomunicipio == $usu['cod_municipio']){
-                                 $nombreparroquias = $parroquias->nombre;
-                                 
-                             }
-                            
-                         }
-                       
-                     }
+                 
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$row->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
 
 
-            }
+         
             $btn_pagos='';
             $btn_pagos='';
 
@@ -292,11 +268,11 @@ class  AdminOrderController extends RootAdminController
                  'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
                 'Articulo' => $Articulo->name ?? 'N/A',
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
-                'Cedula'          => $cedula ?? 'N/A',
-                'Telefono'          => $phone ?? 'N/A',
-                'Estado'          =>$nombreEstado ?? 'N/A',
-                'Municipio'          =>$nombremunicipos ?? 'N/A',
-                'Parroquia'          =>$nombreparroquias ?? 'N/A',
+                'Cedula'          => $datos_cliente->cedula ?? 'N/A',
+                'Telefono'          => $datos_cliente->phone ?? 'N/A',
+                'Estado'          =>$datos_cliente->estado ?? 'N/A',
+                'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
+                'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
                 'status'         => $styleStatus[$row['status']] ?? $row['status'],
                 'Modalidad'         => $AlContado,
@@ -429,7 +405,7 @@ class  AdminOrderController extends RootAdminController
 
                     <div class="m-auto" >
                     <div class=" ml-1" style="width: 150px;">
-                        <form action="'.$ruta_exel.'" method="GET" accept-charset="UTF-8">
+                        <form action="'.$ruta_exel.'?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'" method="GET" accept-charset="UTF-8">
 
                          '.$inpuExcel.'
                         <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
@@ -639,7 +615,7 @@ class  AdminOrderController extends RootAdminController
         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-        ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+        ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
         $role = AdminRole::find($user_roles->role_id);
         
        $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -649,37 +625,17 @@ class  AdminOrderController extends RootAdminController
       
        ->all();
 
-    /*    if($user_roles->rol == 'Vendedor'){
-             $id_status=[1,2,3,4,11];
-             $estatus=  $this->statusOrder  = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-
-        }
-        else if($user_roles->rol == 'Riesgo'){
-             $id_status=[5,6,7,8,9,4,3,21];
-             $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-            }
-        else if($user_roles->rol == 'Administrator'){
-            $id_status=[8,9,10,12,13,16,17,19,22];
-            $estatus=  $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all();
-
-            }
-            else {
-
-                $estatus=  $this->statusOrder   = ShopOrderStatus::pluck('name', 'id')->all();
-    
-                }*/
-
 
             $styleStatus = $this->statusOrder;
 
 
 
         
-        $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->get();
+        $clasificacion =  SC_shop_customer::where('id' , $order->customer_id)->first();
 
-        if(!empty($clasificacion)){
-            $Clasificacion =  $clasificacion[0]['nivel'];
-        }
+       
+            $Clasificacion =  $clasificacion->nivel;
+  
 
 
         if (!$order) {
@@ -734,7 +690,7 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
-           
+     
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -755,7 +711,7 @@ class  AdminOrderController extends RootAdminController
                 "products" => $products,
                 "statusOrder" => $styleStatus ,
                 "statusOrdert" => $this->statusOrder ?? '',
-                "statu_en"=> ShopOrderStatus::pluck('name', 'id')->all(),
+                "statu_en"=> ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')->all(),
                 "statusPayment" => $this->statusPayment,
                 "statusShipping" => $this->statusShipping,
                 'dataTotal' => AdminOrder::getOrderTotal($id),
@@ -845,13 +801,30 @@ class  AdminOrderController extends RootAdminController
         }
 
 
+        if ($code == 'modalidad_de_compra') {
+            $options = [
+                'Financiamento' => 1,
+                'Al contado' => 0,
+                'Entraga inmediata' => 2,
+                'Propuesta' => 3,
+            ];
+            $esTatus = $options[$value] ?? null;
+            $value=$esTatus;
+        }
+        
 
+
+      
+
+        
       
 
         if(!empty($Email)){
         //    estatus_del_pedido($Email);
             
         }
+
+      
 
 
         $datavalor = [];
@@ -929,6 +902,8 @@ class  AdminOrderController extends RootAdminController
             }
         }
 
+    
+
         
         if($code=='vendedor_id'){
             $userad = new AdminUser;
@@ -952,6 +927,9 @@ class  AdminOrderController extends RootAdminController
             'admin_id' => Admin::user()->id,
             'order_status_id' => $order->status,
         ];
+
+
+        
         (new AdminOrder)->addOrderHistory($dataHistory);
 
         $orderUpdated = AdminOrder::getOrderAdmin($orderId);
@@ -1284,7 +1262,7 @@ class  AdminOrderController extends RootAdminController
 
     public function ficha_pedido()
     {
-        $orderId = request('order_id') ?? null;
+         $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
 
@@ -1298,34 +1276,179 @@ class  AdminOrderController extends RootAdminController
 
         if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
 
-
-       
-
-   
             
-
+        $doc_cedula="";
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+
+            $conocio = AdminCustomer::where('id', $order->customer_id)->first();
+
+            $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
+
+            $Articulo = shop_order_detail::where('order_id', $order->id)->first();
+
+            $resul =AdminProduct::where('id', $Articulo->product_id)->first();
+
+
+            
+
+            //dd($resul->alias);
+
+            
+
+
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+
+  
             if($documento){
                 $constacia_trabajo= $documento->carta_trabajo ;
                 $rif= $documento->rif ;
-                $cedula= $documento->cedula ;
+                $doc_cedula= $documento->cedula;
+
+            }
+            $data                    = array();
+            $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
+            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
+            $data['phone']           = $order['phone'];
+            $data['phone2']           = $conocio->phone2 ?? '';
+            $data['conocio']           = $conocio->nos_conocio ?? '';
+            $data['marca']           = $resul->property ?? '';
+            $data['nombre_produt']           = $resul->property ?? '';
+            $data['vendedor']           = $user_roles->name ?? '';
+            $data['email']           = $order['email'];
+            
+ 
+            $data['referencias']           = $referencias;
+            $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
+            $data['nro_convenio'] =  $nro_convenio  ;
+            $data['constacia_trabajo'] =  $constacia_trabajo;
+            $data['rif'] =  $rif;
+            $data['doc_cedula'] =  $doc_cedula;
+
+            $data['order'] =  $order;
+            
+            $data['datos_cliente']    =  $datos_cliente;
+            $data['cedula']           = $order['cedula'];
+            $data['comment']         = $order['comment'];
+            $data['payment_method']  = $order['payment_method'];
+            $data['shipping_method'] = $order['shipping_method'];
+            $data['created_at']      = $order['created_at'];
+            $data['currency']        = $order['currency'];
+            $data['exchange_rate']   = $order['exchange_rate'];
+            $data['subtotal']        = $order['subtotal'];
+            $data['tax']             = $order['tax'];
+            $data['shipping']        = $order['shipping'];
+            $data['discount']        = $order['discount'];
+            $data['total']           = $order['total'];
+            $data['received']        = $order['received'];
+            $data['balance']         = $order['balance'];
+            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['comment']         = $order['comment'];
+            $data['country']         = $order['country'];
+            $data['id']              = $order->id;
+            $data['details'] = [];
+
+            $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
+        
+
+            if ($order->details) {
+                foreach ($order->details as $key => $detail) {
+
+                    
+
+                
+                    $arrAtt = json_decode($detail->attribute, true);
+                    if ($arrAtt) {
+                        $htmlAtt = '';
+                        foreach ($arrAtt as $groupAtt => $att) {
+                            $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
+                        }
+                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                    } else {
+                        $name = $detail->name;
+                    }
+                    $data['details'][] = [
+                        'no' => $key + 1, 
+                        'sku' => $detail->sku, 
+                        'name' => $name, 
+                        'qty' => $detail->qty, 
+                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        
+                        'price' => $detail->price, 
+                        'abono_inicial' => $detail->abono_inicial, 
+                        'nro_coutas' => $detail->nro_coutas, 
+                        'total_price' => $detail->total_price ?? '',
+                    ];
+                }
+            }
+
+            if ($action =='invoice_excel') {
+                $options = ['filename' => 'Order ' . $orderId];
+                return \Export::export($action, $data, $options);
+            }
+            
+            return view($this->templatePathAdmin.'format.ficha_solicitud')
+            ->with($data);
+        } else {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+    }
+
+    public function ficha_propuesta()
+    {
+         $orderId = request('order_id') ?? null;
+        $action = request('action') ?? '';
+        $order = AdminOrder::getOrderAdmin($orderId);
+
+        $convenio=Convenio::where('order_id',$orderId)->first();
+
+        $constacia_trabajo='';
+        $rif='';
+        $cedula='';
+       
+        $nro_convenio = 'A/N';
+
+        if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
+  
+        $doc_cedula="";
+        if ($order) {
+            $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+            $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+
+  
+            if($documento){
+                $constacia_trabajo= $documento->carta_trabajo ;
+                $rif= $documento->rif ;
+                $doc_cedula= $documento->cedula;
+
             }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
             $data['email']           = $order['email'];
+            
+ 
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
             $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
-            $data['cedula'] =  $cedula;
+            $data['doc_cedula'] =  $doc_cedula;
 
             $data['order'] =  $order;
-      
+            
+            $data['datos_cliente']    =  $datos_cliente;
             $data['cedula']           = $order['cedula'];
             $data['comment']         = $order['comment'];
             $data['payment_method']  = $order['payment_method'];
@@ -1368,7 +1491,10 @@ class  AdminOrderController extends RootAdminController
                         'sku' => $detail->sku, 
                         'name' => $name, 
                         'qty' => $detail->qty, 
+                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        
                         'price' => $detail->price, 
+                        'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
                         'total_price' => $detail->total_price ?? '',
                     ];
@@ -1380,7 +1506,7 @@ class  AdminOrderController extends RootAdminController
                 return \Export::export($action, $data, $options);
             }
             
-            return view($this->templatePathAdmin.'format.ficha_pedido')
+            return view($this->templatePathAdmin.'format.ficha_propuesta')
             ->with($data);
         } else {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
@@ -1461,20 +1587,22 @@ class  AdminOrderController extends RootAdminController
         if ($user === null) {
             return 'inicia secion';
         }
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
-        $order = ShopOrder::where('id',$id)->get();
+
+        $order = ShopOrder::where('id',$id)->first();
         $letraconvertir_nuber = new NumeroLetra;
 
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-        $convenio = Convenio::where('order_id',$id)->first();
+     
         
-        $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
-        $result = $usuario->all();
+        $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
+        ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+        ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+        ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+        ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+
         $productoDetail = shop_order_detail::where('order_id' , $id)->get();
         $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
         $nombreProduct = [];
@@ -1491,44 +1619,29 @@ class  AdminOrderController extends RootAdminController
         }
         
 
-        $nombreEstado=[];
-        $nombreparroquias =[];
-        $nombremunicipos =[];
-        foreach($result as $c){
-            foreach($estado as $estados){
-           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
 
-                foreach($municipio as $municipos){
-                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
-                }
-                foreach($parroquia as $parroquias){
-                    if($parroquias->codigomunicipio == $c['cod_municipio']){
-                        $nombreparroquias = $parroquias->nombre;}
-                }
-              
-            }
 
             $dato_usuario = [
-                'subtotal' => $c['subtotal'],
-                'natural_jurídica' => $c['natural_jurídica'],
-                'razon_social' => $c['razon_social'],
-                'rif' => $c['rif'],
-                'first_name' => $c['first_name'],
-                'last_name' => $c['last_name'],
-                'phone' => $c['phone'],
-                'email' => $c['email'],
-                'address1' => $c['address1'],
-                'address2' => $c['address2'],
-                'cedula' => $c['cedula'],
-                'cod_estado' => $nombreEstado ,
-                'cod_municipio' => $nombremunicipos,
-                'cod_parroquia' => $nombreparroquias,
-                'estado_civil' => $c['estado_civil'],
+                'subtotal' =>$order->subtotal,
+                'natural_jurídica' =>$datos_cliente->natural_jurídica,
+                'razon_social' => $datos_cliente->razon_social,
+                'rif' => $datos_cliente->rif,
+                'first_name' =>$datos_cliente->first_name,
+                'last_name' =>$datos_cliente->last_name,
+                'phone' =>$datos_cliente->phone,
+                'email' => $datos_cliente->email,
+                'address1' => $datos_cliente->address1,
+                'address2' =>$datos_cliente->address2,
+                'cedula' =>$datos_cliente->cedula,
+                'cod_estado' => $datos_cliente->estado,
+                'cod_municipio' => $datos_cliente->municipio,
+                'cod_parroquia' =>$datos_cliente->parroquia,
+                'estado_civil' =>$datos_cliente->estado_civil,
                 
                 
                 [
         
-                    'subtotal'=> $order[0]['subtotal'],
+                    'subtotal'=> $order->subtotal,
                     'cantidaProduc'=> $cantidaProduc,
                     'nombreProduct'=> $nombreProduct,
                     'cuotas' => $cuotas,
@@ -1540,7 +1653,7 @@ class  AdminOrderController extends RootAdminController
             ];
 
 
-        }
+        
 
             
 
@@ -1552,41 +1665,42 @@ class  AdminOrderController extends RootAdminController
                     }
 
                 $borrado_html = [];
-                switch ($dato_usuario['natural_jurídica']) {
+                $datos_cliente->natural_juridica=   $datos_cliente->natural_juridica ?? 'N';
+                switch ($datos_cliente->natural_juridica) {
                     case 'N':
                         $borrado_html = $abono_inicial > 0
-                            ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
-                            : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                            ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->first()
+                            : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->first();
                         break;
-                    case 'J':
-                        $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
+                   default:
+                        $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->first();
                         break;
                 }
 
 
-                $pieces = explode(" ", $dato_usuario['cedula']);
-                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
+                $pieces = explode(" ", $datos_cliente->cedula);
+                if ( $productoDetail[0]->id_modalidad_pago== 3) {
                     $mesualQuinsena = "MENSUAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+                    $cod_diaMes = "LOS DIAS 30 DE CADA MES";
                 }else {
-                    $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
+                   
                     $mesualQuinsena = " QUINCENAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " .$suma ." DE CADA MES";
+                    $cod_diaMes = "LOS DIAS 15 Y 30 DE CADA MES";
                 } 
                 if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
                     else $Nacionalidad = "Extranjer(A)"; 
 
                
 
-                    $monto = $dato_usuario[0]['subtotal'];
-                    $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                    $cuotas = $dato_usuario[0]['cuotas'];
-                    if($dato_usuario[0]['abono_inicial']>0){
-                        $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
-                        $monto = $dato_usuario[0]['subtotal'];
+                    $monto = $order->subtotal;
+                    $number1 =  $order->subtotal/ $productoDetail[0]->nro_coutas;
+                    $cuotas = $productoDetail[0]->nro_coutas;
+                    if( $productoDetail[0]->abono_inicial>0){
+                        $totalinicial=( $productoDetail[0]->nro_coutas*$order->subtotal)/100;
+                        
                         $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$dato_usuario[0]['cuotas'];
-                        $cuotas_entre_monto =  $dato_usuario[0]['subtotal']/$cuotas;
+                        $number1 =  $monto/$productoDetail[0]->nro_coutas;
+ 
                         $number2 =  $monto*$cod_bolibares;
                        
                       }
@@ -1596,7 +1710,7 @@ class  AdminOrderController extends RootAdminController
                   $number2 =  $monto*$cod_bolibares;
                     
 
-                  foreach($borrado_html as $replacee){
+       
                     $dataFind = [
                         '/\{\{\$numero_de_convenio\}\}/',
                         '/\{\{\$razon_social\}\}/',
@@ -1636,17 +1750,17 @@ class  AdminOrderController extends RootAdminController
 
                     $dataReplace = [
                         'numero_de_convenio'=>  "sin convenio",
-                        'razon_social' => $dato_usuario['razon_social'],
-                        'rif' => $dato_usuario['rif'],
-                        'nombre' => $dato_usuario['first_name'],
-                        'apellido' =>$dato_usuario['last_name'],
-                        'direccion' => $dato_usuario['address1'],
-                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
-                        'estado'=> $dato_usuario['cod_estado'],
-                        'municipio'=>$dato_usuario['cod_municipio'],
-                        'parroquia'=>$dato_usuario['cod_parroquia'],
-                        'cedula'=>$dato_usuario['cedula'],
-                        'estado_civil'=>$dato_usuario['estado_civil'],
+                        'razon_social' => $datos_cliente->razon_social,
+                        'rif' => $datos_cliente->rif,
+                        'nombre' => $datos_cliente->first_name,
+                        'apellido' =>$datos_cliente->last_name,
+                        'direccion' =>$datos_cliente->address1,
+                        'direccion2' => $datos_cliente->address2 ?? 'no aplica',
+                        'estado'=> $datos_cliente->cod_estado,
+                        'municipio'=>$datos_cliente->cod_municipio,
+                        'parroquia'=>$datos_cliente->cod_parroquia,
+                        'cedula'=>$datos_cliente->cedula,
+                        'estado_civil'=>$datos_cliente->estado_civil,
                         'nacionalidad'=>$Nacionalidad,
                         $mesualQuinsena,
                         $letraconvertir_nuber->convertir1($cuotas),
@@ -1670,7 +1784,7 @@ class  AdminOrderController extends RootAdminController
                     ];
 
 
-                    $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
+                    $content = preg_replace($dataFind, $dataReplace, $borrado_html->contenido);
                     $dataView = [
                         'content' => $content,
                     ];
@@ -1679,7 +1793,7 @@ class  AdminOrderController extends RootAdminController
 
 
 
-                }
+                
 
 
 
@@ -2044,9 +2158,7 @@ class  AdminOrderController extends RootAdminController
     {
 
         $search = request()->all();
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
+
         $dataSearch = [
             'keyword'      =>  $search['keyword'] ?? '',
             'email'        => $search['email'] ?? '',
@@ -2059,13 +2171,14 @@ class  AdminOrderController extends RootAdminController
             'perfil'=>$search['perfil'] ?? '',
         ];
 
-
+ 
+   
         $id_usuario_rol = Admin::user()->id;
         $dminUser = new AdminUser;
          $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
          ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
          ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
-         ->select('sc_admin_user.*', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
          $id_status= $role ? $role->status->pluck('id')->toArray() :[];
@@ -2101,11 +2214,6 @@ class  AdminOrderController extends RootAdminController
         // Establecer los datos de la tabla
         $fila = 2;
 
-        $cedula =[];
-        $phone =[];
-        $nombreEstado = [];
-        $nombremunicipos =[];
-        $nombreparroquias =[];
         $Articulo = [];
         $convenio = [];
         $user_roles= [];
@@ -2120,43 +2228,25 @@ class  AdminOrderController extends RootAdminController
             if($dato->modalidad_de_compra == 0)$AlContado = "Al contado";
                 else $AlContado = "Financiamiento" ;
 
-            
-            $usuario =  SC_shop_customer::where('id', $dato->customer_id)->get();
-            $colection = $usuario->all();
-            foreach($colection as $key => $usu){
-                foreach($estado as $estados){
-                    if($estados->codigoestado ==  $usu['cod_estado']){$nombreEstado = $estados->nombre;}
-                         foreach($municipio as $municipos){
-                             if($municipos->codigomunicipio ==  $usu['cod_municipio']){
-                                 $nombremunicipos = $municipos->nombre;
-                             }
-                         }
-                         foreach($parroquia as $parroquias){
-                             if($parroquias->codigomunicipio == $usu['cod_municipio']){
-                                 $nombreparroquias = $parroquias->nombre;
-                                 
-                             }
-                            
-                         }
-                       
-                     }
-
-
-            }
-
-
-
-            $hoja->setCellValue('A' . $fila, $dato->first_name . $dato->last_name);
-            $hoja->setCellValue('B' . $fila, $dato->id);
+        
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$dato->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+      
+          
+            $hoja->setCellValue('A' . $fila, $datos_cliente->first_name . $datos_cliente->last_name);
+            $hoja->setCellValue('B' . $fila, $datos_cliente->id);
             $hoja->setCellValue('C' . $fila, $convenio->nro_convenio ?? 'N/A');
             $hoja->setCellValue('D' . $fila, $user_roles->name ?? 'N/A');
             $hoja->setCellValue('E' . $fila,  $Articulo->name ?? 'N/A');
             $hoja->setCellValue('F' . $fila,  $Articulo->nro_coutas ?? 'N/A');
-            $hoja->setCellValue('G' . $fila, $dato->cedula);
-            $hoja->setCellValue('H' . $fila, $dato->phone);
-            $hoja->setCellValue('I' . $fila, $nombreEstado ?? 'N/A');
-            $hoja->setCellValue('J' . $fila, $nombremunicipos ?? 'N/A');
-            $hoja->setCellValue('K' . $fila, $nombreparroquias);
+            $hoja->setCellValue('G' . $fila, $datos_cliente->cedula);
+            $hoja->setCellValue('H' . $fila, $datos_cliente->phone);
+            $hoja->setCellValue('I' . $fila, $datos_cliente->estado ?? 'N/A');
+            $hoja->setCellValue('J' . $fila, $datos_cliente->municipio ?? 'N/A');
+            $hoja->setCellValue('K' . $fila, $datos_cliente->parroquia);
             $hoja->setCellValue('L' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
             $hoja->setCellValue('M' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
             $hoja->setCellValue('N' . $fila, $AlContado ?? 'N/A');

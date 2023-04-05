@@ -37,6 +37,9 @@ Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJurad
 
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
 Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
+Route::get('sc_admin/ficha_propuesta', [AdminOrderController::class,'ficha_propuesta'])->name('propuesta');
+
+
 
 
 
@@ -75,6 +78,8 @@ Route::post('/sc_admin/fecha_delete/{id}', [AdminOrderController::class,'fecha_d
 });
 
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
+
+
 Route::post('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'post_crear_tasa'])->name('tasa_cambio.crear');
 Route::get('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'crear_tasa_cambio'])->name('tasa_cambio');
 Route::get('/sc_admin/list_tasa_cambio', [HistorialPagosController::class ,'list_tasa_cambio'])->name('list_tasa_cambio');
