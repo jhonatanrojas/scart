@@ -1,10 +1,15 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/fontawesome-free/css/all.min.css')}}">
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
+<style>
+    body {
+        color:#000;
+    }
+    </style>
 
-<div style="color: black" class="page-content container">
-    <div class="row justify-content-around ">
-      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
+<div class="page-content container">
+    <div class="page-header text-blue-d2">
+      <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:100px;">
         <div class="page-tools">
             <div class="action-buttons">
                 <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
@@ -17,87 +22,154 @@
         </div>
     </div>
 
-    <div class="container px-0 ">
-        <div class="row mt-4 justify-content-center ">
+    <div class="container px-0">
+        <div class="row mt-4">
             <div class="col-12 col-lg-10 offset-lg-1">
                 <div class="row">
                     <div class="col-12">
-                        <div class="text-center ">
-                            <span class="page-title">{{ sc_store('title') }}</span>
+                        <div class="text-center h4">
+                            <span class="text-dark">{{ sc_store('title') }}</span>
                         </div>
                     </div>
                 </div>
                 <!-- .row -->
 
-                <hr class="row brc-default-l1 mx-n1 mb-4" />
+                <hr class="row mx-n1 mb-4" />
 
-                <div class="row justify-content-center align-content-center">
-                    <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-8">
                         <div>
-                            <span class=" text-dark">Cliente:{{ $name }}</span> <br>
-                            <span class=" text-dark align-middle">Cedula:{{ $cedula }}</span>
+                            <span class="text-md  align-middle">Cliente:{{ $name }}</span> <br>
+                            <span class="text-md  align-middle">Cedula:{{ $cedula }}</span>
                         </div>
-                        <div class="text-dark">
+                        <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt "></i> {{ $address }}, {{ $country }}
+                              <i class="fas fa-map-marker-alt"></i> {{  $datos_cliente->estado  }},{{  $datos_cliente->municipio  }}, {{  $datos_cliente->parroquia  }}.  {{ $datos_cliente->address1 }}.
                             </div>
                             <div class="my-1">
-                                <i class="fas fa-map-marker-alt "></i> {{ $address2 }}, {{ $country }}
+                                <i class="fas fa-map-marker-alt"></i> {{ $address2}}
                               </div>
                             <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }}</div>
                             <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone2 }}</div>
                             <div class="my-1"><i class="far fa-envelope"></i> {{ $email }}</div>
                             <div class="my-1"><i class=" fas fa-users"></i>Nos conocio: {{ $Nosconocio }}</div>
-                           
                         </div>
                     </div>
                     <!-- /.col -->
 
-                    <div class=" col-sm-6 align-self-start d-sm-flex justify-content-end">
+                    <div class="text-95 col-sm-4 align-self-start d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
-                        <div class="text-dark">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero del la Solicitud:</span> #{{ $id }}</div>
+                        <div class="">
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de solicitud:</span> #{{ $id }}</div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">{{ sc_language_render('order.date') }}:</span> {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                           
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Numero de convenio:</span> #{{ $nro_convenio }}</div>
 
                         </div>
                     </div>
-
-                  
                     <!-- /.col -->
                 </div>
 
                  
-                <div class=" mt-5 " >
-
-                  
-                    <div class="  col-lg-10 offset-lg-1">
-
-                        <table   class="table table-responsive p-2">
+                <div class="row d-flex justify-content-center " style="margin-left: 10%">
+                    <div class="col-12 mt-5 align-self-center  order-sm-last ">
+                   
+                        <table class="table table-responsive text-grey-m2">
                             <thead>
                                 <tr>
                                   <th>#</th>
                                   <th>Producto</th>
-                                  <th>Cantida De Producto</th>
+                                  <th>Cant</th>
                                   <th>Numero de cuotas</th>
-                                  <th>Monto Cuotas</th>
-                                  <th>Inicial</th>
+                                  <th>Monto Cuota</th>
+                                  <th>Monto Inicial </th>
+                                  <th>Total</th>
                           
                                 </tr>
                               </thead>
-                       
-                              @foreach ($details as $detail)
+                              
                           
-                            <tbody>
-    
-                               
+                        
+                          
+                            <tbody>        
+                                @foreach ($details as $detail)
+                                <tr> 
+                                @php 
+
+$AlContado = "Financiamiento" ;
+                                if($detail->id_modalidad_pago == 0){
+                                    $AlContado = "Al contado";
+                                }else if($detail->id_modalidad_pago ==2){
+                                    $AlContado = "Financiamiento/Entrega Inmediata" ;
+                                }
+                                $inicial=0;
+                                $precio=$detail['price'];
+                                if($detail['abono_inicial']>0){
+                                    $inicial= $detail['abono_inicial']* $detail['price']/100;
+                                }
+                                $precio= $precio-$inicial;
+                                $monto_cuota=number_format( ( $precio *$detail['qty'] ) / $detail['nro_coutas'],2 );
+                                    
+                         
+                                    
+                                    @endphp
                                 <td>{{$detail['no']}}</td>
                                 <td>{{$detail['name']}}</td>
                                 <td>{{$detail['qty'] }}</td>
                                 <td>{{$detail['nro_coutas'] }}</td>      
-                                <td> ${{number_format( $detail['monto_cuotas'] ,2)}}</td> 
-                                     
-                                <td>{{number_format( $detail['total_price'],2)}}$</td>      
+                                <td>${{ $monto_cuota }}</td>  
+                                <td>${{ number_format( $inicial) }}</td>    
+                                <td>${{ number_format($detail['total_price']) }}</td>   
+                                
+                            
+                                        
+                                 
+                            </tr>
+                                @endforeach
+            
+                            </tbody>
+                
+            
+                       
+                    </table>
+                    
+                    
+                </div>
+            </div>
+          
+                <div class="mt-4">
+                
+
+                    <hr>
+                    <div class="row border-b-2 "></div>
+
+                    <div class="col-12 text-grey-m2 "  style="margin-left: 10%">
+               
+                        <h3 class="text-grey-m2">Refencias personales</h3>
+                        <table class="table table-responsive text-grey-m2">
+                            <thead>
+                                <tr>
+                                  <th>Nombre</th>
+                                  <th>Apellido</th>
+                                  <th>Cedula</th>
+                                  <th>Telefono</th>
+                                  <th>Parentesco</th>
+                                  <th>Nota</th>
+                          
+                                </tr>
+                              </thead>
+                       
+                              @foreach ($referencias as $ref)
+                          
+                            <tbody>
+    
+                                   
+    
+                                <td>{{$ref->nombre_ref}}</td>
+                                <td>{{$ref->apellido_ref}}</td>
+                                <td>{{$ref->cedula_ref}}</td>
+                                <td>{{$ref->telefono}}</td>      
+                                <td>{{$ref->parentesco}}</td>      
+                                <td>{{$ref->nota}}</td>      
                             
                                         
                                  
@@ -112,30 +184,169 @@
                     
                     
                 </div>
+    
 
-               
-            </div>
-
-            <div  class="col-lg-9 m-auto">
-                <h3 class="">NOTA</h3>
-                <hr>
-                <div class="text-dark page-title">
-                   <p> {{$comment}}</p>
                 </div>
+
                 <hr>
+                <br>
+                
+               <h5 class="text-center"> Evaluación del solicitud</h5>
+
+                <table class="table table-hover box-body text-wrap table-bordered text-grey-m2"   style="margin-left: 5%">
+                    <tr>
+                     <td>Evaluación</td>
+                     <td>Observación</td>
+                     <td>% Interes Comercial</td>
+                     <td>% Confiabilidad</td>
+                    </tr>
+                     <tr>
+                       <td  class="td-title"><span >Evaluación comercial</span></td>
+                       <td>
+                             @if (!empty($order->nota_evaluacion_comercial ))
+                                 {{$order->nota_evaluacion_comercial }} 
+                             @endif
+                      
+                     </td>
+                       <td>
+                         
+                           @if (!empty($order->evaluacion_comercial ))
+                               {{$order->evaluacion_comercial }} 
+                           @endif
+                   
+                      
+                     </td>
+       
+                     <td>
+                         
+                        
+                         @if (!empty($order->confiabilidad ))
+                             {{$order->confiabilidad }} 
+                         @endif
+                  
+                  
+                   </td>
+                     </tr>
+       
+                     {{-- Evaluacion_comercial --}}
+       
+       
+                     {{-- nota_evaluacion_financiera --}}
+       
+                     <tr>
+                       <td  class="td-title"><span >Evaluación financiera</span></td>
+                       <td>
+                         
+                           @if (!empty($order->nota_evaluacion_financiera ))
+                            
+                                 {{$order->nota_evaluacion_financiera }} 
+                             @endif
+                        
+                     </td>
+                       <td>
+                         
+                           @if (!empty($order->evaluacion_comercial ))
+                               {{$order->evaluacion_comercial }} 
+                           @endif
+                   
+                       
+                     </td>
+                     <td>
+                         
+                        
+                                     
+                         @if (!empty($order->confiabilidad2 ))
+                             {{$order->confiabilidad2 }} 
+                         @endif
+                  
+                   </td>
+                     </tr>
+                     {{-- nota_evaluacion_financiera --}}
+       
+                     <tr>
+                       <td  class="td-title"><span >Evaluación legal</span></td>
+                       <td>
+                           
+                           @if (!empty($order->nota_evaluacion_legal ))
+                                
+                                 {{$order->nota_evaluacion_legal }} 
+                             @endif
+                       
+                     </td>
+                       <td>
+                         
+                        
+                           @if (!empty($order->evaluacion_comercial ))
+                               {{$order->evaluacion_comercial }} 
+                           @endif
+                    
+                       
+                     </td>
+                     <td>
+                         
+                        
+                         @if (!empty($order->confiabilidad3 ))
+                             {{$order->confiabilidad3 }} 
+                         @endif
+                    
+                   </td>
+                     </tr>
+       
+       
+                     
+       
+       
+                     <tr>
+                       <td  class="td-title"><span >Decisión final</span></td>
+                       <td>
+                           @if (!empty($order->nota_decision_final ))
+                           {{$order->nota_decision_final }} 
+                       @endif
+                        
+                     </td>
+                       <td>
+                         
+                
+                            <span value="0"  >  {{ $order['decision_final'] == 0 ? 'Pendiente':'' }}  </span>
+                           <span value="1"   > {{ $order['decision_final'] == 1 ? 'Negado ':'' }}</span>
+                           <span value="2"   > {{ $order['decision_final'] ==2  ? 'Aprobado':'' }}</span>
+                           <span value="3"   >  {{ $order['decision_final'] ==3  ? 'Diferido':'' }}</span>
+                           <span value="3"   > {{ $order['decision_final'] >3  ? 'Otro':'' }}</span>
+                 
+                     </td>
+                     </tr>
+                   </table>
             </div>
-           
-          
-              
-              
-          
-              
-            </div>
+        </div>
+
+        <div class="row align-content-center m-auto">
+<div class="col-8">
+
+    <div class="text-grey-m2">
+        <p>Notas:</p>
+        <i class="text-grey-m2">{!! $comment !!}</i>
+    </div>
+
+     
+</div>
 
 
-           
+<div class="col-6">
 
+    <div class="view view-first ">  
+        <div style="page-break-after:always">
+        <img  width="100%" class="img-fluid" src="/{!! $doc_cedula!!}" />  
+        </div>
+        <div style="page-break-after:always">
+        <img  width="100%" class="img-fluid" src="/{!! $rif !!}"/>  
+    </div>
+    <div style="page-break-after:always">
+        <img  width="100%" class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
+    </div>
+    </div>
+</div>
 
+        </div>
     </div>
 </div>
 
@@ -173,8 +384,7 @@
     padding: 0;
     margin: 0;
     font-size: 1.75rem;
-    font-weight: 400;
-    color:#000;
+    font-weight: 300;
 }
 .brc-default-l1 {
     border-color: #dce9f0!important;
@@ -197,10 +407,7 @@ hr {
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
-.text-dark {
-    color: #000103!important;
-    font-size: 18.4px;
-}
+
 
 .text-success-m2 {
     color: #86bd68!important;
@@ -235,7 +442,7 @@ hr {
 }
 
 .btn-light {
-    color: #757984;
+    color: #000103;
     background-color: #f5f6f9;
     border-color: #dddfe4;
 }
@@ -262,8 +469,8 @@ hr {
 .text-60 {
     font-size: 60%!important;
 }
-.text-dark-m1 {
-    color: #7b7d81!important;
+.text-grey-m1 {
+    color: #000103!important;
 }
 .align-bottom {
     vertical-align: bottom!important;

@@ -1262,7 +1262,7 @@ class  AdminOrderController extends RootAdminController
 
     public function ficha_pedido()
     {
-        $orderId = request('order_id') ?? null;
+         $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
 
@@ -1285,7 +1285,6 @@ class  AdminOrderController extends RootAdminController
         $doc_cedula="";
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
-            $usuario = AdminCustomer::where('id', $order->customer_id)->first();
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
@@ -1302,11 +1301,8 @@ class  AdminOrderController extends RootAdminController
             }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
-            $data['address']         = $address1 ?? '';
+            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
-            $data['address2']        = $address2 ?? '';
-            $data['phone2']           = $telefono2 ?? '';
-            $data['Nosconocio']        = $nos_conocio ?? '' ;
             $data['email']           = $order['email'];
             
  
@@ -1347,18 +1343,6 @@ class  AdminOrderController extends RootAdminController
                 foreach ($order->details as $key => $detail) {
 
                 
-                    $totalinicial = 0.00;
-                    
-                    $number1 =  $detail->total_price/$detail->nro_coutas;
-                    if($detail->abono_inicial>0){
-                        $monto = $detail->total_price;
-                        $totalinicial=($detail->abono_inicial*$detail->total_price)/100;
-                        $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$detail->nro_coutas;
-                      }
-
-                     
-
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1379,8 +1363,7 @@ class  AdminOrderController extends RootAdminController
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $totalinicial ?? '',
-                        'monto_cuotas' => $number1 ?? '',
+                        'total_price' => $detail->total_price ?? '',
                     ];
                 }
             }
@@ -1399,7 +1382,7 @@ class  AdminOrderController extends RootAdminController
 
     public function ficha_propuesta()
     {
-        $orderId = request('order_id') ?? null;
+         $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
 
@@ -1412,49 +1395,41 @@ class  AdminOrderController extends RootAdminController
         $nro_convenio = 'A/N';
 
         if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
-
-
-       
-
-      
-            
-
+  
+        $doc_cedula="";
         if ($order) {
-
-
-           
-
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
-            $usuario = AdminCustomer::where('id', $order->customer_id)->first();
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+
+  
             if($documento){
                 $constacia_trabajo= $documento->carta_trabajo ;
                 $rif= $documento->rif ;
-                $cedula= $documento->cedula ;
-                $telefono2 = $usuario->phone2 ;
-                $address1 = $usuario->address1 ;
-                $address2 = $usuario->address2 ;
-                $nos_conocio = $usuario->nos_conocio ;
-               
+                $doc_cedula= $documento->cedula;
+
             }
             $data                    = array();
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
-            $data['address']         = $address1 ?? '';
-            $data['address2']        = $address2 ?? '';
-            $data['phone2']           = $telefono2 ?? '';
-            $data['Nosconocio']        = $nos_conocio ?? '' ;
+            $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
-            
             $data['email']           = $order['email'];
+            
+ 
             $data['referencias']           = $referencias;
             $data['nro_coutas'] =   count($order->details) ? $order->details[0]->nro_coutas : 0;
             $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
-            $data['cedula'] =  $cedula;
+            $data['doc_cedula'] =  $doc_cedula;
 
             $data['order'] =  $order;
-      
+            
+            $data['datos_cliente']    =  $datos_cliente;
             $data['cedula']           = $order['cedula'];
             $data['comment']         = $order['comment'];
             $data['payment_method']  = $order['payment_method'];
@@ -1481,16 +1456,7 @@ class  AdminOrderController extends RootAdminController
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
 
-                    $totalinicial = 0.00;
-                    
-                    $number1 =  $detail->total_price/$detail->nro_coutas;
-                    if($detail->abono_inicial>0){
-                        $monto = $detail->total_price;
-                        $totalinicial=($detail->abono_inicial*$detail->total_price)/100;
-                        $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$detail->nro_coutas;
-                      }
-
+                
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1506,11 +1472,12 @@ class  AdminOrderController extends RootAdminController
                         'sku' => $detail->sku, 
                         'name' => $name, 
                         'qty' => $detail->qty, 
+                        'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        
                         'price' => $detail->price, 
+                        'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
-                        'total_price' => $totalinicial ?? '',
-                        'monto_cuotas' => $number1 ?? '',
-                        'comment' => $detail->comment ?? '',
+                        'total_price' => $detail->total_price ?? '',
                     ];
                 }
             }
