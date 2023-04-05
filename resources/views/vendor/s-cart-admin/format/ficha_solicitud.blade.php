@@ -227,7 +227,7 @@
                                         <address class=" text-uppercase">
                                             <ul class="address">
                                                 <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
-                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.</li>
+                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
                                               
                                               <li><i class="fas fa-envelope"></i> Correo:{{ strtoupper($email) }}</li>
@@ -267,7 +267,7 @@
                                                     <th>#</th>
                                                     <th>Producto</th>
                                                     <th>Marca</th>
-                                                    <th>Moodelo</th>
+                                                    <th>Modelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
