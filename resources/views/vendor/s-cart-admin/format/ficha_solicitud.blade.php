@@ -227,7 +227,7 @@
                                         <address class=" text-uppercase">
                                             <ul class="address">
                                                 <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
-                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.</li>
+                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
                                               
                                               <li><i class="fas fa-envelope"></i> Correo:{{ strtoupper($email) }}</li>
@@ -267,6 +267,7 @@
                                                     <th>#</th>
                                                     <th>Producto</th>
                                                     <th>Marca</th>
+                                                    <th>Modelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
@@ -299,7 +300,8 @@
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>
                                                         <td>{{ $detail['name'] }}</td>
-                                                        <td>{{ $marca }}</td>
+                                                        <td>{{ $detail['marca'] }}</td>
+                                                        <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
@@ -316,7 +318,7 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="4">&nbsp;</td><td>
+                                                    <td colspan="6">&nbsp;</td><td>
            <p> <strong>Total</strong></p></td>
                                                         
                                                        <td>${{$monto_cuota_total}}</td> <td><strong>${{ $monto_total }}</strong></h5></td></tr>

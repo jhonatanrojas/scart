@@ -18,16 +18,24 @@
         display: inline-block;
         font-size: 1.6rem;
         font-weight: 700;
-        color: #2e323c;
+        color: #010205;
     }
 
     .invoice-container .invoice-header .invoice-logo img {
         max-width: 130px;
     }
 
+    address, .text-50 {
+  text-transform: uppercase;
+  font-weight:600;
+}
+
+
+    
+
     .invoice-container .invoice-header address {
         font-size: 1rem;
-        color: #2f3133;
+        color: #010508;
         margin: 0;
     }
 
@@ -69,7 +77,7 @@
 
     .invoice-status h5.status-title {
         margin: 0 0 0.8rem 0;
-        color: #9fa8b9;
+        color: #010307;
     }
 
     .invoice-status p.status-type {
@@ -102,7 +110,7 @@
 
 
     .custom-table {
-        border: 1px solid #e0e3ec;
+        border: 1px solid #000000;
     }
 
     .custom-table thead {
@@ -111,7 +119,7 @@
 
     .custom-table thead th {
         border: 0;
-        color: #ffffff;
+        color: #000000;
     }
 
     .custom-table>tbody tr:hover {
@@ -123,7 +131,7 @@
     }
 
     .custom-table>tbody td {
-        border: 1px solid #e6e9f0;
+        border: 1px solid #202020;
     }
 
 
@@ -141,7 +149,7 @@
     }
 
     .text-muted {
-        color: #9fa8b9 !important;
+        color: #01040a !important;
     }
 
     .custom-actions-btns {
@@ -156,7 +164,7 @@
 
     #address2 {
         font-size: 0.8rem;
-        color: #525557;
+        color: #01060a;
     }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
@@ -213,35 +221,39 @@
                             </div>
                             <!-- Row end -->
                             <!-- Row start -->
-                            <div class="row gutters">
+                            <div  class="row gutters">
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
-                                        <address>
-                                            <span class="">Cliente:{{ $name }} - Cedula:{{ $cedula }}</span> <br>
-                                            <span class=""></span><br>
-                                            <i class="fas fa-map-marker-alt"></i> {{ $datos_cliente->estado }}
-                                            {{ $datos_cliente->municipio }}, {{ $datos_cliente->parroquia }}.
-                                            {{ $datos_cliente->address1 }}.
+                                        <address class=" text-uppercase">
+                                            <ul class="address">
+                                                <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
+                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
+                                              <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
+                                              
+                                              <li><i class="fas fa-envelope"></i> Correo:{{ strtoupper($email) }}</li>
+                                              <li><i class="fas fa-envelope"></i> nos conocio:{{ strtoupper($conocio) }}</li>
 
-                                            <div class="my-1"><i class="fas fa-phone-alt"></i> {{ $phone }} email:{{ $email }}
-                                            </div>
-                                         
-                                        </address>
+                                               <li><i class="fas fa-envelope"></i> Vendedor Asignado:{{ strtoupper($vendedor) }}</li>
+                                            </ul>
+                                          </address>
+                                          
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                                
+                                <div style="color: #000000;" class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 address">
                                     <div class="invoice-details">
-                                        <div class="invoice-num">
-
-                                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>
-                                                <span class="text-90">Fecha:</span>
+                                        <div class="invoice-num text-uppercase ">
+                            
+                                            <div class="my-1\ "><i class="fa fa-circle  text-xs mr-1"></i>
+                                                <span class="text-90 ">Fecha:</span>
                                                 {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>
+                                            <div class="my-1"><i class="fa fa-circle  text-xs mr-1"></i>
                                                 <span class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Row end -->
                         </div>
                         <div class="invoice-body">
@@ -254,12 +266,14 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Producto</th>
+                                                    <th>Marca</th>
+                                                    <th>Modelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
                                                     <th>Cuota $</th>
 
-                                                   
+                                                    
 
                                                 </tr>
                                             </thead>
@@ -286,12 +300,14 @@
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>
                                                         <td>{{ $detail['name'] }}</td>
+                                                        <td>{{ $detail['marca'] }}</td>
+                                                        <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
                                                         <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
 
-                                                       
+                                                        
 
                                                         @php $monto_total+=$detail['total_price'] ;
                                                              $monto_cuota_total+=$monto_cuota;
@@ -301,7 +317,7 @@
 
                                                     </tr>
                                                 @endforeach
-                                               
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -314,14 +330,14 @@
                         </div>
                     <br>
                          
-                       
-            
+                    
                      
-                            </div>
-
+                    <div class="invoice-footer">
+                        Documento generado a través del sistema de Waika Import
                     </div>
-                     
-                 
+                    <h5 class="text-center"  style="page-break-after:always"> </h5>
+
+                   
                    
                     </div>
                 </div>
@@ -332,7 +348,7 @@
     <script src="{{ sc_file('admin/LTE/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ sc_file('admin/LTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script>
-        function order_print() {
+        function order_print_pdf() {
             $('.dont-print').hide();
 
 
@@ -361,8 +377,8 @@
             html2pdf().set(opt).from(contenidoPDF).save();
             $('.dont-print').show();
         }
-        
- function order_print(){
+
+        function order_print(){
     $('.dont-print').hide();
     window.print();
     $('.dont-print').show();

@@ -1281,20 +1281,10 @@ class  AdminOrderController extends RootAdminController
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
 
-            $conocio = AdminCustomer::where('id', $order->customer_id)->first();
 
             $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
 
-            $Articulo = shop_order_detail::where('order_id', $order->id)->first();
-
-            $resul =AdminProduct::where('id', $Articulo->product_id)->first();
-
-
-            
-
-            //dd($resul->alias);
-
-            
+           
 
 
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
@@ -1302,7 +1292,10 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia ,postcode ' )->first();
+
+
+          
 
   
             if($documento){
@@ -1315,10 +1308,9 @@ class  AdminOrderController extends RootAdminController
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
-            $data['phone2']           = $conocio->phone2 ?? '';
-            $data['conocio']           = $conocio->nos_conocio ?? '';
-            $data['marca']           = $resul->property ?? '';
-            $data['nombre_produt']           = $resul->property ?? '';
+            $data['phone2']           = $datos_cliente->phone2 ?? '';
+            $data['conocio']           = $datos_cliente->nos_conocio ?? '';
+
             $data['vendedor']           = $user_roles->name ?? '';
             $data['email']           = $order['email'];
             
@@ -1329,6 +1321,9 @@ class  AdminOrderController extends RootAdminController
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
             $data['doc_cedula'] =  $doc_cedula;
+
+
+           
 
             $data['order'] =  $order;
             
@@ -1354,14 +1349,23 @@ class  AdminOrderController extends RootAdminController
             $data['details'] = [];
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
-        
+            $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
 
                     
-
+                    //cosultamos la marca y modelo del producto
+                    $producto = AdminProduct::getProductAdmin($detail->product_id);
+                    $modelo='';
+                    if(  $producto->attributes->count()){                     
+                            //obtener el atributo modelo por el id de $producto->attributes con $id_attribute_modelo
+                        $first_attributes = $producto->attributes->where('attribute_group_id',$id_attribute_modelo)->first();
+                        $modelo = $first_attributes->name ?? '';
+                        
+                    }
                 
+             
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1372,12 +1376,16 @@ class  AdminOrderController extends RootAdminController
                     } else {
                         $name = $detail->name;
                     }
+
+          
                     $data['details'][] = [
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
                         'qty' => $detail->qty, 
+                        'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        'modelo'=>$modelo ?? '',
                         
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
@@ -1414,10 +1422,18 @@ class  AdminOrderController extends RootAdminController
         $nro_convenio = 'A/N';
 
         if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
-  
+
+            
         $doc_cedula="";
         if ($order) {
             $documento = SC__documento::where('id_usuario', $order->customer_id)->first();
+
+
+            $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first();
+
+           
+
+
             $referencias = SC_referencia_personal::where('id_usuario',$order->customer_id)->get();
             $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$order->customer_id)
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
@@ -1436,6 +1452,10 @@ class  AdminOrderController extends RootAdminController
             $data['name']            = $order['first_name'] . ' ' . $order['last_name'];
             $data['address']         = $order['address1'] . ', ' . $order['address2'] . ', ' . $order['address3'].', '.$order['country'];
             $data['phone']           = $order['phone'];
+            $data['phone2']           = $datos_cliente->phone2 ?? '';
+            $data['conocio']           = $datos_cliente->nos_conocio ?? '';
+
+            $data['vendedor']           = $user_roles->name ?? '';
             $data['email']           = $order['email'];
             
  
@@ -1470,12 +1490,23 @@ class  AdminOrderController extends RootAdminController
             $data['details'] = [];
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
-        
+            $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
 
             if ($order->details) {
                 foreach ($order->details as $key => $detail) {
 
+                    
+                    //cosultamos la marca y modelo del producto
+                    $producto = AdminProduct::getProductAdmin($detail->product_id);
+                    $modelo='';
+                    if(  $producto->attributes->count()){                     
+                            //obtener el atributo modelo por el id de $producto->attributes con $id_attribute_modelo
+                        $first_attributes = $producto->attributes->where('attribute_group_id',$id_attribute_modelo)->first();
+                        $modelo = $first_attributes->name ?? '';
+                        
+                    }
                 
+             
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
                         $htmlAtt = '';
@@ -1486,12 +1517,16 @@ class  AdminOrderController extends RootAdminController
                     } else {
                         $name = $detail->name;
                     }
+
+          
                     $data['details'][] = [
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
                         'qty' => $detail->qty, 
+                        'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
+                        'modelo'=>$modelo ?? '',
                         
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
