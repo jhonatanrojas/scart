@@ -31,76 +31,58 @@
                   <div class="btn-group float-right" style="margin-right: 0px">
                       <a href="{{ sc_route_admin('admin_order.index') }}" class="btn btn-flat btn-default"><i class="fa fa-list"></i>&nbsp;{{ sc_language_render('admin.back_list') }}</a>
                   </div>
-                  @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2 )
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                      <a class="btn btn-flat" target=_new title="Invoice" href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs"> {{ sc_language_render('order.invoice') }}</span></a>
-                  </div>
-                  
-                 
-                 <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                  <a class="btn btn-flat" target=_new title="Descargar exp" href="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar exp </span></a>
-              </div>
-              @elseif ($order->modalidad_de_compra == 3)
-              <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                <a class="btn btn-flat" target=_new title="Descargar propuesta" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"><i class="far fa-file-file"></i><span class="hidden-xs">Descargar propuesta </span></a>
-            </div>
-                     
-                 @endif
-                
                
-
-                                  
-                  
-                  @php  $dblockconvenio="display:none;";   @endphp
-                  @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra >= 1  && $order->status==5 )
-                  @php  $dblockconvenio="display:block;";   @endphp
-                  @endif
-                  <div class="btn-group float-right btn-generar-convenio" style="margin-right: 10px;border:1px solid #c5b5b5;   @php echo $dblockconvenio  @endphp">
-                    <a class="btn btn-flat" onclick="abrir_modal()" href="#" title=""><i class="far fa-file"></i> Generar Convenio<span class="hidden-xs"> 
-
-                    </span></a>
-                </div>
-
-                @if ($order->total >0  && !empty($convenio))
-                <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                  <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadJuradada', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Declaracion jurada</span></a>
-              </div>
-                   
-                @endif
+                 
 
                   
                 @if($estatus_user == 'Riesgo ' || $estatus_user == 'Administrator' )
-                  @if ($order->total >0  && !empty($convenio))
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('downloadPdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Descargar convenio</span></a>
+
+
+
+
+                  <div class="form-group">
+                  <label for="opciones">Descarga de documentos:</label>
+                  <select class="form-control" id="opciones">
+                    <option value="">Selecione una opcion</option>
+                    @if ($order->total >0  && !empty($convenio))
+                      <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
+                    @endif
+
+                    @php  $dblockconvenio="display:none;";   @endphp
+                    @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra >= 1  && $order->status==5 )
+                      @php  $dblockconvenio="display:block;";   @endphp
+                      <option value="convenio_modal" target="_blank">Generar Convenio</option>
+                    @endif
+
+                    @if ($order->total >0  && !empty($convenio))
+                      <option value="{{ route('downloadPdf', ['id' => $order->id]) }}" target="_blank">Descargar convenio</option>
+                    @endif
+
+                    @if ($order->total >0  && !empty($convenio))
+                      <option value="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar convenio</option>
+                    @endif
+
+                    @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
+                      <option value="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Borrador Convenio</option>
+                    @endif
+                    @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
+
+                     <option value="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar exp</option>
+
+                     @endif
+
+
+                     <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
+
+                     @if ($order->modalidad_de_compra == 3)
+
+                        <option value="{{sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</option>
+                      @endif
+                  </select>
                 </div>
-                 
-                      
-                  @endif
-                   
                 @endif
-                @if($estatus_user == 'Riesgo' || $estatus_user == 'Administrator')
 
-                  @if ($order->total >0  && !empty($convenio))
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Editar convenio</span></a>
-                </div>
-                      
-                  @endif
-                  
-                  
-                @endif
-                  @if($estatus_user == 'Vendedor' || $estatus_user == 'administracion' || $estatus_user == 'Administrator')
 
-                   @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
-                  <div class="btn-group float-right" style="margin-right: 10px;border:1px solid #c5b5b5;">
-                    <a class="btn btn-flat" target=_new title="Invoice" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"><i class="far fa-file-pdf"></i><span class="hidden-xs">Borrador Convenio</span></a>
-                   
-                  </div>
-                      
-                  @endif
-
-                  @endif
                  
                  
 
@@ -116,7 +98,7 @@
                   <tr>
                     <td  class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                     <td>
-                      {{ $statu_en[$order->status]}}
+                      {{ $statu_en[$order->status] ?? ''}}
                       @php 
                     $liststatus=array_keys($statusOrder);                                                                                         
                       @endphp
@@ -1089,13 +1071,14 @@
             
               <td> <span class="monto_cuota_text"></span> </td>
 
+
               <td><input onChange="update_total($(this));" type="number" min="0" class="add_qty form-control" name="add_qty[]" value="0"></td>
 
              
 
               <td><input onChange="update_total($(this));" type="number" step="0.01" min="0" class="add_price form-control" name="add_price[]" id="preci" value="0"></td>
 
-              <td><input  type="number" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0"></td>
+              <input  type="hidden" step="0.01" min="0" class="add_tax form-control" name="add_tax[]" value="0">
 
               <td><input type="number" disabled class="add_total form-control" value="0"></td>
               <td><button onClick="$(this).parent().parent().remove();" class="btn btn-danger btn-md btn-flat" data-title="Delete"><i class="fa fa-times" aria-hidden="true"></i></button></td>
@@ -1994,8 +1977,36 @@ function deleteItem(id){
 
 
 
+ 
+  const select = document.getElementById('opciones');
+
+  const routes = {
+  "{{ route('borrador_pdf', ['id' => $order->id]) }}": "_blank",
+  "{{ route('editar_convenio_cliente', ['id' => $order->id]) }}": "_blank",
+  "{{ route('downloadPdf', ['id' => $order->id]) }}": "_blank",
+  "{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}": "_blank",
+  "{{ route('downloadJuradada', ['id' => $order->id]) }}": "_blank",
+  "{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id])}}": "_blank",
+  "{{ sc_route_admin('propuesta', ['order_id' => $order->id])}}": "_blank",
+  "convenio_modal": null, 
+};
+
+select.addEventListener('change', (event) => {
+  const selectedValue = event.target.value;
+  const target = routes[selectedValue];
+
+  if (target !== null) {
+    window.open(selectedValue, target);
+  } else {
+    abrir_modal();
+  }
+});
 
 
+document.querySelector('.updateStatus select').addEventListener('change', function() {
+  // Acciones a realizar cuando se selecciona una opción
+  console.log('Opción seleccionada:', this.value);
+});
 
 
 </script>

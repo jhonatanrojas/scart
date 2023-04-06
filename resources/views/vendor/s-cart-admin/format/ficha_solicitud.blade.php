@@ -162,6 +162,12 @@
         margin: .3rem 0 .3rem .3rem;
     }
 
+    table td{
+        color: #01060a;
+        font-weight:bold;
+
+    }
+
     #address2 {
         font-size: 0.8rem;
         color: #01060a;
@@ -245,10 +251,10 @@
                                         <div class="invoice-num text-uppercase ">
                             
                                             <div class="my-1\ "><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span class="text-90 ">Fecha:</span>
+                                                <span style="font-weight: 600;" class="text-90 ">Fecha:</span>
                                                 {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
                                             <div class="my-1"><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
+                                                <span style="font-weight: 600;" class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -330,11 +336,11 @@
                             <!-- Row end -->
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                            <p>Notas:</p> <i>{!! $comment !!}</i>
+                            <p style="font-weight: 600;">Notas:</p> <i>{!! $comment !!}</i>
                         </div>
                     <br>
                          
-                        <h5 class="text-center">Referencias Personales <small class="text-muted">Nro solicitud {{ $id }}</small ></h5>
+                        <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
                         <div class="invoice-body">
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -381,7 +387,7 @@
             
                         <div >
                             <h5 class="text-center"  style="page-break-after:always"> </h5>
-                            <h5 class="text-center"> Evaluación de la solicitud -  <small class="text-muted">Nro solicitud {{ $id }}</small ></h5>
+                            <h5 style="font-weight: 600;" class="text-center"> Evaluación de la solicitud -  <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
                             <div class="invoice-body" >
                          
                             <div class="row gutters">
@@ -572,7 +578,7 @@
 
                     </div>
                      
-                    <div class="invoice-footer">
+                    <div style="font-weight: 600;" class="invoice-footer">
                         Documento generado a través del sistema de Waika Import
                     </div>
                     <h5 class="text-center"  style="page-break-after:always"> </h5>
