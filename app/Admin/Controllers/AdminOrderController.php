@@ -1,8 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Reader\Exception;
-use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Admin;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -16,13 +14,10 @@ use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\Convenio;
-use App\Models\Estado;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use App\Models\ModalidadPago;
 use App\Models\HistorialPago;
-use App\Models\Municipio;
-use App\Models\Parroquia;
 use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_fecha_de_entregas;
@@ -41,7 +36,6 @@ use App\Models\SC_referencia_personal;
 use SCart\Core\Admin\Models\AdminUser;
 use App\Models\AdminRole;
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\Spreadsheet as PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
@@ -202,7 +196,7 @@ class  AdminOrderController extends RootAdminController
         }
 
 
-   
+ 
      
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
@@ -602,9 +596,9 @@ class  AdminOrderController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($id);
         $dminUser = new AdminUser;
         $list_usuarios=  $dminUser->pluck('name', 'id')->all();
-        $ademin = SC_admin_role::pluck('id' , 'name')->all();
+      
         $id_usuario_rol = Admin::user()->id;
-    
+        $statusPayment = ShopPaymentStatus::pluck( 'name','id' )->all();
 
        
         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
@@ -614,11 +608,7 @@ class  AdminOrderController extends RootAdminController
         $role = AdminRole::find($user_roles->role_id);
         
        $id_status= $role ? $role->status->pluck('id')->toArray() :[];
-       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)
-       ->orderBy('orden')
-       ->pluck('name', 'id')
-      
-       ->all();
+       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->orderBy('orden')->pluck('name', 'id')->all();
 
 
             $styleStatus = $this->statusOrder;
@@ -640,7 +630,11 @@ class  AdminOrderController extends RootAdminController
         $convenio = Convenio::where('order_id',$id)->first();
 
         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
-       
+        $styleStatusPayment = $statusPayment;
+        array_walk($styleStatusPayment, function (&$v, $k) {
+            $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
         
 
         if($convenio){
@@ -686,6 +680,7 @@ class  AdminOrderController extends RootAdminController
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
      
+     
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -714,6 +709,7 @@ class  AdminOrderController extends RootAdminController
                 'paymentMethod' => $paymentMethod,
                 'shippingMethod' => $shippingMethod,
                 'fecha_primer_pago' => $fecha_primer_pago,
+                'styleStatusPayment'=> $styleStatusPayment,
                 'country' => $this->country,
             ]
         );

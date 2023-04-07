@@ -307,7 +307,7 @@ $layout_page = shop_profile
 
          
 
-          <button onclick="pagar({{$historial->order_id  , $historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
+          <button onclick="pagar({{$historial->order_id,$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal" >
             PAGAR
           </button>
           

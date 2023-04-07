@@ -29,6 +29,12 @@ Route::get('convenio', 'ShopAccountController@convenio')->name('convenio');
 Route::get('pago_exitoso', 'ShopAccountController@pago_exitoso')->name('pago_exitoso');
 Route::get('biopago', 'ShopAccountController@biopago')->name('biopago');
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
+//ruta para eliminar una pago de sc_historial_pagos ajax
+Route::post('/sc_admin/historial_pagos/eliminar', [HistorialPagosController::class ,'eliminar_pago'])->name('historial_pagos.delete');
+//ruta para obtener pagos de un arden
+Route::get('/sc_admin/historial_pagos/getpagosajax', [HistorialPagosController::class ,'getpagosajax'])->name('getPagosAjax');
+//ruta para crear un nuevo pago en sc_historial_pagos
+Route::post('/sc_admin/historial_pagos/create', [HistorialPagosController::class ,'postCreate'])->name('historial_pagos.postCreate');
 
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 

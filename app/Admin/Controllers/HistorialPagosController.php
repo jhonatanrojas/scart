@@ -24,6 +24,7 @@ use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -283,6 +284,49 @@ class HistorialPagosController extends RootAdminController
    
      }
 
+     /**
+      *  function create para crear un nuevo pago post recibe los datas mediante el request
+      *
+      * @return void
+      */
+      public function postCreate(Request $request){
+   
+
+        //si la validacion falla responde con un json Validator
+     
+        $validator = Validator::make($request->all(), [
+            'importe_couta' => 'required',
+            'order_id'=>'required',
+            'fecha_vencimiento'=>'required',
+            'nro_couta'=>'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 1,
+                'msg' => $validator->errors()->all(),
+            ]);
+        }
+        $data_pago =[
+            'nro_coutas' =>$request->nro_couta,     
+            'order_id' =>$request->order_id,            
+            'importe_couta' =>$request->importe_couta,
+            'fecha_venciento' =>$request->fecha_vencimiento,
+            'order_detail_id' =>0,        
+            'payment_status' => $request->payment_status ?? 1
+   
+           ];
+         
+             HistorialPago::create($data_pago);
+
+             // reponse json
+                return response()->json([
+                    'error' => 0,
+                    'msg' => 'Pago creado correctamente',
+                ]);
+    
+     
+
+      }
     public function detalle(){
         $data = [
             'title'         => 'Detalle de pago', 
@@ -621,7 +665,7 @@ class HistorialPagosController extends RootAdminController
          'moneda' =>$request->moneda,
          'tasa_cambio' => $request->tipo_cambio,
          'comprobante'=>   $path_archivo,
-         'payment_status' => 5
+         'payment_status' => $request->payment_status ?? 5
 
         ];
         if( $id_pago==null){
@@ -753,6 +797,26 @@ class HistorialPagosController extends RootAdminController
 
         return $orderList;
     }
+
+    /**
+     * obtener la lista de pagos via ajax func getpagosajax where('sc_historial_pagos.order_id
+     */
+    
+     public function getPagosAjax(){
+      $result_pagos=  HistorialPago::where('order_id',request()->pId)->get();
+      //   $fecha = Carbon::parse($fecha)->format('d-m-Y');
+      $result_pagos->map(function($item){
+
+        $item->fecha_pago = Carbon::parse($item->fecha_pago)->format('d-m-Y');
+        $item->fecha_venciento = Carbon::parse($item->fecha_pago)->format('d-m-Y');
+        return $item;
+      });
+ 
+      return response()->json($result_pagos);
+
+     }
+
+     
 
     public static function getPagosListAdmin2(array $dataSearch)
     {
@@ -1279,6 +1343,23 @@ class HistorialPagosController extends RootAdminController
       
        
     }
+
+    /**
+     * funcion para eliminar una pago de sc_historial_pagos ajax
+     *
+     * @return void
+     */
+    public function eliminar_pago(){
+        $id = request('pId');
+        //valida si existe el pago
+          $pago = HistorialPago::find($id);
+          if(!$pago){
+            return response()->json(['error' => 1, 'msg' => sc_language_render('action.not_found')]);
+          }
+        $pago->delete();
+        return response()->json(['error' => 0, 'msg' => sc_language_render('action.delete_success')]);
+    }
+
     public function obtener_pago(){
      
  
