@@ -433,12 +433,8 @@ class  AdminOrderController extends RootAdminController
      */
     public function create()
     {
-
         $users = AdminCustomer::getListAll();
-        // dd($users);
 
-       
-       
         $data = [
             'title'             => sc_language_render('order.admin.add_new_title'),
             'subTitle'          => '',
@@ -467,7 +463,6 @@ class  AdminOrderController extends RootAdminController
         $data['currenciesRate'] = $currenciesRate;
         $data['paymentMethod']  = $paymentMethod;
         $data['shippingMethod'] = $shippingMethod;
-       
 
         return view($this->templatePathAdmin.'screen.order_add')
             ->with($data);
@@ -754,18 +749,25 @@ class  AdminOrderController extends RootAdminController
      * [getInfoProduct description]
      * @param   [description]
      * @return [type]           [description]
-     */
-    public function getInfoProduct()
+     */    public function getInfoProduct()
     {
+        // Get product id and order id
         $id = request('id');
         $orderId = request('order_id');
+        // Get order info
         $oder = AdminOrder::getOrderAdmin($orderId);
+        // Get product info
         $product = AdminProduct::getProductAdmin($id);
+        // Check product
         if (!$product) {
+            Log::error('msg');
             return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => '#product:'.$id]), 'detail' => '']);
         }
+        // Return product info
         $arrayReturn = $product->toArray();
+        // Get attribute to render
         $arrayReturn['renderAttDetails'] = $product->renderAttributeDetailsAdmin($oder->currency, $oder->exchange_rate);
+        // Get final price
         $arrayReturn['price_final'] = $product->getFinalPrice();
         return response()->json($arrayReturn);
     }

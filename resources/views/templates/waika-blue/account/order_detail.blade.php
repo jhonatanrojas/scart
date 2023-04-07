@@ -256,13 +256,13 @@ $layout_page = shop_profile
 
         <tbody>
           @foreach($historial_pagos as $historial)
-          <tr>
-          @php
-          $n = (isset($n)?$n:0);
-          $n++;
-            if($order->modalidad_de_compra==0)
-              $n=$historial->nro_coutas;
-          @endphp
+    <tr>
+      @php
+      $n = (isset($n)?$n:0);
+      $n++;
+        if($order->modalidad_de_compra==0)
+          $n=$historial->nro_coutas;
+      @endphp
         <td>
           <span class="item_21_id">
             {{ $n }}
@@ -302,7 +302,7 @@ $layout_page = shop_profile
           @endif
       
 
-        @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2 && $historial->payment_status !=5)
+        @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2  && $historial->payment_status !=5)
         <td>   
 
          

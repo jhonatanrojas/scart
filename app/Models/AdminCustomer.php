@@ -21,9 +21,9 @@ class AdminCustomer extends ShopCustomer
     public static function getCustomerAdmin($id)
     {
         return self::with('addresses')
-        ->where('id', $id)
-        ->where('store_id', session('adminStoreId'))
-        ->first();
+            ->where('id', $id)
+            ->where('store_id', session('adminStoreId'))
+            ->first();
     }
 
     /**
@@ -48,38 +48,41 @@ class AdminCustomer extends ShopCustomer
      */
     public static function getCustomerListAdmin(array $dataSearch)
     {
+        // Get input data from $dataSearch array
         $keyword          = $dataSearch['keyword'] ?? '';
         $sort_order       = $dataSearch['sort_order'] ?? '';
         $arrSort          = $dataSearch['arrSort'] ?? '';
 
-    
- 
-      
+        // Get customer list from database
         $customerList = self::select('sc_shop_customer.*', 'estado.nombre as estado', 'municipio.nombre as municipio')
-        ->where('store_id', session('adminStoreId'))
-        ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
-        ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
-        ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia');
-    
-    if ($keyword) {
-        $customerList->where(function ($query) use ($keyword) {
-            $query->where('email', 'like', '%' . $keyword . '%')
-                ->orWhere('last_name', 'like', '%' . $keyword . '%')
-                ->orWhere('cedula', 'like', '%' . $keyword . '%')
-                ->orWhere('first_name', 'like', '%' . $keyword . '%');
-        });
-    }
-    
-    if ($sort_order && array_key_exists($sort_order, $arrSort)) {
-        [$field, $sort_field] = explode('__', $sort_order);
-        $customerList->orderBy($field, $sort_field);
-    } else {
-        $customerList->orderBy('sc_shop_customer.id', 'desc');
-    }
-    $customerList->distinct('sc_shop_customer.id');
+            ->where('store_id', session('adminStoreId'))
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia');
 
-    $customerList = $customerList->paginate(20);
+        // Filter by keyword
+        if ($keyword) {
+            $customerList->where(function ($query) use ($keyword) {
+                $query->where('email', 'like', '%' . $keyword . '%')
+                    ->orWhere('last_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('cedula', 'like', '%' . $keyword . '%')
+                    ->orWhere('first_name', 'like', '%' . $keyword . '%');
+            });
+        }
 
+        // Sort order
+        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+            [$field, $sort_field] = explode('__', $sort_order);
+            $customerList->orderBy($field, $sort_field);
+        } else {
+            $customerList->orderBy('sc_shop_customer.id', 'desc');
+        }
+
+        // Distinct
+        $customerList->distinct('sc_shop_customer.id');
+
+        // Paginate
+        $customerList = $customerList->paginate(20);
 
         return $customerList;
     }
