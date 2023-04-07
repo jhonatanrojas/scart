@@ -55,11 +55,13 @@
             @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
             <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Ver Borrador Convenio</a>
             @endif
+
+
             <a class="dropdown-item" href="{{ route('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar expediente</a>
 
             <!--a href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</a -->
                    
-             @if ($order->modalidad_de_compra == 3)
+            @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor']) && ($order->modalidad_de_compra == 3))
 
                   <a href="{{sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</a>
                @endif
@@ -106,6 +108,9 @@
             </div>
            
                  
+                  
+
+                        
                  
 
               </div>
