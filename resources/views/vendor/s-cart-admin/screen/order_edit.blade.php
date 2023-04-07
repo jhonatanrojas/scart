@@ -46,6 +46,9 @@
                         <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
                     @endif
 
+
+
+
                     @php $dblockconvenio = "display:none;"; @endphp
                     @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra == 1 && $order->status == 5)
                         @php $dblockconvenio = "display:block;"; @endphp
@@ -65,14 +68,19 @@
                             <option value="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Borrador Convenio</option>
                         @endif
                     @endif
-                    @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']))
+                    @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator','vendedor']))
 
                     @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
                         <option value="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar exp</option>
                     @endif
                   @endif
 
+                  @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']) && $order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+
+
                     <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
+
+                    @endif
 
                     @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor']) && ($order->modalidad_de_compra == 3))
                         <option value="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</option>

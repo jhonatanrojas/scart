@@ -690,11 +690,15 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
-     
+            $Titulo = sc_language_render('order.order_detail');
+            if($order->modalidad_de_compra == 3){
+                $Titulo = 'Lista de la propuesta';
+
+            }
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
-                "title" => sc_language_render('order.order_detail'),
+                "title" => $Titulo,
                 "subTitle" => '',
                 'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
@@ -2322,7 +2326,7 @@ class  AdminOrderController extends RootAdminController
           
         
         $data = [
-            'title'         => sc_language_render('order.admin.list'),
+            'title'         => 'Lista de las propuesta',
             'subTitle'      => '',
             'icon'          => 'fa fa-indent',
             'urlDeleteItem' => sc_route_admin('admin_order.delete'),
