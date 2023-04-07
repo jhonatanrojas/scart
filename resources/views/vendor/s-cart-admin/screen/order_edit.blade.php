@@ -34,56 +34,53 @@
                
                  
                   
-                 
-                  
-                @if($estatus_user == 'Riesgo ' || $estatus_user == 'Administrator' || $estatus_user == 'Vendedor' || $estatus_user == 'administrator'  )
-
-                  <div class="form-group">
-                  <label for="opciones">Descarga de documentos:</label>
-                  <select class="form-control" id="opciones">
-                    <option value="">Selecione una opcion</option>
-                    @if ($order->total >0  && !empty($convenio))
-                      <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
-                    @endif
-
-                    @php  $dblockconvenio="display:none;";   @endphp
-                    @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra == 1  && $order->status==5 )
-                      @php  $dblockconvenio="display:block;";   @endphp
-                      <option value="convenio_modal" target="_blank">Generar Convenio</option>
-                    @endif
-
-                    @if ($order->total >0  && !empty($convenio))
-                      <option value="{{ route('downloadPdf', ['id' => $order->id]) }}" target="_blank">Descargar convenio</option>
-                    @endif
-
-                    @if ($order->total >0  && !empty($convenio))
-                      <option value="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar convenio</option>
-                    @endif
-                     @if($estatus_user == 'Riesgo ' || $estatus_user == 'Administrator'  || $estatus_user == '1dministrator' )
-
-                    @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
-                      <option value="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Borrador Convenio</option>
-                    @endif
-                    @endif
-                    @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
 
                   
+            @if(in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator' ,'vendedor']))
+            <div class="form-group">
+                <label for="opciones">Descarga de documentos:</label>
+                <select class="form-control" id="opciones">
+                    <option value="">Seleccione una opción</option>
 
-                     <option value="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar exp</option>
+                    @if ($order->total > 0 && !empty($convenio))
+                        <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
+                    @endif
 
-                     @endif
-                   
+                    @php $dblockconvenio = "display:none;"; @endphp
+                    @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra == 1 && $order->status == 5)
+                        @php $dblockconvenio = "display:block;"; @endphp
+                        <option value="convenio_modal" target="_blank">Generar Convenio</option>
+                    @endif
 
+                    @if ($order->total > 0 && !empty($convenio))
+                        <option value="{{ route('downloadPdf', ['id' => $order->id]) }}" target="_blank">Descargar convenio</option>
+                    @endif
 
-                     <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
+                    @if ($order->total > 0 && !empty($convenio))
+                        <option value="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar convenio</option>
+                    @endif
 
-                     @if ( $estatus_user == 'Administrator' ||$order->modalidad_de_compra == 3 && $estatus_user == 'Vendedor')
+                    @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']))
+                        @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
+                            <option value="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Borrador Convenio</option>
+                        @endif
+                    @endif
+                    @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']))
 
-                        <option value="{{sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</option>
-                      @endif
-                  </select>
-                </div>
-                @endif
+                    @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
+                        <option value="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar exp</option>
+                    @endif
+                  @endif
+
+                    <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
+
+                    @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor']) && ($order->modalidad_de_compra == 3))
+                        <option value="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</option>
+                    @endif
+                </select>
+            </div>
+        @endif
+
 
 
                  
