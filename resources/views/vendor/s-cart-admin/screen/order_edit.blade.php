@@ -46,6 +46,8 @@
                         <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
                     @endif
 
+                    
+
                     @php $dblockconvenio = "display:none;"; @endphp
                     @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra == 1 && $order->status == 5)
                         @php $dblockconvenio = "display:block;"; @endphp
