@@ -196,12 +196,12 @@
                                                         onclick="order_print_pdf()" data-title="Print">
                                                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                                                         PDF
-                                                    </a>
+                                                    </a>-->
                                                     <a class=" btn btn-info mx-1px text-95 dont-print"
                                                     onclick="order_print()" data-title="Print">
                                                     <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
                                                     IMPRIMIR
-                                                </a>-->
+                                                </a>
 
                                                 </div>
                                             </div>
