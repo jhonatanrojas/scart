@@ -47,7 +47,7 @@
                     @endif
 
 
-                    
+
 
                     @php $dblockconvenio = "display:none;"; @endphp
                     @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra == 1 && $order->status == 5)
@@ -75,7 +75,7 @@
                     @endif
                   @endif
 
-                  @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']) && $order->modalidad_de_compra == 1)
+                  @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']) && $order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
 
 
                     <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
