@@ -648,24 +648,25 @@ class HistorialPagosController extends RootAdminController
 
         $id_pago = $request->id_pago;
         $order = AdminOrder::getOrderAdmin($request->order_id);
-
-
-
-        $data_pago =[
-         'order_id' =>$request->order_id,
-         
-         'customer_id' => $order->customer_id,
-        'referencia' =>$request->referencia,
-         'order_detail_id' =>0,
-         'producto_id' =>$request->product_id,
-         'metodo_pago_id' =>$request->forma_pago,
-         'fecha_pago' =>$request->fecha,
-         'importe_pagado' =>$request->monto,
-         'comment' =>$request->observacion,
-         'moneda' =>$request->moneda,
-         'tasa_cambio' => $request->tipo_cambio,
-         'comprobante'=>   $path_archivo,
-         'payment_status' => $request->payment_status ?? 5
+        $importe_cuota=$request->monto;
+        if($request->moneda=='Bs'){
+            $importe_cuota= number_format($request->monto/$request->tipo_cambio,2);
+        }
+        $data_pago = [
+            'order_id' => $request->order_id,
+            'customer_id' => $order->customer_id,
+            'referencia' => $request->referencia,
+            'order_detail_id' => 0,
+            'importe_couta' => $importe_cuota,
+            'producto_id' => $request->product_id,
+            'metodo_pago_id' => $request->forma_pago,
+            'fecha_pago' => $request->fecha,
+            'importe_pagado' => $request->monto,
+            'comment' => $request->observacion,
+            'moneda' => $request->moneda,
+            'tasa_cambio' => $request->tipo_cambio,
+            'comprobante' => $path_archivo,
+            'payment_status' => $request->payment_status ?? 5
 
         ];
         if( $id_pago==null){
@@ -1395,10 +1396,14 @@ class HistorialPagosController extends RootAdminController
             
 
         ]);
-
+        $importe_cuota=$request->importe_pagado;
+        if($request->moneda=='Bs'){
+            $importe_cuota= number_format($request->importe_pagado/$request->tasa_cambio,2);
+        }
 
         HistorialPago::where('id',$datos['id'])->first()->update([
             "metodo_pago_id" => $datos['metodo_pago_id'],
+            'importe_couta' =>   $importe_cuota,
             "importe_pagado" => $datos['importe_pagado'],
             "moneda" => $datos['moneda'],
             "fecha_pago" => $datos['fecha_pago'],

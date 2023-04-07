@@ -33,7 +33,7 @@
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="tabtotales-tab" data-toggle="tab" href="#tabtotales" role="tab" aria-controls="tabtotales" aria-selected="false">Totales</a>
         </li> 
-        @if($estatus_user == 'Riesgo ' || $estatus_user == 'Administrator' )
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Generar Documentos</a>
           <div class="dropdown-menu">
@@ -71,9 +71,7 @@
 
         </li>
 
-        @endif
-  
-  
+ 
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">

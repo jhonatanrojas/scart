@@ -16,7 +16,7 @@
                 <tr>
                     <th>#</th>
                     <th>Acciones</th>
-                    <th>Cuota </th>
+                    <th>Importe </th>
                     <th>Reportado</th>
                     <th>Divisa</th>
                     <th>Conversion</th>
