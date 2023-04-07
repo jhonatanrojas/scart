@@ -46,6 +46,7 @@
                         <option value="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración jurada</option>
                     @endif
 
+
                     
 
                     @php $dblockconvenio = "display:none;"; @endphp
