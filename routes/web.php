@@ -39,6 +39,9 @@ Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_
 Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
 Route::get('sc_admin/ficha_propuesta', [AdminOrderController::class,'ficha_propuesta'])->name('propuesta');
 
+Route::get('sc_admin/List_propuesta', [AdminOrderController::class,'list_propuesta'])->name('list_propuesta');
+
+
 
 
 

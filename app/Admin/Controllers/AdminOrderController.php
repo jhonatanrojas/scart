@@ -2206,7 +2206,9 @@ class  AdminOrderController extends RootAdminController
             'perfil'=>$search['perfil'] ?? '',
         ];
 
- 
+        
+
+      
    
         $id_usuario_rol = Admin::user()->id;
         $dminUser = new AdminUser;
@@ -2216,9 +2218,16 @@ class  AdminOrderController extends RootAdminController
          ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
-         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+      
+            $id_status= $role ? $role->status->pluck('id')->toArray() :[];
          $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
          ->all();
+        
+
+
+
+
+
 
          $spreadsheet = new Spreadsheet();
 
@@ -2302,8 +2311,332 @@ class  AdminOrderController extends RootAdminController
 
 
 
+    public function list_propuesta()
+    {
 
 
+
+          $arr_pach= explode('/',request()->path());
+          $perfil =$arr_pach[2] ?? false;
+
+          
+        
+        $data = [
+            'title'         => sc_language_render('order.admin.list'),
+            'subTitle'      => '',
+            'icon'          => 'fa fa-indent',
+            'urlDeleteItem' => sc_route_admin('admin_order.delete'),
+            'removeList'    => 1, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+        //Process add content
+        $data['menuRight']    = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft']     = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft']  = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'Acción'          => 'Acción',
+            'Nombre&Apellido'          => 'Nombre&Apellido',
+            'N°'          => 'Solicitud°',
+            'N°Convenio'          => 'N°Convenio',
+            'Vendedor Asignado' => 'Vendedor Asignado',
+            'Articulo'          => 'Articulo',
+            'Cuotas' => 'Cuotas',
+            'Cedula'          => 'Cedula',
+            'Telefono'          => 'Telefono',
+            'Estado'          => 'Estado',
+            'Municipio'          => 'Municipio',
+            'Parroquia'          => 'Parroquia',
+            'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
+            'Modalidad'         =>"Modalidad",
+            
+        ];
+        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+            // Only show store info if store is root
+            $listTh['shop_store'] = '<i class="fab fa-shopify" aria-hidden="true" title="'.sc_language_render('front.store_list').'"></i>';
+        }
+        $listTh['created_at'] = sc_language_render('admin.created_at');
+
+        $sort_order   = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword      = sc_clean(request('keyword') ?? '');
+        $email        = sc_clean(request('email') ?? '');
+        $from_to      = sc_clean(request('from_to') ?? '');
+        $end_to       = sc_clean(request('end_to') ?? '');
+        $order_status = sc_clean(request('order_status') ?? '');
+
+
+   
+        $arrSort = [
+            'id__desc'         => sc_language_render('filter_sort.id_desc'),
+            'id__asc'          => sc_language_render('filter_sort.id_asc'),
+            'email__desc'      => sc_language_render('filter_sort.alpha_desc', ['alpha' => 'Email']),
+            'email__asc'       => sc_language_render('filter_sort.alpha_asc', ['alpha' => 'Email']),
+            'created_at__desc' => sc_language_render('filter_sort.value_desc', ['value' => 'Date']),
+            'created_at__asc'  => sc_language_render('filter_sort.value_asc', ['value' => 'Date']),
+        ];
+
+
+        $dataSearch = [
+            'keyword'      => $keyword,
+            'email'        => $email,
+            'Cedula'        => $email,
+            'Telefono'        => $email,
+            'Estado'        => $email,
+            'from_to'      => $from_to,
+            'end_to'       => $end_to,
+            'sort_order'   => $sort_order,
+            'arrSort'      => $arrSort,
+            'order_status' => $order_status,
+            'perfil'=> $perfil,
+        ];
+    
+         $dataSearch2 = [
+            'keyword'      => $keyword,
+            'email'        => $email,
+            'Cedula'        => $email,
+            'Telefono'        => $email,
+            'Estado'        => $email,
+            'from_to'      => $from_to,
+            'end_to'       => $end_to,
+            'sort_order'   => $sort_order,
+            'order_status' =>  '3',
+            'perfil'=> $perfil,
+        ];
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+         
+         $id_status= '3';
+
+        
+        $dataTmp = (new AdminOrder)->getpropuesta($dataSearch, $id_status);
+
+
+        
+
+
+        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+            $arrId = $dataTmp->pluck('id')->toArray();
+            // Only show store info if store is root
+            if (function_exists('sc_get_list_store_of_order')) {
+                $dataStores = sc_get_list_store_of_order($arrId);
+            } else {
+                $dataStores = [];
+
+            }
+        }
+
+
+   
+     
+        $styleStatus = $this->statusOrder;
+        array_walk($styleStatus, function (&$v, $k) {
+            $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
+
+        
+        $dataTr = [];
+        $AlContado = [];
+        foreach ($dataTmp as $key => $row) {
+
+           
+
+           
+            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
+
+            $convenio = Convenio::where('order_id',$row->id)->first();
+
+           
+            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+
+            
+
+
+            if($row->modalidad_de_compra == 0){
+                $AlContado = "Al contado";
+            }else if($row->modalidad_de_compra ==2){
+                $AlContado = "Financiamiento/Entrega Inmediata" ;
+            }else if($row->modalidad_de_compra ==1){
+                $AlContado = "Financiamiento" ;
+            }else{
+
+                $AlContado = "Propuesta" ;
+
+            }
+            
+                 
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$row->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+
+
+         
+            $btn_pagos='';
+            $btn_pagos='';
+
+            $btn_reportar_pago="";
+
+            if($row->modalidad_de_compra==0){
+                $btn_reportar_pago='  <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;';
+            }
+            $dataMap = [
+             
+                'Acción' =>  '
+                <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                '.$btn_pagos. $btn_reportar_pago.'
+                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span >
+                ',
+                'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
+                'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
+                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                 'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
+                'Articulo' => $Articulo->name ?? 'N/A',
+                'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
+                'Cedula'          => $datos_cliente->cedula ?? 'N/A',
+                'Telefono'          => $datos_cliente->phone ?? 'N/A',
+                'Estado'          =>$datos_cliente->estado ?? 'N/A',
+                'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
+                'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
+                'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
+                'Modalidad'         => $AlContado,
+            ];
+            if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+                // Only show store info if store is root
+                if (!empty($dataStores[$row['id']])) {
+                    $storeTmp = $dataStores[$row['id']]->pluck('code', 'id')->toArray();
+                    $storeTmp = array_map(function ($code) {
+                        return '<a target=_new href="'.sc_get_domain_from_code($code).'">'.$code.'</a>';
+                    }, $storeTmp);
+                    $dataMap['shop_store'] = '<i class="nav-icon fab fa-shopify"></i> '.implode('<br><i class="nav-icon fab fa-shopify"></i> ', $storeTmp);
+                } else {
+                    $dataMap['shop_store'] = '';
+                }
+            }
+
+     
+            $dataMap['created_at'] = $row['created_at'];
+          
+            $dataTr[$row['id']] = $dataMap;
+        }
+
+        
+
+        
+
+       
+        $data['listTh'] = $listTh;
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+
+
+       
+
+
+        //menuRight
+        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_order.create') . '" class="btn  btn-success  btn-flat" title="Crear pedido" id="button_create_new">
+                           <i class="fa fa-plus" title="'.sc_language_render('action.add').'"></i>
+                           </a>';
+        //=menuRight
+
+        //menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $sort) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $sort . '</option>';
+        }
+        $data['optionSort'] = $optionSort;
+        $data['urlSort'] = sc_route_admin('sc_admin/List_propuesta', request()->except(['_token', '_pjax', 'sort_order']));
+        //=menuSort
+
+        //menuSearch
+        $optionStatus = '';
+        $inpuExcel = '' ;
+    
+        foreach ($this->statusOrder as $key => $status) {
+            $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+
+        
+
+
+                $ruta_exel= route('descargar.excel');
+                foreach ($dataSearch2 as $key => $value){
+                    $inpuExcel .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';}
+                     
+                           
+
+
+       
+
+        $ruta_busqueda= sc_route_admin('sc_admin/List_propuesta');
+
+        if( $perfil){
+            $ruta_busqueda=  sc_route_admin('sc_admin/List_propuesta')."/$perfil";
+
+           
+        }
+        $data['topMenuRight'][] = '
+                <form action="' .  $ruta_busqueda . '" id="button_search">
+                    <div class="input-group float-left">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>'.sc_language_render('action.from').':</label>
+                                <div class="input-group">
+                                <input type="text" name="from_to" id="from_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>'.sc_language_render('action.to').':</label>
+                                <div class="input-group">
+                                <input type="text" name="end_to" id="end_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Buscar por Nombre/Cedula:</label>
+                                <div class="input-group">
+                                    <input type="text" name="email" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('order.admin.search_email') . '" value="' . $email . '">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary  btn-flat"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+
+                
+                
+                
+                ';
+
+                
+        //=menuSearch
+        $data['page'] =  request()->all()['page'] ?? '';
+
+
+        return view($this->templatePathAdmin.'screen.list')
+            ->with($data);
+    }
 
 
 }

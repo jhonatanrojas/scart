@@ -94,7 +94,10 @@ class AdminOrder extends ShopOrder
         }*/
             if(!empty($estatus)){
                 
-            $orderList = $orderList->whereIn('status', $estatus);
+             
+                $orderList = $orderList->whereIn('status', $estatus)->where('modalidad_de_compra', 1);
+
+               
             }
         if ($order_status) {
             $orderList = $orderList->where('status', $order_status);
@@ -152,9 +155,11 @@ class AdminOrder extends ShopOrder
         $orderList = (new ShopOrder);
 
         
-       
-       
-        if ($order_status) {
+
+
+   
+
+        if ($order_status ) {
            
              $orderList = $orderList->where('status', $order_status);
             
@@ -205,13 +210,95 @@ class AdminOrder extends ShopOrder
             $orderList = $orderList->sort('created_at', 'desc');
         }
 
-             if(!empty($estatus)){
+    if(!empty($estatus)){
     
             
             $orderList = $orderList->whereIn('status', $estatus);
             
+            
                 
 
+        }
+
+
+
+
+        
+        $orderList = $orderList->paginate(35);
+
+    
+        
+ 
+        return  $orderList;
+
+        
+    }
+
+
+    public static function getpropuesta(array $dataSearch,$estatus=[])
+    {
+        $keyword      = $dataSearch['keyword'] ?? '';
+        $email        = $dataSearch['email'] ?? '';
+        $from_to      = $dataSearch['from_to'] ?? '';
+        $end_to       = $dataSearch['end_to'] ?? '';
+        $sort_order   = $dataSearch['sort_order'] ?? '';
+        $arrSort      = $dataSearch['arrSort'] ?? '';
+        $order_status = $dataSearch['order_status'] ?? '';
+        $storeId      = $dataSearch['storeId'] ?? '';
+        $orderList = (new ShopOrder);
+
+        
+       
+       
+        if ($order_status) {
+           
+             $orderList = $orderList->where('status', $order_status);
+            
+
+        }
+        
+        if ($storeId) {
+            $orderList = $orderList->where('store_id', $storeId);
+
+        }
+
+
+        if ($keyword) {
+            $orderList = $orderList->where(function ($sql) use ($keyword) {
+                $sql->Where('id', $keyword);
+            });
+        }
+
+        if ($email) {
+            $orderList = $orderList->where(function ($sql) use ($email) {
+                $sql->Where('cedula', 'like', '%'.$email.'%')
+                ->orWhere('last_name', 'like','%'.$email.'%')
+                ->orWhere('id', 'like','%'.$email.'%');
+            });
+        }
+
+        if ($from_to) {
+            $orderList = $orderList->where(function ($sql) use ($from_to) {
+                $sql->Where('created_at', '>=', $from_to);
+            });
+        }
+
+        if ($end_to) {
+            $orderList = $orderList->where(function ($sql) use ($end_to) {
+                $sql->Where('created_at', '<=', $end_to);
+            });
+        }
+
+        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+            $field = explode('__', $sort_order)[0];
+            $sort_field = explode('__', $sort_order)[1];
+            $orderList = $orderList->sort($field, $sort_field);
+        } else {
+            $orderList = $orderList->sort('created_at', 'desc');
+        }
+
+        if($estatus == '3'){
+            $orderList = $orderList->where('modalidad_de_compra', $estatus);  
         }
 
 
