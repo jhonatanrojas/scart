@@ -36,7 +36,7 @@
                   
 
                   
-            @if(in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']))
+            @if(in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator' ,'vendedor']))
             <div class="form-group">
                 <label for="opciones">Descarga de documentos:</label>
                 <select class="form-control" id="opciones">
@@ -65,10 +65,12 @@
                             <option value="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Borrador Convenio</option>
                         @endif
                     @endif
+                    @if (in_array(strtolower($estatus_user), ['administrator' ,'Riesgo' ,'Administrator']))
 
                     @if ($order->total > 0 && $order->modalidad_de_compra == 1 && empty($convenio) || $order->modalidad_de_compra == 2)
                         <option value="{{ sc_route_admin('ficha_pedido', ['order_id' => $order->id]) }}" target="_blank">Descargar exp</option>
                     @endif
+                  @endif
 
                     <option value="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</option>
 
