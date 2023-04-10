@@ -1351,6 +1351,9 @@ class  AdminOrderController extends RootAdminController
             $data['id']              = $order->id;
             $data['details'] = [];
 
+
+           
+
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
             $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
 
