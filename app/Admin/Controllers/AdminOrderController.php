@@ -238,7 +238,7 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email')->first();
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email' ,'parroquia.nombre as parroquia')->first();
 
 
          
@@ -2286,7 +2286,11 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email')->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email'
+            ,'parroquia.nombre as parroquia')->first();
+
+            
+            
       
           
             $hoja->setCellValue('A' . $fila, $datos_cliente->first_name . $datos_cliente->last_name);
@@ -2318,8 +2322,6 @@ class  AdminOrderController extends RootAdminController
 
         exit;
     }
-
-
 
     public function list_propuesta()
     {
