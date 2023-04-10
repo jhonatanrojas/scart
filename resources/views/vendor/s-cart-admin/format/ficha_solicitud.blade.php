@@ -336,8 +336,10 @@
                             <!-- Row end -->
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                            <p style="font-weight: 600;">Notas:</p> <i>{!! $comment !!}</i>
+                            <p style="font-weight: 600;" >Notas:</p> 
+                            <i style="font-weight: 600; line-height: 30pt;">{!! $comment !!}</i>
                         </div>
+
                     <br>
                          
                         <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
