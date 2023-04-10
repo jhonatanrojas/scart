@@ -45,6 +45,7 @@
             @if ($order->total >0  && !empty($convenio))
             <a class="dropdown-item" href="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración Jurada</a>
             @endif
+            
 
             @php  $dblockconvenio="display:none;";   @endphp
             @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra >= 1  && $order->status==5 )

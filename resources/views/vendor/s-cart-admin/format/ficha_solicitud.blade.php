@@ -342,8 +342,9 @@
 
                     <br>
                          
-                        <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
+                       
                         <div class="invoice-body">
+                             <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
