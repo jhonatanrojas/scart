@@ -110,6 +110,7 @@ class  AdminOrderController extends RootAdminController
             'Cuotas' => 'Cuotas',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
+            'Correo'          => 'correo',
             'Estado'          => 'Estado',
             'Municipio'          => 'Municipio',
             'Parroquia'          => 'Parroquia',
@@ -237,7 +238,7 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email')->first();
 
 
          
@@ -264,6 +265,7 @@ class  AdminOrderController extends RootAdminController
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
                 'Cedula'          => $datos_cliente->cedula ?? 'N/A',
                 'Telefono'          => $datos_cliente->phone ?? 'N/A',
+                'Correo'          => $datos_cliente->email ?? 'N/A',
                 'Estado'          =>$datos_cliente->estado ?? 'N/A',
                 'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
                 'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
@@ -2249,13 +2251,14 @@ class  AdminOrderController extends RootAdminController
         $hoja->setCellValue('F1', 'Cuotas');
         $hoja->setCellValue('G1', 'Cedula');
         $hoja->setCellValue('H1', 'Telefono');
-        $hoja->setCellValue('I1', 'Estado');
-        $hoja->setCellValue('J1', 'Municipio');
-        $hoja->setCellValue('K1', 'Parroquia');
-        $hoja->setCellValue('L1', 'Total');
-        $hoja->setCellValue('M1', 'Estatus');
-        $hoja->setCellValue('N1', 'Modalidad');
-        $hoja->setCellValue('O1', 'Creado en');
+        $hoja->setCellValue('I1', 'Correo');
+        $hoja->setCellValue('J1', 'Estado');
+        $hoja->setCellValue('K1', 'Municipio');
+        $hoja->setCellValue('L1', 'Parroquia');
+        $hoja->setCellValue('M1', 'Total');
+        $hoja->setCellValue('N1', 'Estatus');
+        $hoja->setCellValue('O1', 'Modalidad');
+        $hoja->setCellValue('P1', 'Creado en');
        
 
         // Obtener los datos de la base de datos
@@ -2283,7 +2286,7 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email')->first();
       
           
             $hoja->setCellValue('A' . $fila, $datos_cliente->first_name . $datos_cliente->last_name);
@@ -2294,13 +2297,14 @@ class  AdminOrderController extends RootAdminController
             $hoja->setCellValue('F' . $fila,  $Articulo->nro_coutas ?? 'N/A');
             $hoja->setCellValue('G' . $fila, $datos_cliente->cedula);
             $hoja->setCellValue('H' . $fila, $datos_cliente->phone);
-            $hoja->setCellValue('I' . $fila, $datos_cliente->estado ?? 'N/A');
-            $hoja->setCellValue('J' . $fila, $datos_cliente->municipio ?? 'N/A');
-            $hoja->setCellValue('K' . $fila, $datos_cliente->parroquia);
-            $hoja->setCellValue('L' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
-            $hoja->setCellValue('M' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
-            $hoja->setCellValue('N' . $fila, $AlContado ?? 'N/A');
-            $hoja->setCellValue('O' . $fila, $dato->created_at);
+            $hoja->setCellValue('I' . $fila, $datos_cliente->email);
+            $hoja->setCellValue('J' . $fila, $datos_cliente->estado ?? 'N/A');
+            $hoja->setCellValue('K' . $fila, $datos_cliente->municipio ?? 'N/A');
+            $hoja->setCellValue('L' . $fila, $datos_cliente->parroquia);
+            $hoja->setCellValue('M' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
+            $hoja->setCellValue('N' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
+            $hoja->setCellValue('O' . $fila, $AlContado ?? 'N/A');
+            $hoja->setCellValue('P' . $fila, $dato->created_at);
 
             $fila++;
         }

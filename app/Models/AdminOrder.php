@@ -220,10 +220,7 @@ class AdminOrder extends ShopOrder
         }
 
 
-
-
-        
-        $orderList = $orderList->paginate(500);
+        $orderList = $orderList->paginate($orderList->count());
 
     
         
@@ -302,7 +299,7 @@ class AdminOrder extends ShopOrder
 
 
         
-        $orderList = $orderList->paginate(35);
+        $orderList = $orderList->paginate(25);
 
     
         
