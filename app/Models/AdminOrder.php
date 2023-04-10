@@ -93,9 +93,8 @@ class AdminOrder extends ShopOrder
             $orderList = $orderList->whereIn('status', $id_status);
         }*/
             if(!empty($estatus)){
-                
              
-                $orderList = $orderList->whereIn('status', $estatus)->where('modalidad_de_compra', 1);
+                $orderList = $orderList->whereIn('status', $estatus)->whereIn('modalidad_de_compra', [1,2]);
 
                
             }
@@ -224,7 +223,7 @@ class AdminOrder extends ShopOrder
 
 
         
-        $orderList = $orderList->paginate(35);
+        $orderList = $orderList->paginate(500);
 
     
         

@@ -9,6 +9,21 @@
         height: 100%;
     }
 
+
+@media print {
+   @page {
+     margin-left: 0.8in;
+     margin-right: 0.8in;
+     margin-top: 0;
+     margin-bottom: 0;
+   }
+}
+ 
+.texto {
+	text-align: justify;
+  	text-justify: inter-word;
+}
+
     .invoice-container {
         padding: 1rem;
     }
@@ -642,7 +657,7 @@
 
         function order_print(){
     $('.dont-print').hide();
-    window.print();
+        window.print();
     $('.dont-print').show();
   }
     </script>
