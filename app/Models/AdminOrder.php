@@ -220,7 +220,7 @@ class AdminOrder extends ShopOrder
         }
 
 
-        $orderList = $orderList->paginate($orderList->count());
+        $orderList = $orderList->get();
 
     
         
