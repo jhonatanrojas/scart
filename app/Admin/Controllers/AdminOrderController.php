@@ -99,7 +99,8 @@ class  AdminOrderController extends RootAdminController
         $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
         $data['topMenuLeft']  = sc_config_group('topMenuLeft', \Request::route()->getName());
         $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
-
+        
+        $ruta_exel = route('descargar.excel');
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
@@ -132,6 +133,7 @@ class  AdminOrderController extends RootAdminController
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
 
+        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'"><i class="fa fa-download"></i>Export Ecxel </a>';
 
    
         $arrSort = [
@@ -337,7 +339,6 @@ class  AdminOrderController extends RootAdminController
         
 
 
-                $ruta_exel= route('descargar.excel');
                 foreach ($dataSearch2 as $key => $value){
                     $inpuExcel .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';}
                      
@@ -404,7 +405,7 @@ class  AdminOrderController extends RootAdminController
                         <form action="'.$ruta_exel.'?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'" method="GET" accept-charset="UTF-8">
 
                          '.$inpuExcel.'
-                        <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
+                      
                         </form>
                     
                     </div>

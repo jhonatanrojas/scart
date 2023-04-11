@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Controllers\AdminOrderController;
+use App\Admin\Controllers\AdminProductController;
 use App\Admin\Controllers\HistorialPagosController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\Municipio;
@@ -46,6 +47,9 @@ Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido']
 Route::get('sc_admin/ficha_propuesta', [AdminOrderController::class,'ficha_propuesta'])->name('propuesta');
 
 Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propuesta'])->name('list_propuesta');
+
+
+Route::get('sc_admin/export_product', [AdminProductController::class,'export_product'])->name('export_product');
 
 
 
