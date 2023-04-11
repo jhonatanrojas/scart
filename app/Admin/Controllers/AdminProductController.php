@@ -1,5 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopAttributeGroup;
@@ -26,7 +27,16 @@ use SCart\Core\Admin\Models\AdminCategory;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ModalidadPago;
 use App\Models\Productos_cuotas;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
+
 use DB;
+
+use SCart\Core\Front\Models\ShopProduct;
+use SCart\Core\Front\Models\ShopCategory;
+//use Exel
+
 
 class AdminProductController extends RootAdminController
 {
@@ -76,6 +86,7 @@ class AdminProductController extends RootAdminController
         $data['topMenuLeft']  = sc_config_group('topMenuLeft', \Request::route()->getName());
         $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
 
+    $data['menuLeft'][] = '<a class="btn btn-flat btn-info" href="' . sc_route_admin('export_product') . '"><i class="fa fa "></i> Export</a>';	
         $listTh = [
             'image'     => sc_language_render('product.image'),
             'name'     => sc_language_render('product.name'),
@@ -1275,4 +1286,109 @@ class AdminProductController extends RootAdminController
        
     }
   
+
+    public function export_product() {
+        //Export::export($action, $data, $options);
+       // $data = AdminProduct::with('descriptions')->get()->toArray();
+        $tableProduct     = (new ShopProduct)->getTable();
+        $tableDescription = (new ShopProductDescription)->getTable();
+        $tablePTC         = (new ShopProductCategory)->getTable();
+        $tableProduct     = (new ShopProduct)->getTable();
+        $tableProductStore = (new ShopProductStore)->getTable();
+        $dataSelect = $tableProduct.'.*, '.$tableDescription.'.name, '.$tableDescription.'.keyword, '.$tableDescription.'.description,'. $tablePTC.'.category_id ';
+
+        $dataExp= (new ShopProduct)
+            ->selectRaw($dataSelect)
+            ->leftJoin($tableDescription, $tableDescription . '.product_id', $tableProduct . '.id')
+            ->leftJoin($tableProductStore, $tableProductStore . '.product_id', $tableProduct . '.id')
+            
+            ->join($tablePTC, $tablePTC . '.product_id', $tableProduct . '.id')->get()->toArray();
+            $spreadsheet = new Spreadsheet();
+
+            // Obtener la hoja activa
+            $hoja = $spreadsheet->getActiveSheet();
+   
+           // Agregar el encabezado de las columnas
+           /**$dataExport[$key]['id'] = $row['id'];
+            $dataExport[$key]['sku'] = $row['sku'];
+            $dataExport[$key]['name'] = $row['name'];
+            $dataExport[$key]['keyword'] = ['keyword'];
+            $dataExport[$key]['description'] = ['description'];
+                   $dataExport[$key]['price'] = $row['price'];
+            $dataExport[$key]['category_id'] = $row['category_id'];
+            $dataExport[$key]['kind'] = $row['kind'];
+            $dataExport[$key]['status'] = $row['status'];
+            $dataExport[$key]['image'] = $row['image'];
+            $dataExport[$key]['view'] = $row['view'];
+            $dataExport[$key]['brand_id'] = $row['brand_id'];
+            $dataExport[$key]['supplier_id'] = $row['supplier_id'];
+             $dataExport[$key]['nro_coutas'] = $row['nro_coutas'];
+            $dataExport[$key]['cuotas_inmediatas'] = $row['cuotas_inmediatas'];
+            $dataExport[$key]['monto_inicial'] = $row['monto_inicial'];
+            $dataExport[$key]['id_modalidad_pagos'] = $row['id_modalidad_pagos'];
+            $dataExport[$key]['sold'] = $row['sold'];
+            $dataExport[$key]['sort'] = $row['sort'];
+            $dataExport[$key]['created_at'] = $row['created_at']; 
+            $dataExport[$key]['updated_at'] = $row['updated_at'];
+
+ */
+               $hoja->setCellValue('A1', 'ID');
+                $hoja->setCellValue('B1', 'SKU');
+                $hoja->setCellValue('C1', 'Nombre');
+                $hoja->setCellValue('D1', 'Palabras Clave');
+                $hoja->setCellValue('E1', 'Descripción');
+                $hoja->setCellValue('F1', 'Precio');
+                $hoja->setCellValue('G1', 'Categoría');
+                $hoja->setCellValue('H1', 'Tipo');
+                $hoja->setCellValue('I1', 'Estado');
+                $hoja->setCellValue('J1', 'Imagen');
+                $hoja->setCellValue('K1', 'Vistas');
+                $hoja->setCellValue('L1', 'Marca');
+                $hoja->setCellValue('M1', 'Proveedor');
+                $hoja->setCellValue('N1', 'Nro. Cuotas');
+                $hoja->setCellValue('O1', 'Cuotas Inmediatas');
+                $hoja->setCellValue('P1', 'Monto Inicial');
+                $hoja->setCellValue('Q1', 'Modalidad de Pago');
+                $hoja->setCellValue('R1', 'Vendidos');
+                $hoja->setCellValue('S1', 'Orden');
+                $hoja->setCellValue('T1', 'Fecha de Creación');
+                $hoja->setCellValue('U1', 'Fecha de Actualización');
+             
+
+   
+                // Establecer los datos de la tabla
+        $fila = 2;
+        $dataExport = [];
+        foreach ($dataExp as $key => $row) {
+        
+            $hoja->setCellValue('A' . $fila, $row['id']);
+            $hoja->setCellValue('B' . $fila, $row['sku']);
+            $hoja->setCellValue('C' . $fila, $row['name']);
+            $hoja->setCellValue('D' . $fila, $row['keyword']);
+            $hoja->setCellValue('E' . $fila, $row['description']);
+            $hoja->setCellValue('F' . $fila, $row['price']);
+            $hoja->setCellValue('G' . $fila, $row['category_id']);
+            $hoja->setCellValue('H' . $fila, $row['kind']);
+            $hoja->setCellValue('I' . $fila, $row['status']);
+            $hoja->setCellValue('J' . $fila, $row['image']);
+            $hoja->setCellValue('K' . $fila, $row['view']);
+            $hoja->setCellValue('L' . $fila, $row['brand_id']);
+            $hoja->setCellValue('M' . $fila, $row['supplier_id']);
+            $hoja->setCellValue('N' . $fila, $row['nro_coutas']);
+            $hoja->setCellValue('O' . $fila, $row['cuotas_inmediatas']);
+            $hoja->setCellValue('P' . $fila, $row['monto_inicial']);
+            $hoja->setCellValue('Q' . $fila, $row['id_modalidad_pagos']);
+            $hoja->setCellValue('R' . $fila, $row['sold']);
+            $hoja->setCellValue('S' . $fila, $row['sort']);
+            $hoja->setCellValue('T' . $fila, $row['created_at']);
+            $hoja->setCellValue('U' . $fila, $row['updated_at']);
+
+            $fila ++;
+    }
+    $writer = new Xlsx($spreadsheet);
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="export_productos.xlsx"');
+    header('Cache-Control: max-age=0');
+    $writer->save('php://output');
+}
 }

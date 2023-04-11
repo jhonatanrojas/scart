@@ -55,10 +55,12 @@ class AppConfig extends ConfigDefault
             AdminConfig::insert(
                 [
                     /*
-                    This is where the html content of the Plugin appears
-                    group_of_layout allow:
-                    Position include "menuLeft,topMenuRight, topMenuLeft, topMenuRight, blockBottom" -> Show on all index pages in admin with corresponding position as above.
-                    or Position_route_name_of_admin_page. Example menuLeft_admin_product.index, topMenuLeft_admin_order.index
+                     
+                    Posición incluye "menuLeft, topMenuRight, topMenuLeft, topMenuRight, blockBottom" -> Muestra en todas las páginas índice de administrador con la posición correspondiente como arriba.
+                    o Posición_nombre_de_la_ruta_de_la_página_admin. Ejemplo menuLeft_admin_product.index, topMenuLeft_admin_order.index
+
+
+                   
                     */
                     'group' => 'menuLeft__admin_product.index',
                     /*
@@ -71,6 +73,8 @@ class AppConfig extends ConfigDefault
                     'detail' => '',
                 ]
             );
+
+            
             if (!$process) {
                 $return = ['error' => 1, 'msg' => 'Error when install'];
             } else {

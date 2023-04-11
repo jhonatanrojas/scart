@@ -86,7 +86,7 @@ class AdminController extends Controller
             $dataInsert['nro_coutas']  = (int)$row['nro_coutas'] ?? 1;   
             $dataInsert['cuotas_inmediatas']  = (int)$row['nro_cuotas_inmediatas'] ?? 8;                
             $dataInsert['monto_inicial']         = (int)$row['monto_inicial'] ?? 1;
-            $dataInsert['id_modalidad_pagos	']  = (int)$row['modalidad_de_pago_2_3'] ?? 2;
+            $dataInsert['id_modalidad_pagos']  = (int)$row['modalidad_de_pago_2_3'] ?? 2;
       
             $alias = $row['alias'] ?? ($row['name'] ?? '');
             $alias = sc_word_format_url($alias);
@@ -311,4 +311,7 @@ public function processImportBuild() {
     }
     return redirect()->back()->with(['arrayError' => $arrayError, 'arraySuccess' => $arraySuccess, 'step' => 'product-build']);
     }
+
+
+   
 }
