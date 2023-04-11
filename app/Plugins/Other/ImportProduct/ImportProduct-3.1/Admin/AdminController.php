@@ -86,7 +86,7 @@ class AdminController extends Controller
             $dataInsert['status']       = (int)($row['status'] ?? 0);
             $dataInsert['sort']         = (int)$row['sort'] ?? 0;
            $dataInsert['nro_coutas']  = (int)$row['nro_coutas'] ?? 1;   
-            $dataInsert['cuotas_inmediatas']  = (int)$row['nro_cuotas_inmediatas'] ?? 8;                
+            $dataInsert['cuotas_inmediatas']  = (int)$row['cuotas_inmediatas'] ?? 8;                
             $dataInsert['monto_inicial']         = (int)$row['monto_inicial'] ?? 1;
             $dataInsert['id_modalidad_pagos']  = (int)$row['modalidad_de_pago_2_3'] ?? 2;
       
