@@ -9,6 +9,21 @@
         height: 100%;
     }
 
+
+@media print {
+   @page {
+     margin-left: 0.8in;
+     margin-right: 0.8in;
+     margin-top: 0;
+     margin-bottom: 0;
+   }
+}
+ 
+.texto {
+	text-align: justify;
+  	text-justify: inter-word;
+}
+
     .invoice-container {
         padding: 1rem;
     }
@@ -192,11 +207,11 @@
                                             <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
                                             <div class="page-tools">
                                                 <div class="action-buttons">
-                                                    <a class=" btn btn-primary mx-1px text-95 dont-print"
+                                                   <!-- <a class=" btn btn-primary mx-1px text-95 dont-print"
                                                         onclick="order_print_pdf()" data-title="Print">
                                                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                                                         PDF
-                                                    </a>
+                                                    </a>-->
                                                     <a class=" btn btn-info mx-1px text-95 dont-print"
                                                     onclick="order_print()" data-title="Print">
                                                     <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
@@ -336,12 +351,15 @@
                             <!-- Row end -->
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                            <p style="font-weight: 600;">Notas:</p> <i>{!! $comment !!}</i>
+                            <p style="font-weight: 600;" >Notas:</p> 
+                            <i style="font-weight: 600; line-height: 30pt;">{!! $comment !!}</i>
                         </div>
+
                     <br>
                          
-                        <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
+                       
                         <div class="invoice-body">
+                             <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
@@ -639,7 +657,7 @@
 
         function order_print(){
     $('.dont-print').hide();
-    window.print();
+        window.print();
     $('.dont-print').show();
   }
     </script>

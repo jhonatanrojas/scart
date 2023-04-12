@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Controllers\AdminOrderController;
+use App\Admin\Controllers\AdminProductController;
 use App\Admin\Controllers\HistorialPagosController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\Municipio;
@@ -29,6 +30,12 @@ Route::get('convenio', 'ShopAccountController@convenio')->name('convenio');
 Route::get('pago_exitoso', 'ShopAccountController@pago_exitoso')->name('pago_exitoso');
 Route::get('biopago', 'ShopAccountController@biopago')->name('biopago');
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
+//ruta para eliminar una pago de sc_historial_pagos ajax
+Route::post('/sc_admin/historial_pagos/eliminar', [HistorialPagosController::class ,'eliminar_pago'])->name('historial_pagos.delete');
+//ruta para obtener pagos de un arden
+Route::get('/sc_admin/historial_pagos/getpagosajax', [HistorialPagosController::class ,'getpagosajax'])->name('getPagosAjax');
+//ruta para crear un nuevo pago en sc_historial_pagos
+Route::post('/sc_admin/historial_pagos/create', [HistorialPagosController::class ,'postCreate'])->name('historial_pagos.postCreate');
 
 Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->name('downloadPdf');
 
@@ -38,6 +45,12 @@ Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJurad
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
 Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
 Route::get('sc_admin/ficha_propuesta', [AdminOrderController::class,'ficha_propuesta'])->name('propuesta');
+
+Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propuesta'])->name('list_propuesta');
+
+
+Route::get('sc_admin/export_product', [AdminProductController::class,'export_product'])->name('export_product');
+
 
 
 

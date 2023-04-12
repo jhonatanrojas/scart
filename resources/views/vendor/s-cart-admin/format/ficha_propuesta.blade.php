@@ -61,6 +61,12 @@
         margin: 5px 0 0 0;
     }
 
+      table td{
+        color: #01060a;
+        font-weight:bold;
+
+    }
+
     .invoice-status {
         text-align: center;
         padding: 1rem;
@@ -186,11 +192,11 @@
                                             <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
                                             <div class="page-tools">
                                                 <div class="action-buttons">
-                                                    <a class=" btn btn-primary mx-1px text-95 dont-print"
+                                                    <!--<a class=" btn btn-primary mx-1px text-95 dont-print"
                                                         onclick="order_print_pdf()" data-title="Print">
                                                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                                                         PDF
-                                                    </a>
+                                                    </a>-->
                                                     <a class=" btn btn-info mx-1px text-95 dont-print"
                                                     onclick="order_print()" data-title="Print">
                                                     <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
@@ -326,7 +332,7 @@
                             <!-- Row end -->
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                            <p>Notas:</p> <i>{!! $comment !!}</i>
+                            <p style="font-weight: 600;" >Notas:</p> <i>{!! $comment !!}</i>
                         </div>
                     <br>
                          

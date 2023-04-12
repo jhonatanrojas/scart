@@ -1,8 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Reader\Exception;
-use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Admin;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -16,13 +14,10 @@ use SCart\Core\Front\Models\ShopShippingStatus;
 use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\Convenio;
-use App\Models\Estado;
 use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use App\Models\ModalidadPago;
 use App\Models\HistorialPago;
-use App\Models\Municipio;
-use App\Models\Parroquia;
 use Validator;
 use App\Models\SC__documento;
 use App\Models\SC_fecha_de_entregas;
@@ -41,7 +36,6 @@ use App\Models\SC_referencia_personal;
 use SCart\Core\Admin\Models\AdminUser;
 use App\Models\AdminRole;
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\Spreadsheet as PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
@@ -105,7 +99,8 @@ class  AdminOrderController extends RootAdminController
         $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
         $data['topMenuLeft']  = sc_config_group('topMenuLeft', \Request::route()->getName());
         $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
-
+        
+        $ruta_exel = route('descargar.excel');
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre&Apellido',
@@ -116,6 +111,7 @@ class  AdminOrderController extends RootAdminController
             'Cuotas' => 'Cuotas',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
+            'Correo'          => 'correo',
             'Estado'          => 'Estado',
             'Municipio'          => 'Municipio',
             'Parroquia'          => 'Parroquia',
@@ -137,6 +133,7 @@ class  AdminOrderController extends RootAdminController
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
 
+        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'"><i class="fa fa-download"></i>Export Ecxel </a>';
 
    
         $arrSort = [
@@ -202,7 +199,7 @@ class  AdminOrderController extends RootAdminController
         }
 
 
-   
+ 
      
         $styleStatus = $this->statusOrder;
         array_walk($styleStatus, function (&$v, $k) {
@@ -243,7 +240,7 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email' ,'parroquia.nombre as parroquia')->first();
 
 
          
@@ -270,6 +267,7 @@ class  AdminOrderController extends RootAdminController
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
                 'Cedula'          => $datos_cliente->cedula ?? 'N/A',
                 'Telefono'          => $datos_cliente->phone ?? 'N/A',
+                'Correo'          => $datos_cliente->email ?? 'N/A',
                 'Estado'          =>$datos_cliente->estado ?? 'N/A',
                 'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
                 'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
@@ -341,7 +339,6 @@ class  AdminOrderController extends RootAdminController
         
 
 
-                $ruta_exel= route('descargar.excel');
                 foreach ($dataSearch2 as $key => $value){
                     $inpuExcel .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';}
                      
@@ -408,7 +405,7 @@ class  AdminOrderController extends RootAdminController
                         <form action="'.$ruta_exel.'?from_to='.$from_to.'&end_to='.$from_to.'&from_to='.$from_to.'&email='.$email.'&order_status='.$order_status.'" method="GET" accept-charset="UTF-8">
 
                          '.$inpuExcel.'
-                        <button id="boton-descarga" type="submit" class="btn btn-primary">DESCARGA EXCEL</button>
+                      
                         </form>
                     
                     </div>
@@ -433,12 +430,8 @@ class  AdminOrderController extends RootAdminController
      */
     public function create()
     {
-
         $users = AdminCustomer::getListAll();
-        // dd($users);
 
-       
-       
         $data = [
             'title'             => sc_language_render('order.admin.add_new_title'),
             'subTitle'          => '',
@@ -467,7 +460,6 @@ class  AdminOrderController extends RootAdminController
         $data['currenciesRate'] = $currenciesRate;
         $data['paymentMethod']  = $paymentMethod;
         $data['shippingMethod'] = $shippingMethod;
-       
 
         return view($this->templatePathAdmin.'screen.order_add')
             ->with($data);
@@ -607,9 +599,9 @@ class  AdminOrderController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($id);
         $dminUser = new AdminUser;
         $list_usuarios=  $dminUser->pluck('name', 'id')->all();
-        $ademin = SC_admin_role::pluck('id' , 'name')->all();
+      
         $id_usuario_rol = Admin::user()->id;
-    
+        $statusPayment = ShopPaymentStatus::pluck( 'name','id' )->all();
 
        
         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
@@ -619,11 +611,7 @@ class  AdminOrderController extends RootAdminController
         $role = AdminRole::find($user_roles->role_id);
         
        $id_status= $role ? $role->status->pluck('id')->toArray() :[];
-       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)
-       ->orderBy('orden')
-       ->pluck('name', 'id')
-      
-       ->all();
+       $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->orderBy('orden')->pluck('name', 'id')->all();
 
 
             $styleStatus = $this->statusOrder;
@@ -644,12 +632,21 @@ class  AdminOrderController extends RootAdminController
 
         $convenio = Convenio::where('order_id',$id)->first();
 
-        $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
        
+
+        $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+        $styleStatusPayment = $statusPayment;
+        array_walk($styleStatusPayment, function (&$v, $k) {
+            $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
         
 
         if($convenio){
             $nro_convenio = $convenio->nro_convenio;
+
+
+           
         }
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
@@ -690,11 +687,17 @@ class  AdminOrderController extends RootAdminController
         foreach ($shippingMethodTmp as $key => $value) {
             $fecha_primer_pago[$key] = sc_language_render($value->detail);
         }
-     
+
+            $Titulo = sc_language_render('order.order_detail');
+            if($order->modalidad_de_compra == 3){
+                $Titulo = 'Lista de la propuesta';
+
+            }
+
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
-                "title" => sc_language_render('order.order_detail'),
+                "title" => $Titulo,
                 "subTitle" => '',
                 'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
@@ -719,6 +722,7 @@ class  AdminOrderController extends RootAdminController
                 'paymentMethod' => $paymentMethod,
                 'shippingMethod' => $shippingMethod,
                 'fecha_primer_pago' => $fecha_primer_pago,
+                'styleStatusPayment'=> $styleStatusPayment,
                 'country' => $this->country,
             ]
         );
@@ -754,18 +758,25 @@ class  AdminOrderController extends RootAdminController
      * [getInfoProduct description]
      * @param   [description]
      * @return [type]           [description]
-     */
-    public function getInfoProduct()
+     */    public function getInfoProduct()
     {
+        // Get product id and order id
         $id = request('id');
         $orderId = request('order_id');
+        // Get order info
         $oder = AdminOrder::getOrderAdmin($orderId);
+        // Get product info
         $product = AdminProduct::getProductAdmin($id);
+        // Check product
         if (!$product) {
+            Log::error('msg');
             return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => '#product:'.$id]), 'detail' => '']);
         }
+        // Return product info
         $arrayReturn = $product->toArray();
+        // Get attribute to render
         $arrayReturn['renderAttDetails'] = $product->renderAttributeDetailsAdmin($oder->currency, $oder->exchange_rate);
+        // Get final price
         $arrayReturn['price_final'] = $product->getFinalPrice();
         return response()->json($arrayReturn);
     }
@@ -1348,6 +1359,9 @@ class  AdminOrderController extends RootAdminController
             $data['id']              = $order->id;
             $data['details'] = [];
 
+
+           
+
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
             $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
 
@@ -1567,6 +1581,8 @@ class  AdminOrderController extends RootAdminController
                 if (!$plantilla) {
                     return 'No se encontró la plantilla';
                 }
+
+         
 
                 
                     $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
@@ -2206,7 +2222,9 @@ class  AdminOrderController extends RootAdminController
             'perfil'=>$search['perfil'] ?? '',
         ];
 
- 
+        
+
+      
    
         $id_usuario_rol = Admin::user()->id;
         $dminUser = new AdminUser;
@@ -2216,9 +2234,16 @@ class  AdminOrderController extends RootAdminController
          ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
          $role = AdminRole::find($user_roles->role_id);
          
-         $id_status= $role ? $role->status->pluck('id')->toArray() :[];
+      
+            $id_status= $role ? $role->status->pluck('id')->toArray() :[];
          $this->statusOrder   = ShopOrderStatus::whereIn('id',$id_status)->pluck('name', 'id')
          ->all();
+        
+
+
+
+
+
 
          $spreadsheet = new Spreadsheet();
 
@@ -2234,13 +2259,14 @@ class  AdminOrderController extends RootAdminController
         $hoja->setCellValue('F1', 'Cuotas');
         $hoja->setCellValue('G1', 'Cedula');
         $hoja->setCellValue('H1', 'Telefono');
-        $hoja->setCellValue('I1', 'Estado');
-        $hoja->setCellValue('J1', 'Municipio');
-        $hoja->setCellValue('K1', 'Parroquia');
-        $hoja->setCellValue('L1', 'Total');
-        $hoja->setCellValue('M1', 'Estatus');
-        $hoja->setCellValue('N1', 'Modalidad');
-        $hoja->setCellValue('O1', 'Creado en');
+        $hoja->setCellValue('I1', 'Correo');
+        $hoja->setCellValue('J1', 'Estado');
+        $hoja->setCellValue('K1', 'Municipio');
+        $hoja->setCellValue('L1', 'Parroquia');
+        $hoja->setCellValue('M1', 'Total');
+        $hoja->setCellValue('N1', 'Estatus');
+        $hoja->setCellValue('O1', 'Modalidad');
+        $hoja->setCellValue('P1', 'Creado en');
        
 
         // Obtener los datos de la base de datos
@@ -2268,7 +2294,11 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email'
+            ,'parroquia.nombre as parroquia')->first();
+
+            
+            
       
           
             $hoja->setCellValue('A' . $fila, $datos_cliente->first_name . $datos_cliente->last_name);
@@ -2279,13 +2309,14 @@ class  AdminOrderController extends RootAdminController
             $hoja->setCellValue('F' . $fila,  $Articulo->nro_coutas ?? 'N/A');
             $hoja->setCellValue('G' . $fila, $datos_cliente->cedula);
             $hoja->setCellValue('H' . $fila, $datos_cliente->phone);
-            $hoja->setCellValue('I' . $fila, $datos_cliente->estado ?? 'N/A');
-            $hoja->setCellValue('J' . $fila, $datos_cliente->municipio ?? 'N/A');
-            $hoja->setCellValue('K' . $fila, $datos_cliente->parroquia);
-            $hoja->setCellValue('L' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
-            $hoja->setCellValue('M' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
-            $hoja->setCellValue('N' . $fila, $AlContado ?? 'N/A');
-            $hoja->setCellValue('O' . $fila, $dato->created_at);
+            $hoja->setCellValue('I' . $fila, $datos_cliente->email);
+            $hoja->setCellValue('J' . $fila, $datos_cliente->estado ?? 'N/A');
+            $hoja->setCellValue('K' . $fila, $datos_cliente->municipio ?? 'N/A');
+            $hoja->setCellValue('L' . $fila, $datos_cliente->parroquia);
+            $hoja->setCellValue('M' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
+            $hoja->setCellValue('N' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
+            $hoja->setCellValue('O' . $fila, $AlContado ?? 'N/A');
+            $hoja->setCellValue('P' . $fila, $dato->created_at);
 
             $fila++;
         }
@@ -2300,10 +2331,332 @@ class  AdminOrderController extends RootAdminController
         exit;
     }
 
+    public function list_propuesta()
+    {
 
 
 
+          $arr_pach= explode('/',request()->path());
+          $perfil =$arr_pach[2] ?? false;
 
+          
+        
+        $data = [
+            'title'         => 'Lista de las propuesta',
+            'subTitle'      => '',
+            'icon'          => 'fa fa-indent',
+            'urlDeleteItem' => sc_route_admin('admin_order.delete'),
+            'removeList'    => 1, // 1 - Enable function delete list item
+            'buttonRefresh' => 1, // 1 - Enable button refresh
+            'buttonSort'    => 1, // 1 - Enable button sort
+            'css'           => '',
+            'js'            => '',
+        ];
+        //Process add content
+        $data['menuRight']    = sc_config_group('menuRight', \Request::route()->getName());
+        $data['menuLeft']     = sc_config_group('menuLeft', \Request::route()->getName());
+        $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
+        $data['topMenuLeft']  = sc_config_group('topMenuLeft', \Request::route()->getName());
+        $data['blockBottom']  = sc_config_group('blockBottom', \Request::route()->getName());
+
+        $listTh = [
+            'Acción'          => 'Acción',
+            'Nombre&Apellido'          => 'Nombre&Apellido',
+            'N°'          => 'Solicitud°',
+            'N°Convenio'          => 'N°Convenio',
+            'Vendedor Asignado' => 'Vendedor Asignado',
+            'Articulo'          => 'Articulo',
+            'Cuotas' => 'Cuotas',
+            'Cedula'          => 'Cedula',
+            'Telefono'          => 'Telefono',
+            'Estado'          => 'Estado',
+            'Municipio'          => 'Municipio',
+            'Parroquia'          => 'Parroquia',
+            'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
+            'Modalidad'         =>"Modalidad",
+            
+        ];
+        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+            // Only show store info if store is root
+            $listTh['shop_store'] = '<i class="fab fa-shopify" aria-hidden="true" title="'.sc_language_render('front.store_list').'"></i>';
+        }
+        $listTh['created_at'] = sc_language_render('admin.created_at');
+
+        $sort_order   = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword      = sc_clean(request('keyword') ?? '');
+        $email        = sc_clean(request('email') ?? '');
+        $from_to      = sc_clean(request('from_to') ?? '');
+        $end_to       = sc_clean(request('end_to') ?? '');
+        $order_status = sc_clean(request('order_status') ?? '');
+
+
+   
+        $arrSort = [
+            'id__desc'         => sc_language_render('filter_sort.id_desc'),
+            'id__asc'          => sc_language_render('filter_sort.id_asc'),
+            'email__desc'      => sc_language_render('filter_sort.alpha_desc', ['alpha' => 'Email']),
+            'email__asc'       => sc_language_render('filter_sort.alpha_asc', ['alpha' => 'Email']),
+            'created_at__desc' => sc_language_render('filter_sort.value_desc', ['value' => 'Date']),
+            'created_at__asc'  => sc_language_render('filter_sort.value_asc', ['value' => 'Date']),
+        ];
+
+
+        $dataSearch = [
+            'keyword'      => $keyword,
+            'email'        => $email,
+            'Cedula'        => $email,
+            'Telefono'        => $email,
+            'Estado'        => $email,
+            'from_to'      => $from_to,
+            'end_to'       => $end_to,
+            'sort_order'   => $sort_order,
+            'arrSort'      => $arrSort,
+            'order_status' => $order_status,
+            'perfil'=> $perfil,
+        ];
+    
+         $dataSearch2 = [
+            'keyword'      => $keyword,
+            'email'        => $email,
+            'Cedula'        => $email,
+            'Telefono'        => $email,
+            'Estado'        => $email,
+            'from_to'      => $from_to,
+            'end_to'       => $end_to,
+            'sort_order'   => $sort_order,
+            'order_status' =>  '3',
+            'perfil'=> $perfil,
+        ];
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+         
+         $id_status= '3';
+
+        
+        $dataTmp = (new AdminOrder)->getpropuesta($dataSearch, $id_status);
+
+
+        
+
+
+        if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+            $arrId = $dataTmp->pluck('id')->toArray();
+            // Only show store info if store is root
+            if (function_exists('sc_get_list_store_of_order')) {
+                $dataStores = sc_get_list_store_of_order($arrId);
+            } else {
+                $dataStores = [];
+
+            }
+        }
+
+
+   
+     
+        $styleStatus = $this->statusOrder;
+        array_walk($styleStatus, function (&$v, $k) {
+            $v = '<span class="badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
+
+        
+        $dataTr = [];
+        $AlContado = [];
+        foreach ($dataTmp as $key => $row) {
+
+           
+
+           
+            $Articulo = shop_order_detail::where('order_id', $row->id)->first();
+
+            $convenio = Convenio::where('order_id',$row->id)->first();
+
+           
+            $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+
+            
+
+
+            if($row->modalidad_de_compra == 0){
+                $AlContado = "Al contado";
+            }else if($row->modalidad_de_compra ==2){
+                $AlContado = "Financiamiento/Entrega Inmediata" ;
+            }else if($row->modalidad_de_compra ==1){
+                $AlContado = "Financiamiento" ;
+            }else{
+
+                $AlContado = "Propuesta" ;
+
+            }
+            
+                 
+            $datos_cliente =  SC_shop_customer::where('sc_shop_customer.id',$row->customer_id)
+            ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
+            ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
+            ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
+            ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio')->first();
+
+
+         
+            $btn_pagos='';
+            $btn_pagos='';
+
+            $btn_reportar_pago="";
+
+            if($row->modalidad_de_compra==0){
+                $btn_reportar_pago='  <a href="' . sc_route_admin('historial_pagos.reportar', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class=" fa fa-credit-card "></i></span></a>&nbsp;';
+            }
+            $dataMap = [
+             
+                'Acción' =>  '
+                <a href="' . sc_route_admin('admin_order.detail', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
+                '.$btn_pagos. $btn_reportar_pago.'
+                <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span >
+                ',
+                'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
+                'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
+                'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                 'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
+                'Articulo' => $Articulo->name ?? 'N/A',
+                'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
+                'Cedula'          => $datos_cliente->cedula ?? 'N/A',
+                'Telefono'          => $datos_cliente->phone ?? 'N/A',
+                'Estado'          =>$datos_cliente->estado ?? 'N/A',
+                'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
+                'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
+                'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
+                'Modalidad'         => $AlContado,
+            ];
+            if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
+                // Only show store info if store is root
+                if (!empty($dataStores[$row['id']])) {
+                    $storeTmp = $dataStores[$row['id']]->pluck('code', 'id')->toArray();
+                    $storeTmp = array_map(function ($code) {
+                        return '<a target=_new href="'.sc_get_domain_from_code($code).'">'.$code.'</a>';
+                    }, $storeTmp);
+                    $dataMap['shop_store'] = '<i class="nav-icon fab fa-shopify"></i> '.implode('<br><i class="nav-icon fab fa-shopify"></i> ', $storeTmp);
+                } else {
+                    $dataMap['shop_store'] = '';
+                }
+            }
+
+     
+            $dataMap['created_at'] = $row['created_at'];
+          
+            $dataTr[$row['id']] = $dataMap;
+        }
+
+        
+
+        
+
+       
+        $data['listTh'] = $listTh;
+        $data['dataTr'] = $dataTr;
+        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
+        $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
+
+
+       
+
+
+        //menuRight
+        $data['menuRight'][] = '<a href="' . sc_route_admin('admin_order.create') . '" class="btn  btn-success  btn-flat" title="Crear pedido" id="button_create_new">
+                           <i class="fa fa-plus" title="'.sc_language_render('action.add').'"></i>
+                           </a>';
+        //=menuRight
+
+        //menuSort
+        $optionSort = '';
+        foreach ($arrSort as $key => $sort) {
+            $optionSort .= '<option  ' . (($sort_order == $key) ? "selected" : "") . ' value="' . $key . '">' . $sort . '</option>';
+        }
+        $data['optionSort'] = $optionSort;
+        $data['urlSort'] = sc_route_admin('sc_admin/List_propuesta', request()->except(['_token', '_pjax', 'sort_order']));
+        //=menuSort
+
+        //menuSearch
+        $optionStatus = '';
+        $inpuExcel = '' ;
+    
+        foreach ($this->statusOrder as $key => $status) {
+            $optionStatus .= '<option  ' . (($order_status == $key) ? "selected" : "") . ' value="' . $key . '">' . $status . '</option>';
+        }
+
+        
+
+
+                $ruta_exel= route('descargar.excel');
+                foreach ($dataSearch2 as $key => $value){
+                    $inpuExcel .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';}
+                     
+                           
+
+
+       
+
+        $ruta_busqueda= sc_route_admin('sc_admin/List_propuesta');
+
+        if( $perfil){
+            $ruta_busqueda=  sc_route_admin('sc_admin/List_propuesta')."/$perfil";
+
+           
+        }
+        $data['topMenuRight'][] = '
+                <form action="' .  $ruta_busqueda . '" id="button_search">
+                    <div class="input-group float-left">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>'.sc_language_render('action.from').':</label>
+                                <div class="input-group">
+                                <input type="text" name="from_to" id="from_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>'.sc_language_render('action.to').':</label>
+                                <div class="input-group">
+                                <input type="text" name="end_to" id="end_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Buscar por Nombre/Cedula:</label>
+                                <div class="input-group">
+                                    <input type="text" name="email" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('order.admin.search_email') . '" value="' . $email . '">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary  btn-flat"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+
+                
+                
+                
+                ';
+
+                
+        //=menuSearch
+        $data['page'] =  request()->all()['page'] ?? '';
+
+
+        return view($this->templatePathAdmin.'screen.list')
+            ->with($data);
+    }
 
 
 }

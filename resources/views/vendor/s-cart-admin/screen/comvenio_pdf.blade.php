@@ -149,10 +149,8 @@
       </style>
     </head>
     <body class="c18 doc-content">
-
-
-        
-       
+    
+            <h2 style="text-align: center; padding: 0; margin: 0;">CONVENIO :{!!$convenio!!}</h2>
             {!!$borrado_html!!}
        
     </body>
