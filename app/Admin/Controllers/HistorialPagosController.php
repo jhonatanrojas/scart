@@ -1142,7 +1142,7 @@ class HistorialPagosController extends RootAdminController
                           $number2 =  $monto*$cod_bolibares;
         
                           foreach($borrado_html as $replacee){
-                            $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
+                            $nro_convenio = $data['nro_convenio'];
                             $dataFind = [
                                 '/\{\{\$numero_de_convenio\}\}/',
                                 '/\{\{\$razon_social\}\}/',
@@ -1249,13 +1249,8 @@ class HistorialPagosController extends RootAdminController
                                 '/\{\{\$logo_global\}\}/',
                                
                             ];
-                                $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
-        
-        
-                           
-        
-                       
-        
+                               
+
                             $dataReplaces = [
                                 'numero_de_convenio'=>  $nro_convenio,
                                 'razon_social' => $dato_usuario['razon_social'],
