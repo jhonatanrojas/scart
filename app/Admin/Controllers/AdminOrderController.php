@@ -632,6 +632,8 @@ class  AdminOrderController extends RootAdminController
 
         $convenio = Convenio::where('order_id',$id)->first();
 
+       
+
         $nro_convenio = str_pad(Convenio::count()+1, 6, "0", STR_PAD_LEFT);
         $styleStatusPayment = $statusPayment;
         array_walk($styleStatusPayment, function (&$v, $k) {
@@ -642,6 +644,9 @@ class  AdminOrderController extends RootAdminController
 
         if($convenio){
             $nro_convenio = $convenio->nro_convenio;
+
+
+           
         }
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
@@ -1576,6 +1581,8 @@ class  AdminOrderController extends RootAdminController
                 if (!$plantilla) {
                     return 'No se encontró la plantilla';
                 }
+
+         
 
                 
                     $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
