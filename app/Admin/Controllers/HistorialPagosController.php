@@ -978,12 +978,18 @@ class HistorialPagosController extends RootAdminController
 
 
 
-        
+     
 
-        $tiene_convenio = Convenio::where('order_id', request()->c_order_id)->first();
 
-        if(!$tiene_convenio ){
 
+       
+
+        if (Convenio::where('nro_convenio', $data['nro_convenio'])->exists()) {
+            return redirect()->back()
+            ->with(['error' => 'convenio ya creado']);
+        } else {
+
+           
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
@@ -1318,11 +1324,23 @@ class HistorialPagosController extends RootAdminController
               echo  $ncouta++;
             }
 
-        }else{
 
-        }
         return redirect()->back()
         ->with(['success' => 'Accion completada']);
+
+   
+         
+        }
+        
+
+        
+
+       
+
+          
+
+        
+        
     }
 
     public function postUpdate(){
