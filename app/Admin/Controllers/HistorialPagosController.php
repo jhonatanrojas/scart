@@ -805,15 +805,22 @@ class HistorialPagosController extends RootAdminController
     
      public function getPagosAjax(){
       $result_pagos=  HistorialPago::where('order_id',request()->pId)->get();
+     $data_pagos=[];
+      foreach ($result_pagos as $key => $item) {
+        $item->fecha_pago =  Carbon::parse($item->fecha_pago)->format('d-m-Y');
+        $item->fecha_venciento = Carbon::parse($item->fecha_venciento)->format('d-m-Y');
+        $data_pagos[] = $item;
+        # code...
+      }
       //   $fecha = Carbon::parse($fecha)->format('d-m-Y');
-      $result_pagos->map(function($item){
+      /*$result_pagos->map(function($item){
 
-        $item->fecha_pago = Carbon::parse($item->fecha_pago)->format('d-m-Y');
-        $item->fecha_venciento = Carbon::parse($item->fecha_pago)->format('d-m-Y');
+        $item->fecha_pago =  $item->fecha_pago;
+        $item->fecha_venciento =$item->fecha_pago;
         return $item;
-      });
- 
-      return response()->json($result_pagos);
+      });*/
+
+      return response()->json($data_pagos);
 
      }
 

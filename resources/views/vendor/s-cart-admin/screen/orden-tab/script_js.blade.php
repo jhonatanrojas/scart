@@ -768,7 +768,7 @@
             acciones += '<a href="#" onclick="obtener_detalle_pago(' + historial.id + ')"><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>';
         }
         if (historial.payment_status !== 2 && historial.payment_status !== 5) {
-            acciones += '<a href="#"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class="fa fa-credit-card"></i></span></a><span onclick="deleteItemPago(\'' + historial.id + '\');" title="Eliminar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>';
+            acciones += '<a href="{{route("historial_pagos.reportar")}}?id='+historial.order_id+'&id_pago=' + historial.id + '"><span title="Reportar pago" type="button" class="btn btn-flat btn-sm btn-info"><i class="fa fa-credit-card"></i></span></a> <a href="#"><span onclick="deleteItemPago(\'' + historial.id + '\');" title="Eliminar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>';
         }
 
         const tasaCambio = historial.tasa_cambio ? historial.tasa_cambio : 1;
