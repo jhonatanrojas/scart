@@ -212,7 +212,7 @@
                   </tr>
                   <tr>
                    
-                    <td>Fecha  primer pago</td>
+                    <td>Fecha  del convenio</td>
                     <td><a href="#" class="updateStatus" data-name="fecha_primer_pago" data-type="date" data-source ="{{ json_encode($order->fecha_primer_pago) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_primer_pago))
                       {{$order->fecha_primer_pago}}
                         
