@@ -15,7 +15,7 @@
                         </tr>
                         <tr>
 
-                        @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor' ,'Administrator']) && ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2))
+                       
                             <td class="td-title"><span>Evaluación comercial</span></td>
                             <td>
                                 <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial "
@@ -64,7 +64,7 @@
                         <tr>
 
                        
-                         @if ($estatus_user == 'Riesgo' ||  $estatus_user == 'administrator' || $estatus_user == 'Administrator')
+                        
                             <td class="td-title"><span>Evaluación financiera</span></td>
                             <td>
                                 <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera "
@@ -100,12 +100,12 @@
                                 </a>
                             </td>
 
-                            @endif
+                          
                         </tr>
                         {{-- nota_evaluacion_financiera --}}
 
                         <tr>
-                         @if (in_array(strtolower($estatus_user), ['administrator' ,'Administrator']) && ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2))
+                        
                             <td class="td-title"><span>Evaluación legal</span></td>
                             <td>
                                 <a href="#" class="updateInfo" data-name="nota_evaluacion_legal"
@@ -179,11 +179,11 @@
                                     </option>
                                 </select>
                             </td>
-                             @endif
+                            
                         </tr>
                     </table>
 
-                @endif
+                
 
 
 
