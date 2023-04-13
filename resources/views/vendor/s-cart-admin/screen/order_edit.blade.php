@@ -40,12 +40,12 @@
 
           
           
-
-            @if ($estatus_user == 'Riesgo' ||  $estatus_user == 'administrator' || $estatus_user == 'Administrator') 
+            {{-- administracion --}}
+            @if ($estatus_user == 'Riesgo' ||  $estatus_user == 'administrator' || $estatus_user == 'Administrator' ||  $estatus_user == 'administracion' ) 
             @if ($order->total >0  && !empty($convenio))
             <a class="dropdown-item" href="{{ route('downloadJuradada', ['id' => $order->id]) }}" target="_blank">Declaración Jurada</a>
             @endif
-            
+
 
             @php  $dblockconvenio="display:none;";   @endphp
             @if (count($order->details) >0  && empty($convenio) && $order->modalidad_de_compra >= 1  && $order->status==5 )
@@ -76,7 +76,7 @@
 
             
                    
-            @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor']) && ($order->modalidad_de_compra == 3))
+            @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor','administracion']) && ($order->modalidad_de_compra == 3))
 
                   <a  class="dropdown-item" href="{{sc_route_admin('propuesta', ['order_id' => $order->id]) }}" target="_blank">Descargar propuesta</a>
                @endif
