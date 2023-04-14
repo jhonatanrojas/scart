@@ -8,7 +8,7 @@
     <section class="section section-xxl bg-default">
         <div class="container">
             <div class="row">
-                <h3 class="title-section">{{ sc_language_render('front.products_new') }}</h3>
+                <h3 class="title-section">{{ sc_language_render('front.products_recommend') }}</h3>
             </div>
 
             <article class="section-products">

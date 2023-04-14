@@ -1,4 +1,4 @@
-<product class="product-card card border border-0 shadow-sm overflow-hidden" style="width: 200px;">
+<product class="product-card card border border-0 shadow-sm overflow-hidden">
   <figure class="card-img-top m-0 img-featured">
     <a class="" href="{{$product->getUrl()}}">
       <img src="{{ sc_file($product->getThumb()) }}" alt="{{ $product->name }}" width="200px" height="190px"/>

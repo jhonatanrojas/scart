@@ -1,27 +1,28 @@
-<header class="section page-header">
+<header class="section page-header bg-white">
 
-  {{-- NAVBAR 1 --}}
-  <nav class="navbar navbar-expand-lg bg-white">
-    <div class="container gap-5">
+  
+    <div class="container">
+      <div class="row align-items-center gy-2 gy-lg-0 py-2">
+        <div class="col-6 col-lg-3 order-0 order-lg-0">
           {{-- LOGO --}}
           <a class="navbar-brand" href="{{ sc_route('home') }}">
             <img class="" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{$title??sc_store('title')}}"/>
           </a>
-          {{-- BOTON RESPONSIVE --}}
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        </div>
+
+        <div class="col-12 col-lg-6 order-2 order-lg-1">
           {{-- FORM HEADER --}}
-          <form class="d-flex flex-fill mb-0" action="{{ sc_route('search') }}"  method="GET" role="search">
+          <form class="form-header d-flex flex-fill mb-0" action="{{ sc_route('search') }}"  method="GET" role="search">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="{{ sc_language_render('search.placeholder') }}" aria-label="{{ sc_language_render('search.placeholder') }}" aria-describedby="button-Search">
-              <button class="btn btn-outline-secondary" type="button" id="button-Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+              <button class="btn btn-outline-secondary" type="submit" id="button-Search"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
           </form>
-
+        </div>
+        
+        <div class="col-6 col-lg-3 order-1 order-lg-2">
           {{-- MENÚ RIGHT --}}
-          <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul class="nav-account nav justify-content-end">
               @if (sc_config('link_account', null, 1))
                 @guest
                   <li class="nav-item">
@@ -40,12 +41,13 @@
                 @endguest
               @endif
             </ul>
-          </div>
+        </div>
+        
+      </div>
     </div>
-  </nav>
 
   {{-- NAVBAR 2 --}}
-  <nav class="navbar navbar-expand-lg" style="background: #E6F3F8;">
+  <nav class="navbar navbar-expand-lg py-2" style="background: #E6F3F8;">
     <div class="container">
 
       {{-- categorias --}}
@@ -70,12 +72,18 @@
         @endif
       </div>
 
-      <div class="" id="">
-        <ul class="nav me-auto mb-2 mb-lg-0">
+      {{-- BOTON RESPONSIVE --}}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      
+      <div class="collapse navbar-collapse flex-grow-0 py-3 py-lg-0" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-lg-0">
           {{-- menu dinamico --}}
           @if (!empty($sc_layoutsUrl['menu']))
               @foreach ($sc_layoutsUrl['menu'] as $url)
-                <li class="rd-nav-item">
+                <li class="nav-item">
                     <a class="nav-link text-capitalize" {{ ($url->target =='_blank')?'target=_blank':''  }}
                         href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
                 </li>
