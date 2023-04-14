@@ -544,7 +544,8 @@
                                 </div>
                             </div>
 
-
+                     
+                            @if (!empty($referencias[0])) 
                             <div class="invoice-body p-0 m-0 nueva-pagina mt-5">
                                 <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
                                <div class="row gutters">
@@ -589,6 +590,7 @@
                                    </div>
                                </div>
                            </div>
+                         @endif
 
                     </div>
 
