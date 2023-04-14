@@ -1565,6 +1565,11 @@ class  AdminOrderController extends RootAdminController
     /**
      * Check permisison item
      */
+
+
+    
+
+
     public function checkPermisisonItem($id)
     {
         return AdminOrder::getOrderAdmin($id);
@@ -1584,6 +1589,18 @@ class  AdminOrderController extends RootAdminController
 
                 $order = ShopOrder::where('id',  $id)->first();
 
+                function formatearFecha($fechas) {
+                    $fecha = Carbon::createFromFormat('Y-m-d', $fechas);
+                    $diaSemana = ucfirst($fecha->locale('es')->dayName);
+                    $numeroDia = $fecha->day;
+                    $nombreMes = ucfirst($fecha->locale('es')->monthName);
+                    $anio = $fecha->year;
+                
+                    return "{$diaSemana} {$numeroDia} de {$nombreMes} del {$anio}";
+                }
+                
+                
+
                 
 
          
@@ -1592,7 +1609,7 @@ class  AdminOrderController extends RootAdminController
                 $pdf = PDF::loadView($this->templatePathAdmin.'screen.comvenio_pdf', [
                     'borrado_html' => $plantilla->convenio,
                     'convenio' => $plantilla['nro_convenio'],
-                    'fecha_convenio' => $order->fecha_primer_pago
+                    'fecha_convenio' => formatearFecha($order->fecha_primer_pago)
                 ]);
                 
 
