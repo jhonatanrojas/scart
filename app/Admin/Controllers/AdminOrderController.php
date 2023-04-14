@@ -651,8 +651,7 @@ class  AdminOrderController extends RootAdminController
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
 
-        $pagadoCount =  HistorialPago::Where('order_id',$id)
-        ->Where('payment_status' , 5)->count();
+        $pagadoCount =  count($historialPagos);
 
         
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
