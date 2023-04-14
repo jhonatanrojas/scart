@@ -198,6 +198,7 @@
                               @endforeach;
                             </select>  
                           </div>
+
                         <div class="form-group col-md-4">
                           <label for="inputEmail4">Nro de referencia</label>
                           <input type="text" class="form-control"  required name="referencia" id="referencia" placeholder="referencia">
@@ -207,8 +208,10 @@
                         @enderror
                         <div class="form-group col-md-4">
                           <label for="inputEmail4">Fecha de pago</label>
-                          <input type="date" class="form-control" required value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="referencia">
+                          <input type="date" class="form-control" required value="{!!date('Y-m-d')!!}" name="fecha" id="fecha" placeholder="referencia">
                         </div>
+
+                       
             
                       </div>
             
@@ -219,6 +222,7 @@
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Monto</label>
                           <input step="any" type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
+                          <small id="error_monto" style="color: red; display: none;">Por favor ingrese solo números y un punto decimal.</small>
                           @error('monto')
                           <small style="color: red">{{$message}}</small>
                       @enderror
@@ -243,7 +247,7 @@
 
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Tasa de cambio</label>
-                          <input id="tipo_cambio" class="form-control" required name="tipo_cambio"  value="{!!sc_currency_all()[0]->exchange_rate!!}">
+                          <input step="any" type="number"  id="tipo_cambio" class="form-control" required name="tipo_cambio"  value="{!!sc_currency_all()[0]->exchange_rate!!}">
             
                           @error('tipo_cambio')
                           <small style="color: red">{{$message}}</small>
@@ -327,6 +331,19 @@
    <script src="{{ sc_file('admin/plugin/jquery.pjax.js')}}"></script>
 
   <script type="text/javascript">
+
+   function soloNumeros(event) {
+        var charCode = event.keyCode;
+        if (charCode == 46) { // permitir el punto decimal
+            return true;
+        } else if (charCode > 31 && (charCode < 48 || charCode > 57)) { // permitir solo números
+            document.getElementById("error_monto").style.display = "inline";
+            return false;
+        } else {
+            document.getElementById("error_monto").style.display = "none";
+            return true;
+        }
+    }
 
  
 $("#divisa").change(function(){
