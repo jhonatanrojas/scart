@@ -147,3 +147,9 @@ ENTRGA DE SU PRODUCTO ');
 
           CREATE TABLE `sc_rol_estatus_pedido` ( `admin_role_id` bigint(20), 
           `shop_order_status_id` bigint(20) , `modificar` BOOLEAN NOT NULL DEFAULT false, `created_at` timestamp NULL DEFAULT NULL, `updated_at` timestamp NULL DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `sc_auditoria` (
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `add_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

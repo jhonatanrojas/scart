@@ -149,10 +149,12 @@
       </style>
     </head>
     <body class="c18 doc-content">
+    
+            <span style="  margin-left: 20%;font-size: 18px; font-weight: bold;">CONVENIO :{!!$convenio ?? ''!!}</span>
 
+            <span style="font-size: 18px; text-align: end; margin-left: 18%; font-weight: bold;"> {!!$fecha_convenio ?? 'N/A' !!}</span>
 
-        
-       
+            
             {!!$borrado_html!!}
        
     </body>

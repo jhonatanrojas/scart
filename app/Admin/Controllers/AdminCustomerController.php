@@ -96,34 +96,14 @@ class AdminCustomerController extends RootAdminController
 
         $dataTmp = (new AdminCustomer)->getCustomerListAdmin($dataSearch);
 
-
-
-        $estado = Estado::all();
-        $municipio = Municipio::all();
-        $parroquia = Parroquia::all();
-        $nombreEstado=[];
-        $nombreparroquias =[];
-        $nombremunicipos =[];
+      
         $dataTr = [];
+   
         foreach ($dataTmp as $key => $row) {
-                foreach($estado as $estados){
-                    if($estados->codigoestado == $row['cod_estado']){$nombreEstado = $estados->nombre;}
-                         foreach($municipio as $municipos){
-                             if($municipos->codigomunicipio ==$row['cod_municipio']){
-                                 $nombremunicipos = $municipos->nombre;
-                             }
-                         }
-                         foreach($parroquia as $parroquias){
-                             if($parroquias->codigomunicipio == $row['cod_municipio']){
-                                 $nombreparroquias = $parroquias->nombre;
-                                 
-                             }
-                            
-                         }
-                       
-                     }
+    
+             
 
-            $dataTr[$row['id']] = [
+            $dataTr[] = [
                 'action' => '
                     <a href="' . sc_route_admin('admin_customer.edit', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
 
@@ -131,14 +111,15 @@ class AdminCustomerController extends RootAdminController
 
                     <span onclick="deleteItem(\'' . $row['id'] . '\');"  title="' . sc_language_render('action.delete') . '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>'
                 ,
+                'id' => $row['id'],
                 'email' => $row['email'],
                 'name' => $row['name'],
                 'cedula' => $row['cedula'],
                 'phone' => $row['phone'],
                 'address1' => $row['address1'],
-                'Estado' => $nombreEstado,
-                'Municipio' => $nombremunicipos,
-                'Parroquia' =>  $nombreparroquias ,
+                'Estado' =>  $row['estado'],
+                'Municipio' => $row['municipio'],
+                'Parroquia' =>  $row['parroquia'],
                 'status' => $row['status'] ? '<span class="badge badge-success">ON</span>' : '<span class="badge badge-danger">OFF</span>',
                 'created_at' => $row['created_at'],
                 
@@ -147,9 +128,9 @@ class AdminCustomerController extends RootAdminController
 
         $data['listTh'] = $listTh;
 
-        
+   
         $data['dataTr'] = $dataTr;
-        $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination') ?? '';
+        $data['pagination'] = $dataTmp->links($this->templatePathAdmin.'component.pagination') ?? '';
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
 
         //menuRight
