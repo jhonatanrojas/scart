@@ -15,7 +15,7 @@
                         </tr>
                         <tr>
 
-                        @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor' ,'Administrator']) && ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2))
+                       
                             <td class="td-title"><span>Evaluación comercial</span></td>
                             <td>
                                 <a href="#" class="updateInfo" data-name="nota_evaluacion_comercial "
@@ -64,8 +64,8 @@
                         <tr>
 
                        
-                         @if ($estatus_user == 'Riesgo' ||  $estatus_user == 'administrator' || $estatus_user == 'Administrator')
-                            <td class="td-title"><span>Evaluación financiera</span></td>
+                        
+                            <td class="td-title"><span> Evaluación legal y financiera</span></td>
                             <td>
                                 <a href="#" class="updateInfo" data-name="nota_evaluacion_financiera "
                                     data-type="textarea" data-pk="{{ $order->id }}"
@@ -100,49 +100,11 @@
                                 </a>
                             </td>
 
-                            @endif
+                          
                         </tr>
                         {{-- nota_evaluacion_financiera --}}
 
-                        <tr>
-                         @if (in_array(strtolower($estatus_user), ['administrator' ,'Administrator']) && ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2))
-                            <td class="td-title"><span>Evaluación legal</span></td>
-                            <td>
-                                <a href="#" class="updateInfo" data-name="nota_evaluacion_legal"
-                                    data-type="textarea" data-pk="{{ $order->id }}"
-                                    data-url="{{ route('admin_order.update') }}" data-title="Nota">
-
-
-
-                                    {{ $order->nota_evaluacion_legal }}
-
-                                </a>
-                            </td>
-                            <td>
-
-
-                                <a href="#" class="updateInfo" data-name="evaluacion_legal" data-type="number"
-                                    data-pk="{{ $order->id }}" data-url="{{ route('admin_order.update') }}"
-                                    data-title="Confiabilidad">
-                                    @if (!empty($order->evaluacion_legal))
-                                        {{ $order->evaluacion_legal }}
-                                    @endif
-                                </a>
-
-                            </td>
-                            <td>
-
-
-                                <a href="#" class="updateInfo" data-name="confiabilidad3 " data-type="number"
-                                    data-pk="{{ $order->id }}" data-url="{{ route('admin_order.update') }}"
-                                    data-title="Confiabilidad">
-                                    @if (!empty($order->confiabilidad3))
-                                        {{ $order->confiabilidad3 }}
-                                    @endif
-                                </a>
-                            </td>
-                           
-                        </tr>
+                       
 
 
 
@@ -179,11 +141,11 @@
                                     </option>
                                 </select>
                             </td>
-                             @endif
+                            
                         </tr>
                     </table>
 
-                @endif
+                
 
 
 

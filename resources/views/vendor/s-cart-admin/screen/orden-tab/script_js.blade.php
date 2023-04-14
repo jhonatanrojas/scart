@@ -489,9 +489,9 @@
               if(response.error ==0){
                 alertJs('success', response.msg);
                
-                if(valor_estatus==5 && response.detail.total>0){
+                if(valor_estatus==5 ){
                
-                    gen_table(fecha_p=false)
+                    gen_table(false)
                     }
                     
               } else {

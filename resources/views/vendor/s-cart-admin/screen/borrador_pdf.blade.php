@@ -71,7 +71,7 @@
     
     <div>
         <h2>BORRADOR DEL CONVENIO</h2>
-        {!!$borrado_html!!}
+        {!!$borrado_html !!}
     </div>
 </body>
 

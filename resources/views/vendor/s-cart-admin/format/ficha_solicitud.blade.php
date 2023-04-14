@@ -16,6 +16,8 @@
      margin-right: 0.8in;
      margin-top: 0;
      margin-bottom: 0;
+     padding: 0;
+     margin: 0;
    }
 }
  
@@ -147,6 +149,7 @@
 
     .custom-table>tbody td {
         border: 1px solid #202020;
+        font-size: 19px;
     }
 
 
@@ -165,6 +168,10 @@
 
     .text-muted {
         color: #01040a !important;
+    }
+    table tbody tr .td-title {
+        padding-top: 55px;
+        
     }
 
     .custom-actions-btns {
@@ -187,6 +194,17 @@
         font-size: 0.8rem;
         color: #01060a;
     }
+    li{
+        font-size: 20px;
+    }
+    table thead tr th{
+        font-size: 20px;
+    }
+    table tbody tr th{
+        font-size: 20px;
+    }
+
+   
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
     integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
@@ -232,13 +250,17 @@
                                         Waika Import
                                     </a>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <address class="text-right address2 " id="address2">
+                                <div  class="col-lg-6 col-md-6 col-sm-6">
+                                    <address style="font-weight: 600; font-size: 17px;" class="text-right address2 " id="address2">
                                         {{ sc_store('address') }}
                                         <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
                                                 class="text-90">Nro solicitud:</span> #{{ $id }}</div>
+                                                <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
                                     </address>
+                                   
                                 </div>
+
+                               
                             </div>
                             <!-- Row end -->
                             <!-- Row start -->
@@ -246,7 +268,7 @@
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
                                         <address class=" text-uppercase">
-                                            <ul class="address">
+                                            <ul  class="address">
                                                 <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
                                               <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
@@ -261,28 +283,17 @@
                                     </div>
                                 </div>
                                 
-                                <div style="color: #000000;" class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 address">
-                                    <div class="invoice-details">
-                                        <div class="invoice-num text-uppercase ">
-                            
-                                            <div class="my-1\ "><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span style="font-weight: 600;" class="text-90 ">Fecha:</span>
-                                                {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                                            <div class="my-1"><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span style="font-weight: 600;" class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                             </div>
                             
                             <!-- Row end -->
                         </div>
                         <div class="invoice-body">
                             <!-- Row start -->
-                            <div class="row gutters">
+                            <div class="row gutters p-0 m-0">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
-                                        <table class="table custom-table m-0">
+                                        <table style="margin-top: 10px;" class="table custom-table m-0">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -358,12 +369,12 @@
                     <br>
                          
                        
-                        <div class="invoice-body">
-                             <h5 style="font-weight: 600;" class="text-center">Referencias Personales <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
+                        <div class="invoice-body p-0 m-0">
+                             <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
-                                        <table class="table custom-table m-0">
+                                        <table  class="table custom-table m-0">
                                             <thead>
                                                 <tr>
                                                     <th>Nombre</th>
@@ -377,7 +388,7 @@
                                             </thead>
 
                                             @foreach ($referencias as $ref)
-                                                <tbody>
+                                                <tbody >
 
 
 
@@ -404,9 +415,10 @@
                         </div>
             
                         <div >
-                            <h5 class="text-center"  style="page-break-after:always"> </h5>
-                            <h5 style="font-weight: 600;" class="text-center"> Evaluación de la solicitud -  <small style="font-weight: 600;" class="text-muted">Nro solicitud {{ $id }}</small ></h5>
-                            <div class="invoice-body" >
+                            <br>
+                          
+                            <div style="padding-top: 30px;" class="invoice-body " >
+                                <h5 style="font-weight:bold; font-size: 25px;  " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -417,19 +429,19 @@
   <tr>
                                                  <th>Evaluación</th>
                                                  <th>Observación</th>
-                                                 <th>% Interes Comercial</th>
+                                                 <th>% Evaluacion del aria </th>
                                                  <th>% Confiabilidad</th>
                                                 </tr>
                                             </thead>
                                                  <tr>
                                                    <td  class="td-title"><span >Evaluación comercial</span></td>
-                                                   <td>
+                                                   <td class="td-titulo">
                                                          @if (!empty($order->nota_evaluacion_comercial ))
                                                              {{$order->nota_evaluacion_comercial }} 
                                                          @endif
                                                   
                                                  </td>
-                                                   <td>
+                                                   <td class="td-titulo"> 
                                                      
                                                        @if (!empty($order->evaluacion_comercial ))
                                                            {{$order->evaluacion_comercial }} 
@@ -438,7 +450,7 @@
                                                   
                                                  </td>
                                    
-                                                 <td>
+                                                 <td class="td-titulo">
                                                      
                                                     
                                                      @if (!empty($order->confiabilidad ))
@@ -454,9 +466,9 @@
                                    
                                                  {{-- nota_evaluacion_financiera --}}
                                    
-                                                 <tr>
-                                                   <td  class="td-title"><span >Evaluación financiera</span></td>
-                                                   <td>
+                                                 <tr >
+                                                   <td  class="td-title"><span > Evaluación legal y Financiera</span></td>
+                                                   <td class="td-titulo">
                                                      
                                                        @if (!empty($order->nota_evaluacion_financiera ))
                                                         
@@ -464,7 +476,7 @@
                                                          @endif
                                                     
                                                  </td>
-                                                   <td>
+                                                   <td class="td-titulo">
                                                      
                                                        @if (!empty($order->evaluacion_comercial ))
                                                            {{$order->evaluacion_comercial }} 
@@ -472,7 +484,7 @@
                                                
                                                    
                                                  </td>
-                                                 <td>
+                                                 <td class="td-titulo">
                                                      
                                                     
                                                                  
@@ -484,40 +496,13 @@
                                                  </tr>
                                                  {{-- nota_evaluacion_financiera --}}
                                    
-                                                 <tr>
-                                                   <td  class="td-title"><span >Evaluación legal</span></td>
-                                                   <td>
-                                                       
-                                                       @if (!empty($order->nota_evaluacion_legal ))
-                                                            
-                                                             {{$order->nota_evaluacion_legal }} 
-                                                         @endif
-                                                   
-                                                 </td>
-                                                   <td>
-                                                     
-                                                    
-                                                       @if (!empty($order->evaluacion_comercial ))
-                                                           {{$order->evaluacion_comercial }} 
-                                                       @endif
-                                                
-                                                   
-                                                 </td>
-                                                 <td>
-                                                     
-                                                    
-                                                     @if (!empty($order->confiabilidad3 ))
-                                                         {{$order->confiabilidad3 }} 
-                                                     @endif
-                                                
-                                               </td>
-                                                 </tr>
+                                                 
                                    
                                    
                                                  
                                    
                                    
-                                                 <tr>
+                                                 <tr  style="margin-top: 10px;">
                                                    <td  class="td-title"><span >Decisión final</span></td>
                                                    <td>
                                                        @if (!empty($order->nota_decision_final ))
@@ -528,15 +513,61 @@
                                                    <td>
                                                      
                                             
-                                                        <span value="0"  >  {{ $order['decision_final'] == 0 ? 'Pendiente':'' }}  </span>
+                                                        <!--<span value="0"  >  {{ $order['decision_final'] == 0 ? 'Pendiente':'' }}  </span>
                                                        <span value="1"   > {{ $order['decision_final'] == 1 ? 'Negado ':'' }}</span>
                                                        <span value="2"   > {{ $order['decision_final'] ==2  ? 'Aprobado':'' }}</span>
                                                        <span value="3"   >  {{ $order['decision_final'] ==3  ? 'Diferido':'' }}</span>
-                                                       <span value="3"   > {{ $order['decision_final'] >3  ? 'Otro':'' }}</span>
+                                                       <span value="3"   > {{ $order['decision_final'] >3  ? 'Otro':'' }}</span> -->
                                              
                                                  </td>
                                                  </tr>
                                                </table>
+                                        </div>
+                                    </div>
+
+                                    <div class=" col-lg-12 col-md-12 col-sm-12 ">
+
+                                       
+                                        <div class="d-flex justify-content-end align-items-center ">
+
+                                                  <table class="table custom-table mt-5">
+                                                    <thead>
+                                                      <tr>
+                                                       
+                                                        <th scope="col">APROBADO</th>
+                                                        <th scope="col">NEGADO</th>
+                                                        <th scope="col">DIFERIDO</th>
+                                                        <th >OTRO</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr>
+                                                      
+                                                        <td><p class="p-3"></p></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                      </tr>
+                                                      
+                                                     
+
+                                                    
+                                                    </tbody>
+                                                  </table>
+                                                
+
+                                                  
+
+
+
+                                      
+                                           
+
+                                            
+                                        </div>
+                                        <div style="text-align: center;">
+                                           <span style="width: 100%; font-weight: bold;"> ___________________________________________________________________</span>
+                                            <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
                                         </div>
                                     </div>
 
@@ -596,7 +627,7 @@
 
                     </div>
                      
-                    <div style="font-weight: 600;" class="invoice-footer">
+                    <div style="font-weight:bold; font-size: 15px;" class="invoice-footer">
                         Documento generado a través del sistema de Waika Import
                     </div>
                     <h5 class="text-center"  style="page-break-after:always"> </h5>
