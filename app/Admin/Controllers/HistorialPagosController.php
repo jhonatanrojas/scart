@@ -1000,16 +1000,18 @@ class HistorialPagosController extends RootAdminController
                 $estado = Estado::all();
                 $municipio = Municipio::all();
                 $parroquia = Parroquia::all();
-                $order = ShopOrder::where('id', $data['c_order_id'])->get();
+                $order = ShopOrder::where('id', $data['c_order_id'])->first();
                 $letraconvertir_nuber = new NumeroLetra;
+
+
+               
                 
                 if (!$order) {
                     return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
                 }
         
-                $convenio = Convenio::where('order_id',$data['c_order_id'])->first();
                 
-                $usuario =  SC_shop_customer::where('id', $order[0]->customer_id)->get();
+                $usuario =  SC_shop_customer::where('id', $order->customer_id)->get();
                 $result = $usuario->all();
                 $productoDetail = shop_order_detail::where('order_id' , $data['c_order_id'])->get();
                 $cantidaProduc = shop_order_detail::where('order_id',$data['c_order_id'])->count();
@@ -1064,7 +1066,7 @@ class HistorialPagosController extends RootAdminController
                         
                         [
                 
-                            'subtotal'=> $order[0]['subtotal'],
+                            'subtotal'=> $order['subtotal'],
                             'cantidaProduc'=> $cantidaProduc,
                             'nombreProduct'=> $nombreProduct,
                             'cuotas' => $cuotas,
@@ -1202,7 +1204,7 @@ class HistorialPagosController extends RootAdminController
                                 $dato_usuario[0]['nombreProduct'] ,
                                 $dato_usuario['phone'],
                                 $dato_usuario['email'],
-                                $this->fechaEs(),
+                                $this->fechaEs($order->fecha_primer_pago),
                                 sc_file(sc_store('logo', ($storeId ?? null))),
                                 sc_file(sc_store('logo', ($storeId ?? null))) ,
                                 'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
@@ -1278,7 +1280,7 @@ class HistorialPagosController extends RootAdminController
                                 $dato_usuario[0]['nombreProduct'] ,
                                 $dato_usuario['phone'],
                                 $dato_usuario['email'],
-                                $this->fechaEs(),
+                                $this->fechaEs($order->fecha_primer_pago),
                                 sc_file(sc_store('logo', ($storeId ?? null))),
                                 sc_file(sc_store('logo', ($storeId ?? null))) ,
                                 'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
@@ -1568,9 +1570,9 @@ class HistorialPagosController extends RootAdminController
 
 
 
-    public function fechaEs()
+    public function fechaEs($fechas)
 {
-    $fecha = Carbon::now();
+    $fecha = Carbon::createFromFormat('Y-m-d', $fechas);
     $diaSemana = ucfirst($fecha->locale('es')->dayName);
     $numeroDia = $fecha->day;
     $nombreMes = ucfirst($fecha->locale('es')->monthName);
@@ -1578,6 +1580,8 @@ class HistorialPagosController extends RootAdminController
 
     return "{$diaSemana} {$numeroDia} de {$nombreMes} del {$anio}";
 }
+
+
     
 
 
@@ -1895,9 +1899,9 @@ class HistorialPagosController extends RootAdminController
 
              
    
-         function fechaEs()
+         function fechaEs($fechas)
         {
-            $fecha = Carbon::now();
+            $fecha = Carbon::createFromFormat('Y-m-d', $fechas);
             $diaSemana = ucfirst($fecha->locale('es')->dayName);
             $numeroDia = $fecha->day;
             $nombreMes = ucfirst($fecha->locale('es')->monthName);
@@ -1911,7 +1915,7 @@ class HistorialPagosController extends RootAdminController
 
         if($dataSearch['pdf_cobranzas']){
             $data['totales'] = $totales;
-            $data['fecha'] =fechaEs();
+            $data['fecha'] =fechaEs(date('d-m-y'));
             $data['totaleudsBS'] = $totale;
             $data['listTh'] = $listTh;
             $data['dataTr'] = $dataTr;
