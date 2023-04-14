@@ -1609,7 +1609,7 @@ class  AdminOrderController extends RootAdminController
                 $pdf = PDF::loadView($this->templatePathAdmin.'screen.comvenio_pdf', [
                     'borrado_html' => $plantilla->convenio,
                     'convenio' => $plantilla['nro_convenio'],
-                    'fecha_convenio' => formatearFecha($order->fecha_primer_pago)
+                    'fecha_convenio' => formatearFecha($order->fecha_primer_pago ?? date('d-m-y'))
                 ]);
                 
 
