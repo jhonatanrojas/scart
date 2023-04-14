@@ -216,6 +216,12 @@
         font-size: 18px;
     }
 
+    @media print {
+  div.nueva-pagina {
+    page-break-before: always;
+  }
+}
+
    
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
@@ -381,7 +387,7 @@
                     <br>
                          
                        
-                        <div class="invoice-body p-0 m-0">
+                        <div class="invoice-body p-0 m-0 ">
                              <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -426,8 +432,8 @@
                             </div>
                         </div>
             
-                        <div >
-                            <br>
+                        <div  class="nueva-pagina">
+                          
                         
                             <div style="padding-top: 30px;" class="invoice-body " >
                                 <h5 style="font-weight:bold; font-size: 25px; margin-top: 30px; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
@@ -537,13 +543,12 @@
                                         </div>
                                     </div>
 
-                                    <div style="height: 70px; width: 100%;"></div>
 
 
                                     <div class=" col-lg-12 col-md-12 col-sm-12 mt-4 ">
 
                                        
-                                        <div class="d-flex justify-content-end align-items-center mt-4   mb-5">
+                                        <div class="d-flex justify-content-end align-items-center">
                                             
 
                                                   <table class="table custom-table mt-4 pt-4">
@@ -581,7 +586,7 @@
 
                                             
                                         </div>
-                                        <div style="text-align: center;">
+                                        <div class="mt-4" style="text-align: center;">
                                            <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
                                             <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
                                         </div>
@@ -651,13 +656,13 @@
                     <div class="col-12"  style="page-break-after:always">
 
                         <div class="view view-first " >  
-                            <div>
+                            <div class="nueva-pagina">
                             <img  style=" max-width: 500px; height: auto;" class="img-fluid" src="/{!! $doc_cedula!!}" />  
                             </div>
-                            <div style="page-break-after:always">
+                            <div class="nueva-pagina" style="page-break-after:always">
                             <img  style=" max-width: 500px; height: auto;" class="img-fluid" src="/{!! $rif !!}"/>  
                         </div>
-                        <div style="">
+                        <div class="nueva-pagina" style="page-break-after:always">
                             <img  style=" max-width: 500px; height: auto;"class="img-fluid" src="/{!! $constacia_trabajo !!}" />   
                         </div>
                         </div>
