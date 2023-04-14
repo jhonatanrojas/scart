@@ -181,10 +181,6 @@
     .text-muted {
         color: #01040a !important;
     }
-    table tbody tr .td-title {
-       
-        
-    }
 
     .custom-actions-btns {
         margin: auto;
@@ -193,6 +189,7 @@
     }
 
     .custom-actions-btns .btn {
+        
         
     }
 
@@ -391,6 +388,8 @@
                                 <h5  style="font-weight:bold; font-size: 25px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
+
+                              
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
                                         <table class="table custom-table m-0">
@@ -446,10 +445,12 @@
                                                          @endif
                                                     
                                                  </td>
+
+                                                 
                                                    <td >
                                                      
                                                        @if (!empty($order->evaluacion_comercial ))
-                                                           {{$order->evaluacion_comercial }} 
+                                                           {{$order->evaluacion_financiera }} 
                                                        @endif
                                                
                                                    
