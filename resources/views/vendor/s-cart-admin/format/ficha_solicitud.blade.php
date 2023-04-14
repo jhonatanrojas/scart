@@ -181,10 +181,6 @@
     .text-muted {
         color: #01040a !important;
     }
-    table tbody tr .td-title {
-        padding-top: 55px;
-        
-    }
 
     .custom-actions-btns {
         margin: auto;
@@ -193,7 +189,8 @@
     }
 
     .custom-actions-btns .btn {
-        margin: .3rem 0 .3rem .3rem;
+        
+        
     }
 
     table td{
@@ -207,13 +204,13 @@
         color: #01060a;
     }
     li{
-        font-size: 18px;
+        font-size: 17px;
     }
     table thead tr th{
-        font-size: 18px;
+        font-size: 17px;
     }
     table tbody tr th{
-        font-size: 18px;
+        font-size: 17px;
     }
 
     @media print {
@@ -381,14 +378,9 @@
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95  mt-lg-0">
                             <p style="font-weight:bold; font-size: 20px;" >Notas:</p> 
-                            <i style="font-weight: bold; line-height: 25pt;">{!! $comment !!}</i>
+                            <i style="font-weight: bold; line-height: 20pt;">{!! $comment !!}</i>
                         </div>
 
-                    <br>
-                         
-                       
-                       
-            
                         <div  class="">
                           
                         
@@ -396,6 +388,8 @@
                                 <h5  style="font-weight:bold; font-size: 25px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
+
+                              
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="table-responsive">
                                         <table class="table custom-table m-0">
@@ -443,7 +437,7 @@
                                    
                                                  <tr >
                                                    <td  class="td-title"><span > Evaluación legal y Financiera</span></td>
-                                                   <td class="td-titulo">
+                                                   <td >
                                                      
                                                        @if (!empty($order->nota_evaluacion_financiera ))
                                                         
@@ -451,15 +445,17 @@
                                                          @endif
                                                     
                                                  </td>
-                                                   <td class="td-titulo">
+
+                                                 
+                                                   <td >
                                                      
                                                        @if (!empty($order->evaluacion_comercial ))
-                                                           {{$order->evaluacion_comercial }} 
+                                                           {{$order->evaluacion_financiera }} 
                                                        @endif
                                                
                                                    
                                                  </td>
-                                                 <td class="td-titulo">
+                                                 <td >
                                                      
                                                     
                                                                  
@@ -503,62 +499,53 @@
 
 
 
+                                    <div class=" col-lg-12 col-md-12 col-sm-12  ">
+
+                                       
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            
+
+                                                  <table class="table custom-table">
+                                                    <thead>
+                                                      <tr>
+                                                       
+                                                        <th scope="col">APROBADO</th>
+                                                        <th scope="col">NEGADO</th>
+                                                        <th scope="col">DIFERIDO</th>
+                                                        <th >OTRO</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr>
+                                                      
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                      </tr>
+                                                      
+                                                     
+
+                                                    
+                                                    </tbody>
+                                                  </table>
+
+                                                   <div class="mt-1" style="text-align: center;">
+                                           <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
+                                            <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
+                                        </div>
+        
+                                        </div>
+                                       
+                                    </div>
+
+
                                     </div>
                                 </div>
                             </div>
 
 
                             <div class="invoice-body p-0 m-0 nueva-pagina mt-5">
-
-
-                                <div class=" col-lg-12 col-md-12 col-sm-12  ">
-
-                                       
-                                    <div class="d-flex justify-content-end align-items-center">
-                                        
-
-                                              <table class="table custom-table">
-                                                <thead>
-                                                  <tr>
-                                                   
-                                                    <th scope="col">APROBADO</th>
-                                                    <th scope="col">NEGADO</th>
-                                                    <th scope="col">DIFERIDO</th>
-                                                    <th >OTRO</th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                  <tr>
-                                                  
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                  </tr>
-                                                  
-                                                 
-
-                                                
-                                                </tbody>
-                                              </table>
-                                            
-
-                                              
-
-
-
-                                  
-                                       
-
-                                        
-                                    </div>
-                                    <div class="mt-3" style="text-align: center;">
-                                       <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
-                                        <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
-                                    </div>
-                                </div>
-
-
                                 <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
                                <div class="row gutters">
                                    <div class="col-lg-12 col-md-12 col-sm-12">
