@@ -393,7 +393,7 @@
                           
                         
                             <div class="invoice-body " >
-                                <h5 style="font-weight:bold; font-size: 25px;  " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
+                                <h5  style="font-weight:bold; font-size: 25px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -477,7 +477,7 @@
                                                  
                                    
                                    
-                                                 <tr  style="margin-top: 10px;">
+                                                 <tr >
                                                    <td  class="td-title"><span >Decisión final</span></td>
                                                    <td>
                                                        @if (!empty($order->nota_decision_final ))
