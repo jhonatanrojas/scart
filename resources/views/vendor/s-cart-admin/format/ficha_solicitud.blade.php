@@ -369,7 +369,7 @@
                                                 @endforeach
                                                 <tr>
                                                     <td colspan="6">&nbsp;</td><td>
-           <p> <strong>Total</strong></p></td>
+                                                    <p> <strong>Total</strong></p></td>
                                                         
                                                        <td>${{$monto_cuota_total}}</td> <td><strong>${{ $monto_total }}</strong></h5></td></tr>
                                             </tbody>
@@ -379,64 +379,21 @@
                             </div>
                             <!-- Row end -->
                         </div>
-                        <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+                        <div class="col-12 col-sm-7 text-grey-d2 text-95  mt-lg-0">
                             <p style="font-weight:bold; font-size: 20px;" >Notas:</p> 
-                            <i style="font-weight: bold; line-height: 30pt;">{!! $comment !!}</i>
+                            <i style="font-weight: bold; line-height: 25pt;">{!! $comment !!}</i>
                         </div>
 
                     <br>
                          
                        
-                        <div class="invoice-body p-0 m-0 ">
-                             <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
-                            <div class="row gutters">
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <div class="table-responsive">
-                                        <table  class="table custom-table m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nombre</th>
-                                                    <th>Apellido</th>
-                                                    <th>Cedula</th>
-                                                    <th>Telefono</th>
-                                                    <th>Parentesco</th>
-                                                    <th>Nota</th>
-
-                                                </tr>
-                                            </thead>
-
-                                            @foreach ($referencias as $ref)
-                                                <tbody >
-
-
-
-                                                    <td>{{ $ref->nombre_ref }}</td>
-                                                    <td>{{ $ref->apellido_ref }}</td>
-                                                    <td>{{ $ref->cedula_ref }}</td>
-                                                    <td>{{ $ref->telefono }}</td>
-                                                    <td>{{ $ref->parentesco }}</td>
-                                                    <td>{{ $ref->nota }}</td>
-
-
-
-
-
-                                                </tbody>
-                                            @endforeach
-
-
-
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
             
-                        <div  class="nueva-pagina">
+                        <div  class="">
                           
                         
-                            <div style="padding-top: 30px;" class="invoice-body " >
-                                <h5 style="font-weight:bold; font-size: 25px; margin-top: 30px; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
+                            <div class="invoice-body " >
+                                <h5 style="font-weight:bold; font-size: 25px;  " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -545,13 +502,13 @@
 
 
 
-                                    <div class=" col-lg-12 col-md-12 col-sm-12 mt-4 ">
+                                    <div class=" col-lg-12 col-md-12 col-sm-12  ">
 
                                        
                                         <div class="d-flex justify-content-end align-items-center">
                                             
 
-                                                  <table class="table custom-table mt-4 pt-4">
+                                                  <table class="table custom-table">
                                                     <thead>
                                                       <tr>
                                                        
@@ -586,67 +543,66 @@
 
                                             
                                         </div>
-                                        <div class="mt-4" style="text-align: center;">
+                                        <div class="mt-3" style="text-align: center;">
                                            <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
                                             <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
                                         </div>
                                     </div>
 
 
-                                   
-                                    <div class=" col-lg-12 col-md-12 col-sm-12 ">
-
-                                       
-                                        <div class="d-flex justify-content-end align-items-center ">
-
-                                                   <div class="table-responsive">
-                        
-
-                                          
-
-
-                                                <div class="table-responsive">
-                                                  <table class="table custom-table mt-5">
-                                                    <thead>
-                                                      <tr>
-                                                        <th scope="col"></th> <!-- Nueva columna agregada -->
-                                                        <th scope="col">Evacuación comercial(Vendedor)</th>
-                                                        <th scope="col">Evaluación financiera y legal (riesgo)</th>
-                                                        <th scope="col">Decisión Final (comité Evaluación)</th>
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr>
-                                                        <td>Nombre y Apellido</td> <!-- Nombre y Apellido agregados -->
-                                                        <td><p class="p-3"></p></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                      </tr>
-                                                      <tr class="table-light">
-                                                        
-                                                      </tr>
-                                                      <tr>
-                                                        <td>Firma</td> <!-- Nombre y Apellido agregados -->
-                                                        <td><p class="p-3"></p></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                      </tr>
-                                                    </tbody>
-                                                  </table>
-                                                </div>
-
-
-
-                                        </div>
-                                           
-
-                                            
-                                        </div>
                                     </div>
                                 </div>
                             </div>
 
+
+                            <div class="invoice-body p-0 m-0 nueva-pagina mt-5">
+                                <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
+                               <div class="row gutters">
+                                   <div class="col-lg-12 col-md-12 col-sm-12">
+                                       <div class="table-responsive">
+                                           <table  class="table custom-table m-0">
+                                               <thead>
+                                                   <tr>
+                                                       <th>Nombre</th>
+                                                       <th>Apellido</th>
+                                                       <th>Cedula</th>
+                                                       <th>Telefono</th>
+                                                       <th>Parentesco</th>
+                                                       <th>Nota</th>
+   
+                                                   </tr>
+                                               </thead>
+   
+                                               @foreach ($referencias as $ref)
+                                                   <tbody >
+   
+   
+   
+                                                       <td>{{ $ref->nombre_ref }}</td>
+                                                       <td>{{ $ref->apellido_ref }}</td>
+                                                       <td>{{ $ref->cedula_ref }}</td>
+                                                       <td>{{ $ref->telefono }}</td>
+                                                       <td>{{ $ref->parentesco }}</td>
+                                                       <td>{{ $ref->nota }}</td>
+   
+   
+   
+   
+   
+                                                   </tbody>
+                                               @endforeach
+   
+   
+   
+                                           </table>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+
                     </div>
+
+                   
                      
                     <div style="font-weight:bold; font-size: 15px;" class="invoice-footer">
                         Documento generado a través del sistema de Waika Import
