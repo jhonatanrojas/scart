@@ -2,6 +2,4 @@
       <!--Module left -->
       @includeIf($sc_templatePath.'.common.render_block', ['positionBlock' => 'left'])
       <!--//Module left -->
-
-1
     </div>
