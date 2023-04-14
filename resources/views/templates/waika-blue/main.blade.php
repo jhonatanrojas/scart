@@ -57,13 +57,18 @@
     {{-- Sobre escribiendo estilos --}}
     <link href="{{asset('templates/waika-blue/assets/css/style.css')}}" rel="stylesheet">
 
-    <link href="{{asset('templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.carousel.min.css')}}" rel="stylesheet">
-
+    
     <style>
         {!! sc_store_css() !!}
     </style>
     <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+    
     @stack('styles')
+    
+    {{-- owl --}}
+    <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.carousel.min.css')}}" rel="stylesheet">
+    <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet">
+    {{-- end owl --}}
   </head>
 <body>
     <div class="ie-panel">
@@ -97,14 +102,14 @@
 
         {{-- Block main --}}
         @section('block_main')
-            <section class="section section-xxl bg-default text-md-left">
+            <section class="section">
                 <div class="container">
                     <div class="row">
                         @section('block_main_content')
-
+                        
                         @if (empty($hiddenBlockLeft))
                             <!--Block left-->
-                            <div class="col-lg-4 col-xl-3">
+                            <div class="col-lg-3">
                                 @section('block_main_content_left')
                                     @include($sc_templatePath.'.block_main_content_left')
                                 @show
@@ -112,7 +117,7 @@
                             <!--//Block left-->
 
                             <!--Block center-->
-                            <div class="col-lg-9 col-xl-9">
+                            <div class="col-9">
                                 @section('block_main_content_center')
                                     @include($sc_templatePath.'.block_main_content_center')
                                 @show
@@ -120,9 +125,11 @@
                             <!--//Block center-->
                         @else
                             <!--Block center-->
-                            @section('block_main_content_center')
+                            <div class="col-12">
+                                @section('block_main_content_center')
                                 @include($sc_templatePath.'.block_main_content_center')
-                            @show
+                                @show
+                            </div>
                             <!--//Block center-->
                         @endif
 
@@ -170,7 +177,8 @@
 
     <script src="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js')}}"></script>
 
-    <script src="{{asset('templates/waika-blue/assets/owlcarousel2-2.3.4/dist/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/owl.carousel.min.js')}}"></script>
+    
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')
