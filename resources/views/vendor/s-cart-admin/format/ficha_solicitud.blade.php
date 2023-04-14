@@ -430,7 +430,7 @@
                             <br>
                           
                             <div style="padding-top: 30px;" class="invoice-body " >
-                                <h5 style="font-weight:bold; font-size: 25px;  " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
+                                <h5 style="font-weight:bold; font-size: 25px; margin-top: 30px; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
