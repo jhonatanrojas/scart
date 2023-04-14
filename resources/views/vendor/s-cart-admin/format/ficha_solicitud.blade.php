@@ -502,53 +502,6 @@
 
 
 
-                                    <div class=" col-lg-12 col-md-12 col-sm-12  ">
-
-                                       
-                                        <div class="d-flex justify-content-end align-items-center">
-                                            
-
-                                                  <table class="table custom-table">
-                                                    <thead>
-                                                      <tr>
-                                                       
-                                                        <th scope="col">APROBADO</th>
-                                                        <th scope="col">NEGADO</th>
-                                                        <th scope="col">DIFERIDO</th>
-                                                        <th >OTRO</th>
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr>
-                                                      
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                      </tr>
-                                                      
-                                                     
-
-                                                    
-                                                    </tbody>
-                                                  </table>
-                                                
-
-                                                  
-
-
-
-                                      
-                                           
-
-                                            
-                                        </div>
-                                        <div class="mt-3" style="text-align: center;">
-                                           <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
-                                            <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
-                                        </div>
-                                    </div>
-
 
                                     </div>
                                 </div>
@@ -556,6 +509,56 @@
 
 
                             <div class="invoice-body p-0 m-0 nueva-pagina mt-5">
+
+
+                                <div class=" col-lg-12 col-md-12 col-sm-12  ">
+
+                                       
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        
+
+                                              <table class="table custom-table">
+                                                <thead>
+                                                  <tr>
+                                                   
+                                                    <th scope="col">APROBADO</th>
+                                                    <th scope="col">NEGADO</th>
+                                                    <th scope="col">DIFERIDO</th>
+                                                    <th >OTRO</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <tr>
+                                                  
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                  </tr>
+                                                  
+                                                 
+
+                                                
+                                                </tbody>
+                                              </table>
+                                            
+
+                                              
+
+
+
+                                  
+                                       
+
+                                        
+                                    </div>
+                                    <div class="mt-3" style="text-align: center;">
+                                       <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
+                                        <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
+                                    </div>
+                                </div>
+
+
                                 <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
                                <div class="row gutters">
                                    <div class="col-lg-12 col-md-12 col-sm-12">
