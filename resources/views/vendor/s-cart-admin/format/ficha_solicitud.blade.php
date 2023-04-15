@@ -268,12 +268,15 @@
                                 <div  class="col-lg-6 col-md-6 col-sm-6">
                                     <address style="font-weight: 600; font-size: 17px;" class="text-right address2 " id="address2">
                                         {{ sc_store('address') }}
-                                        <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
-                                                class="text-90">Nro solicitud:</span> #{{ $id }}</div>
+                                        
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
                                     </address>
                                    
                                 </div>
+
+                               <div class="col-12">
+                                <h4 style="font-weight: bold; font-size: 20px;" class="p-0 m-0 text-center "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h4>
+                               </div>
 
                                
                             </div>
@@ -282,9 +285,11 @@
                             <div  class="row gutters">
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
+
+                                       
                                         <address class=" text-uppercase">
                                             <ul  class="address">
-                                                <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
+                                               
                                               <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
                                               
@@ -472,10 +477,10 @@
                                    
                                                  
                                    
-                                   
+                                  
                                                  <tr >
-                                                   <td  class="td-title"><span >Decisión final</span></td>
-                                                   <td>
+                                                   <td style="padding: 40px;" class="td-title"><span >Decisión final</span></td>
+                                                   <td >
                                                        @if (!empty($order->nota_decision_final ))
                                                        {{$order->nota_decision_final }} 
                                                    @endif
@@ -499,7 +504,7 @@
 
 
 
-                                    <div class=" col-lg-12 col-md-12 col-sm-12  ">
+                                    <div class=" col-lg-12 col-md-12 col-sm-12  mb-3">
 
                                        
                                         <div class="d-flex justify-content-end align-items-center">
@@ -530,10 +535,7 @@
                                                     </tbody>
                                                   </table>
 
-                                                   <div class="mt-1" style="text-align: center;">
-                                           <span style="width: 100%; font-weight: bold; "> ___________________________________________________________________</span>
-                                            <h3 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h3>
-                                        </div>
+                                       
         
                                         </div>
                                        
@@ -541,6 +543,11 @@
 
 
                                     </div>
+                                </div>
+
+                                 <div class="mt-1" style="text-align: center; ">
+                                           <span style="width: 100%; font-weight: bold; "> __________________________________________________________________________________________________</span>
+                                            <h4 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h4>
                                 </div>
                             </div>
 
