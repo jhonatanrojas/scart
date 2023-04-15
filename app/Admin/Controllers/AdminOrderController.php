@@ -1281,6 +1281,8 @@ class  AdminOrderController extends RootAdminController
         $constacia_trabajo='';
         $rif='';
         $cedula='';
+
+       
        
         $nro_convenio = 'A/N';
 
@@ -1352,7 +1354,7 @@ class  AdminOrderController extends RootAdminController
             $data['total']           = $order['total'];
             $data['received']        = $order['received'];
             $data['balance']         = $order['balance'];
-            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['other_fee']       = $order['other_fee'] ?? '';
             $data['comment']         = $order['comment'];
             $data['country']         = $order['country'];
             $data['id']              = $order->id;

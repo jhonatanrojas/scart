@@ -455,7 +455,7 @@
                                                    <td >
                                                      
                                                        @if (!empty($order->evaluacion_comercial ))
-                                                           {{$order->evaluacion_financiera }} 
+                                                           {!!$order->evaluacion_financiera == 0 ? $notas = '' : $notas = $order->evaluacion_financiera !!}
                                                        @endif
                                                
                                                    
