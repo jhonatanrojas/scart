@@ -312,7 +312,7 @@
                             <!-- Row start -->
                             <div class="row gutters p-0 m-0">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <div class="table-responsive">
+                                    <div class="">
                                         <table style="margin-top: 10px;" class="table custom-table m-0">
                                             <thead>
                                                 <tr>
