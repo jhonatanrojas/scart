@@ -25,6 +25,10 @@ use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use SCart\Core\Front\Models\ShopPaymentStatus;
+use SCart\Core\Front\Models\ShopOrderDetail;
+use DateTime;
+use DateInterval;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -864,9 +868,8 @@ class HistorialPagosController extends RootAdminController
         }
 
         if ($historial_pago && $keyword) {
-            $orderList->where('sc_historial_pagos.order_id',$keyword)
-            ->where('sc_historial_pagos.payment_status', 5);
-
+            $orderList->whereIn('sc_historial_pagos.payment_status', [1, 5])
+                ->where('sc_historial_pagos.order_id', $keyword);
         }
 
         if ($order_status) {
@@ -961,7 +964,9 @@ class HistorialPagosController extends RootAdminController
             }
             
 
-        } else {
+        } 
+
+        else {
             $orderList->where('sc_historial_pagos.payment_status','<>' ,2)
             ->orderBy('fecha_pago', 'desc');
 
@@ -2007,13 +2012,16 @@ class HistorialPagosController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
-            'N° de Pago'      => 'N° de Pago',
-            'MONTO' => 'Monto de
-            Pago Bs',
-            'tasa_cambio' => 'TASA DE CAMBIO',
-            'Referencia_$' => 'Referencia $',
-            'FORMA_DE_PAGO' => 'FORMA DE PAGO',
-            'REFRENCIA' => 'REFRENCIA',
+            'N° de Pago'      => 'N°',
+            'MONTO' => 'Importe',
+            'Reportado' => 'Reportado',
+            'DIVISA' => 'Divisa',
+            'CONVERSION' => 'Conversion',
+            'tasa_cambio' => 'Tasa ',
+            'estatus' => 'Estatus',
+            'FORMA_DE_PAGO' => 'Forma de pago',
+            'REFRENCIA' => 'Referencia',
+            'FECHA_DE_PAGO' => 'Fecha de pago',
 
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
@@ -2036,6 +2044,8 @@ class HistorialPagosController extends RootAdminController
             'arrSort'    => $arrSort,
         ];
 
+    
+
 
       
 
@@ -2049,64 +2059,87 @@ class HistorialPagosController extends RootAdminController
         $total_monto_pagado = 0;
         $total_usd_pagado = 0;
         $vendedor = '';
+        $totalPor_pagar = '';
 
 
-        if(empty($dataTmp->all())){
+        if(empty($dataTmp)){
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
             ->with(['error' => 'no hay pago Reportado']);
         }
-        
+
+  
         foreach ($dataTmp as $key => $row) {
-                $pagados = [];
+            $ultimoPago = HistorialPago::latest()->first();
+            $fechaVencimiento = $ultimoPago->fecha_vencimiento;
+            $proximoPago = \Carbon\Carbon::parse($fechaVencimiento)->addMonth();
+           
+
+
+
+        $statusPayment = ShopPaymentStatus::pluck( 'name','id' )->all();
+
+
+
+        $styleStatusPayment = $statusPayment;
+        array_walk($styleStatusPayment, function (&$v, $k) {
+            $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
+            $historial_pagos = HistorialPago::where('order_id', $row->order_id)
+                ->where('payment_status', 1)
+                ->get();
+                $order = AdminOrder::getOrderAdmin($row->order_id);
+                $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first() ;
+                $detalle = ShopOrderDetail::where('order_id' ,$row->order_id)->first(); 
+
+                $adeUdado = 0;
+
+                    foreach ($historial_pagos as $importe_coutas) {
+                    if (is_numeric($importe_coutas->importe_couta)) {
+                    $adeUdado += $importe_coutas->importe_couta;
+                    }
+                    }
+
+                $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
 
 
                
-        
-        // $fecha_actual = date('Y-m-d');
-        // $fech_p = date('Y-m-d',strtotime($fecha_actual . "-10 day"));
 
-        //     $historial_pagos =   HistorialPago::where('order_id', $row->order_id)->where('payment_status',3)
-        //     ->orWhere('payment_status',4 )
-        //     ->orderBy('fecha_venciento')->first();
-            
+               
 
-        //     dd($historial_pagos);
-
-
-                $user_roles = AdminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
-                $User_roles = $user_roles[0]->role_user;
-                $ademin = SC_admin_role::where('id' , $User_roles)->get();
-                $list_usuarios = $ademin[0]->name;
-
-
-
-                $order = AdminOrder::getOrderAdmin($row->order_id);
-
-                $forma_pago = $row['metodoPago'];
+                $list_usuarios =$user_roles->username ?? 'N/A';
                 $moneda = $row['moneda'];
                 $monto = $row['importe_pagado'];
-                $totalusd = '';
+               
 
-               if($moneda == 'USD'){
-                     $result=  $row->tasa_cambio * $monto;
-                     $monto = round($result , 2);
-                     $result2  = $monto / $row->tasa_cambio; 
-                     $Referencia = round($result2 , 2);
-               }else if($moneda == 'Bs'){
-                        $result = $monto;
-                        $monto = round($result , 2);
-                        $result2  = $monto /  $row->tasa_cambio  ; 
-                        $Referencia = round($result2 , 2);
+                if ($moneda == 'USD') {
+                    // El monto está en dólares
+                    $monto_dolares = round($monto, 2);
+                    $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                    $Referencia = $monto_bolivares;
+                    $diVisA = $moneda;
+                    $Reportado =  $monto;
+                } elseif ($moneda == 'Bs') {
+                    // El monto está en bolívares
+                    $monto_bolivares = round($monto, 2);
+                    $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                    $Referencia = $monto_dolares .'.'. 000;
+                    $diVisA = $moneda;
+                    $Reportado =  $monto;
                 }
-
+               
 
                 $dataTr[$row->id ] = [
                     'N° de Pago'      => $Nr++,
-                    'MONTO' => $monto,
-                    'tasa_cambio' => $row->tasa_cambio,
-                    'Referencia_$' => $Referencia,
+                    'MONTO' => $row->importe_couta,
+                    'Reportado' => $Reportado ?? 0,
+                    'DIVISA' => $diVisA,
+                    'CONVERSION' => $Referencia,
+                    'tasa_cambio' => $row->tasa_cambio ?? 0,
+                    'estatus' => $styleStatusPayment[$row->payment_status],
                     'FORMA_DE_PAGO' => $row->metodoPago,
                     'REFRENCIA' => $row->referencia,
+                    'FECHA_DE_PAGO' => $fecha_formateada
 
                 ];
 
@@ -2123,13 +2156,16 @@ class HistorialPagosController extends RootAdminController
                 $fecha_maxima_entrega= $row->fecha_maxima_entrega;
                 $order_id = $row->order_id;
                 $lote = $row->lote;
-                $fecha_pago = $row->fecha_pago;
+                $fecha_pago = $row->fecha_pago  ?? '';
                 $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr ) +1;
-                $total_monto_pagado += $monto ;
-                $total_usd_pagado += $Referencia;
+                $total_monto_pagado += $monto_dolares * $row->tasa_cambio ;
+                $total_usd_pagado += $monto_dolares;
                 $Importe_couta = $row->importe_couta;
                 $Cedula = $row->cedula;
-                $vendedor = $list_usuarios;
+                $vendedor = $list_usuarios ;
+                $totalPor_pagar =  $adeUdado;
+                $Serial_produt = $detalle->serial;
+                $formatted_dates = 'A/N';
 
            
 
@@ -2138,6 +2174,9 @@ class HistorialPagosController extends RootAdminController
 
      
             
+            $data['formatted_dates'] = $formatted_dates ;
+            $data['totalPor_pagar'] = $totalPor_pagar ;
+            $data['Serial_produt'] = $Serial_produt ;
             $data['cliente'] = $cliente ?? '';
             $data['vendedor'] = $vendedor ?? '';
             $data['cedula'] = $Cedula ?? '';
@@ -2145,16 +2184,17 @@ class HistorialPagosController extends RootAdminController
             $data['Importe_couta'] = $Importe_couta ?? '';
             $data['total_monto_pagado'] = $total_monto_pagado;
             $data['total_usd_pagado'] = $total_usd_pagado;
-            $data['Cuotas_Pendientes'] = $Cuotas_Pendientes;
-            $data['fecha_pago'] = $fecha_pago;
-            $data['lote'] = $lote;
-            $data['order_id'] = $order_id;
-            $data['nro_convenio'] = $nro_convenio;
-            $data['nombre_product'] = $nombre_product;
-            $data['cantidad'] = $cantidad;
-            $data['tota_product'] = $tota_product;
-            $data['totales'] = $totales;
+            $data['Cuotas_Pendientes'] = $Cuotas_Pendientes ?? 0;
+            $data['fecha_pago'] = $fecha_pago ?? '';
+            $data['lote'] = $lote ?? '';
+            $data['order_id'] = $order_id ?? '';
+            $data['nro_convenio'] = $nro_convenio ?? '';
+            $data['nombre_product'] = $nombre_product ?? '';
+            $data['cantidad'] = $cantidad ?? 0;
+            $data['tota_product'] = $tota_product ?? 0;
+            $data['totales'] = $totales ?? 0;
             $data['fecha_maxima_entrega'] =$this->fechaEs($fecha_maxima_entrega) ;
+           
 
 
             if($dataSearch['historial_pago']){

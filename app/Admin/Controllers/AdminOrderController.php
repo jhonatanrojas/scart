@@ -214,10 +214,7 @@ class  AdminOrderController extends RootAdminController
 
            
             $Articulo = shop_order_detail::where('order_id', $row->id)->first();
-
             $convenio = Convenio::where('order_id',$row->id)->first();
-
-           
             $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
 
             

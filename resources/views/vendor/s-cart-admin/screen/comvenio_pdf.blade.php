@@ -128,11 +128,18 @@
 
         .huella_text {
             width: 100%;
-            display: inline-flex;
-            justify-content: space-evenly;
-            align-items: center;
-            
-           
+            display: flex;
+            flex-direction: column-reverse;
+            margin-left: 60%;
+            margin-top: 0;
+        
+        }
+        .waika{
+            font-weight:bold ;
+            font-size: 15px;
+            margin-top: 20px;
+
+          
 
         }
         .huella_text .huella{
@@ -141,6 +148,7 @@
             margin-left: 5px;
             border: solid black 1px;
             float: left;
+            
             
         }
         #logo_fondo{
