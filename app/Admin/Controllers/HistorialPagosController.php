@@ -2067,16 +2067,14 @@ class HistorialPagosController extends RootAdminController
         $totalPor_pagar = '';
 
 
-        if(empty($dataTmp)){
+        if(empty($dataTmp->all())){
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword'] ]) )
             ->with(['error' => 'no hay pago Reportado']);
         }
 
   
         foreach ($dataTmp as $key => $row) {
-            $ultimoPago = HistorialPago::latest()->first();
-            $fechaVencimiento = $ultimoPago->fecha_vencimiento;
-            $proximoPago = \Carbon\Carbon::parse($fechaVencimiento)->addMonth();
+          
            
 
 
@@ -2174,7 +2172,7 @@ class HistorialPagosController extends RootAdminController
                 $vendedor = $list_usuarios ;
                 $totalPor_pagar =  $adeUdado;
                 $Serial_produt = $detalle->serial;
-                $formatted_dates = 'A/N';
+               
 
            
 
@@ -2183,7 +2181,7 @@ class HistorialPagosController extends RootAdminController
 
      
             
-            $data['formatted_dates'] = $formatted_dates ;
+           
             $data['totalPor_pagar'] = $totalPor_pagar ;
             $data['Serial_produt'] = $Serial_produt ;
             $data['cliente'] = $cliente ?? '';
@@ -2202,7 +2200,7 @@ class HistorialPagosController extends RootAdminController
             $data['cantidad'] = $cantidad ?? 0;
             $data['tota_product'] = $tota_product ?? 0;
             $data['totales'] = $totales ?? 0;
-            $data['fecha_maxima_entrega'] =$this->fechaEs($order->fecha_maxima_entrega) ;
+            $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '' ;
            
 
 

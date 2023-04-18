@@ -1848,7 +1848,7 @@ class  AdminOrderController extends RootAdminController
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $this->fechaEs(date('d-m-y')),
+                        'fecha_de_hoy' => 'N/A',
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
