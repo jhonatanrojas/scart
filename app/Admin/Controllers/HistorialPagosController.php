@@ -2090,6 +2090,8 @@ class HistorialPagosController extends RootAdminController
                 ->get();
                 $order = AdminOrder::getOrderAdmin($row->order_id);
                 $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first() ;
+
+                
                 $detalle = ShopOrderDetail::where('order_id' ,$row->order_id)->first(); 
 
                 $adeUdado = 0;
@@ -2107,7 +2109,7 @@ class HistorialPagosController extends RootAdminController
 
                
 
-                $list_usuarios =$user_roles->username ?? 'N/A';
+                $list_usuarios =$user_roles->name ?? 'N/A';
                 $moneda = $row['moneda'];
                 $monto = $row['importe_pagado'];
                
