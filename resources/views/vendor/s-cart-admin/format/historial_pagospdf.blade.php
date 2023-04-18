@@ -86,13 +86,15 @@
 
                             <table style="font-weight: bold;" class="table table-hover box-body text-wrap table-bordered">
                                 <thead>
-                                    <td class="text-center" colspan="4"><h4 style="font-weight: bold;" >PRODUCTO</h4></td>
+                                    <td class="text-center" colspan="6"><h4 style="font-weight: bold;" >PRODUCTO</h4></td>
                                     <tr>
                                        
                                         <td>Descriccion</td>
                                         <td>Cant.</td>
                                         <td>precio.</td>
-                                        <td>Dcto.</td>
+                                        <td>Subtotal</td>
+                                        <td>Descuento</td>
+                                        <td>Total</td>
                                     </tr>
                                 </thead>
                                 
@@ -103,10 +105,12 @@
                                         <td>{{$nombre_product}}</td>
                                         <td>{{$cantidad}}</td>
                                         <td>{{$tota_product}}$</td>
-                                        <td></td>
+                                        <td>{{$subtotal}}</td>
+                                        <td>{{$descuento}}</td>
+                                        <td>{{$Totales}}</td>
                                     </tr>
                                     <br>
-                                <td class="text-center text-uppercase" colspan="5"> <h4 style="font-weight: bold;"  class="p-0 m-0">
+                                <td class="text-center text-uppercase" colspan="6"> <h4 style="font-weight: bold;"  class="p-0 m-0">
                                         Fecha máxima de Entrega <hr>
                                         {{$fecha_maxima_entrega}}
                                     </h4>
@@ -147,7 +151,7 @@
                               <tr>
                                 <td colspan="4">Total de pago</td>
                                
-                                <td colspan="1">Total: {{$total_monto_pagado}}BS</td>
+                                <td colspan="1">Total: {!!round($total_monto_pagado  , 2)!!}   BS</td>
                                 <td colspan="4"></td> 
                                                                <td colspan="">Total: {{$total_usd_pagado}} $</td>
                               </tr>
