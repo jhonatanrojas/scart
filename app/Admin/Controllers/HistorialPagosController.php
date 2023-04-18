@@ -2130,7 +2130,7 @@ class HistorialPagosController extends RootAdminController
                     // El monto está en bolívares
                     $monto_bolivares = round($monto, 2);
                     $monto_dolares = round($monto / $row->tasa_cambio, 2);
-                    $Referencia = $monto_dolares .'.'. 000;
+                    $Referencia = $monto_dolares ;
                     $diVisA = $moneda;
                     $Reportado =  $monto;
                 }
@@ -2172,7 +2172,10 @@ class HistorialPagosController extends RootAdminController
                 $vendedor = $list_usuarios ;
                 $totalPor_pagar =  $adeUdado;
                 $Serial_produt = $detalle->serial;
-               
+              
+                    $descuento = $order->discount;
+                    $subtotale = $order->subtotal;
+                    $Totales = $order->total;
 
            
 
@@ -2180,8 +2183,10 @@ class HistorialPagosController extends RootAdminController
         }
 
      
+            $data['descuento'] = $descuento  ?? 0;
+            $data['subtotal'] = $subtotale ?? 0;
+            $data['Totales'] = $Totales ?? 0;
             
-           
             $data['totalPor_pagar'] = $totalPor_pagar ;
             $data['Serial_produt'] = $Serial_produt ;
             $data['cliente'] = $cliente ?? '';

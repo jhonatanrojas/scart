@@ -354,7 +354,7 @@
                       <td class="td-title">Reporte de pago</td>
                       <td>
 
-                        <a target="_blank"  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
+                        <a  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
                       </td>
 
 
