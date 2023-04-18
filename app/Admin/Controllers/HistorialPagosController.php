@@ -1301,6 +1301,8 @@ class HistorialPagosController extends RootAdminController
         
         
                         }
+
+                       
         
                         $r_convenio=   Convenio::create([
                             'order_id'=> request()->c_order_id,
@@ -1315,6 +1317,9 @@ class HistorialPagosController extends RootAdminController
                             'declaracion_jurada'=>$dataViewe['content'],
                             'fecha_maxima_entrega'=> request()->fecha_maxima_entrega ?? '',
                     ]);
+
+
+                  
            
                     $order = AdminOrder::getOrderAdmin(request()->c_order_id);
                     //generar pagos
