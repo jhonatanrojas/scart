@@ -145,10 +145,11 @@
                               </tbody>
 
                               <tr>
-                                <td colspan="6">Total de pago</td>
-                                
-                                
-                                <td colspan="9">Total: {{$total_usd_pagado}} $</td>
+                                <td colspan="4">Total de pago</td>
+                               
+                                <td colspan="1">Total: {{$total_monto_pagado}}BS</td>
+                                <td colspan="4"></td> 
+                                                               <td colspan="">Total: {{$total_usd_pagado}} $</td>
                               </tr>
                               <tr>
                                 <td style="font-weight: bold;"  class="h4 text-center" colspan="10">RESUMEN</td>
