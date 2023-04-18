@@ -2106,6 +2106,7 @@ class HistorialPagosController extends RootAdminController
 
 
                
+                
 
                
 
