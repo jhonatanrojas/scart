@@ -2091,6 +2091,7 @@ class HistorialPagosController extends RootAdminController
                 $order = AdminOrder::getOrderAdmin($row->order_id);
                 $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first() ;
 
+
                 
                 $detalle = ShopOrderDetail::where('order_id' ,$row->order_id)->first(); 
 
@@ -2196,7 +2197,7 @@ class HistorialPagosController extends RootAdminController
             $data['cantidad'] = $cantidad ?? 0;
             $data['tota_product'] = $tota_product ?? 0;
             $data['totales'] = $totales ?? 0;
-            $data['fecha_maxima_entrega'] =$this->fechaEs($fecha_maxima_entrega) ;
+            $data['fecha_maxima_entrega'] =$this->fechaEs($order->fecha_maxima_entrega) ;
            
 
 

@@ -167,8 +167,8 @@
                                         <li class="">Numero de Cuotas Pendientes:  {{$Cuotas_Pendientes}}</li>
                                         <li>Monto de Proxima Cuota (Ref. $):    {{$Importe_couta}}
                                         </li>
-                                        <li>Fecha Proxima Cuota:{{$formatted_dates ?? 'N/A'}}</li>
-                                        <li></li>
+                                        <!--<li>Fecha Proxima Cuota:{{$formatted_dates ?? 'N/A'}}</li>
+                                        <li></li>-->
                                     </ul>
 
                                 </div>

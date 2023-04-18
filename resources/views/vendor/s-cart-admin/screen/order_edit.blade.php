@@ -223,6 +223,20 @@
                    
                   </tr>
 
+
+                   <tr>
+                   
+                    <td>Fecha de entrega</td>
+                    <td><a href="#" class="updateStatus" data-name="fecha_maxima_entrega" data-type="date" data-source ="{{ json_encode($order->fecha_maxima_entrega) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_maxima_entrega))
+                      {{$order->fecha_maxima_entrega}}
+                        
+                    @endif" data-url="{{ route("admin_order.update") }}" data-title="Fecha de entrega">@if (!empty($order->fecha_maxima_entrega))
+                      {{$order->fecha_maxima_entrega}}
+                        
+                    @endif</a> </td>
+                   
+                  </tr>
+
                    @endif
 
                   
