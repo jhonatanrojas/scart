@@ -31,6 +31,9 @@ use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Cart;
 use Illuminate\Support\Facades\File;
+use SCart\Core\Admin\Models\AdminUser;
+use SCart\Core\Front\Models\ShopOrderDetail;
+use SCart\Core\Front\Models\ShopPaymentStatus;
 
 class ShopAccountController extends RootFrontController
 {
@@ -1345,10 +1348,182 @@ class ShopAccountController extends RootFrontController
 
     }
 
+    public static function getPagosListAdmin($dataSearch)
+    {
 
-     public function view_QR(){
+        $keyword      = $dataSearch['keyword'] ?? '';
+       
+        $orderList =  HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
+        ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
+        ->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente' , 'sc_shop_customer.address1 as direccion' , 'sc_shop_order.cedula' , 'sc_shop_order.vendedor_id');
 
-        return view($this->templatePath.'.screen.vista_qr');
+
+        if ($keyword) {
+            $orderList->where('sc_historial_pagos.order_id',$keyword)
+            ->where('sc_historial_pagos.payment_status', 5);
+
+        }
+
+
+
+        $orderList = $orderList->get();
+
+        return $orderList;
+    }
+
+
+     public function view_QR($id){
+
+      
+
+        $dataSearch = [
+            'keyword'    => $id ,
+            
+        ];
+
+
+        $REFERENCIA =  $this->getPagosListAdmin($dataSearch['keyword']);
+
+
+      
+        $Nr= 1;
+        $dataTr = [];
+        
+        $totales = [];
+        $totale = [];
+        $total_monto_pagado = 0;
+        $total_usd_pagado = 0;
+        $vendedor = '';
+        $totalPor_pagar = '';
+        foreach($REFERENCIA as $row){
+
+
+            $statusPayment = ShopPaymentStatus::pluck( 'name','id' )->all();
+
+            $styleStatusPayment = $statusPayment;
+            array_walk($styleStatusPayment, function (&$v, $k) {
+                $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+            });
+    
+                $historial_pagos = HistorialPago::where('order_id', $row->order_id)
+                    ->where('payment_status', 1)
+                    ->get();
+                    $order = AdminOrder::getOrderAdmin($row->order_id);
+                    $user_roles = AdminUser::where('id' ,$order->vendedor_id)->first() ;
+    
+    
+                    
+                    $detalle = ShopOrderDetail::where('order_id' ,$row->order_id)->first(); 
+    
+                    $adeUdado = 0;
+    
+                        foreach ($historial_pagos as $importe_coutas) {
+                        if (is_numeric($importe_coutas->importe_couta)) {
+                        $adeUdado += $importe_coutas->importe_couta;
+                        }
+                        }
+    
+                    $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+
+                    $list_usuarios =$user_roles->name ?? 'N/A';
+                    $moneda = $row['moneda'];
+                    $monto = $row['importe_pagado'];
+                   
+    
+                    if ($moneda == 'USD') {
+                        // El monto está en dólares
+                        $monto_dolares = round($monto, 2);
+                        $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                        $Referencia = $monto_bolivares;
+                        $diVisA = $moneda;
+                        $Reportado =  $monto;
+                    } elseif ($moneda == 'Bs') {
+                        // El monto está en bolívares
+                        $monto_bolivares = round($monto, 2);
+                        $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                        $Referencia = $monto_dolares ;
+                        $diVisA = $moneda;
+                        $Reportado =  $monto;
+                    }
+                   
+    
+                    $dataTr[$row->id ] = [
+                        'N° de Pago'      => $Nr++,
+                        'MONTO' => $row->importe_couta,
+                        'Reportado' => $Reportado ?? 0,
+                        'DIVISA' => $diVisA,
+                        'CONVERSION' => $Referencia,
+                        'tasa_cambio' => $row->tasa_cambio ?? 0,
+                        'estatus' => $styleStatusPayment[$row->payment_status],
+                        'FORMA_DE_PAGO' => $row->metodoPago,
+                        'REFRENCIA' => $row->referencia,
+                        'FECHA_DE_PAGO' => $fecha_formateada
+    
+                    ];
+    
+
+                    $cliente = $row->first_name .' '. $row->last_name;
+                    $direccion = $row->direccion;
+                    $nro_convenio = $row->nro_convenio;
+                    $nombre_product = $row->nombre_product;
+                    $cantidad = $row->cantidad;
+                    $tota_product= $row->tota_product;
+                    $fecha_maxima_entrega= $row->fecha_maxima_entrega;
+                    $order_id = $row->order_id;
+                    $lote = $row->lote;
+                    $fecha_pago = $row->fecha_pago  ?? '';
+                    $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr ) +1;
+                    $total_monto_pagado += $monto_dolares * $row->tasa_cambio ;
+                    $total_usd_pagado += $monto_dolares;
+                    $Importe_couta = $row->importe_couta;
+                    $Cedula = $row->cedula;
+                    $vendedor = $list_usuarios ;
+                    $totalPor_pagar =  $adeUdado;
+                    $Serial_produt = $detalle->serial;
+                    $descuento = $order->discount;
+                    $subtotale = $order->subtotal;
+                    $Totales = $order->total;
+                    $id_solicitud = $row->order_id;
+    
+               
+    
+                
+            }
+    
+                $data['id_solicitud'] = $id_solicitud  ?? 0;
+                $data['descuento'] = $descuento  ?? 0;
+                $data['subtotal'] = $subtotale ?? 0;
+                $data['Totales'] = $Totales ?? 0;
+                $data['totalPor_pagar'] = $totalPor_pagar ;
+                $data['Serial_produt'] = $Serial_produt ;
+                $data['cliente'] = $cliente ?? '';
+                $data['vendedor'] = $vendedor ?? '';
+                $data['cedula'] = $Cedula ?? '';
+                $data['direccion'] = $direccion ?? '';
+                $data['Importe_couta'] = $Importe_couta ?? '';
+                $data['total_monto_pagado'] = $total_monto_pagado;
+                $data['total_usd_pagado'] = $total_usd_pagado;
+                $data['Cuotas_Pendientes'] = $Cuotas_Pendientes ?? 0;
+                $data['fecha_pago'] = $fecha_pago ?? '';
+                $data['lote'] = $lote ?? '';
+                $data['order_id'] = $order_id ?? '';
+                $data['nro_convenio'] = $nro_convenio ?? '';
+                $data['nombre_product'] = $nombre_product ?? '';
+                $data['cantidad'] = $cantidad ?? 0;
+                $data['tota_product'] = $tota_product ?? 0;
+                $data['totales'] = $totales ?? 0;
+                $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '' ;
+
+
+              
+               
+           
+
+      
+
+                return view($this->templatePath.'.screen.vista_qr')->with($data);
     }
 
 

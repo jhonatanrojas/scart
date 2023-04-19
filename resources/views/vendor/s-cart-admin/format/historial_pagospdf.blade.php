@@ -257,7 +257,7 @@
 <script>
         new QRious({
     element: document.querySelector("#codigo"),
-    value: "{{route('view_QR')}}", // La URL o el texto
+    value: "{{route('view_QR',['id' =>$id_solicitud])}}", // La URL o el texto
     size: 140,
     backgroundAlpha: 0, // 0 para fondo transparente
     foreground: "#000", // Color del QR
