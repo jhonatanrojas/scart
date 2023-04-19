@@ -122,12 +122,12 @@
                         <span class="item_21_sku">{{ $total_pagado }}$</span>
                     </th>
                     <th>
-                        Cuotas Pendiente: {{ $total_pendiente }}
+                        Cuotas Pendiente: {!!round( $total_pendiente ,2)!!}
                         
                     </th>
                    
                     <th>
-                        <span class="item_21_sku">Por Pagar: {{ $order->total - $total_pagado}}$</span>
+                        <span class="item_21_sku">Por Pagar: {!! round($order->total - $total_pagado , 2)!!}$</span>
                         <br>
                     </th>
                 </tr>

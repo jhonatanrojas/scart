@@ -65,11 +65,11 @@
 
                 <div class="d-flex align-items-center justify-content-center " style="font-weight: bold;">
                     <div class="col-md-5">
-                        <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$cliente}}</div>
+                        <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$Cliente}}</div>
                         
                         <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
+                              <i class="fas fa-map-marker-alt"></i> Direccion: {{$direccion}}
                             </div>
                             <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
                             <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR: {{$vendedor}}</div>
@@ -84,7 +84,7 @@
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">serial del artículo:{{$Serial_produt ?? 'N/A'}}</span> </div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Serial del artículo:{{$Serial_produt ?? 'N/A'}}</span> </div>
         
                         </div>
                     </div>
