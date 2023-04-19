@@ -1862,16 +1862,14 @@ class  AdminOrderController extends RootAdminController
                         'content' => $content,
                     ];
 
-                    
-
-
-
-                
-
+                    $id_solicitud = $id;
 
 
             $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
-                    ['borrado_html'=> $dataView['content']]
+                    [
+                        'borrado_html'=> $dataView['content'],
+                        'id_solicitud'=> $id_solicitud
+                    ]
 
                     );
 

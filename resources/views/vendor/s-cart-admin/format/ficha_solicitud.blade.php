@@ -545,7 +545,7 @@
                                     </div>
                                 </div>
 
-                                 <div class="mt-1" style="text-align: center; ">
+                                 <div class="mt-3" style="text-align: center; ">
                                            <span style="width: 100%; font-weight: bold; "> __________________________________________________________________________________________________</span>
                                             <h4 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h4>
                                 </div>

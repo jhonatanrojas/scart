@@ -2000,7 +2000,7 @@ class HistorialPagosController extends RootAdminController
     public function historial_cliente(){
 
         $dminUser = new AdminUser;
-       $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+        $list_usuarios=  $dminUser->pluck('name', 'id')->all();
 
 
         $data = [
@@ -2160,6 +2160,9 @@ class HistorialPagosController extends RootAdminController
                 ];
 
 
+               
+
+
 
                 
 
@@ -2182,14 +2185,17 @@ class HistorialPagosController extends RootAdminController
                 $totalPor_pagar =  $adeUdado;
                 $Serial_produt = $detalle->serial;
               
-                    $descuento = $order->discount;
-                    $subtotale = $order->subtotal;
-                    $Totales = $order->total;
+                $descuento = $order->discount;
+                $subtotale = $order->subtotal;
+                $Totales = $order->total;
+                $id_solicitud = $row->order_id;
 
            
 
             
         }
+
+            $data['id_solicitud'] = $id_solicitud  ?? 0;
 
      
             $data['descuento'] = $descuento  ?? 0;
