@@ -103,8 +103,8 @@
                                     <tr>
                                        
                                         <td>Descriccion</td>
-                                        <td>Cant.</td>
-                                        <td>precio.</td>
+                                        <td>Cant</td>
+                                        <td>Precio</td>
                                         <td>Subtotal</td>
                                         <td>Descuento</td>
                                         <td>Total</td>
