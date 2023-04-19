@@ -2001,6 +2001,13 @@ class HistorialPagosController extends RootAdminController
 
         $dminUser = new AdminUser;
         $list_usuarios=  $dminUser->pluck('name', 'id')->all();
+        $user_roles = $dminUser::where('id' ,Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id' , 'sc_admin_role_user.role_id as role_user')->get();
+       
+        $emitido_por = $user_roles[0]->name;
+
+        
+
+
 
 
         $data = [
@@ -2029,8 +2036,8 @@ class HistorialPagosController extends RootAdminController
             'N° de Pago'      => 'N°',
             'MONTO' => 'Importe',
             'Reportado' => 'Reportado',
-            'DIVISA' => 'Divisa',
-            'CONVERSION' => 'Conversion',
+            'DIVISA' => 'Moneda',
+            'CONVERSION' => 'Conversión',
             'tasa_cambio' => 'Tasa ',
             'estatus' => 'Estatus',
             'FORMA_DE_PAGO' => 'Forma de pago',
@@ -2142,15 +2149,16 @@ class HistorialPagosController extends RootAdminController
                     $Referencia = $monto_dolares ;
                     $diVisA = $moneda;
                     $Reportado =  $monto;
+
                 }
                
 
                 $dataTr[$row->id ] = [
                     'N° de Pago'      => $Nr++,
-                    'MONTO' => $row->importe_couta,
-                    'Reportado' => $Reportado ?? 0,
-                    'DIVISA' => $diVisA,
-                    'CONVERSION' => $Referencia,
+                    'MONTO' => $row->importe_couta . '$',
+                    'Reportado' => $Reportado   ?? 0,
+                    'DIVISA' => $diVisA ,
+                    'CONVERSION' => $Referencia ,
                     'tasa_cambio' => $row->tasa_cambio ?? 0,
                     'estatus' => $styleStatusPayment[$row->payment_status],
                     'FORMA_DE_PAGO' => $row->metodoPago,
@@ -2160,7 +2168,8 @@ class HistorialPagosController extends RootAdminController
                 ];
 
 
-               
+                $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
+
 
 
 
@@ -2175,7 +2184,7 @@ class HistorialPagosController extends RootAdminController
                 $fecha_maxima_entrega= $row->fecha_maxima_entrega;
                 $order_id = $row->order_id;
                 $lote = $row->lote;
-                $fecha_pago = $row->fecha_pago  ?? '';
+                $fecha_pago = $fechaActual  ?? '';
                 $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr ) +1;
                 $total_monto_pagado += $monto_dolares * $row->tasa_cambio ;
                 $total_usd_pagado += $monto_dolares;
@@ -2194,6 +2203,7 @@ class HistorialPagosController extends RootAdminController
 
             
         }
+       
 
             $data['id_solicitud'] = $id_solicitud  ?? 0;
 
@@ -2201,6 +2211,7 @@ class HistorialPagosController extends RootAdminController
             $data['descuento'] = $descuento  ?? 0;
             $data['subtotal'] = $subtotale ?? 0;
             $data['Totales'] = $Totales ?? 0;
+            $data['emitido_por'] = $emitido_por ?? '';
             
             $data['totalPor_pagar'] = $totalPor_pagar ;
             $data['Serial_produt'] = $Serial_produt ;

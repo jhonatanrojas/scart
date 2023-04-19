@@ -176,7 +176,7 @@
     
             <span style="  font-size: 17px; font-weight: bold;">CONVENIO :{!!$convenio ?? ''!!}</span>
 
-            <span style="font-size: 16px; text-align: end; margin-left: 13%; font-weight: bold;"> {!!$fecha_convenio ?? 'N/A' !!}</span>
+            <span style="font-size: 16px; text-align: end; margin-left: 5%; font-weight: bold;"> {!!$fecha_convenio ?? 'N/A' !!}</span>
 
             {!!$borrado_html!!}
 
