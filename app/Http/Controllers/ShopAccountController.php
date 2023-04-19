@@ -1516,13 +1516,6 @@ class ShopAccountController extends RootFrontController
                 $data['totales'] = $totales ?? 0;
                 $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '' ;
 
-
-              
-               
-           
-
-      
-
                 return view($this->templatePath.'.screen.vista_qr')->with($data);
     }
 
