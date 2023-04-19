@@ -20,11 +20,23 @@
     <div style="font-weight: bold;" class="container px-0">
         <div class="row ">
 
-            <div class="col-12"> 
-                <img width="100" class=" img-fluid" src="{{ sc_file(sc_store('logo')) }}" style="margin-left: 8%">
-                        
+           <div class="col-12">
+            <div class="row  align-items-center">
+                <div class="col-10"> 
+                    <img style="margin-left: 10%;" width="100" class=" img-fluid" src="{{ sc_file(sc_store('logo')) }}" >
+                            
+                    
+                </div>
+    
+                <div  class="col-2">
+                    <img class="img-fluid" alt="Código QR" id="codigo">
+    
+                   
                 
+                </div>
             </div>
+
+           </div>
             <div class="col-12 col-lg-10 offset-lg-1">
                 
                 <div class="row">
@@ -236,6 +248,22 @@
     window.print();
     $('.dont-print').show();
   }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+            
+            
+<script>
+        new QRious({
+    element: document.querySelector("#codigo"),
+    value: "{{route('view_QR')}}", // La URL o el texto
+    size: 140,
+    backgroundAlpha: 0, // 0 para fondo transparente
+    foreground: "#000", // Color del QR
+    level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+    });
+
 </script>
 <style>
   body{

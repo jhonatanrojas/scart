@@ -1345,4 +1345,11 @@ class ShopAccountController extends RootFrontController
 
     }
 
+
+     public function view_QR(){
+
+        return view($this->templatePath.'.screen.vista_qr');
+    }
+
+
 }

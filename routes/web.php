@@ -73,6 +73,8 @@ Route::get('sc_admin/editar_plantilla/{id}', [AdminOrderController::class,'edita
 
 Route::post('sc_admin/create_convenio/{id}', [AdminOrderController::class,'postCreate_convenio'])->name('create_convenio');
 
+Route::get('/QR_hisroria', 'ShopAccountController@view_QR')->name('view_QR');
+
 
 Route::get('sc_admin/order/ventas',  [AdminOrderController::class,'index'])->name('pedidos_ventas');
 Route::get('sc_admin/order/riesgo',  [AdminOrderController::class,'index'])->name('pedidos_riesgo');

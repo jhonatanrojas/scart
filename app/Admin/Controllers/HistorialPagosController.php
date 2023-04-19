@@ -1051,6 +1051,10 @@ class HistorialPagosController extends RootAdminController
                                 $nombreparroquias = $parroquias->nombre;}
                         }
                     }
+
+
+
+                   
         
                     $dato_usuario = [
                         'subtotal' => $c['subtotal'],
@@ -1068,6 +1072,7 @@ class HistorialPagosController extends RootAdminController
                         'cod_municipio' => $nombremunicipos,
                         'cod_parroquia' => $nombreparroquias,
                         'estado_civil' => $c['estado_civil'],
+                        'nos_conocio' =>$c->nos_conocio,
                         
                         [
                 
@@ -1162,6 +1167,7 @@ class HistorialPagosController extends RootAdminController
                                 '/\{\{\$municipio\}\}/',
                                 '/\{\{\$parroquia\}\}/',
                                 '/\{\{\$cedula\}\}/',
+                                '/\{\{\$nos_conocio\}\}/',
                                 '/\{\{\$estado_civil\}\}/',
                                 '/\{\{\$nacionalidad\}\}/',
                                 '/\{\{\$modalidad_de_pago\}\}/',
@@ -1194,6 +1200,7 @@ class HistorialPagosController extends RootAdminController
                                 'municipio'=>$dato_usuario['cod_municipio'],
                                 'parroquia'=>$dato_usuario['cod_parroquia'],
                                 'cedula'=>$dato_usuario['cedula'],
+                                'nos_conocio' =>$dato_usuario['nos_conocio'],
                                 'estado_civil'=>$dato_usuario['estado_civil'],
                                 'nacionalidad'=>$Nacionalidad,
                                 $mesualQuinsena,
@@ -1236,6 +1243,7 @@ class HistorialPagosController extends RootAdminController
                                 '/\{\{\$municipio\}\}/',
                                 '/\{\{\$parroquia\}\}/',
                                 '/\{\{\$cedula\}\}/',
+                                '/\{\{\$nos_conocio\}\}/',
                                 '/\{\{\$estado_civil\}\}/',
                                 '/\{\{\$nacionalidad\}\}/',
                                 '/\{\{\$modalidad_de_pago\}\}/',
@@ -1270,6 +1278,7 @@ class HistorialPagosController extends RootAdminController
                                 'municipio'=>$dato_usuario['cod_municipio'],
                                 'parroquia'=>$dato_usuario['cod_parroquia'],
                                 'cedula'=>$dato_usuario['cedula'],
+                                'nos_conocio' =>$dato_usuario['nos_conocio'],
                                 'estado_civil'=>$dato_usuario['estado_civil'],
                                 'nacionalidad'=>$Nacionalidad,
                                 $mesualQuinsena,
