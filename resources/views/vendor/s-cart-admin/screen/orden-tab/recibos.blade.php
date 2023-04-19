@@ -110,14 +110,16 @@
                     Total   Pagado
                     </th>
                     <th>
-                        <span class="item_21_sku">{{ $total_pagado }} $</span>
+                        <span class="item_21_sku">{{ $total_pagado }}$</span>
                     </th>
                     <th>
-                        Total Pendiente
+                        Total Cuotas Pendiente: {{ $total_pendiente }}$
                     </th>
+                   
                     <th>
-                        <span class="item_21_sku">{{ $total_pendiente }} $</span>
+                        <span class="item_21_sku">Por Pagar: {{ $order->total - $total_pagado}}$</span>
                         <br>
+                    </th>
                 </tr>
             </tbody>
         </table>
