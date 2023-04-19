@@ -38,7 +38,6 @@
 
                 if( $historial->payment_status == 5){
                     $Nr++;
-
                     $total_pagado += $historial->importe_couta;
                 }else if( $historial->payment_status == 1){
 
