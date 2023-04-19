@@ -18,7 +18,7 @@
                     <th>Acciones</th>
                     <th>Importe </th>
                     <th>Reportado</th>
-                    <th>Divisa</th>
+                    <th>Moneda</th>
                     <th>Conversion</th>
                     <th>estatus </th>
                     <th>Fecha de vencimiento</th>
@@ -29,14 +29,23 @@
            @php 
            $total_pagado=0;
            $total_pendiente=0;
+           $Nr = 0 ; 
            
            @endphp
                 @foreach ($historial_pagos as $historial)
                 @php 
+                
+
                 if( $historial->payment_status == 5){
+                    $Nr++;
+
                     $total_pagado += $historial->importe_couta;
-                }else{
-                    $total_pendiente += $historial->importe_couta;
+                }else if( $historial->payment_status == 1){
+
+                   
+
+
+                    $total_pendiente = ( $historial->nro_coutas - $Nr);
                 }
            
                 
@@ -113,7 +122,8 @@
                         <span class="item_21_sku">{{ $total_pagado }}$</span>
                     </th>
                     <th>
-                        Total Cuotas Pendiente: {{ $total_pendiente }}$
+                        Cuotas Pendiente: {{ $total_pendiente }}
+                        
                     </th>
                    
                     <th>
