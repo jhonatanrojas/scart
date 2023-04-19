@@ -227,7 +227,7 @@
                    <tr>
                    
                     <td>Fecha de entrega</td>
-                    <td><a href="#" class="updateStatus" data-name="fecha_maxima_entrega" data-type="date" data-source ="{{ json_encode($order->fecha_maxima_entrega) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_maxima_entrega))
+                    <td><a  href="#" class="updateStatus" data-name="fecha_maxima_entrega" data-type="date" data-source ="{{ json_encode($order->fecha_maxima_entrega) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_maxima_entrega))
                       {{$order->fecha_maxima_entrega}}
                         
                     @endif" data-url="{{ route("admin_order.update") }}" data-title="Fecha de entrega">@if (!empty($order->fecha_maxima_entrega))
@@ -343,7 +343,7 @@
                       <td class="td-title">datos del cliente</td>
                       <td>
                        
-                        <a  href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
+                        <a   href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
                       </td>
 
                    
@@ -354,7 +354,7 @@
                       <td class="td-title">Reporte de pago</td>
                       <td>
 
-                        <a  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
+                        <a target="_blank"  href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" class="" data-name="address2" >Ir al  Reporte de pago </a>
                       </td>
 
 
