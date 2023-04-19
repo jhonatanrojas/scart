@@ -2160,7 +2160,8 @@ class HistorialPagosController extends RootAdminController
                 ];
 
 
-               
+                $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
+
 
 
 
@@ -2175,7 +2176,7 @@ class HistorialPagosController extends RootAdminController
                 $fecha_maxima_entrega= $row->fecha_maxima_entrega;
                 $order_id = $row->order_id;
                 $lote = $row->lote;
-                $fecha_pago = $row->fecha_pago  ?? '';
+                $fecha_pago = $fechaActual  ?? '';
                 $Cuotas_Pendientes  =  ( $row->cuaotas_pendiente - $Nr ) +1;
                 $total_monto_pagado += $monto_dolares * $row->tasa_cambio ;
                 $total_usd_pagado += $monto_dolares;
