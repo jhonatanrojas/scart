@@ -133,7 +133,7 @@
                     </th>
                    
                     <th>
-                        <span class="item_21_sku">Por Pagar: {!! round($order->total - $total_pagado , 2)!!}$</span>
+                        <span class="item_21_sku">Por Pagar: {!! round($order->total - $total_pagado)!!}$</span>
                         <br>
                     </th>
                 </tr>

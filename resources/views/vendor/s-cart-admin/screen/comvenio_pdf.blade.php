@@ -151,19 +151,24 @@
         .waika2{
             font-weight:bold ;
             font-size: 15px;
-            margin-top: 40px;
             width:100%;
 
           
 
         }
+        .huella_text{
+            width:100%;
+        }
+     
         .huella_text .huella{
             width: 50px;
             height: 60px;
-            margin-left: 5px;
+            margin-left: 20px;
             border: solid black 1px;
             float: left;
-            margin-top:65px;
+         
+           
+           
             
             
         }
