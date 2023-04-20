@@ -540,7 +540,7 @@
                               
                               if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
                            
-                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
+                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price * $item->qty / 100 );
 
                               echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
