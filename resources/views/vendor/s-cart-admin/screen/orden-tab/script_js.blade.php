@@ -746,7 +746,10 @@
     }
     
     function obtener_historial_pagos(){
-      console.log('obtener_historial_pagos')
+      console.log('obtener_historial_pagos');
+      let= total_pagado =0; 
+      const  order_total="{{ $order->total }}";
+      let total_pendiente=0;
       $.ajax({
         method: 'get',
         url: '{{ route("getPagosAjax") }}',
@@ -754,6 +757,8 @@
           'pId':"{{ $order->id }}",
             _token: '{{ csrf_token() }}',
         },
+
+ 
         success: function (response) {
         
     
@@ -761,6 +766,9 @@
            
             response.forEach(function (historial) {
         let acciones = '';
+        if (historial.payment_status === 5) {
+        total_pagado +=parseFloat(historial.importe_couta);
+        }
         if (historial.payment_status === 2) {
             acciones += '<a href="#" data-id="' + historial.id + '"><span data-id="' + historial.id + '" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>';
         }
@@ -772,6 +780,7 @@
         }
         if ( historial.payment_status !== 5) {
         acciones += ' <a href="#"><span onclick="deleteItemPago(' + historial.id + ');" title="Eliminar" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span></a>';
+        total_pendiente++;
       }
 
         const tasaCambio = historial.tasa_cambio ? historial.tasa_cambio : 1;
@@ -794,12 +803,33 @@
 
             $('#tablerecibos > tbody').append(fila);
     });
-         
+
+    const html = `
+    <tr>
+        <td></td>
+        <th colspan="1">
+            Total Pagado
+        </th>
+        <th>
+            <span class="item_21_sku">${total_pagado}$</span>
+        </th>
+        <th>
+            Cuotas Pendiente: ${total_pendiente}
+        </th>
+        <th>
+            <span class="item_21_sku">Por Pagar: ${ parseFloat(order_total -total_pagado).toFixed(2) }$</span>
+            <br>
+        </th>
+    </tr>
+`;
+    $('#tablerecibos > tbody').append(html);
           
         }
       });
     }
 
+    console.log(total_pagado)
+    console.log(order_total)
        function round(number, precision) {
         const factor = Math.pow(10, precision);
         return Math.round(number * factor) / factor;

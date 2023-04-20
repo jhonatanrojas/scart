@@ -84,7 +84,6 @@
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Serial del artículo:{{$Serial_produt ?? 'N/A'}}</span> </div>
         
                         </div>
                     </div>
@@ -103,24 +102,37 @@
                                     <tr>
                                        
                                         <td>Descriccion</td>
+                                        <td>Serial</td>
                                         <td>Cant</td>
                                         <td>Precio</td>
-                                        <td>Subtotal</td>
-                                        <td>Descuento</td>
+                   
                                         <td>Total</td>
                                     </tr>
                                 </thead>
                                 
                 
                                 <tbody>
+                                    @foreach ( $order->details as $product)
                                     <tr>
-                                        
-                                        <td>{{$nombre_product}}</td>
-                                        <td>{{$cantidad}}</td>
-                                        <td>{{$tota_product}}$</td>
-                                        <td>{{$subtotal}}</td>
-                                        <td>{{$descuento}}</td>
-                                        <td>{{$Totales}}</td>
+                                        <td> {{  $product->name}}</td>
+                                        <td> {{  $product->qty}}</td>
+                                        <td> {{  $product->serial}}</td>
+                                        <td> {{  $product->price}}</td>
+                                    <td>{{  $product->total_price}}</td>
+                                    </tr>
+                                    @endforeach
+                                    <tr>     <td colspan="3"></td> 
+                                        <td >Sub total</td>
+                                        <td>{{ $order->subtotal}}</td>
+                                    </tr>
+                                    <tr>     <td colspan="3"></td> 
+                                        <td >Descuento</td>
+                                        <td>{{ $order->discount}}</td>
+                                    </tr>
+                                   
+                                    <tr>     <td colspan="3"></td> 
+                                        <td  style="font-weight: bold;" > Total Ref $ </td>
+                                        <td  style="font-weight: bold;">{{ $order->total}}</td>
                                     </tr>
                                     <br>
                                 <td class="text-center text-uppercase" colspan="6"> <h4 style="font-weight: bold;"  class="p-0 m-0">
@@ -162,11 +174,11 @@
                               </tbody>
 
                               <tr>
-                                <td colspan="4">Total de pago</td>
-                               
-                                <td colspan="1">Total: {!!round($total_monto_pagado  , 2)!!}   BS</td>
+                    
                                 <td colspan="4"></td> 
-                                                               <td colspan="">Total: {{$total_usd_pagado}} $</td>
+                                <td colspan="1">Total Bs: {!!round($total_bs  , 2)!!}   BS</td>
+                         
+                                                               <td colspan="">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
                               <tr>
                                 <td style="font-weight: bold;"  class="h4 text-center" colspan="10">RESUMEN</td>
@@ -183,7 +195,7 @@
                                     
                                     <ul class="" style="list-style: none">
                                         <li class="">Numero de Cuotas Pendientes:  {{$Cuotas_Pendientes}}</li>
-                                        <li>Monto de Proxima Cuota (Ref. $):    {{$Importe_couta}}
+                                        <li>Monto de Proxima Cuota (Ref. $):    {{$cuota_pendiente}}
                                         </li>
                                         <!--<li>Fecha Proxima Cuota:{{$formatted_dates ?? 'N/A'}}</li>
                                         <li></li>-->
@@ -195,8 +207,8 @@
                                        
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Total Convenio : {{$tota_product}}$</li>
-                                        <li>Total Pagado para la Fecha :{{$total_usd_pagado}}$</li>
+                                        <li class="">Total Convenio : {{$totales}}$</li>
+                                        <li>Total Pagado para la Fecha :{{$total_monto_pagado}}$</li>
                                         <li>Total Monto Adeudado : {{$totalPor_pagar}}$</li>
                                         <li></li>
                                     </ul>

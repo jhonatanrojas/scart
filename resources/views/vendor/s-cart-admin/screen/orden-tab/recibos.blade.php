@@ -2,11 +2,18 @@
     <div class="card-header">
         <div class="card-tools">
             <div class="menu-right">
-                           <a href="#" onclick="$('#modalNuevoRecibo').modal('show')" class="btn  btn-success  btn-flat" title="Crear Pago" id="button_create_new">
-<i class="fa fa-plus" title="Añadir nuevo revico"></i>
+                <a href="{{ sc_route_admin('historial.cliente')}}?historial_pago=true&keyword={{$order->id }}" target="_blank"  class="btn  btn-info  btn-flat" title="Reporte Historial de pago" id="">
+<i class="fa fa-file-pdf" title="Reporte Historial de pago"></i>
 </a>
 
-      </div>
+</div>
+            <div class="menu-right">
+                <a href="#" onclick="$('#modalNuevoRecibo').modal('show')" class="btn  btn-success  btn-flat" title="Crear Pago" id="button_create_new">
+<i class="fa fa-plus" title="Añadir nuevo revibo"></i>
+</a>
+
+</div>
+         
 
 </div>
     </div>
@@ -39,12 +46,12 @@
                 if( $historial->payment_status == 5){
                     $Nr++;
                     $total_pagado += $historial->importe_couta;
-                }else if( $historial->payment_status == 1){
+                }else {
 
                    
 
 
-                    $total_pendiente = ( $historial->nro_coutas - $Nr);
+                    $total_pendiente++;
                 }
            
                 

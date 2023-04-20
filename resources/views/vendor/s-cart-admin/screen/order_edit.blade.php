@@ -58,7 +58,7 @@
             <a class="dropdown-item" href="{{ route('downloadPdf', ['id' => $order->id]) }}" target="_blank">Descargar convenio</a>
             @endif
             @if ($order->total >0  && !empty($convenio))
-            <a class="dropdown-item" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar convenio</a>
+            <a class="dropdown-item" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar Plantilla convenio</a>
             @endif
             @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
             <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Ver Borrador Convenio</a>
