@@ -76,7 +76,7 @@
 
 
 												<tr class="showTotal" style="background:#f5f3f3;font-weight: bold;">
-													<th>Monto de Proxima Cuota</th>
+													<th>Monto de la Proxima Cuota</th>
 															<td style="text-align: right" id="total">
 																${{$order}}
 															</td>
