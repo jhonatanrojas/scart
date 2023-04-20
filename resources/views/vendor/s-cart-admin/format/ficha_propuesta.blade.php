@@ -298,10 +298,11 @@
                                                             $inicial = 0;
                                                             $precio = $detail['price'];
                                                             if ($detail['abono_inicial'] > 0) {
-                                                                $inicial = ($detail['abono_inicial'] * $detail['price']) / 100;
+                                                                $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
+                                                                $precio = $detail['total_price'] - $inicial;
                                                             }
-                                                            $precio = $precio - $inicial;
-                                                            $monto_cuota = number_format(($precio * $detail['qty']) / $detail['nro_coutas'], 2);
+                                                
+                                                            $monto_cuota = number_format($precio / $detail['nro_coutas'], 2);
                                                             
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>

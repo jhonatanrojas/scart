@@ -322,9 +322,9 @@
                                                     <th>Modelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
-                                                    <th>Inicial $</th>
-                                                    <th>Cuota $</th>
-
+                                                    <th>Inicial </th>
+                                                    <th>Cuota </th>
+                                                    <th>Precio </th>
                                                     <th>Total</th>
 
                                                 </tr>
@@ -332,7 +332,9 @@
                                             <tbody>
                                                @php $monto_total=0;
                                                $monto_cuota_total=0;
+                                               $inicial = 0;
                                                @endphp
+                                               
                                                 @foreach ($details as $detail)
                                                     <tr>
                                                         @php
@@ -341,17 +343,19 @@
                                                 if($detail['id_modalidad_pago'] == 3){
                                                 $AlContado = "Mensual";
                                                 }
-                                                            $inicial = 0;
+                                                     
                                                             $precio = $detail['price'];
+                                                            $monto_cuota = number_format($detail['total_price'] / $detail['nro_coutas'], 2);
+
                                                             if ($detail['abono_inicial'] > 0) {
-                                                                $inicial = ($detail['abono_inicial'] * $detail['price']) * $detail['qty'] / 100;
-                                                                $monto_cuota = number_format(($precio * $detail['qty']) / $detail['nro_coutas'], 2);
+                                                                $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
+                                                                $total_price = $detail['total_price'] - $inicial;
+                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
 
                                                                  
                                                             }
-                                                            $precio = $precio - $inicial;
-                                                            $monto_cuota = number_format(($precio * $detail['qty']) / $detail['nro_coutas'], 2);
-
+                                                         
+                            
 
                                                          
 
@@ -368,8 +372,9 @@
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
                                                         <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
+                                                        <td>${{ ($detail['price']) }}</td>
 
-                                                        <td>${{ number_format($detail['total_price']) }}</td>
+                                                        <td>${{ $detail['total_price'] }}</td>
 
                                                         @php $monto_total+=$detail['total_price'] ;
                                                              $monto_cuota_total+=$monto_cuota;
@@ -380,10 +385,54 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="6">&nbsp;</td><td>
+                                                    <td colspan="8">&nbsp;</td><td>
+                                                        
+                                                    <p> <strong>Subtotal</strong></p></td>
+                                                        
+                                                 
+                                                  
+                                                       
+                                                       <td>
+                                                        <strong>${{ $order->subtotal}}</strong></h5>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="8">&nbsp;</td><td>
+                                                        
+                                                    <p> <strong>Descuento</strong></p></td>
+                                                        
+                                                 
+                                                  
+                                                       
+                                                       <td>
+                                                        <strong>${{ $order->discount}}</strong></h5>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="8">&nbsp;</td><td>
+                                                        
+                                                    <p> <strong>Inicial</strong></p></td>
+                                                        
+                                                 
+                                                  
+                                                       
+                                                       <td>
+                                                        <strong>-${{ $inicial}}</strong></h5>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="8">&nbsp;</td><td>
+                                                        
                                                     <p> <strong>Total</strong></p></td>
                                                         
-                                                       <td>${{$monto_cuota_total}}</td> <td><strong>${{ round($monto_total ,2) }}</strong></h5></td></tr>
+                                                 
+                                                  
+                                                       
+                                                       <td>
+                                                        <strong>${{ number_format( $order->total - $inicial,2) }}</strong></h5>
+                                                    </td></tr>
+
+
                                             </tbody>
                                         </table>
                                     </div>
