@@ -385,52 +385,28 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td colspan="8">&nbsp;</td><td>
+                                                  <td colspan="4" style="text-align:right "> Totales</td>
+                                                <td  colspan="2">
                                                         
-                                                    <p> <strong>Subtotal</strong></p></td>
+                                                    <p> <strong>Subtotal: ${{ $order->subtotal}}</strong></strong></p>
+
+                                                </td>
+                                                <td>
+                                                    <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
+                                                </td>
+                                                <td colspan="2">
+                                                    <p> <strong>Inicial: -${{ $inicial}}</strong> </p>
+                                                </td>
+                                                <td >
+                                                    <p> <strong>Total: ${{ $order->total}}</p>
+                                                </td>
                                                         
                                                  
                                                   
-                                                       
-                                                       <td>
-                                                        <strong>${{ $order->subtotal}}</strong></h5>
-                                                    </td>
+                                                      
                                                 </tr>
-                                                <tr>
-                                                    <td colspan="8">&nbsp;</td><td>
-                                                        
-                                                    <p> <strong>Descuento</strong></p></td>
-                                                        
-                                                 
-                                                  
-                                                       
-                                                       <td>
-                                                        <strong>${{ $order->discount}}</strong></h5>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="8">&nbsp;</td><td>
-                                                        
-                                                    <p> <strong>Inicial</strong></p></td>
-                                                        
-                                                 
-                                                  
-                                                       
-                                                       <td>
-                                                        <strong>-${{ $inicial}}</strong></h5>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="8">&nbsp;</td><td>
-                                                        
-                                                    <p> <strong>Total</strong></p></td>
-                                                        
-                                                 
-                                                  
-                                                       
-                                                       <td>
-                                                        <strong>${{ number_format( $order->total - $inicial,2) }}</strong></h5>
-                                                    </td></tr>
+                                                
+                                               
 
 
                                             </tbody>
