@@ -106,6 +106,7 @@ class  AdminOrderController extends RootAdminController
             'Nombre&Apellido'          => 'Nombre&Apellido',
             'N°'          => 'Solicitud°',
             'N°Convenio'          => 'N°Convenio',
+            'status'         =>"Estatus",
             'Vendedor Asignado' => 'Vendedor Asignado',
             'Articulo'          => 'Articulo',
             'Cuotas' => 'Cuotas',
@@ -116,7 +117,7 @@ class  AdminOrderController extends RootAdminController
             'Municipio'          => 'Municipio',
             'Parroquia'          => 'Parroquia',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
-            'status'         =>"Estatus",
+            
             'Modalidad'         =>"Modalidad",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
@@ -259,6 +260,7 @@ class  AdminOrderController extends RootAdminController
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
                 'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                'status'         => $styleStatus[$row['status']] ?? $row['status'],
                  'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
                 'Articulo' => $Articulo->name ?? 'N/A',
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
@@ -269,7 +271,7 @@ class  AdminOrderController extends RootAdminController
                 'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
                 'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
-                'status'         => $styleStatus[$row['status']] ?? $row['status'],
+                
                 'Modalidad'         => $AlContado,
             ];
             if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
