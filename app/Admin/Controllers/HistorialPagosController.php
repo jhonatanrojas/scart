@@ -2105,10 +2105,14 @@ class HistorialPagosController extends RootAdminController
         $historialPago = HistorialPago::where('order_id',$keyword)->where('payment_status', 5)->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $keyword)->where('payment_status','!=', 5)->orderBy('nro_coutas')->first();
 
-        $cuota_pendiente=0;
-        if($cuota_pendientes->exists()){
-            $cuota_pendiente =$cuota_pendientes->importe_couta;
-        }
+                $cuota_pendiente = 0;
+
+                if ($cuota_pendientes != null) {
+                    if ($cuota_pendientes->exists()) {
+                        $cuota_pendiente = $cuota_pendientes->importe_couta;
+                    }
+                }
+
         $nro_total_pagos = 0;
 
         $convenio = Convenio::where('order_id', $keyword)->first();
