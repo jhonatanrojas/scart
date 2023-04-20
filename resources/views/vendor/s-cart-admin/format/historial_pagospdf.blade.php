@@ -210,7 +210,7 @@
                                     <ul class="" style="list-style: none">
                                         <li class="">Total Convenio : {{$totales}}$</li>
                                         <li>Total Pagado para la Fecha :{{$total_monto_pagado}}$</li>
-                                        <li>Total Monto Adeudado : {{$totalPor_pagar}}$</li>
+                                        <li>Total Monto Adeudado : {{round($totalPor_pagar )}}$</li>
                                         <li></li>
                                     </ul>
 
