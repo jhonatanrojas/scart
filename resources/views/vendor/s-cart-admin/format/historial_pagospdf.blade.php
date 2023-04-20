@@ -115,8 +115,9 @@
                                     @foreach ( $order->details as $product)
                                     <tr>
                                         <td> {{  $product->name}}</td>
-                                        <td> {{  $product->qty}}</td>
                                         <td> {{  $product->serial}}</td>
+                                        <td> {{  $product->qty}}</td>
+                                
                                         <td> {{  $product->price}}</td>
                                     <td>{{  $product->total_price}}</td>
                                     </tr>
