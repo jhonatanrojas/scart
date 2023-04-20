@@ -1281,6 +1281,10 @@ class  AdminOrderController extends RootAdminController
         $rif='';
         $cedula='';
 
+
+
+      
+
        
        
         $nro_convenio = 'A/N';
