@@ -382,7 +382,7 @@
                                                     <td colspan="6">&nbsp;</td><td>
                                                     <p> <strong>Total</strong></p></td>
                                                         
-                                                       <td>${{$monto_cuota_total}}</td> <td><strong>${{ $monto_total }}</strong></h5></td></tr>
+                                                       <td>${{$monto_cuota_total}}</td> <td><strong>${{ round($monto_total ,2) }}</strong></h5></td></tr>
                                             </tbody>
                                         </table>
                                     </div>
