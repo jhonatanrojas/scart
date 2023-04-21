@@ -36,9 +36,17 @@
 						<div class="col-12 col-sm-12 col-md-6 animate__animated animate__backInLeft">
 							
 							<table class="table box table-bordered  table-striped table-hover" id="showTotal">
-								<tbody><tr>
+								<tbody>
+									<tr>
 									<th>Nombre:
 									</th><td>{{$cliente}}
+									</td>
+								</tr>
+
+								<tbody>
+									<tr>
+									<th>Vendedor Asignado:
+									</th><td>{{$vendedor}}
 									</td>
 								</tr>
 								
@@ -78,7 +86,7 @@
 																																																																																																																																		<tr class="showTotal table-danger" >
 											<th class="animate__animated animate__flipInX animate__delay-2s" >Por Pagar:</th>
 													<td style="text-align: right" id="total">
-														${{$totalPor_pagar}}
+														${{round($totalPor_pagar)}}
 													</td>
 												</tr>
 

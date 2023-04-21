@@ -1352,7 +1352,6 @@ class ShopAccountController extends RootFrontController
 
      public function view_QR($id){
 
-
         $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->where('sc_historial_pagos.payment_status',5)
         ->leftJoin('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
         ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
@@ -1407,11 +1406,15 @@ class ShopAccountController extends RootFrontController
             return redirect('/')
                 ->with(['error' => 'no se encontraron pagos reportado']);
         }
-        $user_roles = AdminUser::where('id', $order->vendedor_id)->first();
+        
 
         $pagado = 0;
         $total_bs=0;
         foreach($orderList as $row){
+
+
+
+            $user_roles = AdminUser::where('id', $row->vendedor_id)->first();
 
        
            
@@ -1490,7 +1493,7 @@ class ShopAccountController extends RootFrontController
         $data['emitido_por'] = $emitido_por ?? '';
         $data['totalPor_pagar'] = $order->total - $pagado;
         $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
-        $data['vendedor'] = $vendedor ?? '';
+        $data['vendedor'] = $user_roles->name ?? '';
         $data['cedula'] = $order->cedula ?? '';
         $data['cuota_pendiente'] =$cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
