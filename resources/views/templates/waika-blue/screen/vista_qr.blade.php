@@ -3,13 +3,29 @@
 
 @section('block_main')
 
+<style>
+	.baner{
+		width: 100%;
+		height: 100px;
+		background-image: url('/images/historial.png');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		
+	}
+</style>
 	<div class="container mt-4 mb-4">
 
 	<div class="card">
-		<div class="car-body">
+		<div class="car-body p-2">
+		<div class="baner">
+			
 
-			<h3 class="control-label"><i class="fa fa-truck" aria-hidden="true"></i>
-				Historial del pago:<br></h3>
+		</div>
+
+			<div class="card-header">
+				
+			</div>
 			<div class="row justify-content-center align-items-center">
 				<div class="col-12 col-md-12">
 	
@@ -17,9 +33,9 @@
 		                         
 					<div class="row">
 						
-						<div class="col-12 col-sm-12 col-md-6">
+						<div class="col-12 col-sm-12 col-md-6 animate__animated animate__backInLeft">
 							
-							<table class="table box table-bordered" id="showTotal">
+							<table class="table box table-bordered  table-striped table-hover" id="showTotal">
 								<tbody><tr>
 									<th>Nombre:
 									</th><td>{{$cliente}}
@@ -44,39 +60,39 @@
 						</div>
 						
 		
-						<div class="col-12 col-sm-12 col-md-6 ">
+						<div class="col-12 col-sm-12 col-md-6 animate__animated animate__fadeInUp">
 															 
 							
 						
 		
 		
 							<div class="row ">
-								<div class="col-md-12">
+								<div class="col-md-12 ">
 									<table class="table box table-bordered" id="">
-																																					<tbody><tr class="showTotal">
-													<th>Monto Pagado</th>
+																																								<tbody><tr class="showTotal table-success">
+													<th class="animate__animated animate__flipInX animate__delay-1s">Total Pagado:</th>
 													<td style="text-align: right" id="subtotal">
 														${{$total_monto_pagado}}
 													</td>
 												</tr>
-																																																																																																																																		<tr class="showTotal " style="background:#f5f3f3;font-weight: bold;">
-											<th>Monto Pendiente</th>
+																																																																																																																																		<tr class="showTotal table-danger" >
+											<th class="animate__animated animate__flipInX animate__delay-2s" >Por Pagar:</th>
 													<td style="text-align: right" id="total">
 														${{$totalPor_pagar}}
 													</td>
 												</tr>
 
 
-												<tr class="showTotal" style="background:#f5f3f3;font-weight: bold;">
-											<th>Cuotas Pendientes</th>
+												<tr class="showTotal " style="background:#f5f3f3;font-weight: bold;">
+											<th class="animate__animated animate__flipInX animate__delay-3s">Cuotas Pendientes</th>
 													<td style="text-align: right" id="total">
 														{{$Cuotas_Pendientes}}
 													</td>
 												</tr>
 
 
-												<tr class="showTotal" style="background:#f5f3f3;font-weight: bold;">
-													<th>Monto de la Proxima Cuota</th>
+												<tr class="showTotal " style="background:#f5f3f3;font-weight: bold;">
+													<th class="animate__animated animate__flipInX animate__delay-4s">Monto de la Proxima Cuota:</th>
 															<td style="text-align: right" id="total">
 																${{$order}}
 															</td>

@@ -1433,11 +1433,6 @@ class ShopAccountController extends RootFrontController
             $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
 
 
-
-
-
-
-
             $list_usuarios = $user_roles->name ?? 'N/A';
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
