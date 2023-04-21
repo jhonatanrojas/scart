@@ -2,11 +2,12 @@
     integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <style>
     body {
-        margin-top: 20px;
         color: #2e323c;
         background: #f5f6fa;
         position: relative;
         height: 100%;
+         margin:0;
+        padding:0;
     }
 
 
@@ -23,13 +24,15 @@
 @media print {
       body {
         margin-bottom: 20px;
+        margin:0;
+        padding:0;
        
       }
     }
 
     body table{
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 0px;
+        margin-bottom: 0px;
        
     }
  
@@ -39,15 +42,17 @@
 }
 
     .invoice-container {
-        padding: 1rem;
+        padding: 1em;
     }
 
     .invoice-container .invoice-header .invoice-logo {
-        margin: 0.8rem 0 0 0;
+        margin: 0.2rem 0 0 0;
         display: inline-block;
         font-size: 1.6rem;
         font-weight: 700;
         color: #010205;
+          margin:0;
+            padding:0;
     }
 
     .invoice-container .invoice-header .invoice-logo img {
@@ -56,7 +61,9 @@
 
     address, .text-50 {
   text-transform: uppercase;
-  font-weight:600;
+  font-weight:800;
+  margin:0;
+  padding:0;
 }
 
 
@@ -66,11 +73,12 @@
         font-size: 1rem;
         color: #010508;
         margin: 0;
+        padding:0;
     }
 
     .invoice-container .invoice-details {
-        margin: 1rem 0 0 0;
-        padding: 1rem;
+        margin: 0;
+        margin:0;
         line-height: 180%;
         background: #f5f6fa;
     }
@@ -161,7 +169,9 @@
 
     .custom-table>tbody td {
         border: 1px solid #202020;
-        font-size: 19px;
+        font-size: 18px;
+        padding:9px;
+        margin:0;
     }
 
 
@@ -195,7 +205,9 @@
 
     table td{
         color: #01060a;
-        font-weight:bold;
+        font-weight:800;
+         margin:0;
+        padding:0;
 
     }
 
@@ -204,13 +216,15 @@
         color: #01060a;
     }
     li{
-        font-size: 17px;
+        font-size: 15px;
     }
     table thead tr th{
-        font-size: 17px;
+        font-size: 15px;
     }
     table tbody tr th{
-        font-size: 17px;
+        font-size: 15px;
+        margin:0;
+        padding:0;
     }
 
     @media print {
@@ -260,13 +274,13 @@
                             <!-- Row end -->
                             <!-- Row start -->
                             <div class="row gutters">
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 m-0 p-0">
                                     <a href="index.html" class="invoice-logo">
                                         Waika Import
                                     </a>
                                 </div>
                                 <div  class="col-lg-6 col-md-6 col-sm-6">
-                                    <address style="font-weight: 600; font-size: 17px;" class="text-right address2 " id="address2">
+                                    <address style="font-weight: 600; font-size: 15px;" class="text-right address2 " id="address2">
                                         {{ sc_store('address') }}
                                         
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
@@ -275,7 +289,7 @@
                                 </div>
 
                                <div class="col-12">
-                                <h4 style="font-weight: bold; font-size: 20px;" class="p-0 m-0 text-center "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h4>
+                                <h4 style="font-weight: bold; font-size: 17px;" class="p-0 m-0 text-center "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h4>
                                </div>
 
                                
@@ -313,7 +327,7 @@
                             <div class="row gutters p-0 m-0">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="">
-                                        <table style="margin-top: 10px;" class="table custom-table m-0">
+                                        <table  class="table custom-table m-0">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -417,15 +431,15 @@
                             <!-- Row end -->
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95  mt-lg-0">
-                            <p style="font-weight:bold; font-size: 20px;" >Notas:</p> 
-                            <i style="font-weight: bold; line-height: 20pt;">{!! $comment !!}</i>
+                            <p style="font-weight:800; font-size: 20px;" >Notas:</p> 
+                            <i style="font-weight: 800; line-height: 20pt;">{!! $comment !!}</i>
                         </div>
 
                         <div  class="">
                           
                         
                             <div class="invoice-body " >
-                                <h5  style="font-weight:bold; font-size: 25px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
+                                <h5  style="font-weight:800; font-size: 18px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
                          
                             <div class="row gutters">
 
@@ -476,7 +490,7 @@
                                                  {{-- nota_evaluacion_financiera --}}
                                    
                                                  <tr >
-                                                   <td  class="td-title"><span > Evaluación legal y Financiera</span></td>
+                                                   <td style="font-weight: 800;"  class="td-title"><span > Evaluación legal y Financiera</span></td>
                                                    <td >
                                                      
                                                        @if (!empty($order->nota_evaluacion_financiera ))
@@ -514,7 +528,7 @@
                                    
                                   
                                                  <tr >
-                                                   <td style="padding: 40px;" class="td-title"><span >Decisión final</span></td>
+                                                   <td style="padding: 35px;" class="td-title"><span >Decisión final</span></td>
                                                    <td >
                                                        @if (!empty($order->nota_decision_final ))
                                                        {{$order->nota_decision_final }} 
@@ -582,7 +596,7 @@
 
                                  <div class="mt-3" style="text-align: center; ">
                                            <span style="width: 100%; font-weight: bold; "> __________________________________________________________________________________________________</span>
-                                            <h4 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h4>
+                                            <h5 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h5>
                                 </div>
                             </div>
 
@@ -638,7 +652,7 @@
 
                    
                      
-                    <div style="font-weight:bold; font-size: 15px;" class="invoice-footer">
+                    <div style="font-weight:bold; font-size: 15px;" class="invoice-footer text-center">
                         Documento generado a través del sistema de Waika Import
                     </div>
                     <h5 class="text-center"  style="page-break-after:always"> </h5>
