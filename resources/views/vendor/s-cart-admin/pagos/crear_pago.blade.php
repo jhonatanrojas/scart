@@ -196,7 +196,15 @@
                         </div>
 
 
-                     
+                        <div class="form-group col-md-3">
+                          <label for="statusPayment">Estatus de pago</label>
+                          <select id="statusPayment" name="statusPayment" required class="form-control">
+                            @foreach($statusPayment as $pago)
+                            <option value="{{ $pago->id}}" >{{ $pago->name}}</option>
+                          
+                            @endforeach;
+                          </select>  
+                        </div>
 
 
         

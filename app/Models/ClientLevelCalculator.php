@@ -35,7 +35,7 @@ class ClientLevelCalculator
     private function getPayments($clientId)
     {
         return HistorialPago::where('customer_id', $clientId)
-            ->where('payment_status', 5)
+              ->whereIn('payment_status',[3,4,5,6])
             ->count();
     }
 

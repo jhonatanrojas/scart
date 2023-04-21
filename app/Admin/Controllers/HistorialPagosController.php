@@ -152,9 +152,11 @@ class HistorialPagosController extends RootAdminController
             if ($row->payment_status == 2):
                 $btn_estatus = '<a href="#" data-id="' . $row->id . '"><span  data-id="' . $row->id . '" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;';
             endif;
-
-            if ($row->payment_status == 2 || $row->payment_status == 5):
+            //whereIn('payment_status',[3,4,5,6])-
+            if ($row->payment_status == 2 || $row->payment_status == 5  || $row->payment_status == 6 || $row->payment_status == 4 || $row->payment_status == 3  ):
                 $btn_ver_pago_estatus = ' <button  onclick="obtener_detalle_pago(' . $row->id . ')" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></button>';
+                $NOta = ' <a   href="' . sc_route_admin('notas.entrega') . '?notas_entrega=true&keyword=' . $row->order_id . '"><span title="Nota de entrega" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fas fa-clipboard"></i></span></a>&nbsp;';
+
             endif;
 
 
@@ -162,11 +164,6 @@ class HistorialPagosController extends RootAdminController
                 $Referencia = ' <a   href="' . sc_file($row->comprobante) . '"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;';
 
             }
-
-            if ($row->payment_status == 5):
-                $NOta = ' <a   href="' . sc_route_admin('notas.entrega') . '?notas_entrega=true&keyword=' . $row->order_id . '"><span title="Nota de entrega" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fas fa-clipboard"></i></span></a>&nbsp;';
-            endif;
-
 
 
 
@@ -316,8 +313,10 @@ class HistorialPagosController extends RootAdminController
                 'msg' => $validator->errors()->all(),
             ]);
         }
+        $order = ShopOrder::where('id',$request->order_id)->first();
         $data_pago = [
             'nro_coutas' => $request->nro_couta,
+            'customer_id' => $order->customer_id,
             'order_id' => $request->order_id,
             'importe_couta' => $request->importe_couta,
             'fecha_venciento' => $request->fecha_vencimiento,
@@ -326,6 +325,7 @@ class HistorialPagosController extends RootAdminController
 
         ];
 
+      
         HistorialPago::create($data_pago);
 
         // reponse json
@@ -519,8 +519,9 @@ class HistorialPagosController extends RootAdminController
         $historial_pago = HistorialPago::where('id', $id_pago)->first();
 
         $order = ShopOrder::where('id', $id_orden)->first();
-
+        $statusPayment = ShopPaymentStatus::whereIn('id', [ 2, 3, 4, 5, 6])->get();
         $data['order'] = $order;
+        $data['statusPayment'] = $statusPayment;
         $data['historial_pago'] = $historial_pago;
 
         $data['metodos_pagos'] = MetodoPago::all();
@@ -691,7 +692,7 @@ class HistorialPagosController extends RootAdminController
             'moneda' => $request->moneda,
             'tasa_cambio' => $request->tipo_cambio,
             'comprobante' => $path_archivo,
-            'payment_status' => $request->payment_status ?? 5
+            'payment_status' => $request->statusPayment ?? 5
 
         ];
         if ($id_pago == null) {
@@ -702,6 +703,20 @@ class HistorialPagosController extends RootAdminController
 
         }
 
+
+            // Obtén el ID del cliente
+            $clientId = $order->customer_id;
+            // Calcula el nivel del cliente
+            $calculator = new ClientLevelCalculator();
+            $level = $calculator->calculate($clientId);
+            // Obtén el cliente a partir de su ID
+            $client = SC_shop_customer::find($clientId);
+
+            // Actualiza el nivel del cliente
+            $client->nivel = $level;
+
+            // Guarda los cambios en la base de datos
+            $client->save();
 
 
 
@@ -886,7 +901,7 @@ class HistorialPagosController extends RootAdminController
 
         if ($keyword) {
             $orderList->where('sc_historial_pagos.order_id', $keyword)
-                ->where('sc_historial_pagos.payment_status', 5);
+                ->whereIn('sc_historial_pagos.payment_status', [3, 4,5,6]);
 
         }
 
@@ -1573,9 +1588,9 @@ class HistorialPagosController extends RootAdminController
         ]);
         //actulizar pagos
 
-        if ($request->estatus_pagos > 1) {
+     
             $total_pagos = HistorialPago::where('order_id', $pago->order_id)
-                ->where('payment_status', 5)
+                ->whereIn('payment_status',[3,4,5,6])
                 ->get();
 
             // Obtén el ID del cliente
@@ -1606,7 +1621,7 @@ class HistorialPagosController extends RootAdminController
 
             AdminOrder::updateRowOrderTotal($dataTotal);
 
-        }
+        
 
         return redirect()->back()
             ->with(['success' => 'Estatus actualizado']);
@@ -2102,8 +2117,11 @@ class HistorialPagosController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($keyword);
      
         //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-        $historialPago = HistorialPago::where('order_id',$keyword)->where('payment_status', 5)->orderBy('nro_coutas')->get();
-        $cuota_pendientes = HistorialPago::where('order_id', $keyword)->where('payment_status','!=', 5)->orderBy('nro_coutas')->first();
+        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6])->orderBy('nro_coutas')->get();
+        $cuota_pendientes = HistorialPago::where('order_id', $keyword)
+        ->where('payment_status', 1)
+        ->orWhere('payment_status', 7)->where('order_id', $keyword)
+        ->orderBy('nro_coutas')->first();
 
                 $cuota_pendiente = 0;
 
@@ -2161,7 +2179,7 @@ class HistorialPagosController extends RootAdminController
 
 
 
-            $list_usuarios = $user_roles->name ?? 'N/A';
+       
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
             $total_bs += round($monto * $row->tasa_cambio, 2);

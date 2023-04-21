@@ -42,8 +42,8 @@
                 @foreach ($historial_pagos as $historial)
                 @php 
                 
-
-                if( $historial->payment_status == 5){
+                // pagado es === 3,4,5,6
+                if( $historial->payment_status == 5 || $historial->payment_status == 6 || $historial->payment_status == 3 || $historial->payment_status == 4 ){
                     $Nr++;
                     $total_pagado += $historial->importe_couta;
                 }else {
@@ -68,12 +68,12 @@
                                         class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i
                                             class="fa fa-edit"></i></span></a>
                             @endif
-                            @if ($historial->payment_status == 2 || $historial->payment_status == 5 )
+                            @if ($historial->payment_status == 2 || $historial->payment_status == 5   || $historial->payment_status == 6 || $historial->payment_status == 3 || $historial->payment_status == 4)
                                 <a href="#" onclick="obtener_detalle_pago({{ $historial->id }})"><span
                                         title="Detalle del pago" type="button"
                                         class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
                             @endif
-                            @if ($historial->payment_status != 2 &&  $historial->payment_status != 5)
+                            @if ($historial->payment_status != 2 &&  $historial->payment_status != 5 && $historial->payment_status != 6 && $historial->payment_status != 3 && $historial->payment_status != 4)
                                 <a class="btn btn-flat btn-sm btn-info" href='{!! sc_route_admin(
                                     'historial_pagos.reportar',
                                     ['id' => $order->id, 'id_pago' => $historial->id],
@@ -81,7 +81,7 @@
                                 ) !!}'><span title="Reportar pago" 
                                         ><i
                                             class=" fa fa-credit-card "></i></span></a>   @endif
-                                            @if ( $historial->payment_status != 5)
+                                            @if ( $historial->payment_status != 5 && $historial->payment_status != 6 && $historial->payment_status != 3 && $historial->payment_status != 4)
                         <span onclick="deleteItemPago('{{ $historial->id }}');"  title="' .{{ sc_language_render('action.delete')  }}. '" class="btn btn-flat btn-sm btn-danger"><i class="fas fa-trash-alt"></i></span>
                             @endif
                         </td>

@@ -324,7 +324,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial </th>
                                                     <th>Cuota </th>
-                                                    <th>Precio </th>
+                                                
                                                     <th>Total</th>
 
                                                 </tr>
@@ -371,8 +371,8 @@
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
-                                                        <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
-                                                        <td>${{ ($detail['price']) }}</td>
+                                                        <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
+                                              
 
                                                         <td>${{ $detail['total_price'] }}</td>
 
@@ -385,7 +385,7 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                  <td colspan="4" style="text-align:right "> Totales</td>
+                                                  <td colspan="3" style="text-align:right "> Totales</td>
                                                 <td  colspan="2">
                                                         
                                                     <p> <strong>Subtotal: ${{ $order->subtotal}}</strong></strong></p>
@@ -398,7 +398,7 @@
                                                     <p> <strong>Inicial: -${{ $inicial}}</strong> </p>
                                                 </td>
                                                 <td >
-                                                    <p> <strong>Total: ${{ $order->total}}</p>
+                                                    <p> <strong>Total: ${{ $order->total - $inicial }}</p>
                                                 </td>
                                                         
                                                  

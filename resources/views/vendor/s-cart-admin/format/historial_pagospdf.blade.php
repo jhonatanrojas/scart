@@ -69,7 +69,7 @@
                         
                         <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> Direccion: {{$direccion}}
+                              <i class="fas fa-map-marker-alt"></i> Dirección: {{$direccion}}
                             </div>
                             <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
                             <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR: {{$vendedor}}</div>
@@ -81,7 +81,7 @@
                         <hr class="d-sm-none" />
                         <div class="">
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Emitido por:{{$emitido_por}}</span> </div>
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emisión:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
         
@@ -101,7 +101,7 @@
                                     <td class="text-center" colspan="6"><h4 style="font-weight: bold;" >PRODUCTO</h4></td>
                                     <tr>
                                        
-                                        <td>Descriccion</td>
+                                        <td>Descripción</td>
                                         <td>Serial</td>
                                         <td>Cant</td>
                                         <td>Precio</td>
@@ -177,9 +177,9 @@
                               <tr>
                     
                                 <td colspan="4"></td> 
-                                <td colspan="1">Total Bs: {!!round($total_bs  , 2)!!}   BS</td>
+                                <td colspan="2">Total Bs: {!!round($total_bs  , 2)!!}   BS</td>
                          
-                                                               <td colspan="">Total Ref $: {{$total_monto_pagado}} $</td>
+                                                               <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
                               <tr>
                                 <td style="font-weight: bold;"  class="h4 text-center" colspan="10">RESUMEN</td>
@@ -195,8 +195,8 @@
                                     
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Numero de Cuotas Pendientes:  {{$Cuotas_Pendientes}}</li>
-                                        <li>Monto de Proxima Cuota (Ref. $):    {{$cuota_pendiente}}
+                                        <li class="">Numero de cuotas pendientes:  {{$Cuotas_Pendientes}}</li>
+                                        <li>Monto de próxima cuota (Ref. $):    {{$cuota_pendiente}}
                                         </li>
                                         <!--<li>Fecha Proxima Cuota:{{$formatted_dates ?? 'N/A'}}</li>
                                         <li></li>-->
