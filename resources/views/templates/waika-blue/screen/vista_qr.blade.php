@@ -6,11 +6,7 @@
 <style>
 	.baner{
 		width: 100%;
-		height: 100px;
-		background-image: url('/images/historial.png');
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: cover;
+		
 		
 	}
 </style>
@@ -18,7 +14,9 @@
 
 	<div class="card">
 		<div class="car-body p-2">
-		<div class="baner">
+		<div class="baner mb-3">
+
+			<img class="img-fluid" src="{{ asset('images/historial.png') }}" alt="Imagen">
 			
 
 		</div>
