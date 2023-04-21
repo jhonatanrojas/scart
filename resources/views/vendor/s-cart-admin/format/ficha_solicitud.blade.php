@@ -170,7 +170,7 @@
     .custom-table>tbody td {
         border: 1px solid #202020;
         font-size: 18px;
-        padding:9px;
+        padding-top:5px;
         margin:0;
     }
 
@@ -338,7 +338,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial </th>
                                                     <th>Cuota </th>
-                                                    <th>Precio </th>
+                                                    
                                                     <th>Total</th>
 
                                                 </tr>
@@ -386,7 +386,7 @@
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
                                                         <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
-                                                        <td>${{ ($detail['price']) }}</td>
+                                                       
 
                                                         <td>${{ $detail['total_price'] }}</td>
 
@@ -399,7 +399,7 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                  <td colspan="4" style="text-align:right "> Totales</td>
+                                                  <td colspan="3" style="text-align:right "> Totales</td>
                                                 <td  colspan="2">
                                                         
                                                     <p> <strong>Subtotal: ${{ $order->subtotal}}</strong></strong></p>
