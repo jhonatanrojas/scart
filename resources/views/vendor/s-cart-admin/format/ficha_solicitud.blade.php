@@ -338,11 +338,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial </th>
                                                     <th>Cuota </th>
-<<<<<<< HEAD
                                                 
-=======
-                                                    
->>>>>>> 1c7f98dc8ce53e973aee09c166dd39203d33aefe
                                                     <th>Total</th>
 
                                                 </tr>
@@ -413,10 +409,10 @@
                                                     <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
                                                 </td>
                                                 <td colspan="2">
-                                                    <p> <strong>Inicial: -${{ $inicial}}</strong> </p>
+                                                    <p> <strong>Inicial: -${{ round($inicial)}}</strong> </p>
                                                 </td>
                                                 <td >
-                                                    <p> <strong>Total: ${{ $order->total - $inicial }}</p>
+                                                    <p> <strong>Total: ${{  round($order->total - round($inicial),2) }}</p>
                                                 </td>
                                                         
                                                  
