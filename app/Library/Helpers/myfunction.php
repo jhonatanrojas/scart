@@ -1321,7 +1321,7 @@ if (!function_exists('getBadgeHtml')) {
                 break;
         }
 
-        return "<span class='badge badge-pill' style='background-color: {$color};'>{$level}</span>";
+        return "<span class='badge badge-pill  text-light    ' style='background-color: {$color};'>{$level}</span>";
     }
 }
 
