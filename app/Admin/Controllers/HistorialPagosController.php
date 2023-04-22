@@ -2392,7 +2392,7 @@ class HistorialPagosController extends RootAdminController
 
             // Actualiza el nivel del cliente
             $client->nivel = $level;
-
+            echo $client->nivel.' '.$client->first_name.' '.$client->last_name.'<br>';
             // Guarda los cambios en la base de datos
             $client->save();
         }
