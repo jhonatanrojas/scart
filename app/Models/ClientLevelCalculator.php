@@ -27,9 +27,11 @@ class ClientLevelCalculator
             return 'PLATA';
         } elseif ($payments >= 9) {
             return 'BRONCE';
-        } else {
+        }  elseif ($payments >=1) {
             return 'CERTIFICADO';
-        }
+        }else {
+            return 'SIN NIVEL';
+        }	
     }
 
     private function getPayments($clientId)

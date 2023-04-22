@@ -2377,4 +2377,28 @@ class HistorialPagosController extends RootAdminController
 
 
     }
+
+    public function actualizar_puntos_de_clientes(){
+
+        $orders = ShopOrder::all();
+
+        foreach ($orders as $order) {
+            $clientId = $order->customer_id;
+            // Calcula el nivel del cliente
+            $calculator = new ClientLevelCalculator();
+            $level = $calculator->calculate($clientId);
+            // Obtén el cliente a partir de su ID
+            $client = SC_shop_customer::find($clientId);
+
+            // Actualiza el nivel del cliente
+            $client->nivel = $level;
+
+            // Guarda los cambios en la base de datos
+            $client->save();
+        }
+        $clientId = $order->customer_id;
+      
+
+
+    }
 }
