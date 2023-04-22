@@ -384,7 +384,7 @@
                       <td class="td-title">Clasificación del cliente:</td>
                       <td>
                         @if (!empty($clasificacion))
-                            {{$clasificacion}}
+                            {!! getBadgeHtml($clasificacion)!!}
                             @else
                             <span class="text-info">No ha
                               realizado el primer pago</span>
