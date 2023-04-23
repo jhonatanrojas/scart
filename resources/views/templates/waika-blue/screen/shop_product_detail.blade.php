@@ -1,5 +1,3 @@
-
-
 {{-- @php
 
 $layout_page = shop_product_detail
@@ -11,6 +9,31 @@ $layout_page = shop_product_detail
 
 <div>
   <style>
+    .splide__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .splide__slide {
+      opacity: 0.6;
+    }
+    .splide__slide.is-active {
+      opacity: 1;
+    }
+    .splide__list {
+      height: auto !important;
+    }
+    .splide__track--nav>.splide__list>.splide__slide {
+        border: 1px solid #E8E8E8;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .splide__track--nav>.splide__list>.splide__slide.is-active {
+        border: 1px solid #0080B6 !important;
+        border-radius: 2px;
+    }
+
     @import url('https://fonts.googleapis.com/css?family=DM+Sans&display=swap');
   
   
@@ -317,300 +340,95 @@ $layout_page = shop_product_detail
 
 @extends($sc_templatePath.'.layout')
 {{-- block_main --}}
+
 @section('block_main_content_center')
   @php
       $countItem = 0
   @endphp
       <!-- Single Product-->
-      <section class="card">
-     
-        <div class="container">
+      <section class="card mb-4">
+        <div class="card-body">
+            
+            <div class="row justify-content-between">
+             
+              <div class="col-lg-7">
+                  {{-- main carousel --}}
+                  <section id="main-carousel" class="splide pb-2" aria-label="Beautiful Images">
+                      <div class="splide__track">
+                        <ul class="splide__list">
+                          <li class="splide__slide">
+                            <img src="{{ sc_file($product->getImage()) }}" />
+                          </li>
+                          @foreach ($product->images as $key=>$image)
+                            <li class="splide__slide">
+                              <img src="{{ sc_file($image->getImage()) }}" />
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                  </section>
+                  {{-- slider thumbnail carousel --}}
+                  <section id="thumbnail-carousel" class="splide mb-4">
+                    <div class="splide__track">
+                      <ul class="splide__list">
+                        <li class="splide__slide">
+                          <img src="{{ sc_file($product->getImage()) }}" />
+                        </li>
+                        @foreach ($product->images as $key=>$image)
+                          <li class="splide__slide">
+                            <img src="{{ sc_file($image->getImage()) }}" />
+                          </li>
+                        @endforeach
+                      </ul>
+                    </div>
+                </section>
+
+              </div>
+              
+              <div class="col-lg-4">
+                @include($sc_templatePath.'.includes.product_detail.card_info')
+              </div>
+            </div> {{--end row --}}
           
-          <div class="row ">
-           
-            <div class="col-lg-6">
-              <div class="slick-vertical slick-product">
-                <!-- Slick Carousel-->
-                <div class="slick-slider carousel-parent" id="carousel-parent" data-items="1" data-swipe="true" data-child="#child-carousel" data-for="#child-carousel">
-                  <div class="item">
-                    <div class="slick-product-figure"><img src="{{ sc_file($product->getImage()) }}" alt="" width="530" height="480"/>
-                    </div>
-                  </div>
-                  @if ($product->images->count())
-                  @php
-                    $countItem = 1 + $product->images->count();
-                  @endphp
-                  @foreach ($product->images as $key=>$image)
-                  <div class="item">
-                    <div class="slick-product-figure"><img src="{{ sc_file($image->getImage()) }}" alt="" width="530" height="480"/>
-                    </div>
+            <div class="row">
+              <div class="col-12 col-lg-7 py-2">
+              
+                <h3>{{ sc_language_render('product.description') }}</h3>
+    
+                {{-- Render connetnt --}}
+                <div class="description-product">
+                  {!! sc_html_render($product->content) !!}
+                </div>
+                {{--// Render connetnt --}}
+              </div>
+            </div>
+
+          @if ($productRelation->count())
+          <!-- Related Products-->
+            <div class="row">
+              <div class="col-12">
+                <h3>{{ sc_language_render('front.products_recommend') }}</h3>
+              </div>
+              <div class="col-12 col-lg-7">
+                <div class="row row-cols-1 row-cols-lg-3">
+                  @foreach ($productRelation as $key => $productRel)
+                  <div class="col mb-3">
+                        {{-- Render product single --}}
+                        @include($sc_templatePath.'.common.product_single', ['product' => $productRel])
+                        {{-- //Render product single --}}
                   </div>
                   @endforeach
-                  @endif
                 </div>
-
-                @if ($countItem > 1)
-                <div class="slick-slider child-carousel slick-nav-1" id="child-carousel" data-arrows="true" data-items="{{ $countItem }}" data-sm-items="{{ $countItem }}" data-md-items="{{ $countItem }}" data-lg-items="{{ $countItem }}" data-xl-items="{{ $countItem }}" data-xxl-items="{{ $countItem }}" data-md-vertical="true" data-for="#carousel-parent">
-                    <div class="item">
-                      <div class="slick-product-figure"><img src="{{ sc_file($product->getImage()) }}" alt="" width="600" height="480"/>
-                      </div>
-                    </div>
-                    @foreach ($product->images as $key=>$image)
-                    <div class="item">
-                      <div class="slick-product-figure"><img src="{{ sc_file($image->getThumb()) }}" alt="" width="530" height="480"/>
-                      </div>
-                    </div>
-                    @endforeach
-                  </div>
-                @endif
-
               </div>
             </div>
-            <div class="col-lg-6">
             
-              <form id="buy_block" class="product-information" action="{{ sc_route('cart.add') }}" method="post">
-                {{ csrf_field() }}
-                <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
-                <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
-              <div class="single-product">
-                  <h4 class="text-transform-none font-weight-medium" id="product-detail-name">{{ $product->name }}</h4>
-                
-                  {!! $product->displayVendor() !!}
-                
-                  {{-- <p>
-                    SKU: <span id="product-detail-model">{{ $product->sku }}</span>
-                  </p> --}}
+          @endif
+            
+            
+        </div>  
+      </div>
+        {{-- card body --}}
 
-                  {{-- Show price --}}
-                  <div class="">
-                    <div class="single-product-price" id="product-detail-price">
-                      @php
-                      $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-                      $product->price_con_inicial=  $product->price-$product->monto_inicial;
-                
-                
-                      @endphp
-                      @if( $product->precio_de_cuota)
-                      <div class="product-price-wrap">
-                        <div class="sc-new-price">${!!  number_format($product->price_con_inicial/$product->nro_coutas,2) !!} </div>
-                      </div>
-                
-                      @else
-                      {!! $product->showPriceDetail() !!}
-                      @endif
-              
-                      @php
-                  
-                      $total_cuotas=0;
-                      if($product->nro_coutas>0){
-                      
-                        $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-                      $total_cuotas=  $product->price / $product->nro_coutas;  
-                    
-
-                    }
-                    @endphp
-                    
-                    </div>
-                    <div>
-                      <h5>   @if( $product->monto_inicial > 0 )
-
-                        Inicial de  ${!! number_format($product->monto_inicial,2)  !!} <br>
-                        @endif</h5>
-                      <small class=" text-info  " style="font-size:1rem"> {{ $product->description}}</small>
-                    </div>
-                  </div>
-                  {{--// Show price --}}
-
-                  <hr class="hr-gray-100">
-                
-                 
-                  <div class="d-flex justify-content-center">
-
-                    @if (sc_config('customer_pagar_al_contado'))
-                      <div  class="m-2">
-                        <button onclick="validachecke1()" id="descotado" class="btn btn-info btn-lg p-3"  type="button"  name="Des_contado"   ><small style="font-size: 12;">PAGAR AL CONTADO</small></button>
-                      </div>
-                    @endif
-                    <div class="m-2 col-md-12">
-                      <button id="finansiamiento" onclick="validachecke2() ,gen_table()"  data-toggle="modal" data-target="#myModal" type="button" class="pedido p-3  text-white " name="Financiamiento"  ><small  style="font-size: 15px;">CALCULAR SOLICITUD</small></button>
-                    </div>
-
-                  </div>
-                 
-                <div>
-                  <p class="text-danger" id="msg"></p>
-                </div>
-                <hr class="hr-gray-100">
-
-                {{-- Button add to cart --}}
-                @if ($product->kind != SC_PRODUCT_GROUP && $product->allowSale() && !sc_config('product_cart_off'))
-                <div id="group" class="group-xs group-middle" >
-                    <div class="product-stepper" >
-                      <input class="form-input" name="qty" type="number" data-zeros="true" value="1" min="1" max="100">
-                    </div>
-                    <div>
-                        <button    id="buton"  class="button button-lg button-secondary button-zakaria" type="submit">{{ sc_language_render('action.add_to_cart') }}</button>
-                    </div>
-                </div>
-                @endif
-                {{--// Button add to cart --}}
-
-                {{-- Show attribute --}}
-                @if (sc_config('product_property'))
-                <div id="product-detail-attr">
-                    @if ($product->attributes())
-                    {!! $product->renderAttributeDetails() !!}
-                    @endif
-                </div>
-                @endif
-                {{--// Show attribute --}}
-
-                {{-- Stock info --}}
-                @if (sc_config('product_stock'))
-                <div>
-                    {{ sc_language_render('product.stock_status') }}:
-                    <span id="stock_status">
-                        @if($product->stock <=0 && !sc_config('product_buy_out_of_stock'))
-                            {{ sc_language_render('product.out_stock') }} 
-                            @else 
-                            {{ sc_language_render('product.in_stock') }} 
-                            @endif 
-                    </span> 
-                </div>
-                @endif
-                {{--// Stock info --}}
-
-                {{-- date available --}}
-                @if (sc_config('product_available') && $product->date_available >= date('Y-m-d H:i:s'))
-                    {{ sc_language_render('product.date_available') }}:
-                    <span id="product-detail-available">
-                        {{ $product->date_available }}
-                    </span>
-                @endif
-                {{--// date available --}}
-
-                {{-- Category info --}}
-                <div>
-                {{ sc_language_render('product.category') }}: 
-                @foreach ($product->categories as $category)
-                  <a href="{{ $category->getUrl() }}">{{ $category->getTitle() }}</a>,
-                @endforeach
-                </div>
-                {{--// Category info --}}
-
-                {{-- Brand info --}}
-                @if (sc_config('product_brand') && !empty($product->brand->name))
-                <div>
-                    {{ sc_language_render('product.brand') }}:
-                    <span id="product-detail-brand">
-                        {!! empty($product->brand->name) ? 'None' : '<a href="'.$product->brand->getUrl().'">'.$product->brand->name.'</a>' !!}
-                    </span>
-                </div>
-                @endif
-                {{--// Brand info --}}
-
-                {{-- Product kind --}}
-                @if ($product->kind == SC_PRODUCT_GROUP)
-                  <div class="products-group">
-                      @php
-                      $groups = $product->groups
-                      @endphp
-                      <b>{{ sc_language_render('product.kind_group') }}</b>:<br>
-                      @foreach ($groups as $group)
-                      <span class="sc-product-group">
-                          <a target=_blank href="{{ $group->product->getUrl() }}">
-                              {!! sc_image_render($group->product->image) !!}
-                          </a>
-                      </span>
-                      @endforeach
-                  </div>
-                @endif
-
-                @if ($product->kind == SC_PRODUCT_BUILD)
-                  <div class="products-group">
-                      @php
-                      $builds = $product->builds
-                      @endphp
-                      <b>{{ sc_language_render('product.kind_bundle') }}</b>:<br>
-                      <span class="sc-product-build">
-                          {!! sc_image_render($product->image) !!} =
-                      </span>
-                      @foreach ($builds as $k => $build)
-                      {!! ($k) ? '<i class="fa fa-plus" aria-hidden="true"></i>':'' !!}
-                      <span class="sc-product-build">{{ $build->quantity }} x
-                          <a target="_new" href="{{ $build->product->getUrl() }}">{!!
-                              sc_image_render($build->product->image) !!}</a>
-                      </span>
-                      @endforeach
-                  </div>
-                @endif
-              {{-- Product kind --}}
-
-                <hr class="hr-gray-100">
-
-                {{-- Social --}}
-                <div class=" d-flex">
-                 <div>
-                  <span class="">Compartir</span>
-                 </div>
-                  <div>
-
-                    <ul class="list-inline list-social list-inline-sm">
-                      <li><a target="blank" class="icon mdi mdi-facebook" href="https://api.whatsapp.com/send?phone=584126354041"></a></li>
-                      {{-- <li><a class="icon mdi mdi-twitter" href="#"></a></li> --}}
-                      <li><a target="blank" class="icon mdi mdi-instagram" href="https://www.instagram.com/waikaimport/"></a></li>
-                      {{-- <li><a class="icon mdi mdi-google-plus" href="#"></a></li> --}}
-                    </ul>
-                  </div>
-                </div>
-                {{--// Social --}}
-                  <input type="hidden" name="Cuotas" value="{!!$product->nro_coutas!!}">
-                  <input type="hidden" name="modalidad_pago" value="{!!$product->modalidad == "Mensual" ? 3: 2!!}">
-              </div>
-            </form>
-            </div>
-          </div>
-
-          <!-- Bootstrap tabs-->
-          <div class="tabs-custom tabs-horizontal tabs-line" id="tabs-1">
-            <!-- Nav tabs-->
-            <div class="nav-tabs-wrap">
-              <ul class="nav nav-tabs nav-tabs-1">
-                <li class="nav-item" role="presentation">
-                  <a class="nav-link active" href="#tabs-1-1" data-toggle="tab">{{ sc_language_render('product.description') }}</a>
-                </li>
-              </ul>
-            </div>
-
-            {{-- Render connetnt --}}
-            <div class="tab-content tab-content-1">
-              <div class="tab-pane fade show active" id="tabs-1-1">
-                {!! sc_html_render($product->content) !!}
-              </div>
-            </div>
-            {{--// Render connetnt --}}
-
-          </div>
-        </div>
-
-        @if ($productRelation->count())
-          <!-- Related Products-->
-          <section class="section section-sm section-last bg-default">
-            <div class="container">
-              <h4 class="font-weight-sbold">{{ sc_language_render('front.products_recommend') }}</h4>
-              <div class="row row-lg row-30 row-lg-50 justify-content-center">
-                @foreach ($productRelation as $key => $productRel)
-                <div class="col-sm-6 col-md-5 col-lg-3">
-                      {{-- Render product single --}}
-                      @include($sc_templatePath.'.common.product_single', ['product' => $productRel])
-                      {{-- //Render product single --}}
-                </div>
-                @endforeach
-              </div>
-            </div>
-          </section>
-        @endif
       </section>
 
 
@@ -717,8 +535,61 @@ $layout_page = shop_product_detail
 @endpush
 
 @push('scripts')
+    {{-- lightSlider --}}
+      <script>
+        // $(document).ready(function() {
+        //   $('#imageGallery').lightSlider({
+        //       gallery:true,
+        //       item:1,
+        //       adaptiveHeight:true,
+        //       loop:true,
+        //       thumbItem:2,
+        //       thumbMargin: 6,
+        //       slideMargin:0,
+        //       enableDrag: true,
+        //       currentPagerPosition:'left',
+        //       onSliderLoad: function(el) {
+        //           el.lightGallery({
+        //               selector: '#imageGallery .lslide'
+        //           });
+        //       }   
+        //   });  
+        // });
+        
+        document.addEventListener( 'DOMContentLoaded', function () {
+          var main = new Splide( '#main-carousel', {
+            type      : 'slide',
+            rewind    : true,
+            pagination: false,
+            arrows    : false,
+          } );
 
+          var thumbnails = new Splide( '#thumbnail-carousel', {
+            fixedWidth  : 80,
+            fixedHeight : 80,
+            gap         : 6,
+            rewind      : true,
+            pagination  : false,
+            isNavigation: true,
+            arrows    : false,
+            breakpoints : {
+              768: {
+                fixedWidth : 48,
+                fixedHeight: 48,
+              },
+            },
+          } );
 
+          main.sync( thumbnails );
+          main.mount();
+          thumbnails.mount();
+        } );
+        
+      </script>
+    {{-- end lightSlider --}}
+
+    {{-- owl --}}
+    {{-- end owl --}}
   <script type="text/javascript">
 
     const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
@@ -726,160 +597,155 @@ $layout_page = shop_product_detail
 
 
 
-  var radios_tipo_venta = document.getElementsByName('tipo_venta');
-  const input_financamiento =document.getElementById("financiamiento");
-  var select_inicial = document.getElementById("inicial");
-  // Agregar un evento onchange a cada botón de radio
-  for (var i = 0; i < radios_tipo_venta.length; i++) {
-  radios_tipo_venta[i].onchange = function() {
-  // Obtener el valor del botón de radio seleccionado
+    var radios_tipo_venta = document.getElementsByName('tipo_venta');
+    const input_financamiento =document.getElementById("financiamiento");
+    var select_inicial = document.getElementById("inicial");
+    // Agregar un evento onchange a cada botón de radio
+    for (var i = 0; i < radios_tipo_venta.length; i++) {
+    radios_tipo_venta[i].onchange = function() {
+    // Obtener el valor del botón de radio seleccionado
 
 
-  var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+    var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
 
-  if(seleccionado==1){
-    input_financamiento.value=1;
-    select_inicial.querySelector('option[value="30"]').removeAttribute("selected");
-    select_inicial.removeAttribute("readonly");
-    document.getElementById('monto_Inicial').value =0;
+    if(seleccionado==1){
+      input_financamiento.value=1;
+      select_inicial.querySelector('option[value="30"]').removeAttribute("selected");
+      select_inicial.removeAttribute("readonly");
+      document.getElementById('monto_Inicial').value =0;
 
-  
-          document.getElementById('monto_Inicial').value = 0.00
-          gen_table(0)
-
-
-  }else{
+    
+            document.getElementById('monto_Inicial').value = 0.00
+            gen_table(0)
 
 
-      var option = select_inicial.querySelector('option[value="30"]');
-      select_inicial.querySelector('option[value="0"]').removeAttribute("selected");
-  if (option) {
-  option.setAttribute("selected", "selected");
-  select_inicial.setAttribute("readonly", "readonly");
-  gen_table(30)
+    }else{
 
-  }
-  input_financamiento.value=2;
-  }
-  // Hacer algo con el valor seleccionado
-  console.log('El botón de radio seleccionado es: ' + seleccionado);
-  }
-  }
 
-    let  inicial = document.getElementById("inicial")
-    inicial.addEventListener('click' , function(e){
-    var iniciale = e.target.value
+        var option = select_inicial.querySelector('option[value="30"]');
+        select_inicial.querySelector('option[value="0"]').removeAttribute("selected");
+    if (option) {
+    option.setAttribute("selected", "selected");
+    select_inicial.setAttribute("readonly", "readonly");
+    gen_table(30)
 
-    if(iniciale == '0' || iniciale == '30'){
-        gen_table(iniciale)
-    }else if(!iniciale == '0' || !iniciale == '30'){
-        alert('el campo inicial es obligatorio')
+    }
+    input_financamiento.value=2;
+    }
+    // Hacer algo con el valor seleccionado
+    console.log('El botón de radio seleccionado es: ' + seleccionado);
+    }
     }
 
-    
-    
-  })
+      let  inicial = document.getElementById("inicial")
+      inicial.addEventListener('click' , function(e){
+      var iniciale = e.target.value
 
-  function gen_table(iniciale){
-    document.getElementById("butto_modal").disabled = false;
-    var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
-    if(seleccionado==1)
-    var n2=Number(document.getElementById("Cuotas").value);
-    else
-    var n2=Number(document.getElementById("cuotas_inmediatas").value);
+      if(iniciale == '0' || iniciale == '30'){
+          gen_table(iniciale)
+      }else if(!iniciale == '0' || !iniciale == '30'){
+          alert('el campo inicial es obligatorio')
+      }
 
-    let monto=Number(document.getElementById("monto").value);
+      
+      
+    })
 
-    let inicial = iniciale;
-    if(n2>1)
-    document.getElementById("m_nro_cuotas").value=n2;
-    
+    function gen_table(iniciale){
+      document.getElementById("butto_modal").disabled = false;
+      var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+      if(seleccionado==1)
+      var n2=Number(document.getElementById("Cuotas").value);
+      else
+      var n2=Number(document.getElementById("cuotas_inmediatas").value);
 
-  
+      let monto=Number(document.getElementById("monto").value);
 
-    if(inicial>0){
-
-        let precio_couta=  monto -(inicial* monto / 100 );
-        
-        let precio_monto_cuota = precio_couta / n2
-        let tola_inicial = inicial * monto / 100
-        let monto_cuotas = monto/n2;
-
-        document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-        document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-        document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
-
-
+      let inicial = iniciale;
+      if(n2>1)
+      document.getElementById("m_nro_cuotas").value=n2;
+      
 
     
-    }else{
-        let monto_cuotass = monto/n2;
-        document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
-          document.getElementById('monto_Inicial').value = 0.00
-          document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
+
+      if(inicial>0){
+
+          let precio_couta=  monto -(inicial* monto / 100 );
+          
+          let precio_monto_cuota = precio_couta / n2
+          let tola_inicial = inicial * monto / 100
+          let monto_cuotas = monto/n2;
+
+          document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
+          document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
+          document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
+
 
 
       
-    }
+      }else{
+          let monto_cuotass = monto/n2;
+          document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+            document.getElementById('monto_Inicial').value = 0.00
+            document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
 
 
-      fechaInicio = new Date(document.getElementById('fecha').value)
-      fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
-    
-      if(fechaInicio == "Invalid Date"){
-      var fechaInicio  = new Date();
-      var fechaInicio = fechaInicio.toLocaleDateString('en-US');
-      // obtener la fecha de hoy en formato `MM/DD/YYYY`
+        
       }
 
 
-  }
-
-    var msg = document.getElementById('msg');
-    const  Buyblock = document.getElementById("buy_block");
-    function validachecke1(){
+        fechaInicio = new Date(document.getElementById('fecha').value)
+        fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
       
-        let msg = document.getElementById('msg').style.display = "none";
-        const group = document.getElementById("group").style.display = "block"
-        
-        var stylies = document.getElementById("descotado")
-        
-        stylies.classList.replace("btn-primary", "btn-success")
+        if(fechaInicio == "Invalid Date"){
+        var fechaInicio  = new Date();
+        var fechaInicio = fechaInicio.toLocaleDateString('en-US');
+        // obtener la fecha de hoy en formato `MM/DD/YYYY`
+        }
 
-        var finansiamiento = document.getElementById("finansiamiento");
 
-        finansiamiento.classList.replace("btn-success", "btn-primary")
+    }
+
+      var msg = document.getElementById('msg');
+      const  Buyblock = document.getElementById("buy_block");
+      function validachecke1(){
         
-    
-    
-    };
+          let msg = document.getElementById('msg').style.display = "none";
+          const group = document.getElementById("group").style.display = "block"
           
-      document.getElementById('msg').style.display = "none";
-      document.getElementById("group").style.display = "none";
-    function validachecke2(){
-        let msg = document.getElementById('msg').style.display = "none";
-        const group = document.getElementById("group").style.display = "none";
-        let finansiamiento = document.getElementById("finansiamiento");
-        finansiamiento.classList.replace("btn-primary", "btn-success")
+          var stylies = document.getElementById("descotado")
+          
+          stylies.classList.replace("btn-primary", "btn-success")
 
-        var stylies = document.getElementById("descotado")
+          var finansiamiento = document.getElementById("finansiamiento");
+
+          finansiamiento.classList.replace("btn-success", "btn-primary")
+          
+      
+      
+      };
+            
+        document.getElementById('msg').style.display = "none";
+        document.getElementById("group").style.display = "none";
+      function validachecke2(){
+          let msg = document.getElementById('msg').style.display = "none";
+          const group = document.getElementById("group").style.display = "none";
+          let finansiamiento = document.getElementById("finansiamiento");
+          finansiamiento.classList.replace("btn-primary", "btn-success")
+
+          var stylies = document.getElementById("descotado")
+          
+          stylies.classList.replace("btn-success", "btn-primary")
         
-        stylies.classList.replace("btn-success", "btn-primary")
-      
-      
+        
 
-    };
+      };
 
 
 
-      Buyblock.addEventListener("submit" ,function(e){
-      e.preventDefault()
-      if(true) {Buyblock.submit()} });
-
-
-
-
-
+        Buyblock.addEventListener("submit" ,function(e){
+        e.preventDefault()
+        if(true) {Buyblock.submit()} });
   </script>
     
 @endpush

@@ -1,4 +1,4 @@
-<header class="section page-header bg-white">
+<header class="section page-header bg-white mb-3">
 
   
     <div class="container">

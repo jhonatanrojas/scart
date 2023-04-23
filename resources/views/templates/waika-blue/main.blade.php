@@ -69,6 +69,10 @@
     <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.carousel.min.css')}}" rel="stylesheet">
     <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet">
     {{-- end owl --}}
+    
+    {{-- lsplide --}}
+    <link href="{{asset('/templates/waika-blue/assets/splide-4.1.3/dist/css/splide.min.css')}}" rel="stylesheet">
+    {{-- end splide --}}
   </head>
 <body>
     <div class="ie-panel">
@@ -76,7 +80,6 @@
             <img src="{{ sc_file($sc_templateFile.'/images/ie8-panel/warning_bar_0000_us.jpg')}}" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today.">
         </a>
     </div>
-
     <div class="page">
         {{-- Block header --}}
         @section('block_header')
@@ -107,9 +110,9 @@
                     <div class="row">
                         @section('block_main_content')
                         
-                        @if (empty($hiddenBlockLeft))
+                        @if (!empty($hiddenBlockLeft))
                             <!--Block left-->
-                            <div class="col-lg-3">
+                            <div class="col-12 col-lg-3">
                                 @section('block_main_content_left')
                                     @include($sc_templatePath.'.block_main_content_left')
                                 @show
@@ -117,7 +120,7 @@
                             <!--//Block left-->
 
                             <!--Block center-->
-                            <div class="col-9">
+                            <div class="col-12 col-lg-9">
                                 @section('block_main_content_center')
                                     @include($sc_templatePath.'.block_main_content_center')
                                 @show
@@ -179,6 +182,8 @@
 
     <script src="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/owl.carousel.min.js')}}"></script>
     
+    {{-- splide --}}
+    <script src="{{asset('/templates/waika-blue/assets/splide-4.1.3/dist/js/splide.min.js')}}"></script>
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')

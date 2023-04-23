@@ -5,7 +5,7 @@
     </a>
   </figure>
     
-  <div class="card-body">
+    <div class="card-body">
         @php
         $product->nro_coutas=$product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
           if( $product->precio_de_cuota > 0 ):

@@ -12,13 +12,15 @@ a {
 .navbar-brand img {
     max-width: 100%;
 }
-.nav-link {
+#navbarSupportedContent .nav-link{
     display: block;
     padding: 0px 10px;
-    font-size: 12;
+    font-size: 16;
     font-weight: 400;
-    color: #2E515F;
     line-height: 2;
+}
+.nav-link {
+    color: #2E515F;
 }
 .nav-link:focus, .nav-link:hover {
     color: #0080B6;
