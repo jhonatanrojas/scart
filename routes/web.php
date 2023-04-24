@@ -31,7 +31,7 @@ Route::get('pago_exitoso', 'ShopAccountController@pago_exitoso')->name('pago_exi
 Route::get('biopago', 'ShopAccountController@biopago')->name('biopago');
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
 //ruta para eliminar una pago de sc_historial_pagos ajax
-Route::post('/sc_admin/historial_pagos/eliminar', [HistorialPagosController::class ,'eliminar_pago'])->name('historial_pagos.delete');
+Route::post('/sc_admin/historial_pagos/eliminar', [HistorialPagosController::class ,'eliminar_pago'])->name('historial_pagos.delete')->middleware('admin');;
 //ruta para obtener pagos de un arden
 Route::get('/sc_admin/historial_pagos/getpagosajax', [HistorialPagosController::class ,'getpagosajax'])->name('getPagosAjax');
 //ruta para crear un nuevo pago en sc_historial_pagos
@@ -43,17 +43,17 @@ Route::get('/downloadPdf/{id}', [AdminOrderController::class,'downloadPdf'])->na
 Route::get('/downloadJuradada/{id}', [AdminOrderController::class,'downloadJuradada'])->name('downloadJuradada');
 
 Route::get('sc_admin/borrador_pdf/{id}', [AdminOrderController::class,'borrador_pdf'])->name('borrador_pdf');
-Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido');
+Route::get('sc_admin/ficha_pedido', [AdminOrderController::class,'ficha_pedido'])->name('ficha_pedido')->middleware('admin');
 Route::get('sc_admin/ficha_propuesta', [AdminOrderController::class,'ficha_propuesta'])->name('propuesta');
 
-Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propuesta'])->name('list_propuesta');
+Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propuesta'])->name('list_propuesta')->middleware('admin');
 
 
 Route::get('sc_admin/export_product', [AdminProductController::class,'export_product'])->name('export_product');
 
 
 
-
+//[ 'middleware' => 'admin']
 
 
 
@@ -99,13 +99,13 @@ Route::post('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'post_cre
 Route::get('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'crear_tasa_cambio'])->name('tasa_cambio');
 Route::get('/sc_admin/list_tasa_cambio', [HistorialPagosController::class ,'list_tasa_cambio'])->name('list_tasa_cambio');
 
-Route::get('/sc_admin/pagos_realizado',[HistorialPagosController::class ,'pagos_realizado'])->name('pagos_realizado');
+Route::get('/sc_admin/pagos_realizado',[HistorialPagosController::class ,'pagos_realizado'])->name('pagos_realizado')->middleware('admin');
 
-Route::get('/sc_admin/pago_diarios',[HistorialPagosController::class ,'pago_diarios'])->name('pago_diarios');
+Route::get('/sc_admin/pago_diarios',[HistorialPagosController::class ,'pago_diarios'])->name('pago_diarios')->middleware('admin');
 
 Route::get('/sc_admin/cobranza_mensual',[HistorialPagosController::class ,'cobranza_mensual'])->name('cobranza_mensual');
 
-Route::get('sc_admin/historial_cliente', [HistorialPagosController::class,'historial_cliente'])->name('historial.cliente');
+Route::get('sc_admin/historial_cliente', [HistorialPagosController::class,'historial_cliente'])->name('historial.cliente')->middleware('admin');
 
 Route::get('sc_admin/notas_d_entrega', [HistorialPagosController::class,'notas_d_entrega'])->name('notas.entrega');
 
