@@ -317,10 +317,10 @@
 
                                                @if ($comment)
 
-                                               <li><i class="fas fa-envelope"></i>{{ $comment ?? '' }}</li>
+                                               <li><i class="fas fa-envelope"></i>{!!nl2br( $comment)?? '' !!}</li>
                                                    
                                                @endif
-                                              
+                                             
 
                                               
                                             </ul>
