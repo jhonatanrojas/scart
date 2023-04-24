@@ -432,7 +432,7 @@
                         </div>
                         <div class="col-12 col-sm-7 text-grey-d2 text-95  mt-lg-0">
                             <p style="font-weight:800; font-size: 20px;" >Notas:</p> 
-                            <i style="font-weight: 800; line-height: 20pt;">{!! $comment !!}</i>
+                            <i style="font-size: 18px; font-weight: 800; line-height: 20pt;">{!! $comment !!}</i>
                         </div>
 
                         <div  class="">
