@@ -280,10 +280,13 @@
                                     </a>
                                 </div>
                                 <div  class="col-lg-6 col-md-6 col-sm-6">
-                                    <address style="font-weight: 600; font-size: 15px;" class="text-right address2 " id="address2">
+                                    <address style="font-weight: 600; font-size: 15px;" class="text-right  " id="address2">
                                         {{ sc_store('address') }}
                                         
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
+                                                <br>
+
+                                                <span>Solicitud #{{ $nro_convenio }}</span>
                                     </address>
                                    
                                 </div>
@@ -311,6 +314,15 @@
                                               <li><i class="fas fa-envelope"></i> nos conocio:{{ strtoupper($conocio) }}</li>
 
                                                <li><i class="fas fa-envelope"></i> Vendedor Asignado:{{ strtoupper($vendedor) }}</li>
+
+                                               @if ($comment)
+
+                                               <li><i class="fas fa-envelope"></i>{{ $comment ?? '' }}</li>
+                                                   
+                                               @endif
+                                              
+
+                                              
                                             </ul>
                                           </address>
                                           
@@ -430,10 +442,7 @@
                             </div>
                             <!-- Row end -->
                         </div>
-                        <div class="col-12 col-sm-7 text-grey-d2 text-95  mt-lg-0">
-                            <p style="font-weight:800; font-size: 20px;" >Notas:</p> 
-                            <i style="font-size: 18px; font-weight: 800; line-height: 20pt;">{!! $comment !!}</i>
-                        </div>
+                       
 
                         <div  class="">
                           
