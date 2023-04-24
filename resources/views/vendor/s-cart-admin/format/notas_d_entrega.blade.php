@@ -58,7 +58,7 @@
                         
                         <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
+                              <i class="fas fa-map-marker-alt"></i> Direccion: {{$direccion}}
                             </div>
                             <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
                             <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR: {{$vendedor}}</div>
@@ -168,7 +168,7 @@
                                     <ul class="" style="list-style: none">
                                         <li class="">Nota de Entrega:</li>
                                         <li>Total Descuento:{{$order->discount}}</li>
-                                        <li>Total Operación:{{$total_usd_pagado}}</li>
+                                        <li>Total Operación:{{$total_monto_pagado}}</li>
                                         <li></li>
                                     </ul>
                                     <br>
