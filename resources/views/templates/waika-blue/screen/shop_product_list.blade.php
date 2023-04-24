@@ -13,6 +13,7 @@ Use paginate: $products->appends(request()->except(['page','_token']))->links()
 
 {{-- block_main_content_center --}}
 @section('block_main_content_center')
+screen.shop_product_list
   {{-- sub category --}}
   @isset ($subCategory)
     @if($subCategory->count())

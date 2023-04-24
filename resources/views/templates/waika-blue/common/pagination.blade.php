@@ -1,7 +1,17 @@
-<div class="pagination-wrap">
+{{-- <div class="pagination-wrap">
     <nav aria-label="Page navigation">
       <ul class="pagination">
-        {{ $items->appends(request()->except(['page','_token']))->links() }}
       </ul>
     </nav>
-</div>
+  </div> --}}
+  <div class="py-5">
+    <style>
+      .active>.page-link, .page-link.active {
+          z-index: 3;
+          color: #fff;
+          background-color: #0080B6;
+          border-color: #0080B6;
+      }
+    </style>
+    {{ $items->appends(request()->except(['page','_token']))->links() }}
+  </div>

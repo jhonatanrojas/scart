@@ -36,7 +36,7 @@ Use paginate: $products->appends(request()->except(['page','_token']))->links()
     </div>
     <!-- //Product list -->
 
-    <!-- Render pagination -->
+    <!-- Render pagination -->  
     @include($sc_templatePath.'.common.pagination', ['items' => $products])
     <!--// Render pagination -->
   @else
