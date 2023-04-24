@@ -2416,6 +2416,7 @@ class HistorialPagosController extends RootAdminController
         $data['id_solicitud'] = $order->id ?? 0;
         $data['vendedor'] = $user_roles->name ?? '';
         $data['emitido_por'] = $emitido_por ?? '';
+        $data['total_monto_pagado'] = $pagado;
 
        
 

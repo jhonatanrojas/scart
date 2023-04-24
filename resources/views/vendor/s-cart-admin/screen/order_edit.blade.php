@@ -465,25 +465,10 @@
                               @endphp
                             {!! $html !!}
                             </td>
-                              @php
-                                  
-                          
-                                  if($estatus_user == 'Vendedor'){
-                                    $edit = '';
-                                    $UpdateStatus = '';
-
-                                    
-                                  }else{
-                                    $edit = 'edit-item-detail';
-                                    $UpdateStatus = 'updateStatus';
-                                  }
-
-                                 
-
-                              @endphp
+                             
                             
                             <td>
-                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
@@ -497,7 +482,7 @@
                         
 
                              <td>
-                              <a href="#" class="{{$UpdateStatus}}" data-name="id_modalidad_pago" data-type="select"
+                              <a href="#" class="updateStatus" data-name="id_modalidad_pago" data-type="select"
                                data-source ="{{ json_encode($modalidad_pago) }}"  
                                data-pk="{{ $item->id }}" data-value="{!! $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica'  !!}"
                                  data-url="{{ route("admin_order.edit_item") }}" 
@@ -514,7 +499,7 @@
                                       }
                                       
                                     @endphp;             
-                              <a href="#" class="{{$UpdateStatus}}" data-name="abono_inicial" data-type="select"
+                              <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
                               data-source ='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial!!} }'  
                               data-pk="{{ $item->id }}"
                                data-value=" @if  ($item->abono_inicial>0 )
@@ -537,12 +522,21 @@
                  
                              <td>
                               @php
-                              
-                              if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
-                           
-                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price * $item->qty / 100 );
 
-                              echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
+                                   
+                              $precio_couta=0;
+                                           
+                              if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
+
+                        
+                              $inicial = ($item->abono_inicial * $item->total_price) / 100;
+                                                                $total_price = $item->total_price - $inicial;
+                                                                $precio_couta = number_format($total_price / $item->nro_coutas, 2);
+
+
+                             
+
+                              echo  "$".$precio_couta;  
  
                              elseif(  $item->nro_coutas >0):
                                 $precio_couta=  $item->total_price ;
