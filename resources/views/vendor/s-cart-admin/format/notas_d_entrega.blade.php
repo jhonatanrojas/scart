@@ -69,6 +69,7 @@
                     <div class="text-50 col-md-4  d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
                         <div class="">
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Emitido por:{{$emitido_por}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
 
@@ -165,7 +166,7 @@
                                        
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Total Nota de Entrega:</li>
+                                        <li class="">Nota de Entrega:</li>
                                         <li>Total Descuento:{{$order->discount}}</li>
                                         <li>Total Operación:{{$total_usd_pagado}}</li>
                                         <li></li>

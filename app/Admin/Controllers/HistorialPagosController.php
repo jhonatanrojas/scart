@@ -2264,10 +2264,13 @@ class HistorialPagosController extends RootAdminController
 
     public function notas_d_entrega()
     {
-        $user_roles = AdminUser::where('id', Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id', 'sc_admin_role_user.role_id as role_user')->get();
-        $User_roles = $user_roles[0]->role_user;
-        $ademin = SC_admin_role::where('id', $User_roles)->get();
-        $list_usuarios = $ademin[0]->name;
+       
+
+        $dminUser = new AdminUser;
+        $list_usuarios = $dminUser->pluck('name', 'id')->all();
+        $user_roles = $dminUser::where('id', Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id', 'sc_admin_role_user.role_id as role_user')->get();
+
+        $emitido_por = $user_roles[0]->name;
 
 
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
@@ -2314,6 +2317,12 @@ class HistorialPagosController extends RootAdminController
         ->orderBy('nro_coutas')->first();
 
         $convenio = Convenio::where('order_id',$id)->first();
+
+        if (!$historialPago->count() >0) {
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
+                ->with(['error' => 'no se encontraron pagos reportado']);
+        }
+        $user_roles = AdminUser::where('id', $order->vendedor_id)->first();
 
 
        
@@ -2405,6 +2414,8 @@ class HistorialPagosController extends RootAdminController
         $data['total_usd_pagado'] = $monto_dolares;
         $data['order_id'] = $order->id ?? '';
         $data['id_solicitud'] = $order->id ?? 0;
+        $data['vendedor'] = $user_roles->name ?? '';
+        $data['emitido_por'] = $emitido_por ?? '';
 
        
 
