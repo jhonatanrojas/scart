@@ -286,7 +286,7 @@
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
                                                 <br>
 
-                                                <span>Solicitud #{{ $nro_convenio }}</span>
+                                                <span>Solicitud #{{ $order->id }}</span>
                                     </address>
                                    
                                 </div>
