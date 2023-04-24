@@ -1390,10 +1390,12 @@ class  AdminOrderController extends RootAdminController
                         foreach ($arrAtt as $groupAtt => $att) {
                             $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
                         }
-                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                        $name = $detail->name;
                     } else {
                         $name = $detail->name;
                     }
+
+                   
 
           
                     $data['details'][] = [
