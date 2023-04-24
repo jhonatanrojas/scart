@@ -251,7 +251,7 @@
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                     <div class="custom-actions-btns m">
                                         <div class="page-header text-blue-d2 mr-auto">
-                                            <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
+                                            <img class="mt-4" src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
                                             <div class="page-tools">
                                                 <div class="action-buttons">
                                                    <!-- <a class=" btn btn-primary mx-1px text-95 dont-print"
