@@ -2220,15 +2220,8 @@ class HistorialPagosController extends RootAdminController
         } //fin foreach
 
         $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
-
-
         $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
-
-
-
         $data['id_solicitud'] = $order->id ?? 0;
-
-
         $data['descuento'] = $order->discount ?? 0;
         $data['subtotal'] = $order->subtotal ?? 0;
         $data['totales'] = $order->total;
@@ -2300,7 +2293,9 @@ class HistorialPagosController extends RootAdminController
         $id = $dataSearch['keyword'];
 
 
-        $dataTmp = $this->getPagosListAdmin2($dataSearch);
+    
+
+
         $dataTr = [];
         $vendedor = '';
 
@@ -2308,13 +2303,24 @@ class HistorialPagosController extends RootAdminController
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-
-
-        $REFERENCIA = ShopOrder::where('sc_shop_order.id', $id)->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->join('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name', 'sc_convenios.total as cb_total', 'sc_convenios.fecha_maxima_entrega', 'sc_convenios.nro_coutas as cuaotas', 'sc_shop_order_detail.name as name_product', 'sc_shop_order_detail.qty as cantidad', 'sc_shop_order_detail.serial', 'sc_shop_customer.address1 as Direccion')->get();
+        $order = AdminOrder::getOrderAdmin($id);
 
 
 
+        $historialPago = HistorialPago::where('order_id',$id)->whereIn('payment_status',[3,4,5,6])->orderBy('nro_coutas')->get();
+        $cuota_pendientes = HistorialPago::where('order_id', $id)
+        ->where('payment_status', 1)
+        ->orWhere('payment_status', 7)->where('order_id', $id)
+        ->orderBy('nro_coutas')->first();
+
+        $convenio = Convenio::where('order_id',$id)->first();
+
+
+       
+           
+
+
+      
 
 
 
@@ -2333,41 +2339,74 @@ class HistorialPagosController extends RootAdminController
         $cantidad = 0.00;
         $subtotal = 0.00;
         $lote = 0;
+        $pagado = 0;
+        $total_bs=0;
+        $nro_total_pagos = 0;
+        $total_usd_pagado = 0;
 
-        foreach ($REFERENCIA as $key => $row) {
-            $pagados = [];
-            $order = AdminOrder::getOrderAdmin($row->id);
-            $cliente = $row->first_name . ' ' . $row->last_name ?? '';
-            $direccion = $row->Direccion ?? '';
-            $nro_convenio = $row->nro_convenio ?? '';
-            $nombre_product = $row->name_product ?? '';
-            $cantidad = $row->cantidad;
-            $fecha_pago = $row->fecha_pago ?? '';
-            $lote = $row->lote ?? '';
-            $order_id = $row->id ?? '';
-            $Cedula = $row->cedula;
-            $vendedor = $list_usuarios ?? '';
-            $subtotal = $row->cb_total ?? '';
-            $serial_product = $row->serial ?? 'xxxxxxx';
+       
+
+        foreach ($historialPago as $key => $row) {
+
+            $nro_total_pagos++;
+
+            $pagado += $row->importe_couta;
+
+            $moneda = $row->moneda;
+            $monto = $row->importe_pagado;
+            $total_bs += round($monto * $row->tasa_cambio, 2);
+
+            if ($moneda == 'USD') {
+                // El monto está en dólares
+                $monto_dolares = round($monto, 2);
+                $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                $Referencia = $monto_bolivares."Bs";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+            } elseif ($moneda == 'Bs') {
+                // El monto está en bolívares
+                $monto_bolivares = round($monto, 2);
+                $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                $Referencia = $monto_dolares."$";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+
+            }
+
+    
+            $fecha_pago = $row->fecha_pago;
+           
 
         }
 
 
+        $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
 
-        $data['cliente'] = $cliente ?? '';
+       
+
+        $data['cliente'] =$cliente->last_name ?? '';
         $data['vendedor'] = $vendedor ?? '';
         $data['serial_product'] = $serial_product ?? 'xxxx';
-        $data['cedula'] = $Cedula ?? '';
-        $data['direccion'] = $direccion ?? '';
+        $data['cedula'] = $cliente->cedula ?? '';
+        $data['direccion'] = $cliente->address1 ?? '';
         $data['fecha_pago'] = $fecha_pago ?? '';
-        $data['nro_convenio'] = $nro_convenio ?? '';
+        $data['nro_convenio'] = $convenio->nro_convenio ?? '';
         $data['nombre_product'] = $nombre_product ?? '';
         $data['cantidad'] = $cantidad;
         $data['tota_product'] = $subtotal * $tasa_cambio ?? '';
         $data['tota_productusd'] = $subtotal ?? '';
-        $data['lote'] = $lote;
+        $data['lote'] = $convenio->lote;
         $data['tasa_cambio'] = $tasa_cambio ?? '';
         $data['referencia'] = $lasuma ?? '';
+        $data['descuento'] = $order->discount ?? 0;
+        $data['order'] =   $order;
+        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['totalPor_pagar'] = $order->total - $pagado;
+        $data['total_usd_pagado'] = $monto_dolares;
+        $data['order_id'] = $order->id ?? '';
+        $data['id_solicitud'] = $order->id ?? 0;
+
+       
 
         if ($dataSearch['notas_entrega']) {
             $data['dataTr'] = $dataTr;
