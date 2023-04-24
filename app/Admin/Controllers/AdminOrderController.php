@@ -1338,6 +1338,7 @@ class  AdminOrderController extends RootAdminController
             $data['doc_cedula'] =  $doc_cedula;
 
 
+
            
 
             $data['order'] =  $order;

@@ -251,7 +251,7 @@
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                     <div class="custom-actions-btns m">
                                         <div class="page-header text-blue-d2 mr-auto">
-                                            <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
+                                            <img class="mt-4" src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
                                             <div class="page-tools">
                                                 <div class="action-buttons">
                                                    <!-- <a class=" btn btn-primary mx-1px text-95 dont-print"
@@ -286,7 +286,7 @@
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
                                                 <br>
 
-                                                <span>Solicitud #{{ $nro_convenio }}</span>
+                                                <span>Solicitud #{{ $order->id }}</span>
                                     </address>
                                    
                                 </div>
@@ -317,10 +317,10 @@
 
                                                @if ($comment)
 
-                                               <li><i class="fas fa-envelope"></i>{{ $comment ?? '' }}</li>
+                                               <li><i class="fas fa-envelope"></i>{!!nl2br( $comment)?? '' !!}</li>
                                                    
                                                @endif
-                                              
+                                             
 
                                               
                                             </ul>
