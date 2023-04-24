@@ -42,7 +42,7 @@
            </div>
                     <div class="col-12">
                         <div class="text-center text-150">
-                            <span class="text-default-d3">
+                            <span class="h3" class="">
                                 NOTA DE ENTREGA
                                 </span>
                         </div>
@@ -52,11 +52,11 @@
 
                 <hr class="row brc-default-l1 mx-n1 mb-4" />
 
-                <div class="d-flex align-items-center justify-content-center">
+                <div style="font-weight: bold" class="d-flex align-items-center justify-content-center">
                     <div class="col-md-5">
                         <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$cliente}}</div>
                         
-                        <div class="text-grey-m2">
+                        <div class="">
                             <div class="my-1">
                               <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
                             </div>
@@ -68,7 +68,7 @@
 
                     <div class="text-50 col-md-4  d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
-                        <div class="text-grey-m2">
+                        <div class="">
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
 
@@ -128,10 +128,10 @@
                                     </tr>
                                     <br>
                                 <td class="text-center text-uppercase" colspan="6"> <h4 style="font-weight: bold;"  class="p-0 m-0">
-                                        Fecha máxima de Entrega <hr>
-                                        {{$fecha_maxima_entrega}}
+                                    MONTO ADEUDADO PARA LA FECHA <hr>
+                                      
                                     </h4>
-                                    <span>La fecha de entrega puede ser modificada si el Beneficiario no realiza los pagos puntualmente (fecha de pago o día siguiente).</span></
+                                    <span class="h3">{{$totalPor_pagar}}$</span></
                                 </td>
                                        
                                 </tbody>
@@ -142,7 +142,7 @@
                             <br>
                            
 
-                            <div class="d-flex align-items-center mb-4">
+                            <div style="font-weight:bold; " class="d-flex align-items-center mb-4">
 
                                 <div class="col-md-6 ">
                                     
@@ -167,7 +167,7 @@
                                     <ul class="" style="list-style: none">
                                         <li class="">Total Nota de Entrega:</li>
                                         <li>Total Descuento:{{$order->discount}}</li>
-                                        <li>Total Operación:</li>
+                                        <li>Total Operación:{{$total_usd_pagado}}</li>
                                         <li></li>
                                     </ul>
                                     <br>
@@ -214,11 +214,27 @@
 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+            
+            
+<script>
+        new QRious({
+    element: document.querySelector("#codigo"),
+    value: "{{route('view_QR',['id' =>$id_solicitud])}}", // La URL o el texto
+    size: 140,
+    backgroundAlpha: 0, // 0 para fondo transparente
+    foreground: "#000", // Color del QR
+    level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+    });
 
+</script>
 <!-- jQuery -->
 <script src="{{ sc_file('admin/LTE/plugins/jquery/jquery.min.js')}}"></script>
 <script src="{{ sc_file('admin/LTE/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script>
+
+
+
   function order_print(){
     $('.dont-print').hide();
     window.print();

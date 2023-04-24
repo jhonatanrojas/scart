@@ -2341,8 +2341,16 @@ class HistorialPagosController extends RootAdminController
         $lote = 0;
         $pagado = 0;
         $total_bs=0;
+        $nro_total_pagos = 0;
+        $total_usd_pagado = 0;
+
+       
 
         foreach ($historialPago as $key => $row) {
+
+            $nro_total_pagos++;
+
+            $pagado += $row->importe_couta;
 
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
@@ -2392,7 +2400,13 @@ class HistorialPagosController extends RootAdminController
         $data['referencia'] = $lasuma ?? '';
         $data['descuento'] = $order->discount ?? 0;
         $data['order'] =   $order;
-        $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '';
+        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['totalPor_pagar'] = $order->total - $pagado;
+        $data['total_usd_pagado'] = $monto_dolares;
+        $data['order_id'] = $order->id ?? '';
+        $data['id_solicitud'] = $order->id ?? 0;
+
+       
 
         if ($dataSearch['notas_entrega']) {
             $data['dataTr'] = $dataTr;

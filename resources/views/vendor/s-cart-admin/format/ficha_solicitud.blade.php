@@ -327,7 +327,7 @@
                             <div class="row gutters p-0 m-0">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="">
-                                        <table  class="table custom-table m-0">
+                                        <table  class="table custom-table m-0 p-0">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -439,7 +439,7 @@
                           
                         
                             <div class="invoice-body " >
-                                <h5  style="font-weight:800; font-size: 18px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud -  <span>Nro solicitud {{ $id }}</span ></h5>
+                                <h5  style="font-weight:800; font-size: 18px ; margin: 0;  padding: 0; " class="text-center"> Evaluación de la solicitud</h5>
                          
                             <div class="row gutters">
 
@@ -594,7 +594,7 @@
                                     </div>
                                 </div>
 
-                                 <div class="mt-3" style="text-align: center; ">
+                                 <div class="mt-5" style="text-align: center; ">
                                            <span style="width: 100%; font-weight: bold; "> __________________________________________________________________________________________________</span>
                                             <h5 style="padding: 0; margin: 0; font-weight: bold;">DECISOR</h5>
                                 </div>
@@ -603,7 +603,7 @@
                      
                             @if (!empty($referencias[0])) 
                             <div class="invoice-body p-0 m-0 nueva-pagina mt-5">
-                                <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales <span  >Nro solicitud {{ $id }}</span ></h5>
+                                <h5  style="font-weight: bold ; padding: 0;  margin: 0; font-size: 25px;" class="text-center">Referencias Personales</h5>
                                <div class="row gutters">
                                    <div class="col-lg-12 col-md-12 col-sm-12">
                                        <div class="table-responsive">
