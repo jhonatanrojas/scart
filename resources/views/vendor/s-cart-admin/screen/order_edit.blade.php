@@ -544,7 +544,7 @@
 
                               echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
  
-                             else :
+                             elseif(  $item->nro_coutas >0):
                                 $precio_couta=  $item->total_price ;
                                 echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
                               
