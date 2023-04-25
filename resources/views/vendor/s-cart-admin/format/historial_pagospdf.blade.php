@@ -65,7 +65,7 @@
 
                 <div class="d-flex align-items-center justify-content-center " style="font-weight: bold;">
                     <div class="col-md-5">
-                        <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$cliente}}</div>
+                        <div class="my-1"> <h1>Cliente:{{$cliente}}</h1></div>
                         
                         <div class="">
                             <div class="my-1">

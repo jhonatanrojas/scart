@@ -280,7 +280,7 @@
                                     </a>
                                 </div>
                                 <div  class="col-lg-6 col-md-6 col-sm-6">
-                                    <address style="font-weight: 600; font-size: 15px;" class="text-right  " id="address2">
+                                    <address style="font-weight: 800; font-size: 15px;" class="text-right  " id="address2">
                                         {{ sc_store('address') }}
                                         
                                                 <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
@@ -292,7 +292,7 @@
                                 </div>
 
                                <div class="col-12">
-                                <h4 style="font-weight: bold; font-size: 17px;" class="p-0 m-0 text-center "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h4>
+                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h2>
                                </div>
 
                                
