@@ -109,24 +109,6 @@
                 <div class="container">
                     <div class="row">
                         @section('block_main_content')
-                        
-                        @if (empty($hiddenBlockLeft))
-                            <!--Block left-->
-                            <div class="col-12 col-lg-3">
-                                @section('block_main_content_left')
-                                    @include($sc_templatePath.'.block_main_content_left')
-                                @show
-                            </div>
-                            <!--//Block left-->
-
-                            <!--Block center-->
-                            <div class="col-12 col-lg-9">
-                                @section('block_main_content_center')
-                                    @include($sc_templatePath.'.block_main_content_center')
-                                @show
-                            </div>
-                            <!--//Block center-->
-                        @else
                             <!--Block center-->
                             <div class="col-12">
                                 @section('block_main_content_center')
@@ -134,16 +116,6 @@
                                 @show
                             </div>
                             <!--//Block center-->
-                        @endif
-
-                        @if (empty($hiddenBlockRight))
-                            <!--Block right -->
-                            @section('block_main_content_right')
-                                @include($sc_templatePath.'.block_main_content_right')
-                            @show
-                            <!--//Block right -->
-                        @endif
-
                         @show
                     </div>
                 </div>

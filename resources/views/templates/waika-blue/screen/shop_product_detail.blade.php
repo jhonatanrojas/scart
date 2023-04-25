@@ -76,16 +76,16 @@ $layout_page = shop_product_detail
   
       }
   
-      .modal .modal-body{
-        /*background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+      /* .modal .modal-body{
+        background-image: url('https://images.pexels.com/photos/6958525/pexels-photo-6958525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
   
         background-repeat: no-repeat;
-        background-size: cover;*/
+        background-size: cover;
   
   
         box-shadow: 0px 4px 50px 3px rgba(0, 0, 0, 0.25);
         border-radius: 20px;
-      }
+      } */
   
       table{
         border-collapse: collapse;
@@ -100,9 +100,9 @@ $layout_page = shop_product_detail
       
     }
       @media screen and (max-width: 375px) {
-        .modal .modal-dialog{
+        /* .modal .modal-dialog{
           margin-top: 5px; 
-        }
+        } */
   
         .table-1{
           width: 80%;
@@ -121,10 +121,10 @@ $layout_page = shop_product_detail
         }
       }
       @media screen and (max-width: 360px) {
-        .modal .modal-dialog{
+        /* .modal .modal-dialog{
          margin-top: 5px; 
   
-        }
+        } */
   
           .table-1{
             width: 100%;
@@ -338,7 +338,7 @@ $layout_page = shop_product_detail
 
 
 
-@extends($sc_templatePath.'.layout')
+@extends($sc_templatePath.'.layout_centered')
 {{-- block_main --}}
 
 @section('block_main_content_center')
@@ -433,97 +433,8 @@ $layout_page = shop_product_detail
 
 
       
+      @include($sc_templatePath.'.includes.product_detail.form_modal')
       
-      <div class="modal p-1  mt-5  animate__animated animate__slideInUp" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog   modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> 
-            </div>
-            <div class="modal-body p-4">
-              <form action="{{ sc_route('cart.add') }}" method="POST">
-                      <div id="w-100">
-                        {{ csrf_field() }}
-                        <div class=" d-sm-flex justify-content-around align-items-center">
-                          <img class="brand-logo-dark" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="logo" width="100" height="30"/>
-                          <h4 class="text-center text-dark text-capitalize animate__animated animate__flipInX animate__delay-1s p-0 text-uppercase">{{ sc_language_render('customer.title_caculadora') }}</h4>
-                          <div>
-                            <div class="form-check">
-                              <input    class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta" value="2" >
-                              <label class="form-check-label" for="tipo_venta">
-                                {{sc_language_render('customer.title_ENTREGA INMEDIATA')}}
-                              </label>
-                            </div>
-
-                            <div class="form-check">
-                              <input checked class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta2" value="1">
-                              <label class="form-check-label" for="tipo_venta">
-                                {{sc_language_render('customer.title_ENTREGA PROGRAMADA')}}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div name="frmPrestamo" id="frmPrestamo">
-                          <div class="p-0 mt-0 m-0"></div>
-                          <div class="row">
-                            <div class="mt-0 col-md-6">
-                              <label class="text-dark text-uppercase" for="inicial">CON Inicial  </label>
-                              <select required class="form-control w-100 "  name="inicial" id="inicial">
-                                <option value="">Seleccione una opcion</option>
-                                <option value="30">SI</option>
-                                <option value="0">NO</option>
-                              </select>
-                            </div>
-                            <div class=" col-md-6">
-                              <label class="text-dark text-uppercase"  for="monto">Monto de la Inicial$:</label>
-                              <input readonly id="monto_Inicial"  value="" class="form-control   " type="text"  id="" placeholder="">
-                            </div>
-                            <div class="mt-0 col-md-6">
-                              <label class="text-dark text-uppercase" for="inicial">Cuotas</label>
-                              <input readonly class="form-control" type="text"  id="m_nro_cuotas" value="{{$product->nro_coutas}}">
-                            </div>
-
-                            <div class="mt-0 col-md-6">
-                              <label class="text-dark text-uppercase" for="monto_de_la_cuota">Monto de la Cuota$</label>
-                              <input id="monto_de_la_cuota" readonly class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
-                            </div>
-
-                            <div class="col-md-12">
-                              <div class="form-group">
-                                <label class="text-dark text-uppercase"  for="periodo">frecuancia de pago</label>
-                                  @foreach($modalida_pago as $key => $pagos)
-                                    @if($product->id_modalidad_pagos == $pagos->id)
-                                      @if($product->id_modalidad_pagos == $pagos->id )
-                                        <input data-valor={{$pagos->id}}  id="modalidad" readonly la value="{{$pagos->name ?? 'si modalidad de pago'}}" class="form-control  modalidad_pago" type="text" name="modalidad_pago"   >
-                                      @endif
-                                    @endif
-                                  @endforeach
-                              </div>
-                              <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" >
-                              <input id="cuotas_inmediatas" type="hidden" value="{{$product->cuotas_inmediatas}}" name="cuotas_inmediatas" >
-                              <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto">
-                              <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
-                            </div>                      
-                          </div>
-                        </div>
-                        <input type="hidden" name="financiamineto" value="1"  >
-                      </div>
-                                
-                      <div class="modal-footer ">
-                        <div class="text-center mb-2  p-2  w-100 " id="mensaje"></div>
-                        <button id="butto_modal"  type="submit" class="pedido text-white text-uppercase"> {{sc_language_render('customer.c_solicitud')}}</button>
-                      </div>
-
-                      <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
-                      <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
-                      <input  name="qty" type="hidden"  value="1" min="1" max="100">
-                      <input  name="financiamiento" type="hidden"  value="1" id="financiamiento" >
-              </form>     
-            </div>                
-          </div>
-        </div>
-      </div>
 
 
 
@@ -678,7 +589,7 @@ $layout_page = shop_product_detail
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-          document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_con_inicia}</spa>`
+          document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
 
 
 
@@ -687,7 +598,7 @@ $layout_page = shop_product_detail
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= `<spa class="h5 text-primary w-100 ">${title_sin_inicia}</spa>`
+            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
 
 
         

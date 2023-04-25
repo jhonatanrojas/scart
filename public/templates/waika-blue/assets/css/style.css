@@ -155,7 +155,7 @@ input[type="color"]:focus,
 }
 
 /* CARD PRODUCT */
-.section-products{
+.section-products, .product_grip_shop{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -224,7 +224,7 @@ input[type="color"]:focus,
 }
 @media (min-width: 576px)
 {
-    .section-products{
+    .section-products, .product_grip_shop{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 20px;
@@ -232,7 +232,7 @@ input[type="color"]:focus,
 }
 @media (min-width: 768px)
 {
-    .section-products{
+    .section-products, .product_grip_shop{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 20px;
@@ -245,10 +245,20 @@ input[type="color"]:focus,
         grid-template-columns: 1fr 1fr 1fr 1fr;
         gap: 20px;
     }
+    .product_grip_shop {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 20px;
+    }
 }
 @media (min-width: 1200px)
 {
     .section-products{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        gap: 20px;
+    }
+    .product_grip_shop {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         gap: 20px;
@@ -261,6 +271,12 @@ input[type="color"]:focus,
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         gap: 20px;
     }
+    .product_grip_shop {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 20px;
+    }
 }
+
 
 /* FOOTER */

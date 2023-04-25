@@ -112,14 +112,20 @@
                                     type="button"
                                 >Pagar al contado</button>
                             @endif
-                            <button class="btn btn-themes rounded-pill" 
+                            {{-- <button class="btn btn-themes rounded-pill" 
                                 onclick="validachecke2() ,gen_table()"  
                                 data-toggle="modal" 
                                 data-target="#myModal" 
                                 type="button" 
                                 class="pedido p-3  text-white " 
                                 name="Financiamiento"
-                            >Calcular Solicitud</button>
+                            >Calcular Solicitud</button> --}}
+                            <button
+                                onclick="validachecke2() ,gen_table()" 
+                                name="Financiamiento"
+                                type="button" class="btn btn-themes rounded-pill pedido" data-bs-toggle="modal" data-bs-target="#formModal">
+                                Calcular Solicitud
+                              </button>
                         </div>
 
                         <div class="messages">

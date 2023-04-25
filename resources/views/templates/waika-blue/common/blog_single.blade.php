@@ -1,14 +1,13 @@
-<article class="post post-classic box-md col-md-4">
-  <a class="post-classic-figure" href="{{ $blog->getUrl() }}">
-    <img src="{{ sc_file($blog->getThumb()) }}" alt="" width="370" height="239">
+<article class="card">
+  <a class="" href="{{ $blog->getUrl() }}">
+    <img src="{{ sc_file($blog->getThumb()) }}" alt="" class="card-img-top">
   </a>
-  <div class="post-classic-content">
-    <div class="post-classic-time">
-      <time datetime="{{ $blog->created_at }}">{{ $blog->created_at }}</time>
-    </div>
-    <h5 class="post-classic-title"><a href="{{ $blog->getUrl() }}">{{ $blog->title }}</a></h5>
-    <p class="post-classic-text">
-        {{ $blog->description }}
-    </p>
+  <div class="card-body">
+      <h5 class="card-title"><a href="{{ $blog->getUrl() }}">{{ $blog->title }}</a></h5>
+      <p class="card-text">{{ $blog->description }}</p>
+      <a href="{{ $blog->getUrl() }}" class="card-link">Leer más</a>
+  </div>
+  <div class="card-footer text-muted text-center">
+    <time datetime="{{ $blog->created_at }}">{{ $blog->created_at }}</time>
   </div>
 </article>
