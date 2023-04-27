@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/fonts.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}">  --}}
 
-    <link rel="stylesheet" href="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/css/bootstrap.css')}}">
 
     {{-- fontawesome --}}
     <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/fontawesome.css')}}" rel="stylesheet">
