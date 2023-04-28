@@ -4,33 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700%7CLato%7CKalam:300,400,700">
     <link rel="canonical" href="{{ request()->url() }}" />
     <meta name="description" content="{{ $description??sc_store('description') }}">
     <meta name="keyword" content="{{ $keyword??sc_store('keyword') }}">
     <title>{{$title??sc_store('title')}}</title>
-    <link rel="icon" href="{{ sc_file(sc_store('icon', null, 'images/icon.png')) }}" type="image/png" sizes="16x16">
     <meta property="og:image" content="{{ !empty($og_image)?sc_file($og_image):sc_file('images/org.jpg') }}" />
     <meta property="og:url" content="{{ \Request::fullUrl() }}" />
     <meta property="og:type" content="Website" />
     <meta property="og:title" content="{{ $title??sc_store('title') }}" />
     <meta property="og:description" content="{{ $description??sc_store('description') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700%7CLato%7CKalam:300,400,700">
+    <link rel="icon" href="{{ sc_file(sc_store('icon', null, 'images/icon.png')) }}" type="image/png" sizes="16x16">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RHXF116X"></script>
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-21RHXF116X"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-21RHXF116X');
-</script>
-
-
+    gtag('config', 'G-21RHXF116X');
+    </script>
 
     <!-- css default for item s-cart -->
     @include($sc_templatePath.'.common.css')
@@ -40,16 +37,42 @@
     @includeIf($sc_templatePath.'.common.render_block', ['positionBlock' => 'header'])
     <!--//Module header -->
 
-    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
+    {{-- <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/bootstrap.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/iconoAlert.css')}}">
     <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/fonts.css')}}">
- <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}"> 
+    <link rel="stylesheet" href="{{ sc_file($sc_templateFile.'/css/style.css')}}">  --}}
 
+    <link rel="stylesheet" href="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/css/bootstrap.css')}}">
+
+    {{-- fontawesome --}}
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/fontawesome.css')}}" rel="stylesheet">
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/brands.css')}}" rel="stylesheet">
+    <link href="{{asset('templates/waika-blue/assets/fontawesome-free-6.4.0-web/css/solid.css')}}" rel="stylesheet">
+
+    {{-- google fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    {{-- Sobre escribiendo estilos --}}
+    <link href="{{asset('templates/waika-blue/assets/css/style.css')}}" rel="stylesheet">
+
+    
     <style>
         {!! sc_store_css() !!}
     </style>
     <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+    
     @stack('styles')
+    
+    {{-- owl --}}
+    <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.carousel.min.css')}}" rel="stylesheet">
+    <link href="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/assets/owl.theme.default.min.css')}}" rel="stylesheet">
+    {{-- end owl --}}
+    
+    {{-- lsplide --}}
+    <link href="{{asset('/templates/waika-blue/assets/splide-4.1.3/dist/css/splide.min.css')}}" rel="stylesheet">
+    {{-- end splide --}}
   </head>
 <body>
     <div class="ie-panel">
@@ -57,7 +80,6 @@
             <img src="{{ sc_file($sc_templateFile.'/images/ie8-panel/warning_bar_0000_us.jpg')}}" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today.">
         </a>
     </div>
-
     <div class="page">
         {{-- Block header --}}
         @section('block_header')
@@ -83,14 +105,14 @@
 
         {{-- Block main --}}
         @section('block_main')
-            <section class="section section-xxl bg-default text-md-left">
+            <section class="section">
                 <div class="container">
-                    <div class="row row-50">
+                    <div class="row">
                         @section('block_main_content')
-
+                        
                         @if (empty($hiddenBlockLeft))
                             <!--Block left-->
-                            <div class="col-lg-4 col-xl-3">
+                            <div class="col-12 col-lg-3">
                                 @section('block_main_content_left')
                                     @include($sc_templatePath.'.block_main_content_left')
                                 @show
@@ -98,7 +120,7 @@
                             <!--//Block left-->
 
                             <!--Block center-->
-                            <div class="col-lg-9 col-xl-9">
+                            <div class="col-12 col-lg-9">
                                 @section('block_main_content_center')
                                     @include($sc_templatePath.'.block_main_content_center')
                                 @show
@@ -106,9 +128,11 @@
                             <!--//Block center-->
                         @else
                             <!--Block center-->
-                            @section('block_main_content_center')
+                            <div class="col-12">
+                                @section('block_main_content_center')
                                 @include($sc_templatePath.'.block_main_content_center')
-                            @show
+                                @show
+                            </div>
                             <!--//Block center-->
                         @endif
 
@@ -154,7 +178,12 @@
     <script src="{{ sc_file($sc_templateFile.'/js/script.js')}}"></script>
     <script src="{{ sc_file($sc_templateFile.'/js/jquery.paroller.js')}}"></script>
 
+    <script src="{{asset('templates/waika-blue/assets/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js')}}"></script>
 
+    <script src="{{asset('/templates/waika-blue/assets/owlcarousel2-2.3.4/dist/owl.carousel.min.js')}}"></script>
+    
+    {{-- splide --}}
+    <script src="{{asset('/templates/waika-blue/assets/splide-4.1.3/dist/js/splide.min.js')}}"></script>
    
     <!-- js default for item s-cart -->
     @include($sc_templatePath.'.common.js')

@@ -7,28 +7,30 @@ $layout_page = shop_auth
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
-<section class="section section-sm section-first bg-default text-md-left">
+<section class="my-4" style="min-height: 400px;">
     <div class="container">
-    <div class="row">
-        <div class="col-12 col-sm-12">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-4">
             <h2>{{ sc_language_render('customer.password_forgot') }}</h2>
 
-            <form class="form-horizontal" method="POST" action="{{ sc_route('password.email') }}" id="form-process">
+            <form class="container" method="POST" action="{{ sc_route('password.email') }}" id="form-process">
                 {{ csrf_field() }}
-                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="email" class="col-md-12 control-label"><i class="fas fa-envelope"></i>
-                        {{ sc_language_render('customer.email') }}</label>
-                    <div class="col-md-12">
-                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}"
-                            required>
-                        @if ($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                        <br />
-                        @endif
-                        {!! $viewCaptcha ?? ''!!}
-                        <button type="submit" name="SubmitLogin" class="button button-lg button-secondary" id="button-form-process">{{ sc_language_render('action.submit') }}</button>
+                <div class="row gap-3">
+                    <div class="col-12 {{ $errors->has('email') ? ' has-error' : '' }}">
+                        <label for="email" class="control-label">{{ sc_language_render('customer.email') }}</label>
+                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+    
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
+                            {!! $viewCaptcha ?? ''!!}
+                    </div>
+                    <div class="col-12">
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="SubmitLogin" class="btn btn-primary" id="button-form-process">{{ sc_language_render('action.submit') }}</button>
+                        </div>
                     </div>
                 </div>
             </form>
