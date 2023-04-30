@@ -715,8 +715,9 @@ table tfoot {
                          >
                     </div>
 
+                  
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                           <label class="text-dark text-uppercase"  for="periodo">frecuancia de pago 
                             
@@ -749,6 +750,18 @@ table tfoot {
 
                         <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
                       </div>
+
+
+                      <div class="col-12 col-md-6">
+                        <label class="text-dark text-uppercase"  for="periodo">Cantida 
+                            
+                        </label>
+                        <div class="cart-qty">
+                         
+                          <div class="stepper "><input style="width: 150px; margin: 0 auto" type="number" data-store_id="" onchange="updateCart($(this));" class="item-qty form-control stepper-input" name="qty" value="1"><span class="stepper-arrow up text-info"></span><span class="stepper-arrow down"></span></div>
+                      </div>
+                      </div>
+  
                 
                   </div>
 
@@ -775,7 +788,6 @@ table tfoot {
         </div>
         <input type="hidden" name="product_id" id="product-detail-id" value="{{ $product->id }}" />
               <input type="hidden" name="storeId" id="product-detail-storeId" value="{{ $product->store_id }}" />
-              <input  name="qty" type="hidden"  value="1" min="1" max="100">
               <input  name="financiamiento" type="hidden"  value="1" id="financiamiento" >
       </form>
 
@@ -950,7 +962,29 @@ function gen_table(iniciale){
     if(true) {Buyblock.submit()} });
 
 
+  
+    let qty = document.querySelector('.item-qty');
+let up = document.querySelector('.up');
+let down = document.querySelector('.down');
 
+up.addEventListener('click', function() {
+  qty.value = parseInt(qty.value) + 1;
+});
+
+down.addEventListener('click', function() {
+  if (parseInt(qty.value) > 1) { 
+    qty.value = parseInt(qty.value) - 1;
+  } else {
+    qty.value = 1; 
+  }
+});
+
+
+
+      
+
+    
+     
 
 
 </script>

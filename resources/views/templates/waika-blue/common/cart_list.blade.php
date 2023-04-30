@@ -2,6 +2,7 @@
 @php
 
 
+
 @endphp
     <div class="table-responsive">
         <table class="table box table-bordered">
