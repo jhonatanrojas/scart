@@ -13,13 +13,11 @@ $layout_page = shop_page
     <div class="container">
         <div class="row">
             <div class="col-12">
+                screen.Shop_page
                 {!! sc_html_render($page->content ?? '') !!}
             </div>
         </div>
     </div>
-    
-
-    
 </section>
 @endsection
 

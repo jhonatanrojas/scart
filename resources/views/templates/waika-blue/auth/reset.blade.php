@@ -11,9 +11,8 @@ $email
 @section('block_main')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-8">
+        
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="card">
 
                 <div class="card-body">
@@ -22,10 +21,9 @@ $email
 
                         <input type="hidden" name="token" value="{{ $token }}">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.email') }}</label>
-
-                            <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.email') }}</label>
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
 
                                 @if ($errors->has('email'))
@@ -34,12 +32,9 @@ $email
                                     </span>
                                 @endif
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.password') }}</label>
-
-                            <div class="col-md-6">
+                        
+                            <div class="col-12">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.password') }}</label>
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                                 @if ($errors->has('password'))
@@ -48,18 +43,13 @@ $email
                                     </span>
                                 @endif
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.password_confirm') }}</label>
-
-                            <div class="col-md-6">
+                            
+                            <div class="col-12">
+                                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ sc_language_render('customer.password_confirm') }}</label>
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                             </div>
-                        </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-12">
                                 <button type="submit" class="button button-lg button-secondary">
                                     {{ sc_language_render('customer.password_reset') }}
                                 </button>
