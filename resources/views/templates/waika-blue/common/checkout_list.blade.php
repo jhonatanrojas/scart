@@ -1,7 +1,7 @@
 
-{!!$financiamiento = $cartItem[0]->financiamiento!!}
+{!!$financiamiento = 1!!}
 
-<div class="col-md-12">
+<div class="col-md-12"> 
   <div class="table-responsive">
       <table class="table box table-bordered">
           <thead>

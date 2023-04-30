@@ -326,7 +326,7 @@ $layout_page = shop_product_detail
         width: 10px;
         background-color: white;
         position: absolute;
-        border-radius: 50%;
+        border-radius: 50%; 
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
@@ -338,7 +338,7 @@ $layout_page = shop_product_detail
 
 
 
-@extends($sc_templatePath.'.layout_centered')
+@extends($sc_templatePath.'.layout')
 {{-- block_main --}}
 
 @section('block_main_content_center')

@@ -181,7 +181,7 @@ class ShopProductController extends RootFrontController
                     'product'         => $product,
                     'productRelation' => $productRelation,
                     'og_image'        => sc_file($product->getImage()),
-                    'layout_page'     => 'shop_product_detail',
+                    'layout_page'     => 'product_detail',
                     'breadcrumbs'     => [
                         ['url'        => sc_route('shop'), 'title' => sc_language_render('front.shop')],
                         $dataCategoryFirst,

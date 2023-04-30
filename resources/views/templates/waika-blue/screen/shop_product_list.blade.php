@@ -6,10 +6,10 @@ $layout_page = shop_product_list
 Use paginate: $subCategory->appends(request()->except(['page','_token']))->links()
 - $products: paginate
 Use paginate: $products->appends(request()->except(['page','_token']))->links()
-*/ 
+*/  
 @endphp
 
-@extends($sc_templatePath.'.layout_centered')
+@extends($sc_templatePath.'.layout')
 
 {{-- block_main_content_center --}}
 @section('block_main_content_center')
