@@ -2,6 +2,7 @@
 @php
 
 
+
 @endphp
     <div class="table-responsive">
         <style>

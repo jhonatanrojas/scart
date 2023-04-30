@@ -208,6 +208,8 @@ class HistorialPagosController extends RootAdminController
         $data['listTh'] = $listTh;
         $data['statusPayment'] = $statusPayment;
 
+        
+
 
         $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin . 'component.pagination');
@@ -809,7 +811,9 @@ class HistorialPagosController extends RootAdminController
         }
 
         if ($sort_order && array_key_exists($sort_order, $arrSort)) {
-            if ($sort_order == 4) {
+
+           
+            if ($sort_order == 1) {
                 $fecha_hoy = date('y-m-d');
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
 
@@ -820,7 +824,7 @@ class HistorialPagosController extends RootAdminController
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
             } else if ($sort_order == 2) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 1) {
+            } else if ($sort_order == 4) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
             } else if ($sort_order == 3) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
