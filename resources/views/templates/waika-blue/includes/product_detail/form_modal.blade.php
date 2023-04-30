@@ -33,7 +33,7 @@
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="inicial">CON INICIAL</label>
                             <select required class="form-select"  name="inicial" id="inicial">
-                                <option value="">Seleccione una opcion</option>
+                                <option value="">Seleccione una opción</option>
                                 <option value="30">SI</option>
                                 <option value="0">NO</option>
                             </select>
@@ -48,13 +48,13 @@
                         </div>
 
                         <div class="mb-3 col-md-6">
-                            <label class="form-label text-uppercase" for="monto_de_la_cuota">Monto de la Cuota$</label>
+                            <label class="form-label text-uppercase" for="monto_de_la_cuota">Monto de la cuota$</label>
                             <input id="monto_de_la_cuota" readonly class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
                         </div>
 
                         <div class="mb-3 col-md-12">
                             <div class="form-group">
-                            <label class="form-label text-uppercase"  for="periodo">frecuancia de pago</label>
+                            <label class="form-label text-uppercase"  for="periodo">frecuencia de pago</label>
                                 @foreach($modalida_pago as $key => $pagos)
                                 @if($product->id_modalidad_pagos == $pagos->id)
                                     @if($product->id_modalidad_pagos == $pagos->id )
