@@ -1292,7 +1292,37 @@ function estatus_de_pago(array $data)
             sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
         }
     }
+
    
+}
+
+if (!function_exists('getBadgeHtml')) {
+    function getBadgeHtml($level)
+    {
+        // Escribe aquí el código de tu función de ayuda
+        switch ($level) {
+            case 'PLATINUM':
+                $color = 'rgb(115, 115, 255)'; // Color azul claro
+                break;
+            case 'GOLD':
+                $color = 'rgb(255, 215, 0)'; // Color dorado
+                break;
+            case 'PLATA':
+                $color = 'rgb(192, 192, 192)'; // Color plata
+                break;
+            case 'BRONCE':
+                $color = 'rgb(205, 127, 50)'; // Color bronce
+                break;
+            case 'CERTIFICADO':
+                $color = 'rgb(0, 128, 0)'; // Color verde
+                break;
+            default: // 'SIN NIVEL'
+                $color = 'rgb(128, 128, 128)'; // Color gris
+                break;
+        }
+
+        return "<span class='badge badge-pill  text-light    ' style='background-color: {$color};'>{$level}</span>";
+    }
 }
 
 

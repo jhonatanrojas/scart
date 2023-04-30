@@ -10,64 +10,16 @@
       <div class="card-header with-border">
        
         <div class="card-tools">
-          @if (!empty($topMenuRight) && count($topMenuRight))
-            @foreach ($topMenuRight as $item)
-                <div class="menu-right">
-                  @php
-                      $arrCheck = explode('view::', $item);
-                  @endphp
-                  @if (count($arrCheck) == 2)
-                    @if (view()->exists($arrCheck[1]))
-                      @include($arrCheck[1])
-                    @endif
-                  @else
-                    {!! trim($item) !!}
-                  @endif
-                </div>
-            @endforeach
-          @endif
+       
         </div>
         <div class="float-left">
-          @if (!empty($topMenuLeft) && count($topMenuLeft))
-            @foreach ($topMenuLeft as $item)
-                <div class="menu-left">
-                  @php
-                  $arrCheck = explode('view::', $item);
-                  @endphp
-                  @if (count($arrCheck) == 2)
-                    @if (view()->exists($arrCheck[1]))
-                      @include($arrCheck[1])
-                    @endif
-                  @else
-                    {!! trim($item) !!}
-                  @endif
-                </div>
-            @endforeach
-          @endif
-         </div>
+          <a class=" btn btn-info" href="{{ sc_route_admin('admin_order.detail', ['id' => $order->id ? $order->id : 'not-found-id']) }}"   >Regresar a la Solicitud </a>
+
         <!-- /.box-tools -->
       </div>
 
       <div class="card-header with-border">
-        <div class="card-tools">
-           @if (!empty($menuRight) && count($menuRight))
-             @foreach ($menuRight as $item)
-                 <div class="menu-right">
-                  @php
-                      $arrCheck = explode('view::', $item);
-                  @endphp
-                  @if (count($arrCheck) == 2)
-                    @if (view()->exists($arrCheck[1]))
-                      @include($arrCheck[1])
-                    @endif
-                  @else
-                    {!! trim($item) !!}
-                  @endif
-                 </div>
-             @endforeach
-           @endif
-         </div>
-
+   
 
          <div class="float-left">
           @if (!empty($removeList))
@@ -85,18 +37,6 @@
             </div>
           @endif
 
-          @if (!empty($buttonSort))
-          <div class="menu-left">
-            <div class="input-group float-right ml-1" style="width: 350px;">
-              <div class="btn-group">
-                <select class="form-control rounded-0 float-right" id="order_sort">
-                {!! $optionSort??'' !!}
-                </select>
-              </div>
-           
-            </div>
-          </div>
-          @endif
 
           @if (!empty($menuLeft) && count($menuLeft))
             @foreach ($menuLeft as $item)
@@ -177,6 +117,7 @@
         
           </div>
           <hr>
+           <input type="hidden" id="id_importe_couta" name="" value="{!! $historial_pago->importe_couta?? 0 !!}">
             <div class="card">
               <form action="{{route('historial_pagos.postreportar')}}"  method="post" enctype="multipart/form-data">
                @csrf
@@ -218,15 +159,6 @@
                      
         
                       <div class="form-row">
-                     
-                        <div class="form-group col-md-3">
-                          <label for="forma_pago">Monto</label>
-                          <input step="any" type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
-                          <small id="error_monto" style="color: red; display: none;">Por favor ingrese solo números y un punto decimal.</small>
-                          @error('monto')
-                          <small style="color: red">{{$message}}</small>
-                      @enderror
-                        </div>
                         <div class="form-group col-md-3">
                           <label for="forma_pago">Divisa</label>
                           <select id="divisa" class="form-control" required name="moneda">
@@ -240,6 +172,15 @@
                           <small style="color: red">{{$message}}</small>
                       @enderror
                         </div>
+                        <div class="form-group col-md-3">
+                          <label for="forma_pago">Monto</label>
+                          <input step="any" type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto" value="{!! $historial_pago->importe_couta ?? 0 !!}">
+                          <small id="error_monto" style="color: red; display: none;">Por favor ingrese solo números y un punto decimal.</small>
+                          @error('monto')
+                          <small style="color: red">{{$message}}</small>
+                      @enderror
+                        </div>
+                   
 
                      
 
@@ -255,7 +196,15 @@
                         </div>
 
 
-                     
+                        <div class="form-group col-md-3">
+                          <label for="statusPayment">Estatus de pago</label>
+                          <select id="statusPayment" name="statusPayment" required class="form-control">
+                            @foreach($statusPayment as $pago)
+                            <option value="{{ $pago->id}}" >{{ $pago->name}}</option>
+                          
+                            @endforeach;
+                          </select>  
+                        </div>
 
 
         
@@ -283,9 +232,11 @@
         
         
         
-                  <button type="submit" class="btn btn-primary">Reportar</button>
+                      <div class="buttons d-flex justify-content-around">
+                        <button type="submit" class="btn btn-primary mr-10">Reportar</button>
+                      </div>
 
-                  <a class=" btn btn-primary" href="{{ sc_route_admin('admin_order.detail', ['id' => $order->id ? $order->id : 'not-found-id']) }}"   >Ir al Detalle de la orden </a>
+              
                 </div>
               </form>
               </div>
@@ -347,10 +298,18 @@
 
  
 $("#divisa").change(function(){
-  $("#tipo_cambio").val($(this).find(':selected').attr('data-exchange_rate'))
+  const tipo_cambio=$(this).find(':selected').attr('data-exchange_rate');
+  $("#tipo_cambio").val(tipo_cambio)
+  let importe_couta = parseFloat($("#id_importe_couta").val())
+ const moneda= $(this).val();
+ if(moneda=='Bs'){
+    importe_couta= parseFloat(importe_couta*tipo_cambio).toFixed(2)
 
-
+ }
+ $("#monto").val(importe_couta)
+ 
 });
+
 $('.mostrar_estatus_pago').click(function(){
   $("#modal_estatus_pago").modal('show');
 

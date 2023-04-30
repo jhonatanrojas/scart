@@ -83,9 +83,12 @@
         .imge_fondo4 img {
         opacity: 0.10;
         text-align: center;
-        width: 100%;
-        height: auto;
-        margin: auto;
+        width: 80%;
+        margin-top: 0;
+
+       
+       
+        
         }
         .lst-kix_gzed8ezbexe9-3>
        li:before{content:"\0025cf  "}.lst-kix_gzed8ezbexe9-1>li:before{content:"o  "}.lst-kix_gzed8ezbexe9-5>li:before{content:"\0025aa  "}.lst-kix_gzed8ezbexe9-0>li:before{content:"-  "}.lst-kix_gzed8ezbexe9-4>li:before{content:"o  "}.lst-kix_gzed8ezbexe9-7>li:before{content:"o  "}ul.lst-kix_gzed8ezbexe9-8{list-style-type:none}ul.lst-kix_gzed8ezbexe9-7{list-style-type:none}ul.lst-kix_gzed8ezbexe9-6{list-style-type:none}ul.lst-kix_gzed8ezbexe9-5{list-style-type:none}ul.lst-kix_gzed8ezbexe9-4{list-style-type:none}.lst-kix_gzed8ezbexe9-6>li:before{content:"\0025cf  "}ul.lst-kix_gzed8ezbexe9-3{list-style-type:none}ul.lst-kix_gzed8ezbexe9-2{list-style-type:none}ul.lst-kix_gzed8ezbexe9-1{list-style-type:none}ul.lst-kix_gzed8ezbexe9-0{list-style-type:none}.lst-kix_gzed8ezbexe9-8>li:before{content:"\0025aa  "}.lst-kix_qh5w1x1aq8c4-8>li:before{content:"\0025aa  "}ul.lst-kix_qh5w1x1aq8c4-0{list-style-type:none}.lst-kix_qh5w1x1aq8c4-7>li:before{content:"o  "}.lst-kix_qh5w1x1aq8c4-6>li:before{content:"\0025cf  "}.lst-kix_qh5w1x1aq8c4-4>li:before{content:"o  "}ul.lst-kix_qh5w1x1aq8c4-7{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-8{list-style-type:none}.lst-kix_qh5w1x1aq8c4-3>li:before{content:"\0025cf  "}.lst-kix_qh5w1x1aq8c4-5>li:before{content:"\0025aa  "}ul.lst-kix_qh5w1x1aq8c4-5{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-6{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-3{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-4{list-style-type:none}li.li-bullet-0:before{margin-left:-18pt;white-space:nowrap;display:inline-block;min-width:18pt}ul.lst-kix_qh5w1x1aq8c4-1{list-style-type:none}ul.lst-kix_qh5w1x1aq8c4-2{list-style-type:none}.lst-kix_qh5w1x1aq8c4-0>li:before{content:"-  "}.lst-kix_qh5w1x1aq8c4-1>li:before{content:"o  "}.lst-kix_qh5w1x1aq8c4-2>li:before{content:"\0025aa  "}.lst-kix_gzed8ezbexe9-2>li:before{content:"\0025aa  "}ol{margin:0;padding:0}table td,table th{padding:0}.c1{-webkit-text-decoration-skip:none;color:#000000;font-weight:700;text-decoration:underline;vertical-align:baseline;text-decoration-skip-ink:none;font-size:11pt;font-family:"Euphemia";font-style:normal}.c4{margin-left:212.4pt;padding-top:0pt;text-indent:35.4pt;line-height:1.0791666666666666;orphans:2;widows:2;text-align:left;height:11pt}.c23{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:10pt;font-family:"Nanum Gothic";font-style:normal}.c6{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:left;height:11pt}.c5{padding-top:0pt;padding-bottom:0pt;line-height:1.5;orphans:2;widows:2;text-align:justify}.c14{padding-top:0pt;line-height:1.0791666666666666;orphans:2;widows:2;text-align:left}.c22{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left}.c21{padding-top:0pt;padding-bottom:0pt;line-height:1.5;orphans:2;widows:2;text-align:center}.c24{color:#ff0000;text-decoration:none;vertical-align:baseline;font-size:11pt;font-style:normal}.c2{color:#000000;text-decoration:none;vertical-align:baseline;font-size:11pt;font-style:normal}
@@ -128,19 +131,45 @@
 
         .huella_text {
             width: 100%;
-            display: inline-flex;
-            justify-content: space-evenly;
-            align-items: center;
-            
-           
+            display: flex;
+            flex-direction: column-reverse;
+            margin-left: 57%;
+            margin-top: 0;
+        
+        }
+        .waika{
+            font-weight:bold ;
+            font-size: 15px;
+            margin-top: 20px;
+            width:100%;
+
+          
 
         }
+
+
+        .waika2{
+            font-weight:bold ;
+            font-size: 15px;
+            width:100%;
+
+          
+
+        }
+        .huella_text{
+            width:100%;
+        }
+     
         .huella_text .huella{
             width: 50px;
             height: 60px;
-            margin-left: 5px;
+            margin-left: 20px;
             border: solid black 1px;
             float: left;
+         
+           
+           
+            
             
         }
         #logo_fondo{
@@ -150,13 +179,15 @@
     </head>
     <body class="c18 doc-content">
     
-            <span style="  margin-left: 20%;font-size: 18px; font-weight: bold;">CONVENIO :{!!$convenio ?? ''!!}</span>
+            <span style="  font-size: 17px; font-weight: bold;">CONVENIO :{!!$convenio ?? ''!!}</span>
 
-            <span style="font-size: 18px; text-align: end; margin-left: 18%; font-weight: bold;"> {!!$fecha_convenio ?? 'N/A' !!}</span>
+            <span style="font-size: 16px; text-align: end; margin-left: 5%; font-weight: bold;"> {!!$fecha_convenio ?? 'N/A' !!}</span>
 
-            
             {!!$borrado_html!!}
-       
+
+            <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
+
     </body>
 
  

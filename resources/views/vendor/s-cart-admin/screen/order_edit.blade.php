@@ -58,7 +58,7 @@
             <a class="dropdown-item" href="{{ route('downloadPdf', ['id' => $order->id]) }}" target="_blank">Descargar convenio</a>
             @endif
             @if ($order->total >0  && !empty($convenio))
-            <a class="dropdown-item" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar convenio</a>
+            <a class="dropdown-item" href="{{ route('editar_convenio_cliente', ['id' => $order->id]) }}" target="_blank">Editar Plantilla convenio</a>
             @endif
             @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
             <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}" target="_blank">Ver Borrador Convenio</a>
@@ -223,6 +223,20 @@
                    
                   </tr>
 
+
+                   <tr>
+                   
+                    <td>Fecha de entrega</td>
+                    <td><a  href="#" class="updateStatus" data-name="fecha_maxima_entrega" data-type="date" data-source ="{{ json_encode($order->fecha_maxima_entrega) }}"  data-pk="{{ $order->id }}" data-value="@if (!empty($order->fecha_maxima_entrega))
+                      {{$order->fecha_maxima_entrega}}
+                        
+                    @endif" data-url="{{ route("admin_order.update") }}" data-title="Fecha de entrega">@if (!empty($order->fecha_maxima_entrega))
+                      {{$order->fecha_maxima_entrega}}
+                        
+                    @endif</a> </td>
+                   
+                  </tr>
+
                    @endif
 
                   
@@ -329,7 +343,7 @@
                       <td class="td-title">datos del cliente</td>
                       <td>
                        
-                        <a  href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
+                        <a   href="{{ sc_route_admin('admin_customer.edit', ['id' => $order->customer_id ? $order->customer_id : 'not-found-id']) }}" class="" data-name="address2" >Ver perfil del cliente</a>
                       </td>
 
                    
@@ -370,7 +384,7 @@
                       <td class="td-title">Clasificación del cliente:</td>
                       <td>
                         @if (!empty($clasificacion))
-                            {{$clasificacion}}
+                            {!! getBadgeHtml($clasificacion)!!}
                             @else
                             <span class="text-info">No ha
                               realizado el primer pago</span>
@@ -451,25 +465,10 @@
                               @endphp
                             {!! $html !!}
                             </td>
-                              @php
-                                  
-                          
-                                  if($estatus_user == 'Vendedor'){
-                                    $edit = '';
-                                    $UpdateStatus = '';
-
-                                    
-                                  }else{
-                                    $edit = 'edit-item-detail';
-                                    $UpdateStatus = 'updateStatus';
-                                  }
-
-                                 
-
-                              @endphp
+                             
                             
                             <td>
-                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="{{$edit}}" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
+                              <a  id="cuotas_nro"  data-index-number="{{  $item->nro_coutas }}" href="#" class="edit-item-detail" data-value="{{  $item->nro_coutas }}" data-name="nro_coutas" data-type="text" min=0 data-pk="{{ $item->id }}" data-url="{{ route("admin_order.edit_item") }}" 
                               data-title="Cuotas">{{  $item->nro_coutas }}</a>
                               
                              </td>
@@ -483,7 +482,7 @@
                         
 
                              <td>
-                              <a href="#" class="{{$UpdateStatus}}" data-name="id_modalidad_pago" data-type="select"
+                              <a href="#" class="updateStatus" data-name="id_modalidad_pago" data-type="select"
                                data-source ="{{ json_encode($modalidad_pago) }}"  
                                data-pk="{{ $item->id }}" data-value="{!! $modalidad_pago[$item->id_modalidad_pago] ?? 'No aplica'  !!}"
                                  data-url="{{ route("admin_order.edit_item") }}" 
@@ -500,7 +499,7 @@
                                       }
                                       
                                     @endphp;             
-                              <a href="#" class="{{$UpdateStatus}}" data-name="abono_inicial" data-type="select"
+                              <a href="#" class="updateStatus" data-name="abono_inicial" data-type="select"
                               data-source ='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial!!} }'  
                               data-pk="{{ $item->id }}"
                                data-value=" @if  ($item->abono_inicial>0 )
@@ -523,14 +522,23 @@
                  
                              <td>
                               @php
-                              
-                              if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
-                           
-                              $precio_couta=  $item->total_price -($item->abono_inicial* $item->total_price / 100 );
 
-                              echo  "$".number_format($precio_couta / $item->nro_coutas,2);  
+                                   
+                              $precio_couta=0;
+                                           
+                              if  ($item->abono_inicial>0  && $item->nro_coutas >0 ):
+
+                        
+                              $inicial = ($item->abono_inicial * $item->total_price) / 100;
+                                                                $total_price = $item->total_price - $inicial;
+                                                                $precio_couta = number_format($total_price / $item->nro_coutas, 2);
+
+
+                             
+
+                              echo  "$".$precio_couta;  
  
-                             else :
+                             elseif(  $item->nro_coutas >0):
                                 $precio_couta=  $item->total_price ;
                                 echo  "$".number_format($precio_couta / $item->nro_coutas,2); 
                               

@@ -27,15 +27,17 @@ class ClientLevelCalculator
             return 'PLATA';
         } elseif ($payments >= 9) {
             return 'BRONCE';
-        } else {
+        }  elseif ($payments >=1) {
             return 'CERTIFICADO';
-        }
+        }else {
+            return 'SIN NIVEL';
+        }	
     }
 
     private function getPayments($clientId)
     {
         return HistorialPago::where('customer_id', $clientId)
-            ->where('payment_status', 5)
+              ->whereIn('payment_status',[3,4,5,6])
             ->count();
     }
 

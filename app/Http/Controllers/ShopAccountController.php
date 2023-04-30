@@ -29,8 +29,12 @@ use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
 use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Cart;
 use Illuminate\Support\Facades\File;
+use SCart\Core\Admin\Models\AdminUser;
+use SCart\Core\Front\Models\ShopOrderDetail;
+use SCart\Core\Front\Models\ShopPaymentStatus;
 
 class ShopAccountController extends RootFrontController
 {
@@ -1344,5 +1348,172 @@ class ShopAccountController extends RootFrontController
             //  return $pdf->stream();
 
     }
+
+
+     public function view_QR($id){
+
+        $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->where('sc_historial_pagos.payment_status',5)
+        ->leftJoin('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
+        ->leftJoin('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
+        ->leftJoin('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
+        ->leftJoin('sc_shop_customer', 'sc_shop_order.customer_id', '=', 'sc_shop_customer.id')
+        ->select('sc_historial_pagos.*', 
+            'sc_shop_order.first_name', 
+            'sc_shop_order.last_name', 
+            'sc_convenios.lote', 
+            'sc_convenios.nro_convenio', 
+            'sc_metodos_pagos.name as metodoPago', 
+            'sc_convenios.total as cb_total',  
+            'sc_shop_order_detail.name as nombre_product', 
+            'sc_shop_order_detail.qty as cantidad', 
+            'sc_shop_order_detail.total_price as tota_product', 
+            'sc_convenios.fecha_maxima_entrega', 
+            'sc_convenios.nro_coutas as cuotas_pendiente', 
+            'sc_shop_customer.address1 as direccion', 
+            'sc_shop_order.cedula', 
+            'sc_shop_order.vendedor_id')->get();
+
+
+            $order = AdminOrder::getOrderAdmin($id);
+            $historialPago = HistorialPago::where('order_id',$id)->where('payment_status', 5)->orderBy('nro_coutas')->get();
+        $cuota_pendientes = HistorialPago::where('order_id', $id)->where('payment_status','!=', 5)->orderBy('nro_coutas')->first();
+
+                $cuota_pendiente = 0;
+
+                if ($cuota_pendientes != null) {
+                    if ($cuota_pendientes->exists()) {
+                        $cuota_pendiente = $cuota_pendientes->importe_couta;
+                    }
+                }
+
+        $nro_total_pagos = 0;
+      
+
+        $convenio = Convenio::where('order_id', $id)->first();
+
+
+        $dataTr = [];
+
+        $totales = [];
+        $totale = [];
+     
+        $total_usd_pagado = 0;
+        $vendedor = '';
+ 
+
+        if (!$historialPago->count() >0) {
+            return redirect('/')
+                ->with(['error' => 'no se encontraron pagos reportado']);
+        }
+        
+
+        $pagado = 0;
+        $total_bs=0;
+        foreach($orderList as $row){
+
+
+
+            $user_roles = AdminUser::where('id', $row->vendedor_id)->first();
+
+       
+           
+            $nro_total_pagos++;
+
+
+            $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
+             $styleStatusPayment = $statusPayment;
+            array_walk($styleStatusPayment, function (&$v, $k) {
+                $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+            });
+
+
+         
+            $pagado += $row->importe_couta;
+
+
+
+            $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+
+
+            $list_usuarios = $user_roles->name ?? 'N/A';
+            $moneda = $row->moneda;
+            $monto = $row->importe_pagado;
+            $total_bs += round($monto * $row->tasa_cambio, 2);
+
+            if ($moneda == 'USD') {
+                // El monto está en dólares
+                $monto_dolares = round($monto, 2);
+                $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                $Referencia = $monto_bolivares."Bs";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+            } elseif ($moneda == 'Bs') {
+                // El monto está en bolívares
+                $monto_bolivares = round($monto, 2);
+                $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                $Referencia = $monto_dolares."$";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+
+            }
+
+
+            $dataTr[$row->id] = [
+                'N° de Pago' => $row->nro_coutas,
+                'MONTO' => $row->importe_couta . '$',
+                'Reportado' => $Reportado ?? 0,
+                'DIVISA' => $diVisA,
+                'CONVERSION' => $Referencia  ,
+                'tasa_cambio' => $row->tasa_cambio ?? 0,
+                'estatus' => $styleStatusPayment[$row->payment_status],
+                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? '',
+                'REFRENCIA' => $row->referencia,
+                'FECHA_DE_PAGO' => $fecha_formateada
+
+            ];
+
+
+        } //fin foreach
+
+        $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
+
+
+        $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
+
+
+
+
+        $data['id_solicitud'] = $order->id ?? 0;
+
+
+        $data['descuento'] = $order->discount ?? 0;
+        $data['subtotal'] = $order->subtotal ?? 0;
+        $data['totales'] = $order->total;
+        $data['emitido_por'] = $emitido_por ?? '';
+        $data['totalPor_pagar'] = $order->total - $pagado;
+        $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
+        $data['vendedor'] = $user_roles->name ?? '';
+        $data['cedula'] = $order->cedula ?? '';
+        $data['cuota_pendiente'] =$cuota_pendiente;
+        $data['lote'] = $convenio->lote ?? '';
+        $data['total_bs'] = $total_bs ;
+        
+        $data['direccion'] = $cliente->address1 ?? '';
+        $data['total_monto_pagado'] = $pagado;
+        $data['total_usd_pagado'] = $total_usd_pagado;
+        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['fecha_pago'] = $fechaActual ?? '';
+        $data['order_id'] = $order->id ?? '';
+        $data['nro_convenio'] = $convenio->nro_convenio ?? '';
+        $data['order'] =   $historialPago[0]->importe_couta;
+
+        $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '';
+               
+    
+
+                return view($this->templatePath.'.screen.vista_qr')->with($data);
+    }
+
 
 }

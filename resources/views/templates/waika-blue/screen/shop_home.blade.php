@@ -1,13 +1,11 @@
 @php
 /*
-$layout_page = shop_home
-**Variables:**
-- $products: paginate
-Use paginate: $products->appends(request()->except(['page','_token']))->links()
+$layout_page = 'shop_home'
+
 */ 
 @endphp
 
-@extends($sc_templatePath.'.layout_centered')
+@extends($sc_templatePath.'.layout')
 
 {{--  block_main_content_center  --}}
 @section('block_main_content_center')

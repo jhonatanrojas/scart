@@ -5,7 +5,8 @@ return [
     'sc_order_process_after_success',
     'sc_customer_data_edit_mapping',
     'sc_event_order_success',
-    'sc_event_order_created'
+    'sc_event_order_created',
+    'getBadgeHtml'
 
 
 
