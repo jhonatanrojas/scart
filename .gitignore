@@ -18,6 +18,15 @@ yarn-error.log
 public/storage/.gitignore
 public/build
 public/hot
-public/data
+public/data/avatar
+public/data/banner
+public/data/brand
+public/data/category
+public/data/cms-image
+public/data/content
+public/data/language
+public/data/logo
+public/data/product
+public/data/supplier
 !/vendor/s-cart/core/src/Handlers/LfmConfigHandler.php
 
