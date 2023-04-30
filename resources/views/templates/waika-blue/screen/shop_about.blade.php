@@ -9,7 +9,7 @@ $layout_page = shop_about
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
-<section class="section section-sm section-first bg-default text-md-left">
+<section class="section mb-5 pt-3">
     <div class="container">
         <div class="row">
             <div class="col-12">
