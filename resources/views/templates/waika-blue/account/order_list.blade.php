@@ -22,8 +22,8 @@
     </div>
 
    <div class="table-responsive ">
-    <table class="table    table-fixed" width="100%">
-      <thead class="table-dark">
+    <table class="table table-fixed">
+      <thead class="">
         <tr>
           <th style="width: 50px;">No.</th>
           <th style="width: 100px;">Convenio</th>
