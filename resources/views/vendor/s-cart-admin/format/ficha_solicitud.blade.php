@@ -350,7 +350,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial </th>
                                                     <th>Cuota </th>
-                                                
+                                                    <th>Cuota de entrega $ </th>
                                                     <th>Total</th>
 
                                                 </tr>
@@ -371,11 +371,11 @@
                                                 }
                                                      
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format($detail['total_price'] / $detail['nro_coutas'], 2);
+                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
 
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
-                                                                $total_price = $detail['total_price'] - $inicial;
+                                                                $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
                                                                 $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
 
                                                                  
@@ -397,9 +397,9 @@
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
+                                               
                                                         <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
-                                                       
-
+                                                        <td>${{  $detail['monto_cuota_entrega']  }}</td>
                                                         <td>${{ $detail['total_price'] }}</td>
 
                                                         @php $monto_total+=$detail['total_price'] ;
@@ -424,7 +424,7 @@
                                                     <p> <strong>Inicial: -${{ round($inicial)}}</strong> </p>
                                                 </td>
                                                 <td >
-                                                    <p> <strong>Total: ${{  round($order->total - round($inicial),2) }}</p>
+                                                    <p> <strong>Total: ${{  round($order->total,2) }}</p>
                                                 </td>
                                                         
                                                  

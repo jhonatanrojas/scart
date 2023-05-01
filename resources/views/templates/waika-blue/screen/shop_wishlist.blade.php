@@ -21,9 +21,9 @@ $layout_page = shop_wishlist
                             <tr style="background: #eaebec">
                                 <th style="width: 50px;">No.</th>
                                 <th style="width: 100px;">SKU</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Remove</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
