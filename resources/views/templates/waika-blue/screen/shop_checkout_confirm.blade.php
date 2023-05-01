@@ -55,9 +55,9 @@
 
                                         <th colspan="2">Articulo</th>
                                         <th>{{ sc_language_render('product.quantity') }}</th>
-                                        <th>Monto de la cuotas</th>
+                                        <th>Monto $</th>
                                         @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
-                                            <th>Nro de cuotas</th>
+                                            <th>Nro Cuotas</th>
                                             <th>Inicial</th>
                                             <th>Frecuencia de pago</th>
                                         @endif

@@ -20,9 +20,9 @@
                     <tr>
                         <th style="width: 50px;">No.</th>
                         <th colspan="2">{{ sc_language_render('product.name') }}</th>
-                        <th> Monto de la  Coutas</th> 
+                        <th> Monto $</th> 
                         <th>Cuotas</th>
-                        <th>Frecuencia de pago</th>
+                        <th>Frecuencia</th>
                         <th>Inicial</th>
                         <th>{{ sc_language_render('product.quantity') }}</th>
                     
@@ -57,7 +57,7 @@
                     @endphp
                     <tr class="{{ session('arrErrorQty')[$product->id] ?? '' }}{{ (session('arrErrorQty')[$product->id] ?? 0) ? ' has-error' : '' }}">
                         <td>{{ $n }}</td>
-                        <td>
+                        <td colspan="2">
                             <a href="{{$product->getUrl() }}" class="row_cart-name">
                                 <img class="img_product_card" src="{{sc_file($product->getImage())}}" alt="{{ $product->name }}">
                             </a>

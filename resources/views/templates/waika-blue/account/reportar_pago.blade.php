@@ -25,9 +25,7 @@ $layout_page = shop_profile
             <thead>
               <tr>
                 <th> Producto</th>
-                <th class="product_price">{{ sc_language_render('product.price') }}</th>
-                <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
-                <th class="product_total">{{ sc_language_render('order.totals.sub_total') }}</th>
+    
               </tr>
             </thead>
               <tbody>
@@ -48,10 +46,7 @@ $layout_page = shop_profile
                             --}}
                           </td>
             
-                          <td class="product_price">{{ $item->price }}</td>
-                          <td class="product_qty"> {{ $item->qty }}</td>
-                          <td class="product_total item_id_{{ $item->id }}">{{ sc_currency_render_symbol($item->total_price,$order->currency)}}</td>
-                    
+                 
                         </tr>
                 @endforeach
               </tbody>
