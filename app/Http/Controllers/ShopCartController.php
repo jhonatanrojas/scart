@@ -60,6 +60,9 @@ class ShopCartController extends RootFrontController
         $cart = Cart::content();
         // dd($this->templatePath);
 
+
+      
+
         // dd(ShopAttributeGroup::pluck('name', 'id')  |);
 
         sc_check_view($this->templatePath . '.screen.shop_cart');
@@ -777,12 +780,6 @@ class ShopCartController extends RootFrontController
     public function addToCart()
     {
         $data      = request()->all();
-
-
-
-
-
-
      
         $this->clearCartStore();
 

@@ -363,8 +363,7 @@
                         </div>
                         {{-- //Alias --}}
 
-                        @if (sc_config_admin('product_brand') &&
-                            ($product->kind == SC_PRODUCT_SINGLE || $product->kind == SC_PRODUCT_BUILD))
+                        @if (sc_config_admin('product_brand') && ($product->kind == SC_PRODUCT_SINGLE || $product->kind == SC_PRODUCT_BUILD))
                             {{-- Brand --}}
                             <div
                                 class="form-group row kind kind0 kind1 {{ $errors->has('brand_id') ? ' text-red' : '' }}">
@@ -397,8 +396,7 @@
                             {{-- //Brand --}}
                         @endif
 
-                        @if (sc_config_admin('product_supplier') &&
-                            ($product->kind == SC_PRODUCT_SINGLE || $product->kind == SC_PRODUCT_BUILD))
+                        @if (sc_config_admin('product_supplier') && ($product->kind == SC_PRODUCT_SINGLE || $product->kind == SC_PRODUCT_BUILD))
                             {{-- Brand --}}
                             <div
                                 class="form-group row kind kind0 kind1 {{ $errors->has('supplier_id') ? ' text-red' : '' }}">
@@ -483,27 +481,30 @@
                                 {{-- //Price --}}
                             @endif
 
-                                            {{-- monto Inicial --}}
-                                            <div class="form-group row  {{ $errors->has('monto_inicial') ? ' text-red' : '' }}">
-                                                <label for="price"
-                                                    class="col-sm-2 col-form-label">Monto de inical</label>
-                                                <div class="col-sm-8">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="fas fa-cart-alt"></i></span>
-                                                        </div>
-                                                        <input type="number" step="0.01" style="width: 100px;" id="monto_inicial"
-                                                            name="monto_inicial" value="{!! old('monto_inicial', $product->monto_inicial) !!}" class="form-control monto_inicial"
-                                                            placeholder="" />
-                                                    </div>
-                                                    @if ($errors->has('price'))
-                                                        <span class="form-text">
-                                                            <i class="fa fa-info-circl e" ></i> {{ $errors->first('monto_inicial') }}
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                                      {{-- monto Inicial --}}
+                            {{-- monto Inicial --}}
+                            <div class="form-group row  {{ $errors->has('monto_inicial') ? ' text-red' : '' }}">
+                                <label for="price" class="col-sm-2 col-form-label">Monto de inicial</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-cart-alt"></i></span>
+                                        </div>
+                                        <input type="number" step="0.01" style="width: 100px;" id="monto_inicial"
+                                            name="monto_inicial" value="{!! old('monto_inicial', $product->monto_inicial) !!}"
+                                            class="form-control monto_inicial" placeholder="" />
+                                    </div>
+                                    @if ($errors->has('price'))
+                                        <span class="form-text">
+                                            <i class="fa fa-info-circl e"></i> {{ $errors->first('monto_inicial') }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <span class="form-text">
+                                    <i class="fa fa-info-circle"></i> Si el producto tiene un monto de inicial, ingrese el
+                                    monto de inicial
+                                </span>
+                            </div>
+                            {{-- monto Inicial --}}
                             <div class="form-group row kind   {{ $errors->has('nro_coutas') ? ' text-red' : '' }}">
                                 <label for="nro_coutas" class="col-sm-2 col-form-label">Numero de cuotas</label>
                                 <div class="col-sm-8">
@@ -524,7 +525,8 @@
                             </div>
 
 
-                            <div class="form-group row kind   {{ $errors->has('cuotas_inmediatas') ? ' text-red' : '' }}">
+                            <div
+                                class="form-group row kind   {{ $errors->has('cuotas_inmediatas') ? ' text-red' : '' }}">
                                 <label for="cuotas_inmediatas" class="col-sm-2 col-form-label">Cuotas Inmediatas</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
@@ -540,12 +542,38 @@
                                             <i class="fa fa-info-circle"></i> {{ $errors->first('cuotas_inmediatas') }}
                                         </span>
                                     @endif
+
+                                    <span class="form-text">
+                                        <i class="fa fa-info-circle"></i> Si el producto tiene opcion para entrega inmediata, ingrese el nro de cuotas
+                                    </span>
                                 </div>
                             </div>
-                          
 
-                          
 
+
+                            <div class="form-group row kind   {{ $errors->has('monto_cuota_entrega') ? ' text-red' : '' }}">
+                                <label for="monto_cuota_entrega" class="col-sm-2 col-form-label">Monto de cuota entrega $</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-cash-register	"></i></span>
+                                        </div>
+                                        <input type="number" step="0.01" style="width: 100px;" id="cuotas_inmediatas"
+                                            name="monto_cuota_entrega" value="{!! old('monto_cuota_entrega',$product->monto_cuota_entrega) ?? 0 !!}"
+                                            class="form-control input-sm price" placeholder="" />
+                                    </div>
+                                    @if ($errors->has('monto_cuota_entrega'))
+                                        <span class="form-text">
+                                            <i class="fa fa-info-circle"></i> {{ $errors->first('monto_cuota_entrega') }}
+                                        </span>
+                                    @endif
+                                    <span class="form-text">
+                                        <i class="fa fa-info-circle"></i> Si el producto requiere pago cuota adicional de entrega, ingrese el monto
+                                    </span> 
+                                </div>
+                             
+                            </div>
+    
                             <div class="form-group row kind   {{ $errors->has('modalidad_pago') ? ' text-red' : '' }}">
                                 <label for="modalidad_pago" class="col-sm-2 col-form-label"> Modalidad de pagos
                                 </label>
@@ -988,7 +1016,8 @@
     <div class="form-group row ">
         <label for="status" class="col-sm-2 col-form-label">{{ sc_language_render('product.status') }}</label>
         <div class="col-sm-8">
-            <input class="checkbox" type="checkbox" name="status" {{ old('status', $product['status']) ? 'checked' : '' }}>
+            <input class="checkbox" type="checkbox" name="status"
+                {{ old('status', $product['status']) ? 'checked' : '' }}>
         </div>
     </div>
     {{-- //Status --}}
@@ -1258,7 +1287,8 @@
             <label for="date_available" class="col-sm-2 col-form-label">modalidad de pago</label>
             <div class="col-md-8">
                 <div class=" input-group">
-                    <select required id="modalidad" class="form-control w-100 modalidad_pago select2" name="modalidad_pago">
+                    <select required id="modalidad" class="form-control w-100 modalidad_pago select2"
+                        name="modalidad_pago">
                         <?php
                         if (isset($modalidad_pago)) {
                             foreach ($modalidad_pago as $key => $pagos) {

@@ -2,13 +2,13 @@
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/fontawesome-free/css/all.min.css')}}">
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
 
-<div class="page-content container">
+<div class="page-content container ">
     <div class="page-header text-blue-d2">
       
         <div class="page-tools text-center m-auto">
             <div class="action-buttons">
-                <a class="btn bg-white btn-light mx-1px text-95 dont-print" onclick="order_print()" data-title="Print">
-                    <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
+                <a class="btn bg-white btn-light mx-1px  dont-print" onclick="order_print()" data-title="Print">
+                    <i class=" fa fa-print text-primary-m1 text-120 w-2"></i>
                     Imprimir
                 </a>
             
@@ -17,23 +17,43 @@
         </div>
     </div>
 
-    <div class="container px-0">
-        <div class="row mt-4">
-            <div class="col-12 col-lg-10 offset-lg-1">
-                <div class="row">
+    <div style="font-weight: bold;" class="container px-0">
+        <div class="row ">
+
+           <div class="col-12">
+            <div class="row  align-items-center">
+                <div class="col-10"> 
+                    <img style="margin-left: 10%;" width="100" class=" img-fluid" src="{{ sc_file(sc_store('logo')) }}" >
+                            
                     
-                    <div class="col-12 mb-4">
-                        
-                        <span class="h4">WAIKA IMPORT C.A</span>
-                        <img width="100" class="text-center img-fluid" src="{{ sc_file(sc_store('logo')) }}" style="margin-left: 30%">
+                </div>
+    
+                <div  class="col-2">
+                    <img class="img-fluid" alt="Código QR" id="codigo">
+    
+                   
+                
+                </div>
+            </div>
+
+           </div>
+            <div class="col-12 col-lg-10 offset-lg-1">
+                
+                <div class="row">
+                  
+                    
+                    <div class="col-12 ">
+                        <span  class="h4">WAIKA IMPORT C.A</span>
+                       
+                       
                         <p>
                             RIF. J-50145053-6
-                            A.V CUARTA TRANSVERSAL CALLE MIRAIMA EDIF: G.M.S.Y.T , BOLEITA NORTE, CARACAS MIRANDA ZONA POSTAL 1073
+                            A.V CUARTA TRANSVERSAL CALLE MIRAIMA <br/>EDIF: G.M.S.Y.T , BOLEITA NORTE, CARACAS MIRANDA <br/>ZONA POSTAL 1073<br/>
                             0412.635.40.41 / 0412.635.40.38</p>
                     </div>
                     <div class="col-12">
                         <div class="text-center text-150">
-                            <span class="text-default-d3">
+                            <span style="font-weight: bold;"  >
                                 HISTORIAL DE PAGO
                                 </span>
                         </div>
@@ -43,13 +63,16 @@
 
                 <hr class="row brc-default-l1 mx-n1 mb-4" />
 
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center " style="font-weight: bold;">
                     <div class="col-md-5">
-                        <div class="my-1"><i class="fas fa-user-tie"></i> Cliente:{{$cliente}}</div>
                         
-                        <div class="text-grey-m2">
+                        <div class="my-1">
+                            <i class="fas fa-user-tie"></i>Cliente:{{$cliente}}
+                          </div>
+                        
+                        <div class="">
                             <div class="my-1">
-                              <i class="fas fa-map-marker-alt"></i> direccion: {{$direccion}}
+                              <i class="fas fa-map-marker-alt"></i> Dirección: {{$direccion}}
                             </div>
                             <div class="my-1"><i class="fas fa-address-book"></i> RIF / CI: {{$cedula}}</div>
                             <div class="my-1"><i class="fas fa-user-tie"></i> VENDEDOR: {{$vendedor}}</div>
@@ -59,8 +82,9 @@
 
                     <div class="text-50 col-md-4  d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
-                        <div class="text-grey-m2">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emision:{{$fecha_pago}}</span> </div>
+                        <div class="">
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Emitido por:{{$emitido_por}}</span> </div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emisión:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Lote:{{$lote}}</span></div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
         
@@ -70,34 +94,53 @@
                 </div>
 
                  
-                <div class="row   ">
+                <div  class="row   ">
                     <div class="col-12 mt-4 align-self-center  order-sm-last ">
 
                         <div class="table-responsive">
 
-                            <table class="table table-hover box-body text-wrap table-bordered">
+                            <table style="font-weight: bold;" class="table table-hover box-body text-wrap table-bordered">
                                 <thead>
-                                    <td class="text-center" colspan="5"><h4>PRODUCTO</h4></td>
+                                    <td class="text-center" colspan="6"><h4 style="font-weight: bold;" >PRODUCTO</h4></td>
                                     <tr>
                                        
-                                        <td>Descriccion</td>
-                                        <td>Cant.</td>
-                                        <td>precio.</td>
-                                        <td>Dcto.</td>
+                                        <td>Descripción</td>
+                                        <td>Serial</td>
+                                        <td>Cant</td>
+                                        <td>Precio</td>
+                   
+                                        <td>Total</td>
                                     </tr>
                                 </thead>
+                                
                 
                                 <tbody>
+                                    @foreach ( $order->details as $product)
                                     <tr>
-                                        
-                                        <td>{{$nombre_product}}</td>
-                                        <td>{{$cantidad}}</td>
-                                        <td>{{$tota_product}}$</td>
-                                        <td></td>
+                                        <td> {{  $product->name}}</td>
+                                        <td> {{  $product->serial}}</td>
+                                        <td> {{  $product->qty}}</td>
+                                
+                                        <td> {{  $product->price}}</td>
+                                    <td>{{  $product->total_price}}</td>
+                                    </tr>
+                                    @endforeach
+                                    <tr>     <td colspan="3"></td> 
+                                        <td >Sub total</td>
+                                        <td>{{ $order->subtotal}}</td>
+                                    </tr>
+                                    <tr>     <td colspan="3"></td> 
+                                        <td >Descuento</td>
+                                        <td>{{ $order->discount}}</td>
+                                    </tr>
+                                   
+                                    <tr>     <td colspan="3"></td> 
+                                        <td  style="font-weight: bold;" > Total Ref $ </td>
+                                        <td  style="font-weight: bold;">{{ $order->total}}</td>
                                     </tr>
                                     <br>
-                                <td class="text-center" colspan="5"> <h4>
-                                        FECHA ESTIMADA DE ENTREGA <hr><br>
+                                <td class="text-center text-uppercase" colspan="6"> <h4 style="font-weight: bold;"  class="p-0 m-0">
+                                        Fecha máxima de Entrega <hr>
                                         {{$fecha_maxima_entrega}}
                                     </h4>
                                     <span>La fecha de entrega puede ser modificada si el Beneficiario no realiza los pagos puntualmente (fecha de pago o día siguiente).</span></
@@ -107,7 +150,7 @@
                 
                             </table>
                             <br>
-                            <table class="table table-hover  text-wrap table-bordered">
+                            <table style="font-size: 1em; text-align: center;" class="table   text-wrap table-bordered">
                               <thead>
                                 <tr>
                                   @if (!empty($removeList))
@@ -135,13 +178,14 @@
                               </tbody>
 
                               <tr>
-                                <td colspan="2">Total de pago</td>
-                                <td colspan="1">BS</td>
-                                <td colspan="2">BS .F {{$total_monto_pagado}}</td>
-                                <td>Ref. {{$total_usd_pagado}} $</td>
+                    
+                                <td colspan="4"></td> 
+                                <td colspan="2">Total Bs: {!!round($total_bs  , 2)!!}   BS</td>
+                         
+                                                               <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
                               <tr>
-                                <td class="h4 text-center" colspan="6">RESUMEN</td>
+                                <td style="font-weight: bold;"  class="h4 text-center" colspan="10">RESUMEN</td>
                               </tr>
                     
                               
@@ -154,31 +198,26 @@
                                     
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Numero de Cuotas Pendientes:  {{$Cuotas_Pendientes}}</li>
-                                        <li>Monto de Proxima Cuota (Ref. $):    {{$Importe_couta}}
+                                        <li class="">Numero de cuotas pendientes:  {{$Cuotas_Pendientes}}</li>
+                                        <li>Monto de próxima cuota (Ref. $):    {{$cuota_pendiente}}
                                         </li>
-                                        <li>Fecha Proxima Cuota:</li>
-                                        <li></li>
+                                        <!--<li>Fecha Proxima Cuota:{{$formatted_dates ?? 'N/A'}}</li>
+                                        <li></li>-->
                                     </ul>
 
-                                    <div style="margin-left: 35px">
-                                        PAGA CONFORME:________________
-                                    </div>
                                 </div>
 
                                 <div class="col-md-6 aling-items-center">
                                        
                                     
                                     <ul class="" style="list-style: none">
-                                        <li class="">Total Convenio (Referencia)::</li>
-                                        <li>Total Pagado para la Fecha (Referencia):</li>
-                                        <li>FTotal Monto Adeudado (Referencia):</li>
+                                        <li class="">Total Convenio : {{$totales}}$</li>
+                                        <li>Total Pagado para la Fecha :{{$total_monto_pagado}}$</li>
+                                        <li>Total Monto Adeudado : {{round($totalPor_pagar )}}$</li>
                                         <li></li>
                                     </ul>
 
-                                    <span class="" style="margin-left: 35px">
-                                        PAGA CONFORME:________________
-                                    </span>
+                                   
                                 </div>
                             </div>
                     
@@ -227,11 +266,34 @@
     $('.dont-print').show();
   }
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+            
+            
+<script>
+        new QRious({
+    element: document.querySelector("#codigo"),
+    value: "{{route('view_QR',['id' =>$id_solicitud])}}", // La URL o el texto
+    size: 140,
+    backgroundAlpha: 0, // 0 para fondo transparente
+    foreground: "#000", // Color del QR
+    level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+    });
+
+</script>
 <style>
   body{
     margin-top:20px;
     color: #484b51;
+    
 }
+
+table tr td {
+    font-weight: bold;
+    font-size: 15px;
+
+} 
 .text-secondary-d1 {
     color: #728299!important;
 }
@@ -270,13 +332,11 @@
 hr {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 0;
+    
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
-.text-grey-m2 {
-    color: #888a8d!important;
-}
+
 
 .text-success-m2 {
     color: #86bd68!important;

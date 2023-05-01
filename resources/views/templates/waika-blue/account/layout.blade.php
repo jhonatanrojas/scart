@@ -6,11 +6,10 @@
       
       <div class="row">
        
-        <div class="col-12 col-sm-12 col-md-3 animate__animated animate__fadeInDown">
-          
+        <div class="col-12 col-md-3 animate__animated animate__fadeInDown">
           @include($sc_templatePath.'.account.nav_customer')
         </div>
-        <div class="col-12 col-sm-12 col-md-9 min-height-37vh">
+        <div class="col-12 col-md-9" style="min-height: 400px;">
           
             @section('block_main_profile')
             @show

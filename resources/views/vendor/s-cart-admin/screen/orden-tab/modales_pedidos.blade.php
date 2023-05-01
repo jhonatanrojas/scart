@@ -98,6 +98,12 @@
                                     <input class="form-control   " type="date" name="fecha_maxima_entrega" required
                                         id="fecha_maxima_entrega">
                                 </div>
+
+                                 <div class="form-group col-md-6">
+                                    <label for="monto">Fecha de emisión del convenio: </label> 
+                                    <input class="form-control" type="date" name="fecha_primer_pago" required
+                                        id="fecha_primer_pago">
+                                </div>
                                 <div class="form-group col-md-6">
                                     <label for="monto">Inicial $: </label>
                                     <input readonly value="0" class="form-control   " type="text"

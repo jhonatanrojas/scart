@@ -18,7 +18,16 @@
 @extends($sc_templatePath . '.layout')
 
 @section('block_main')
-    <section class="section section-xl bg-default text-md-left">
+    <section class="">
+        <style>
+            .img_product {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                object-position: center;
+                border-radius: 6px;
+            }
+        </style>
         <div class="container">
             <div class=" text-center ">
                 @if (isset($mensaje) && $mensaje != '' && $cart[0]->financiamiento == '1')
@@ -28,7 +37,7 @@
                     </div>
                 @endif
             </div>
-            <div class="row">
+            <div class="row gap-3">
 
            
       
@@ -39,23 +48,20 @@
                 @else
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table box table-bordered">
+                            <table class="table table-striped align-middle">
                                 <thead>
-                                    <tr style="background: #eaebec">
+                                    <tr>
                                         <th style="width: 50px;">No.</th>
 
-                                        <th>Articulo</th>
+                                        <th colspan="2">Articulo</th>
                                         <th>{{ sc_language_render('product.quantity') }}</th>
-                                        <th>Monto de la cuotas</th>
+                                        <th>Monto $</th>
                                         @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
-                                            <th>Nro de cuotas</th>
+                                            <th>Nro Cuotas</th>
                                             <th>Inicial</th>
                                             <th>Frecuencia de pago</th>
                                         @endif
-                                      
-                                    
-                                
-
+                                        
                                         @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
                                             <th>{{ sc_language_render('product.subtotal') }}</th>
                                         @endif
@@ -64,27 +70,28 @@
                                 <tbody>
 
                                     @foreach ($cart as $item)
-
-                                    @php
-                                 
-                                     
+                                        @php
                                             $n = isset($n) ? $n : 0;
                                             $n++;
                                             $product = $modelProduct->start()->getDetail($item->id, null, $item->storeId);
-                                                if($cart[0]->financiamiento==2){
+                                            if($cart[0]->financiamiento==2){
                                                 $product->nro_coutas=$product->cuotas_inmediatas;
                                                 $item->Cuotas=$product->cuotas_inmediatas;
-                                                }
+                                            }
                                             $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-                                    if( $product->precio_de_cuota > 0 ):
-                                    $product->precio=  $product->price-$product->monto_inicial;
-                                   endif;
+                                            if( $product->precio_de_cuota > 0 ):
+                                                $product->precio=  $product->price-$product->monto_inicial;
+                                            endif;
                                         @endphp
 
                                         {{-- Render product in cart --}}
                                         <tr class="row_cart">
                                             <td>{{ $n }}</td>
-
+                                            <td>
+                                                <a href="{{ $product->getUrl() }}">
+                                                    <img src="{{ sc_file($product->getImage()) }}" alt="" class="img_product">
+                                                </a>
+                                            </td>
                                             <td>
                                                 {{ $product->name }}<br>
                                                 {{-- Process attributes --}}
@@ -95,12 +102,7 @@
                                                     <br>
                                                 @endif
                                                 {{-- //end Process attributes --}}
-                                                <a href="{{ $product->getUrl() }}"><img width="100"
-                                                        src="{{ sc_file($product->getImage()) }}" alt=""></a>
                                             </td>
-
-
-                                       
                                    
                                             <td>{{ $item->qty }}</td>
                                             <td>
@@ -127,6 +129,7 @@
                                               
                                                 @endif
                                             </td>
+                                            
                                             @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                                 <td>{{ $item->Cuotas }}</td>
                                                 @php
@@ -142,7 +145,7 @@
                                             
                                         
                                             @if ($cart[0]->financiamiento != '1' &&  $cart[0]->financiamiento != '2')
-                                                <td align="right">{{ sc_currency_render($item->subtotal) }}</td>
+                                                <td>{{ sc_currency_render($item->subtotal) }}</td>
                                             @endif
                                         </tr>
                                         {{-- // Render product in cart --}}
@@ -163,54 +166,57 @@
                                 <div class="col-12 col-sm-12 col-md-6">
                                     <h3 class="control-label"><i class="fa fa-truck" aria-hidden="true"></i>
                                         {{ sc_language_render('cart.shipping_address') }}:<br></h3>
-                                    <table class="table box table-bordered" id="showTotal">
-                                        <tr>
-                                            <th>{{ sc_language_render('order.name') }}:</td>
-                                            <td>{{ $shippingAddress['first_name'] }} {{ $shippingAddress['last_name'] }}
-                                            </td>
-                                        </tr>
-                                        @if (sc_config('customer_name_kana'))
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table box table-bordered" id="showTotal">
                                             <tr>
-                                                <th>{{ sc_language_render('order.name_kana') }}:</td>
-                                                <td>{{ $shippingAddress['first_name_kana'] . $shippingAddress['last_name_kana'] }}
+                                                <th>{{ sc_language_render('order.name') }}:</td>
+                                                <td>{{ $shippingAddress['first_name'] }} {{ $shippingAddress['last_name'] }}
                                                 </td>
                                             </tr>
-                                        @endif
-
-                                        @if (sc_config('customer_phone'))
+                                            @if (sc_config('customer_name_kana'))
+                                                <tr>
+                                                    <th>{{ sc_language_render('order.name_kana') }}:</td>
+                                                    <td>{{ $shippingAddress['first_name_kana'] . $shippingAddress['last_name_kana'] }}
+                                                    </td>
+                                                </tr>
+                                            @endif
+    
+                                            @if (sc_config('customer_phone'))
+                                                <tr>
+                                                    <th>{{ sc_language_render('order.phone') }}:</td>
+                                                    <td>{{ $shippingAddress['phone'] }}</td>
+                                                </tr>
+                                            @endif
                                             <tr>
-                                                <th>{{ sc_language_render('order.phone') }}:</td>
-                                                <td>{{ $shippingAddress['phone'] }}</td>
+                                                <th>{{ sc_language_render('order.email') }}:</td>
+                                                <td>{{ $shippingAddress['email'] }}</td>
                                             </tr>
-                                        @endif
-                                        <tr>
-                                            <th>{{ sc_language_render('order.email') }}:</td>
-                                            <td>{{ $shippingAddress['email'] }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>{{ sc_language_render('order.address') }}:</td>
-                                            <td>{{ $shippingAddress['address1'] . ' ' . $shippingAddress['address2'] . ' ' . $shippingAddress['address3'] . ',' . $shippingAddress['country'] }}
-                                            </td>
-                                        </tr>
-                                        @if (sc_config('customer_postcode'))
                                             <tr>
-                                                <th>{{ sc_language_render('order.postcode') }}:</td>
-                                                <td>{{ $shippingAddress['postcode'] }}</td>
+                                                <th>{{ sc_language_render('order.address') }}:</td>
+                                                <td>{{ $shippingAddress['address1'] . ' ' . $shippingAddress['address2'] . ' ' . $shippingAddress['address3'] . ',' . $shippingAddress['country'] }}
+                                                </td>
                                             </tr>
-                                        @endif
-
-                                        @if (sc_config('customer_company'))
+                                            @if (sc_config('customer_postcode'))
+                                                <tr>
+                                                    <th>{{ sc_language_render('order.postcode') }}:</td>
+                                                    <td>{{ $shippingAddress['postcode'] }}</td>
+                                                </tr>
+                                            @endif
+    
+                                            @if (sc_config('customer_company'))
+                                                <tr>
+                                                    <th>{{ sc_language_render('order.company') }}:</td>
+                                                    <td>{{ $shippingAddress['company'] }}</td>
+                                                </tr>
+                                            @endif
+    
                                             <tr>
-                                                <th>{{ sc_language_render('order.company') }}:</td>
-                                                <td>{{ $shippingAddress['company'] }}</td>
+                                                <th>{{ sc_language_render('cart.note') }}:</td>
+                                                <td>{{ $shippingAddress['comment'] }}</td>
                                             </tr>
-                                        @endif
-
-                                        <tr>
-                                            <th>{{ sc_language_render('cart.note') }}:</td>
-                                            <td>{{ $shippingAddress['comment'] }}</td>
-                                        </tr>
-                                    </table>
+                                        </table>
+                                    </div>
                                 </div>
                                 {{-- // Display address --}}
 
@@ -223,32 +229,34 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="table box table-bordered" id="showTotal">
-                                                @foreach ($dataTotal as $key => $element)
-                                                    @if ($element['code'] == 'total')
-                                                        <tr class="showTotal" style="background:#f5f3f3;font-weight: bold;">
-                                                            <th>{!! $element['title'] !!}</th>
-                                                            <td style="text-align: right" id="{{ $element['code'] }}">
-                                                                {{ $element['text'] }}
-                                                            </td>
-                                                        </tr>
-                                                    @elseif($element['value'] != 0)
-                                                        <tr class="showTotal">
-                                                            <th>{!! $element['title'] !!}</th>
-                                                            <td style="text-align: right" id="{{ $element['code'] }}">
-                                                                {{ $element['text'] }}
-                                                            </td>
-                                                        </tr>
-                                                    @elseif($element['code'] == 'shipping')
-                                                        <tr class="showTotal">
-                                                            <th>{!! $element['title'] !!}</th>
-                                                            <td style="text-align: right" id="{{ $element['code'] }}">
-                                                                {{ $element['text'] }}
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                @endforeach
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table box table-bordered" id="showTotal">
+                                                    @foreach ($dataTotal as $key => $element)
+                                                        @if ($element['code'] == 'total')
+                                                            <tr class="showTotal" style="background:#f5f3f3;font-weight: bold;">
+                                                                <th>{!! $element['title'] !!}</th>
+                                                                <td style="text-align: right" id="{{ $element['code'] }}">
+                                                                    {{ $element['text'] }}
+                                                                </td>
+                                                            </tr>
+                                                        @elseif($element['value'] != 0)
+                                                            <tr class="showTotal">
+                                                                <th>{!! $element['title'] !!}</th>
+                                                                <td style="text-align: right" id="{{ $element['code'] }}">
+                                                                    {{ $element['text'] }}
+                                                                </td>
+                                                            </tr>
+                                                        @elseif($element['code'] == 'shipping')
+                                                            <tr class="showTotal">
+                                                                <th>{!! $element['title'] !!}</th>
+                                                                <td style="text-align: right" id="{{ $element['code'] }}">
+                                                                    {{ $element['text'] }}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </table>
+                                            </div>
 
                                             @if (!sc_config('payment_off'))
                                                 {{-- Payment method --}}
@@ -278,21 +286,18 @@
                                     {{-- End total --}}
                                     @endif
                                     {{-- Button process cart --}}
-                                    <div class="row" style="padding-bottom: 20px;">
-                                        <div class="col-md-12 text-center">
-                                            <div class="pull-left">
-                                                <button class="button button-lg" type="button"
-                                                    style="cursor: pointer;padding:10px 30px"
-                                                    onClick="location.href='{{ sc_route('cart') }}'"><i
-                                                        class="fa fa-arrow-left"></i>
-                                                    {{ sc_language_render('cart.back_to_cart') }}</button>
-                                            </div>
-                                            <div class="pull-right">
-                                                <button class="button button-lg button-secondary" id="submit-order"
+                                    <div class="row">
+                                        <div class="col-12 d-grid gap-2">
+                                            <button class="btn btn-outline-primary" type="button"
+                                                style="cursor: pointer;padding:10px 30px"
+                                                onClick="location.href='{{ sc_route('cart') }}'"><i
+                                                    class="fa fa-arrow-left"></i>
+                                                {{ sc_language_render('cart.back_to_cart') }}</button>
+                                                
+                                                <button class="btn btn-primary" id="submit-order"
                                                     type="submit" style="cursor: pointer;padding:10px 30px"><i
                                                         class="fa fa-check"></i>
                                                     {{ sc_language_render('cart.confirm') }}</button>
-                                            </div>
                                         </div>
                                     </div>
                                     {{-- // Button process cart --}}

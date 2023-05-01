@@ -2,39 +2,46 @@
 @php
 
 
+
 @endphp
     <div class="table-responsive">
-        <table class="table box table-bordered">
+        <style>
+            .img_product_card {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                object-position: center;
+                border-radius: 6px;
+            }
+        </style>
+        <table class="table table-striped align-middle">
             <thead>
                 @if($cartItem[0]->financiamiento == "1" || $cartItem[0]->financiamiento==2)
-                <tr style="background: #eaebec">
-                    <th style="width: 50px;">No.</th>
-                    <th>{{ sc_language_render('product.name') }}</th>
-                    <th> Monto de la  Coutas</th> 
-                    <th>Cuotas</th>
-                    <th>Frecuencia de pago</th>
-                    <th>Inicial</th>
-                    <th>{{ sc_language_render('product.quantity') }}</th>
-                
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th style="width: 50px;">No.</th>
+                        <th colspan="2">{{ sc_language_render('product.name') }}</th>
+                        <th> Monto $</th> 
+                        <th>Cuotas</th>
+                        <th>Frecuencia</th>
+                        <th>Inicial</th>
+                        <th>{{ sc_language_render('product.quantity') }}</th>
+                    
+                        <th></th>
+                    </tr>
 
                 @else
-                <tr style="background: #eaebec">
-                    <th style="width: 50px;">No.</th>
-                    <th>{{ sc_language_render('product.name') }}</th>
-                    <th>{{ sc_language_render('product.price') }}</th>
-                    <th>{{ sc_language_render('product.quantity') }}</th>
-                    <th>{{ sc_language_render('product.subtotal') }}</th>
-                    <th></th>
-                </tr>
-                    
-             
+                    <tr>
+                        <th style="width: 50px;">No.</th>
+                        <th colspan="2">{{ sc_language_render('product.name') }}</th>
+                        <th>{{ sc_language_render('product.price') }}</th>
+                        <th>{{ sc_language_render('product.quantity') }}</th>
+                        <th>{{ sc_language_render('product.subtotal') }}</th>
+                        <th></th>
+                    </tr>
                 @endif
-
             </thead>
 
-            <tbody>
+            <tbody class="table-group-divider">
                 @if($cartItem[0]->financiamiento == "1" || $cartItem[0]->financiamiento==2)
                 @foreach($cartItem as $item)
                     @php
@@ -48,94 +55,89 @@
                         }
                         // End check product in cart
                     @endphp
-                <tr class="row_cart form-group {{ session('arrErrorQty')[$product->id] ?? '' }}{{ (session('arrErrorQty')[$product->id] ?? 0) ? ' has-error' : '' }}">
-                    <td>{{ $n }}</td>
-                    <td>
-                        <a href="{{$product->getUrl() }}" class="row_cart-name">
-                            <img width="100" src="{{sc_file($product->getImage())}}"
-                                alt="{{ $product->name }}">
-                        </a>
-                            <span>
-                              <a href="{{$product->getUrl() }}" class="row_cart-name">{{ $product->name }}</a><br />
-                                <b>{{ sc_language_render('product.sku') }}</b> : {{ $product->sku }}
-                                {!! $product->displayVendor() !!}<br>
-                                {{-- Process attributes --}}
-                                @if ($item->options->count())
-                                @foreach ($item->options as $groupAtt => $att)
-                                <b>{{ $attributesGroup[$groupAtt] }}</b>: {!! sc_render_option_price($att) !!}
-                                @endforeach
-                                @endif
-                                {{-- //end Process attributes --}}
-                            </span>
-                        </a>
-                    </td>
+                    <tr class="{{ session('arrErrorQty')[$product->id] ?? '' }}{{ (session('arrErrorQty')[$product->id] ?? 0) ? ' has-error' : '' }}">
+                        <td>{{ $n }}</td>
+                        <td colspan="2">
+                            <a href="{{$product->getUrl() }}" class="row_cart-name">
+                                <img class="img_product_card" src="{{sc_file($product->getImage())}}" alt="{{ $product->name }}">
+                            </a>
+                                <span>
+                                <a href="{{$product->getUrl() }}" class="row_cart-name">{{ $product->name }}</a><br />
+                                    <b>{{ sc_language_render('product.sku') }}</b> : {{ $product->sku }}
+                                    {!! $product->displayVendor() !!}<br>
+                                    {{-- Process attributes --}}
+                                    @if ($item->options->count())
+                                    @foreach ($item->options as $groupAtt => $att)
+                                    <b>{{ $attributesGroup[$groupAtt] }}</b>: {!! sc_render_option_price($att) !!}
+                                    @endforeach
+                                    @endif
+                                    {{-- //end Process attributes --}}
+                                </span>
+                            </a>
+                        </td>
                     
-                    @php
-                           if($cartItem[0]->financiamiento==2){
-                            $product->nro_coutas=$product->cuotas_inmediatas;
-                            $item->Cuotas=$product->cuotas_inmediatas;
-                           }
-              
-                       
-                    if($item->inicial>0){
-                      $totalinicial= $item->inicial * $product->price/100;
-                      $number1 = $product->price-($item->inicial * $product->price /100);
-                      $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+                        @php
+                            if($cartItem[0]->financiamiento==2){
+                                $product->nro_coutas=$product->cuotas_inmediatas;
+                                $item->Cuotas=$product->cuotas_inmediatas;
+                            }
+                
+                        
+                                if($item->inicial>0){
+                                $totalinicial= $item->inicial * $product->price/100;
+                                $number1 = $product->price-($item->inicial * $product->price /100);
+                                $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+                                }else{
+                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
+                                }
+                        
+                        @endphp
 
+                        <td>
+                            {{$Precio_cuotas}} 
+                        </td> 
 
-                    }else{
-
-                        $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
-
-                    }
-                     
-                    @endphp
-
-                    <td>
-                        {{$Precio_cuotas}} 
-                    </td> 
-
-                    <td>{{$item->Cuotas}} </td>
-                    <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
+                        <td>{{$item->Cuotas}} </td>
+                        <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
-                    @php
-                    $inicial="0.00";
-                    if($item->inicial>0){
-                   
-                        $inicial= number_format( ($product->price * $item->inicial) /100,2);
-                    }
-
-                    @endphp
-                    <td>${!!$inicial!!}</td>
+                        @php
+                            $inicial="0.00";
+                            if($item->inicial>0){
+                        
+                                $inicial= number_format( ($product->price * $item->inicial) /100,2);
+                            }
+                        @endphp
+                    
+                        <td>${!!$inicial!!}</td>
   
-                    <td class="cart-col-qty">
-                        <div class="cart-qty">
-                            <input style="width: 150px; margin: 0 auto" type="number" data-id="{{ $item->id }}"
-                                data-rowid="{{$item->rowId}}" data-store_id="{{$product->store_id}}" onChange="updateCart($(this));"
-                                class="item-qty form-control" name="qty-{{$item->id}}" value="{{$item->qty}}">
-                        </div>
-                        <span class="text-danger item-qty-{{$item->id}}" style="display: none;"></span>
-                        @if (session('arrErrorQty')[$product->id] ?? 0)
-                        <span class="help-block">
-                            <br>{{ sc_language_render('cart.minimum_value', ['value' => session('arrErrorQty')[$product->id]]) }}
-                        </span>
-                        @endif
-                    </td>
+                        <td class="cart-col-qty">
+                            <div class="cart-qty">
+                                <input style="width: 100px;" type="number" data-id="{{ $item->id }}"
+                                    data-rowid="{{$item->rowId}}" data-store_id="{{$product->store_id}}" onChange="updateCart($(this));"
+                                    class="item-qty form-control" name="qty-{{$item->id}}" value="{{$item->qty}}">
+                            </div>
+                            <span class="text-danger item-qty-{{$item->id}}" style="display: none;"></span>
+                            @if (session('arrErrorQty')[$product->id] ?? 0)
+                                <span class="help-block">
+                                    <br>{{ sc_language_render('cart.minimum_value', ['value' => session('arrErrorQty')[$product->id]]) }}
+                                </span>
+                            @endif
+                        </td>
   
                   
   
-                    <td align="center">
-                        <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
-                            class="cart_quantity_delete"
-                            href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-  
+                        <td align="center">
+                            <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
+                                class="cart_quantity_delete"
+                                href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
                 @endforeach
                 
                 @else
+
                 @foreach($cartItem as $item)
                     @php
                         $n = (isset($n)?$n:0);
@@ -147,56 +149,60 @@
                         }
                         // End check product in cart
                     @endphp
-                <tr class="row_cart form-group {{ session('arrErrorQty')[$product->id] ?? '' }}{{ (session('arrErrorQty')[$product->id] ?? 0) ? ' has-error' : '' }}">
-                    <td>{{ $n }}</td>
-                    <td>
-                        <a href="{{$product->getUrl() }}" class="row_cart-name">
-                            <img width="100" src="{{sc_file($product->getImage())}}"
-                                alt="{{ $product->name }}">
-                        </a>
+                    <tr class=" {{ session('arrErrorQty')[$product->id] ?? '' }}{{ (session('arrErrorQty')[$product->id] ?? 0) ? ' has-error' : '' }}">
+                        <td>{{ $n }}</td>
+                        <td>
+                            <a href="{{$product->getUrl() }}" class="row_cart-name">
+                                <img class="img_product_card" src="{{sc_file($product->getImage())}}" alt="{{ $product->name }}">
+                            </a>
+                        </td>
+                        <td>
                             <span>
-                              <a href="{{$product->getUrl() }}" class="row_cart-name">{{ $product->name }}</a><br />
+                                <a href="{{$product->getUrl() }}" class="row_cart-name">{{ $product->name }}</a>
+                                
+                                <br/>
                                 <b>{{ sc_language_render('product.sku') }}</b> : {{ $product->sku }}
+                                
                                 {!! $product->displayVendor() !!}<br>
+                                
                                 {{-- Process attributes --}}
                                 @if ($item->options->count())
-                                @foreach ($item->options as $groupAtt => $att)
-                                <b>{{ $attributesGroup[$groupAtt] }}</b>: {!! sc_render_option_price($att) !!}
-                                @endforeach
+                                    @foreach ($item->options as $groupAtt => $att)
+                                        <b>{{ $attributesGroup[$groupAtt] }}</b>: {!! sc_render_option_price($att) !!}
+                                    @endforeach
                                 @endif
                                 {{-- //end Process attributes --}}
                             </span>
-                        </a>
-                    </td>
-  
-                    <td>{!! $product->showPrice() !!}</td>
-  
-                    <td class="cart-col-qty">
-                        <div class="cart-qty">
-                            <input style="width: 150px; margin: 0 auto" type="number" data-id="{{ $item->id }}"
-                                data-rowid="{{$item->rowId}}" data-store_id="{{$product->store_id}}" onChange="updateCart($(this));"
-                                class="item-qty form-control" name="qty-{{$item->id}}" value="{{$item->qty}}">
-                        </div>
-                        <span class="text-danger item-qty-{{$item->id}}" style="display: none;"></span>
-                        @if (session('arrErrorQty')[$product->id] ?? 0)
-                        <span class="help-block">
-                            <br>{{ sc_language_render('cart.minimum_value', ['value' => session('arrErrorQty')[$product->id]]) }}
-                        </span>
-                        @endif
-                    </td>
-  
-                    <td align="right">
-                        {{sc_currency_render($item->subtotal)}}
-                    </td>
-  
-                    <td align="center">
-                        <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
-                            class="cart_quantity_delete"
-                            href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
+                        </td>
+    
+                        <td>{!! $product->showPrice() !!}</td>
+    
+                        <td class="cart-col-qty">
+                            <div class="cart-qty">
+                                <input type="number" data-id="{{ $item->id }}" style="width: 100px;" 
+                                    data-rowid="{{$item->rowId}}" data-store_id="{{$product->store_id}}" onChange="updateCart($(this));"
+                                    class="item-qty form-control" name="qty-{{$item->id}}" value="{{$item->qty}}">
+                            </div>
+                            <span class="text-danger item-qty-{{$item->id}}" style="display: none;"></span>
+                            @if (session('arrErrorQty')[$product->id] ?? 0)
+                                <span class="help-block">
+                                    <br>{{ sc_language_render('cart.minimum_value', ['value' => session('arrErrorQty')[$product->id]]) }}
+                                </span>
+                            @endif
+                        </td>
+    
+                        <td >
+                            {{sc_currency_render($item->subtotal)}}
+                        </td>
+    
+                        <td>
+                            <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
+                                class="cart_quantity_delete"
+                                href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
   
                 @endforeach
                     

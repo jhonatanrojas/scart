@@ -11,7 +11,7 @@ $layout_page = shop_cart
 @extends($sc_templatePath.'.layout')
 
 @section('block_main')
-<section class="section section-xl bg-default text-md-left">
+<section class="mb-5">
     <div class="container">
         <div class="row">
             @if (count($cart) ==0)
@@ -44,8 +44,8 @@ $layout_page = shop_cart
                     
                     {{-- Button checkout --}}
                     <div class="col-md-12 text-center">
-                        <div class="pull-right">
-                            <button class="button button-lg button-secondary" type="submit">{{ sc_language_render('cart.checkout') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-outline-primary btn-lg" type="submit">{{ sc_language_render('cart.checkout') }} <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                     {{-- Button checkout --}}

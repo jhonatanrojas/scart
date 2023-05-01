@@ -48,7 +48,7 @@ class DocumentosController extends Controller
            
         }else $dato = "";
 
-        return view('templates/s-cart-light/account/documentos')
+        return view('templates/waika-blue/account/documentos')
             ->with(
                 [
                     'title'       => 'adjuntar documento',

@@ -1,16 +1,20 @@
       <!-- Page Footer-->
-      <footer class="section footer-classic">
+      <footer class="section footer-classic py-5" style="background: #E6F3F8;">
         
         <div class="footer-classic-body section-lg bg-brown-2">
           <div class="container">
-            <div class="row row-40 row-md-50 justify-content-xl-between">
-              <div class="col-sm-6 col-lg-4 col-xl-3 wow fadeInRight">
-                <a href="{{ sc_route('home') }}">
-                  <img class="logo-footer" src="{{  sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{ sc_store('title', ($storeId ?? null)) }}">
-
-                </a>
+            <div class="row justify-content-between">
+              
+              <div class="col-sm-6 col-lg-3">
+                <p>
+                  <a href="{{ sc_route('home') }}">
+                    <img class="logo-footer" src="{{  sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="{{ sc_store('title', ($storeId ?? null)) }}">
+                  </a>
+                </p>
+                
                 <p>{{ sc_store('title', ($storeId ?? null)) }}</p>
                 <p> {!! sc_store('time_active', ($storeId ?? null))  !!}</p>
+                
                 <div class="footer-classic-social">
                   <div class="group-lg group-middle">
                     <div>
@@ -31,58 +35,49 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-sm-6 col-lg-4 col-xl-3 wow fadeInRight" data-wow-delay=".1s">
-                <h4 class="footer-classic-title">{{ sc_language_render('about.page_title') }}</h4>
-                <ul class="contacts-creative">
-                  <li>
-                    <div class="unit unit-spacing-sm flex-column flex-md-row">
-                      <div class="unit-left"><span class="icon mdi mdi-map-marker"></span></div>
-                      <div class="unit-body"><a href="#">{{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }}</a></div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="unit unit-spacing-sm flex-column flex-md-row">
-                      <div class="unit-left"><span class="icon mdi mdi-phone"></span></div>
-                      <div class="unit-body"><a href="tel:#">{{ sc_language_render('store.hotline') }}: {{ sc_store('long_phone', ($storeId ?? null)) }}</a></div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="unit unit-spacing-sm flex-column flex-md-row">
-                      <div class="unit-left"><span class="icon mdi mdi-email-outline"></span></div>
-                      <div class="unit-body"><a href="mailto:#{{ sc_store('email', ($storeId ?? null)) }}">{{ sc_language_render('store.email') }}: {{ sc_store('email', ($storeId ?? null)) }}</a></div>
-                    </div>
-                  </li>
-                  <li>
 
-                    <form class="rd-form-inline rd-form-inline-2"  method="post" action="{{ sc_route('subscribe') }}">
-                        @csrf
-                          <div class="form-wrap">
-                            <input class="form-input" id="subscribe-form-2-email" type="email" name="subscribe_email" required/>
-                            <label class="form-label" for="subscribe-form-2-email">{{ sc_language_render('subscribe.email') }}</label>
-                          </div>
-                          <div class="form-button">
-                            <button class="button button-icon-2 button-zakaria button-primary" type="submit" title="{{ sc_language_render('subscribe.title') }}">
-                              <span class="fl-bigmug-line-paper122"></span>
-                            </button>
-                          </div>
-                        </form>
+              </div>
+
+              <div class="col-sm-6 col-lg-3">
+                <h4 class="footer-classic-title">{{ sc_language_render('about.page_title') }}</h4>
+                <ul class="nav flex-column">
+                  <li class="d-flex gap-2">
+                      <i class="fa-solid fa-location-dot py-2 lh-sm"></i>
+                      <a class="nav-link px-0 text-body" href="#">{{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }}</a>
+                  </li>
+                  <li class="d-flex gap-2">
+                    <i class="fa-solid fa-phone py-2 lh-sm"></i>
+                    <a class="nav-link px-0 text-body" href="tel:#">{{ sc_language_render('store.hotline') }}: {{ sc_store('long_phone', ($storeId ?? null)) }}</a>
+                  </li>
+                  <li class="d-flex gap-2">
+                    <i class="fa-solid fa-envelope py-2 lh-sm"></i>
+                    <a class="nav-link px-0 text-body" href="mailto:#{{ sc_store('email', ($storeId ?? null)) }}">{{ sc_language_render('store.email') }}: {{ sc_store('email', ($storeId ?? null)) }}</a>
                   </li>
                 </ul>
               </div>
-              <div class="col-lg-4 wow fadeInRight" data-wow-delay=".2s">
+              
+              <div class="col-sm-12 col-lg-3">
                 <h4 class="footer-classic-title"> {{ sc_language_render('front.my_profile') }}</h4>
                 <!-- RD Mailform-->
-                <ul class="contacts-creative">
+                <ul class="nav flex-column">
                     @if (!empty($sc_layoutsUrl['footer']))
                     @foreach ($sc_layoutsUrl['footer'] as $url)
                     <li>
-                        <a {{ ($url->target =='_blank')?'target=_blank':''  }}
+                        <a {{ ($url->target =='_blank')?'target=_blank':''  }} class="nav-link px-0 text-body"
                             href="{{ sc_url_render($url->url) }}">{{ sc_language_render($url->name) }}</a>
                     </li>
                     @endforeach
                     @endif
                 </ul>
+
+                {{-- <h5>{{ sc_language_render('subscribe.title') }}</h5>
+                <form class="rd-form-inline rd-form-inline-2"  method="post" action="{{ sc_route('subscribe') }}">
+                  @csrf
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="{{ sc_language_render('subscribe.email') }}" aria-label="{{ sc_language_render('subscribe.email') }}" aria-describedby="button-addon2" id="subscribe-form-2-email" type="email" name="subscribe_email" required>
+                    <button class="btn btn-outline-primary" type="submit" id="button-addon2">{{ sc_language_render('action.submit') }}</button>
+                  </div>
+                </form> --}}
               </div>
             </div>
           </div>

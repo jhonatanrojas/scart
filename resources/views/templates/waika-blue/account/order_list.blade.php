@@ -22,8 +22,8 @@
     </div>
 
    <div class="table-responsive ">
-    <table class="table    table-fixed" width="100%">
-      <thead class="table-dark">
+    <table class="table table-fixed">
+      <thead class="">
         <tr>
           <th style="width: 50px;">No.</th>
           <th style="width: 100px;">Convenio</th>
@@ -47,24 +47,20 @@
 
           <td><span class="item_21_id">{{ $n }}</span></td>
           <td><span class="item_21_sku">
-            {{$order->nro_convenio ?? 'xxxxx'}}
-
-            
-        </span>
-      </td>
+            {{$order->nro_convenio ?? 'xxxxx'}}</span>
+          </td>
 
           <td><span class="item_21_id">{{ $order->id }}</span></td>
          
             
-             <td >
+            <td>
               {{$order->name_product}}
             </td>
             
         
           <td>
             
-            <span class="badge badge-{{ $mapStyleStatus[$order->status]??'' }}">{{$statusOrder[$order->status]}}
-            </span>
+            <span class="badge rounded-pill text-bg-{{ $mapStyleStatus[$order->status] ?? '' }}">{{$statusOrder[$order->status]}}</span>
           </td>
           <td>
             

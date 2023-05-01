@@ -106,6 +106,7 @@ class  AdminOrderController extends RootAdminController
             'Nombre&Apellido'          => 'Nombre&Apellido',
             'N°'          => 'Solicitud°',
             'N°Convenio'          => 'N°Convenio',
+            'status'         =>"Estatus",
             'Vendedor Asignado' => 'Vendedor Asignado',
             'Articulo'          => 'Articulo',
             'Cuotas' => 'Cuotas',
@@ -116,7 +117,7 @@ class  AdminOrderController extends RootAdminController
             'Municipio'          => 'Municipio',
             'Parroquia'          => 'Parroquia',
             'total'          => '<i class="fas fa-coins" aria-hidden="true" title="'.sc_language_render('order.total').'"></i>',
-            'status'         =>"Estatus",
+            
             'Modalidad'         =>"Modalidad",
             'pagos'         => '<i class="fa fa-credit-card" aria-hidden="true" title="Pagos realizados"></i>',
         ];
@@ -214,10 +215,7 @@ class  AdminOrderController extends RootAdminController
 
            
             $Articulo = shop_order_detail::where('order_id', $row->id)->first();
-
             $convenio = Convenio::where('order_id',$row->id)->first();
-
-           
             $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
 
             
@@ -262,6 +260,7 @@ class  AdminOrderController extends RootAdminController
                 'Nombre&Apellido'          => $row['first_name'] . " ".$row['last_name'] ?? 'N/A',
                 'N°'          =>  substr($row['id'], 0, -5)  ?? 'N/A',
                 'N°Convenio' => $convenio->nro_convenio ?? 'N/A',
+                'status'         => $styleStatus[$row['status']] ?? $row['status'],
                  'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
                 'Articulo' => $Articulo->name ?? 'N/A',
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
@@ -272,7 +271,7 @@ class  AdminOrderController extends RootAdminController
                 'Municipio'          =>$datos_cliente->municipio ?? 'N/A',
                 'Parroquia'          =>$datos_cliente->parroquia ?? 'N/A',
                 'total'          => sc_currency_render_symbol($row['total'] ?? 0, 'USD'),
-                'status'         => $styleStatus[$row['status']] ?? $row['status'],
+                
                 'Modalidad'         => $AlContado,
             ];
             if (sc_check_multi_shop_installed() && session('adminStoreId') == SC_ID_ROOT) {
@@ -651,8 +650,7 @@ class  AdminOrderController extends RootAdminController
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
 
-        $pagadoCount =  HistorialPago::Where('order_id',$id)
-        ->Where('payment_status' , 5)->count();
+        $pagadoCount =  count($historialPagos);
 
         
         $modalidad_pago =  ModalidadPago::pluck('name', 'id')->all();
@@ -984,7 +982,7 @@ class  AdminOrderController extends RootAdminController
         $add_att = request('add_att');
         $add_tax = request('add_tax');
         $orderId = request('order_id');
-        $add_serial_product = request('add_serial');
+        $add_monto_cuota_entrega = request('add_monto_cuota_entrega');
         $add_inicial = request('add_inicial');
         $serial = request('add_serial');
 
@@ -1015,6 +1013,7 @@ class  AdminOrderController extends RootAdminController
                     'tax' => $add_tax[$key],
                     'attribute' => $pAttr,
                     'currency' => $order->currency,
+                    'monto_cuota_entrega' => $add_monto_cuota_entrega[$key],
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
                     'serial' => $serial[0] ?? 'serial del articulo',
@@ -1282,6 +1281,12 @@ class  AdminOrderController extends RootAdminController
         $constacia_trabajo='';
         $rif='';
         $cedula='';
+
+
+
+      
+
+       
        
         $nro_convenio = 'A/N';
 
@@ -1334,6 +1339,8 @@ class  AdminOrderController extends RootAdminController
             $data['doc_cedula'] =  $doc_cedula;
 
 
+
+            
            
 
             $data['order'] =  $order;
@@ -1353,7 +1360,7 @@ class  AdminOrderController extends RootAdminController
             $data['total']           = $order['total'];
             $data['received']        = $order['received'];
             $data['balance']         = $order['balance'];
-            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['other_fee']       = $order['other_fee'] ?? '';
             $data['comment']         = $order['comment'];
             $data['country']         = $order['country'];
             $data['id']              = $order->id;
@@ -1386,13 +1393,15 @@ class  AdminOrderController extends RootAdminController
                         foreach ($arrAtt as $groupAtt => $att) {
                             $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
                         }
-                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                        $name = $detail->name;
                     } else {
                         $name = $detail->name;
                     }
 
+                   
+
           
-                    $data['details'][] = [
+                    $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
@@ -1400,7 +1409,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        
+                        'monto_cuota_entrega'=> $detail->monto_cuota_entrega,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1408,6 +1417,8 @@ class  AdminOrderController extends RootAdminController
                     ];
                 }
             }
+
+           
 
             if ($action =='invoice_excel') {
                 $options = ['filename' => 'Order ' . $orderId];
@@ -1541,7 +1552,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        
+                        'monto_cuota_entrega' =>$detail->monto_cuota_entrega,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1765,22 +1776,25 @@ class  AdminOrderController extends RootAdminController
 
                
 
-                    $monto = $order->subtotal;
-                    $number1 =  $order->subtotal/ $productoDetail[0]->nro_coutas;
+                    $total_price = $order->subtotal;
+                    $precio_couta =  $order->subtotal/ $productoDetail[0]->nro_coutas;
                     $cuotas = $productoDetail[0]->nro_coutas;
                     if( $productoDetail[0]->abono_inicial>0){
-                        $totalinicial=( $productoDetail[0]->nro_coutas*$order->subtotal)/100;
-                        
-                        $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$productoDetail[0]->nro_coutas;
- 
-                        $number2 =  $monto*$cod_bolibares;
+
+                        $inicial = ($productoDetail[0]->abono_inicial * $order->subtotal) / 100;
+                                                                $total_price = $order->subtotal - $inicial;
+                                                                $precio_couta = number_format($total_price / $productoDetail[0]->nro_coutas, 2);
+
+                                                             
+
+
+                                                               
                        
                       }
     
 
                   
-                  $number2 =  $monto*$cod_bolibares;
+                  $number2 =  $total_price*$cod_bolibares;
                     
 
        
@@ -1838,17 +1852,17 @@ class  AdminOrderController extends RootAdminController
                         $mesualQuinsena,
                         $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
-                        number_format($number1, 2 ,',', ' '),
-                         $letraconvertir_nuber->convertir2($number1),
+                        number_format($precio_couta, 2 ,',', ' '),
+                         $letraconvertir_nuber->convertir2($precio_couta),
                         $cod_diaMes ,
                         'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
-                         $monto ,
+                        $total_price ,
                          $letraconvertir_nuber->convertir2($number2),
                          number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,
                         $dato_usuario['phone'],
                         $dato_usuario['email'],
-                        $this->fechaEs(date('d-m-y')),
+                        'fecha_de_hoy' => 'N/A',
                         sc_file(sc_store('logo', ($storeId ?? null))),
                         sc_file(sc_store('logo', ($storeId ?? null))) ,
                         'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
@@ -1862,16 +1876,14 @@ class  AdminOrderController extends RootAdminController
                         'content' => $content,
                     ];
 
-                    
-
-
-
-                
-
+                    $id_solicitud = $id;
 
 
             $pdf = Pdf::loadView($this->templatePathAdmin.'screen.comvenio_pdf', 
-                    ['borrado_html'=> $dataView['content']]
+                    [
+                        'borrado_html'=> $dataView['content'],
+                        'id_solicitud'=> $id_solicitud
+                    ]
 
                     );
 
@@ -2680,5 +2692,7 @@ class  AdminOrderController extends RootAdminController
             ->with($data);
     }
 
+
+   
 
 }

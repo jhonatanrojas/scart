@@ -6,16 +6,22 @@ $news = $modelNews->start()->setlimit(sc_config('item_top'))->getData();
 <!-- START SECTION NEWS -->
   <section class="section section-xxl section-last bg-gray-21">
     <div class="container">
-      <h2 class="wow fadeScale">{{ sc_language_render('front.blog') }}</h2>
+      <div class="row">
+        <div class="col-12">
+          <h2 class="">{{ sc_language_render('front.blog') }}</h2>
+        </div>
+      </div>
     </div>
-    <!-- Owl Carousel-->
-    <div class="owl-carousel owl-style-7" data-items="1" data-sm-items="2" data-xl-items="3" data-xxl-items="4" data-nav="true" data-dots="true" data-margin="30" data-autoplay="true">
-      @foreach ($news as $blog)
-        {{-- Render product single --}}
-        @include($sc_templatePath.'.common.blog_single', ['blog' => $blog])
-        {{-- //Render product single --}}
-      @endforeach
+    <div class="container">
+      <div class="row">
+          @foreach ($news as $blog)
+            {{-- Render product single --}}
+            @include($sc_templatePath.'.common.blog_single', ['blog' => $blog])
+            {{-- //Render product single --}}
+            @endforeach
+      </div>
     </div>
+      
   </section>
 <!-- END SECTION NEWS -->
 @endif

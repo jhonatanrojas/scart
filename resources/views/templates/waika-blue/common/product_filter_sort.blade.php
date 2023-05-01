@@ -6,7 +6,7 @@
     <input type="hidden" name="{{ $key }}" value="{{ $query }}">
     @endforeach
     
-    <select class="form-control" name="filter_sort">
+    <select class="form-select" aria-label="Default select example" name="filter_sort">
         <option value="">{{ sc_language_render('filter_sort.sort') }}</option>
         <option value="price_asc" {{ ($filterSort =='price_asc')?'selected':'' }}>
             {{ sc_language_render('filter_sort.price_asc') }}</option>

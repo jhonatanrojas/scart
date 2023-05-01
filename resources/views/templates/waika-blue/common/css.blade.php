@@ -71,10 +71,10 @@
 .row_cart>td{
   vertical-align: middle !important;
 }
-input[type="number"]{
+/* input[type="number"]{
   text-align: center;
   padding:2px;
-}
+} */
 .sc-notice{
   clear: both;
   clear: both;
