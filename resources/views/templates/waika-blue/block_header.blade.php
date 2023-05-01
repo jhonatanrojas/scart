@@ -21,28 +21,49 @@
         </div>
         
         <div class="col-6 col-lg-3 order-1 order-lg-2">
-          {{-- MENÚ RIGHT --}}
-            <ul class="nav-account nav justify-content-end">
-              @if (sc_config('link_account', null, 1))
-                @guest
-                  <li class="nav-item">
-                    <a class="nav-link text-uppercase" href="{{ sc_route('register') }}">{{ sc_language_render('customer.signup') }}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-uppercase" href="{{ sc_route('login') }}">{{ sc_language_render('front.login') }}</a>
-                  </li>
-                @else
-                  <li class="nav-item">
-                    <a class="nav-link text-uppercase" href="{{ sc_route('customer.index') }}">{{ sc_language_render('customer.my_account') }}</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-uppercase" href="{{ sc_route('logout') }}">{{ sc_language_render('front.logout') }}</a>
-                  </li>
-                @endguest
-              @endif
-            </ul>
+          <div class="d-flex justify-content-end align-items-center">
+            {{-- MENÚ RIGHT --}}
+            <div class="btn-group">
+              <button class="btn btn-light btn-sm rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                MI CUENTA
+              </button>
+              <ul class="dropdown-menu">
+                @if (sc_config('link_account', null, 1))
+                  @guest
+                    <li class="n">
+                      <a class="dropdown-item" href="{{ sc_route('register') }}">{{ sc_language_render('customer.signup') }}</a>
+                    </li>
+                    <li class="">
+                      <a class="dropdown-item" href="{{ sc_route('login') }}">{{ sc_language_render('front.login') }}</a>
+                    </li>
+                  @else
+                    <li class="">
+                      <a class="dropdown-item" href="{{ sc_route('customer.index') }}">{{ sc_language_render('customer.my_account') }}</a>
+                    </li>
+                    <li class="">
+                      <a class="dropdown-item" href="{{ sc_route('logout') }}">{{ sc_language_render('front.logout') }}</a>
+                    </li>
+                  @endguest
+                @endif
+              </ul>
+            </div> 
+            @if (sc_config('link_cart', null, 1))
+              <!-- RD Navbar Basket-->
+              <a class="btn btn-link btn-sm position-relative" href="{{ sc_route('cart') }}">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ Cart::instance('default')->count() }}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </a>
+                
+                {{-- <a class="rd-navbar-basket fas fa-heart"  href="{{ sc_route('wishlist') }}">
+                  <span class="count sc-cart" id="shopping-cart">{{ Cart::instance('wishlist')->count() }}</span>
+                  
+                </a> --}}
+            @endif              
+          </div>
         </div>
-        
       </div>
     </div>
 
