@@ -1775,22 +1775,25 @@ class  AdminOrderController extends RootAdminController
 
                
 
-                    $monto = $order->subtotal;
-                    $number1 =  $order->subtotal/ $productoDetail[0]->nro_coutas;
+                    $total_price = $order->subtotal;
+                    $precio_couta =  $order->subtotal/ $productoDetail[0]->nro_coutas;
                     $cuotas = $productoDetail[0]->nro_coutas;
                     if( $productoDetail[0]->abono_inicial>0){
-                        $totalinicial=( $productoDetail[0]->nro_coutas*$order->subtotal)/100;
-                        
-                        $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$productoDetail[0]->nro_coutas;
- 
-                        $number2 =  $monto*$cod_bolibares;
+
+                        $inicial = ($productoDetail[0]->abono_inicial * $order->subtotal) / 100;
+                                                                $total_price = $order->subtotal - $inicial;
+                                                                $precio_couta = number_format($total_price / $productoDetail[0]->nro_coutas, 2);
+
+                                                             
+
+
+                                                               
                        
                       }
     
 
                   
-                  $number2 =  $monto*$cod_bolibares;
+                  $number2 =  $total_price*$cod_bolibares;
                     
 
        
@@ -1848,11 +1851,11 @@ class  AdminOrderController extends RootAdminController
                         $mesualQuinsena,
                         $letraconvertir_nuber->convertir1($cuotas),
                         number_format($cuotas),
-                        number_format($number1, 2 ,',', ' '),
-                         $letraconvertir_nuber->convertir2($number1),
+                        number_format($precio_couta, 2 ,',', ' '),
+                         $letraconvertir_nuber->convertir2($precio_couta),
                         $cod_diaMes ,
                         'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
-                         $monto ,
+                        $total_price ,
                          $letraconvertir_nuber->convertir2($number2),
                          number_format($number2, 2 ,',', ' '),
                         $dato_usuario[0]['nombreProduct'] ,

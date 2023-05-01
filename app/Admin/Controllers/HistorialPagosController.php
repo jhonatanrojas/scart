@@ -1183,20 +1183,19 @@ class HistorialPagosController extends RootAdminController
 
 
 
-            $monto = $dato_usuario[0]['subtotal'];
-            $number1 = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
+             $total_price = $dato_usuario[0]['subtotal'];
+            $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
             $cuotas = $dato_usuario[0]['cuotas'];
             if ($dato_usuario[0]['abono_inicial'] > 0) {
-                $totalinicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
-                $monto = $dato_usuario[0]['subtotal'];
-                $monto = $monto - $totalinicial;
-                $number1 = $monto / $dato_usuario[0]['cuotas'];
-                $cuotas_entre_monto = $dato_usuario[0]['subtotal'] / $cuotas;
-                $number2 = $monto * $cod_bolibares;
+                $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
+                $total_price = $dato_usuario[0]['subtotal'] - $inicial;
+                $precio_couta = number_format($total_price / $dato_usuario[0]['cuotas'], 2);
+
+                
 
             }
 
-            $number2 = $monto * $cod_bolibares;
+            $number2 = $total_price * $cod_bolibares;
 
             foreach ($borrado_html as $replacee) {
                 $nro_convenio = $data['nro_convenio'];
@@ -1251,11 +1250,11 @@ class HistorialPagosController extends RootAdminController
                     $mesualQuinsena,
                     $letraconvertir_nuber->convertir1($cuotas),
                     number_format($cuotas),
-                    number_format($number1, 2, ',', ' '),
-                    $letraconvertir_nuber->convertir2($number1),
+                    number_format($precio_couta, 2, ',', ' '),
+                    $letraconvertir_nuber->convertir2($precio_couta),
                     $cod_diaMes,
                     'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
-                    $monto,
+                    $total_price,
                     $letraconvertir_nuber->convertir2($number2),
                     number_format($number2, 2, ',', ' '),
                     $dato_usuario[0]['nombreProduct'],
@@ -1329,11 +1328,11 @@ class HistorialPagosController extends RootAdminController
                     $mesualQuinsena,
                     $letraconvertir_nuber->convertir1($cuotas),
                     number_format($cuotas),
-                    number_format($number1, 2, ',', ' '),
-                    $letraconvertir_nuber->convertir2($number1),
+                    number_format($precio_couta, 2, ',', ' '),
+                    $letraconvertir_nuber->convertir2($precio_couta),
                     $cod_diaMes,
                     'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
-                    $monto,
+                    $total_price,
                     $letraconvertir_nuber->convertir2($number2),
                     number_format($number2, 2, ',', ' '),
                     $dato_usuario[0]['nombreProduct'],
@@ -1364,7 +1363,7 @@ class HistorialPagosController extends RootAdminController
                 'lote' => request()->lote,
                 'fecha_pagos' => fecha_to_sql(request()->c_fecha_inicial),
                 'nro_coutas' => request()->c_nro_coutas,
-                'total' => $monto,
+                'total' =>  $total_price,
                 'inicial' => request()->c_inicial,
                 'modalidad' => request()->c_modalidad,
                 'convenio' => $dataView['content'],
