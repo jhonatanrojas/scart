@@ -27,7 +27,7 @@
             <div class="product-price">${!! number_format($product->price/$product->nro_coutas,2) !!}</div>
           </div>
 
-          <div class="product-price-wrap">
+          <div class="product-price-wrap text-muted">
               @if( $product->monto_inicial > 0 )
                 Inicial de  ${!! number_format($product->monto_inicial,0)  !!} <br>
               @endif

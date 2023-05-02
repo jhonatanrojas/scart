@@ -91,14 +91,14 @@
                         </div>
                         <div>
                             @if( $product->monto_inicial > 0 )
-                            <span class="price__product_initial_payment">
+                            <span class="price__product_initial_payment text-muted">
                                 Inicial de ${!! number_format($product->monto_inicial,2)  !!}
                             </span>
                             @endif
                             <br>
 
                              @if( $product->monto_cuota_entrega > 0 )
-                            <span class="price__product_initial_payment">
+                            <span class="price__product_initial_payment text-muted">
                                 Cuota de entrega ${!! number_format($product->monto_cuota_entrega,2)  !!}
                             </span>
                             @endif
