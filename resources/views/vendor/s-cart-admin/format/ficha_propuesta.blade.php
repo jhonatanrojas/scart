@@ -278,7 +278,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial $</th>
                                                     <th>Cuota $</th>
-
+                                                    <th>Cuota de entrega $ </th>
                                                     
 
                                                 </tr>
@@ -296,10 +296,10 @@
                                                 $AlContado = "Mensual";
                                                 }
                                                             $inicial = 0;
-                                                            $precio = $detail['price'];
+                                                            $precio = $detail['total_price']-$detail['monto_cuota_entrega'];
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
-                                                                $precio = $detail['total_price'] - $inicial;
+                                                                $precio = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
                                                             }
                                                 
                                                             $monto_cuota = number_format($precio / $detail['nro_coutas'], 2);
@@ -313,7 +313,7 @@
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
                                                         <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
-
+                                                        <td>${{  $detail['monto_cuota_entrega']  }}</td>
                                                         
 
                                                         @php $monto_total+=$detail['total_price'] ;

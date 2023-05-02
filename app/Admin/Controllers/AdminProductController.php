@@ -577,6 +577,8 @@ class AdminProductController extends RootAdminController
             'approve'         => (!empty($data['approve']) ? 1 : 0),
             'precio_de_cuota' => (!empty($data['precio_de_cuota']) ? 1 : 0),
             'monto_inicial'           => $data['monto_inicial'] ?? 0,
+            'monto_cuota_entrega'           => $data['monto_cuota_entrega'] ?? 0,
+            
             
             'sort'           => (int) $data['sort'],
             'minimum'        => (int) ($data['minimum'] ?? 0),
@@ -937,6 +939,7 @@ class AdminProductController extends RootAdminController
             'approve'       => (!empty($data['approve']) ? 1 : 0),
             'precio_de_cuota' => (!empty($data['precio_de_cuota']) ? 1 : 0),
             'monto_inicial'           => $data['monto_inicial'] ?? 0,
+            "monto_cuota_entrega"     => $data['monto_cuota_entrega'] ?? 0,
             'sort'         => (int) $data['sort'],
             'minimum'      => (int) ($data['minimum'] ?? 0)
         ];

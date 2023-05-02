@@ -982,7 +982,7 @@ class  AdminOrderController extends RootAdminController
         $add_att = request('add_att');
         $add_tax = request('add_tax');
         $orderId = request('order_id');
-        $add_serial_product = request('add_serial');
+        $add_monto_cuota_entrega = request('add_monto_cuota_entrega');
         $add_inicial = request('add_inicial');
         $serial = request('add_serial');
 
@@ -1013,6 +1013,7 @@ class  AdminOrderController extends RootAdminController
                     'tax' => $add_tax[$key],
                     'attribute' => $pAttr,
                     'currency' => $order->currency,
+                    'monto_cuota_entrega' => $add_monto_cuota_entrega[$key],
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
                     'serial' => $serial[0] ?? 'serial del articulo',
@@ -1400,7 +1401,7 @@ class  AdminOrderController extends RootAdminController
                    
 
           
-                    $data['details'][] = [
+                    $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
@@ -1408,7 +1409,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        
+                        'monto_cuota_entrega'=> $detail->monto_cuota_entrega,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1551,7 +1552,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        
+                        'monto_cuota_entrega' =>$detail->monto_cuota_entrega,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
