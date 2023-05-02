@@ -506,7 +506,7 @@ $layout_page = shop_product_detail
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
-    console.log(valor_product_inicial)
+  
     // Agregar un evento onchange a cada botón de radio
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
