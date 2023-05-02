@@ -384,7 +384,9 @@ $layout_page = shop_product_detail
                 </section>
 
               </div>
-              
+              @php 
+              $inicial_default= $product->price * 0.3;
+            @endphp
               <div class="col-lg-4">
                 @include($sc_templatePath.'.includes.product_detail.card_info')
               </div>
@@ -422,8 +424,8 @@ $layout_page = shop_product_detail
               </div>
             </div>
             @endif
-      
-        <input type="hidden" id="inicial_producto" value="{!! empty($product->inicial) ? 30 :$product->inicial !!}">
+   
+        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
@@ -504,6 +506,7 @@ $layout_page = shop_product_detail
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
+    console.log(valor_product_inicial)
     // Agregar un evento onchange a cada botón de radio
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
@@ -548,11 +551,9 @@ $layout_page = shop_product_detail
       inicial.addEventListener('click' , function(e){
       var iniciale = e.target.value
 
-      if(iniciale == '0' || iniciale == '30'){
+
           gen_table(iniciale)
-      }else if(!iniciale == '0' || !iniciale == '30'){
-          alert('el campo inicial es obligatorio')
-      }
+      
 
       
       
@@ -568,19 +569,19 @@ $layout_page = shop_product_detail
 
       let monto=Number(document.getElementById("monto").value);
 
-      let inicial = iniciale;
+      let inicial = parseFloat(iniciale);
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
       
 
     
-
+console.log(inicial)
       if(inicial>0){
 
-          let precio_couta=  monto -(inicial* monto / 100 );
+          let precio_couta=  monto -inicial;
           
           let precio_monto_cuota = precio_couta / n2
-          let tola_inicial = inicial * monto / 100
+          let tola_inicial = inicial
           let monto_cuotas = monto/n2;
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)

@@ -787,7 +787,7 @@ class ShopCartController extends RootFrontController
         $data      = request()->all();
      
         $this->clearCartStore();
-
+          
         //Process escape
         $data      = sc_clean($data);
         if(isset($data['financiamiento'])
@@ -802,7 +802,9 @@ class ShopCartController extends RootFrontController
             $Cuotas = $data['Cuotas'] ;
             $fecha = $data['fecha'] ?? '';
             $inicial = $data['inicial']?? 0;
-
+            // calcular porcentaje a partir del monto de la in
+            if($inicial > 0)
+            $inicial =  $inicial*100/  $data['monto'];    
 
 
 
