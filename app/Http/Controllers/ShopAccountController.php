@@ -209,6 +209,9 @@ class ShopAccountController extends RootFrontController
         $id = $customer['id'];
 
 
+       
+
+
 
         $documento = SC__documento::where('id_usuario', $id)->get();
         $order = AdminOrder::where('customer_id', $id)->get();
