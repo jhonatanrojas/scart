@@ -95,6 +95,13 @@
                                 Inicial de ${!! number_format($product->monto_inicial,2)  !!}
                             </span>
                             @endif
+                            <br>
+
+                             @if( $product->monto_cuota_entrega > 0 )
+                            <span class="price__product_initial_payment">
+                                Cuota de entrega ${!! number_format($product->monto_cuota_entrega,2)  !!}
+                            </span>
+                            @endif
                         </div>
                         
                         <p class="extract__product">
