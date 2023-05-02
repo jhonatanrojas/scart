@@ -68,7 +68,7 @@
                         <div class="single-product-price" id="product-detail-price">
                             @php
                             $product->nro_coutas = $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-                            $product->price_con_inicial = $product->price-$product->monto_inicial;
+                            $product->price_con_inicial = ($product->price-$product->monto_inicial - $product->monto_cuota_entrega);
                             @endphp
                             
                             @if( $product->precio_de_cuota)

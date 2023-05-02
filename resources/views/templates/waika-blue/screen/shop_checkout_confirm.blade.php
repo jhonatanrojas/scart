@@ -59,6 +59,7 @@
                                         @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                             <th>Nro Cuotas</th>
                                             <th>Inicial</th>
+                                            <th>Cuota de entrega</th>
                                             <th>Frecuencia de pago</th>
                                         @endif
                                         
@@ -80,7 +81,7 @@
                                             }
                                             $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                                             if( $product->precio_de_cuota > 0 ):
-                                                $product->precio=  $product->price-$product->monto_inicial;
+                                                $product->precio=  ($product->price-$product->monto_inicial )- $product->monto_cuota_entrega;
                                             endif;
                                         @endphp
 
@@ -107,6 +108,7 @@
                                             <td>{{ $item->qty }}</td>
                                             <td>
                                                 @php
+                                              $product->price=$product->price-  $product->monto_cuota_entrega;
                                                 if($item->inicial>0){
                                                 $totalinicial= $item->inicial * $product->price/100;
                                                 $number1 = $product->price-($item->inicial * $product->price /100);
@@ -140,6 +142,7 @@
                                                     
                                                 @endphp
                                                 <td>${{ $inicial }} </td>
+                                                <td>$ {{ $product->monto_cuota_entrega}}</td>
                                                 <td>{{ $item->modalidad_pago == '3' ? 'Mensual' : 'Quincenal' }}</td>
                                             @endif
                                             

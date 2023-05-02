@@ -707,6 +707,8 @@ class ShopCartController extends RootFrontController
         $arrCartDetail = [];
         foreach ($cart as $cartItem) {
 
+
+ 
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
             $arrDetail['price']       = $cartItem->price;
@@ -714,11 +716,14 @@ class ShopCartController extends RootFrontController
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
             $arrDetail['abono_inicial']  = $cartItem->inicial;
+
+            
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
             $arrDetail['modalidad_de_compra']  = $cartItem->financiamiento == '1' ? '0':'1';
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
             $arrDetail['total_price'] = $cartItem->price * $cartItem->qty;
+              $arrDetail['abono_inicial']  = $cartItem->inicial;
             $arrCartDetail[]          = $arrDetail;
         }
       

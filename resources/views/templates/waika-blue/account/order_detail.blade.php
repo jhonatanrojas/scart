@@ -110,6 +110,7 @@ $layout_page = shop_profile
                         <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                         <th class="product_price">Cuota</th>
                         <th class="product_price">Monto de la  Cuota</th>
+                        <th>Cuota de entrega</th>
                         <th class="product_total">Frecuencia</th>
                       @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>
@@ -122,6 +123,7 @@ $layout_page = shop_profile
                       @foreach ($order->details as $item)
                         @php
                         $cuotas = $item->nro_coutas;
+                        $item->price=  $item->price - $item->monto_cuota_entrega; 
                         if($item->abono_inicial > "0"){
                           $totalinicial= $item->abono_inicial *$item->price/100;
                           $number1 = $item->price -($item->abono_inicial * $item->price /100);
@@ -148,6 +150,7 @@ $layout_page = shop_profile
                                 <td class="product_qty">x  {{ $item->qty }}</td>
                                 <td>{{$item->nro_coutas}}</th>
                                 <td class="product_price">{{ $Precio_cuotas ?? '0' }}$</td>
+                                <th> {{  $item->monto_cuota_entrega}}</th>
                                 <td class="product_total item_id_{{ $item->id }}">
                                   @if ($item->id_modalidad_pago == 2)
                                     Quincenal

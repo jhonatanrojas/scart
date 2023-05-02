@@ -90,7 +90,7 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
-                  
+                  console.log(returnedData)
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
                   $("#c_monto").val(returnedData.subtotal)
@@ -130,11 +130,13 @@
                   
                   document.getElementById("tbodyconvenio").innerHTML="";
               document.getElementById("butto_modal").disabled = false;
-              let monto=Number(returnedData.subtotal);
+             const monto_cuota_entrega= parseFloat(returnedData.details[0].monto_cuota_entrega)
+
+              let monto=Number(returnedData.subtotal - monto_cuota_entrega);
               let n2=Number(returnedData.details[0].nro_coutas);
               let n3=Number(returnedData.details[0].abono_inicial);
               let inicial = parseInt(n3);
-              if(inicial>0){
+              if(inicial>0){ 
                 totalinicial=(inicial*monto)/100;
                 monto = monto -totalinicial;
               }
@@ -828,7 +830,7 @@
       });
     }
 
-    console.log(total_pagado)
+
     console.log(order_total)
        function round(number, precision) {
         const factor = Math.pow(10, precision);

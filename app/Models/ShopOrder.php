@@ -211,6 +211,7 @@ class ShopOrder extends Model
 
                 $cartDetail['order_id'] = $orderID;
                 $cartDetail['currency'] = $currency;
+                $cartDetail['monto_cuota_entrega'] = $product->monto_cuota_entrega;
                 $cartDetail['exchange_rate'] = $exchange_rate;
                 $cartDetail['sku'] = $product->sku;
                 $cartDetail['tax'] = $tax;
