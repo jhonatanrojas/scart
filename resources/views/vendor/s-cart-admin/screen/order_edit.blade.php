@@ -602,8 +602,9 @@
                                                                 @php
                                                                     $data_json_inicial = '';
                                                                     $monto_inicial = 0.0;
+                                                                    $item->total_price= $item->total_price- $item->monto_cuota_entrega;
                                                                     if ($item->abono_inicial > 0) {
-                                                                        $monto_inicial = round(($item->abono_inicial * ($item->total_price - $item->monto_cuota_entrega)) / 100);
+                                                                        $monto_inicial = round(($item->abono_inicial * ($item->total_price )) / 100);
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
                                                                     }
                                                                     

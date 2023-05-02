@@ -24,6 +24,7 @@
                         <th>Cuotas</th>
                         <th>Frecuencia</th>
                         <th>Inicial</th>
+                        <th> Cuota de entrega</th>
                         <th>{{ sc_language_render('product.quantity') }}</th>
                     
                         <th></th>
@@ -85,10 +86,10 @@
                         
                                 if($item->inicial>0){
                                 $totalinicial= $item->inicial * $product->price/100;
-                                $number1 = $product->price-($item->inicial * $product->price /100);
+                                $number1 = $product->price-($item->inicial * $product->price /100) - $product->monto_cuota_entrega;
                                 $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
                                 }else{
-                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
+                                    $Precio_cuotas = number_format(($product->price- $product->monto_cuota_entrega) / $product->nro_coutas,2);
                                 }
                         
                         @endphp
@@ -110,6 +111,7 @@
                     
                         <td>${!!$inicial!!}</td>
   
+                        <td>{{ $product->monto_cuota_entrega}}</td>
                         <td class="cart-col-qty">
                             <div class="cart-qty">
                                 <input style="width: 100px;" type="number" data-id="{{ $item->id }}"
