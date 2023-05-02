@@ -423,6 +423,7 @@ $layout_page = shop_product_detail
             </div>
             @endif
       
+        <input type="hidden" id="inicial_producto" value="{!! empty($product->inicial) ? 30 :$product->inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
@@ -502,6 +503,7 @@ $layout_page = shop_product_detail
     var radios_tipo_venta = document.getElementsByName('tipo_venta');
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
+    const valor_product_inicial =  $("#inicial_producto").val()
     // Agregar un evento onchange a cada botón de radio
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
@@ -511,9 +513,13 @@ $layout_page = shop_product_detail
     var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
 
     if(seleccionado==1){
+ 
       input_financamiento.value=1;
-      select_inicial.querySelector('option[value="30"]').removeAttribute("selected");
-      select_inicial.removeAttribute("readonly");
+     
+      select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" >SI</option>
+          <option value="0" selected>NO</option>
+        `;
       document.getElementById('monto_Inicial').value =0;
 
     
@@ -523,15 +529,14 @@ $layout_page = shop_product_detail
 
     }else{
 
+      select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" selected>SI</option>
+        
+        `;
 
-        var option = select_inicial.querySelector('option[value="30"]');
-        select_inicial.querySelector('option[value="0"]').removeAttribute("selected");
-    if (option) {
-    option.setAttribute("selected", "selected");
-    select_inicial.setAttribute("readonly", "readonly");
     gen_table(30)
 
-    }
+    
     input_financamiento.value=2;
     }
     // Hacer algo con el valor seleccionado
@@ -621,7 +626,7 @@ $layout_page = shop_product_detail
 
           var finansiamiento = document.getElementById("finansiamiento");
 
-          finansiamiento.classList.replace("btn-success", "btn-primary")
+        //  finansiamiento.classList.replace("btn-success", "btn-primary")
           
       
       

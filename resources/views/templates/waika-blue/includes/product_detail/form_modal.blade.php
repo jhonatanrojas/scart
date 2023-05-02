@@ -1,4 +1,16 @@
 <!-- Modal -->
+<style>
+    #overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: transparent;
+  pointer-events: none;
+}
+    </style>
 <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
@@ -32,27 +44,33 @@
                     <div class="row">
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="inicial">CON INICIAL</label>
+                            <div id="overlay"></div>
+
                             <select required class="form-select"  name="inicial" id="inicial">
                                 <option value="">Seleccione una opción</option>
                                 <option value="30">SI</option>
-                                <option value="0">NO</option>
+                                <option value="0" selected>NO</option>
                             </select>
+
                         </div>
                         <div class="mb-3 col-md-6">
-                            <label class="form-label text-uppercase"  for="monto">Monto de la Inicial$:</label>
-                            <input readonly id="monto_Inicial"  value="" class="form-control" type="text"  id="" placeholder="">
+                            <label class="form-label text-uppercase"  for="monto">Monto de la Inicial $:</label>
+                            <input readonly id="monto_Inicial"  value="0.00" class="form-control" type="text"  placeholder="">
                         </div>
                         <div class="mb-3 col-md-6">
-                            <label class="form-label text-uppercase" for="inicial">Cuotas</label>
+                            <label class="form-label text-uppercase" for="inicial"> Nro de Cuotas</label>
                             <input readonly class="form-control" type="text"  id="m_nro_cuotas" value="{{$product->nro_coutas}}">
                         </div>
 
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="monto_de_la_cuota">Monto de la cuota$</label>
-                            <input id="monto_de_la_cuota" readonly class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
+                            @php
+                            $product->price=$product->price- $product->monto_cuota_entrega;
+                            @endphp
+                            <input id="monto_de_la_cuota" disabled class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
                         </div>
 
-                        <div class="mb-3 col-md-12">
+                        <div class="mb-3 col-md-6">
                             <div class="form-group">
                             <label class="form-label text-uppercase"  for="periodo">frecuencia de pago</label>
                                 @foreach($modalida_pago as $key => $pagos)
@@ -63,11 +81,18 @@
                                 @endif
                                 @endforeach
                             </div>
+                      
                             <input id="Cuotas" type="hidden" value="{{$product->nro_coutas}}" name="Cuotas" >
                             <input id="cuotas_inmediatas" type="hidden" value="{{$product->cuotas_inmediatas}}" name="cuotas_inmediatas" >
                             <input  readonly value="{{$product->price}}" class="form-control   " type="hidden" name="monto" id="monto" placeholder="monto">
                             <input type="hidden" value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="fecha">
-                        </div>                      
+                        </div>   
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="text-uppercase" for="">Monto cuota de entrega $</label>
+                                <input class="form-control" type="text" value="{{$product->monto_cuota_entrega}}" disabled >
+                            </div>
+                        </div>                   
                     </div>
                 </div>
 
