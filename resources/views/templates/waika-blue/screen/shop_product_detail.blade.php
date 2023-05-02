@@ -425,7 +425,7 @@ $layout_page = shop_product_detail
             </div>
             @endif
    
-        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
+        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :'' !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
@@ -530,14 +530,16 @@ $layout_page = shop_product_detail
             gen_table(0)
 
 
-    }else{
+    }else {
+     
+      gen_table(valor_product_inicial)
 
       select_inicial.innerHTML = `
           <option value="${valor_product_inicial}" selected>SI</option>
         
         `;
 
-    gen_table(30)
+   
 
     
     input_financamiento.value=2;
@@ -575,7 +577,7 @@ $layout_page = shop_product_detail
       
 
     
-console.log(inicial)
+
       if(inicial>0){
 
           let precio_couta=  monto -inicial;
@@ -583,6 +585,8 @@ console.log(inicial)
           let precio_monto_cuota = precio_couta / n2
           let tola_inicial = inicial
           let monto_cuotas = monto/n2;
+
+          
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
