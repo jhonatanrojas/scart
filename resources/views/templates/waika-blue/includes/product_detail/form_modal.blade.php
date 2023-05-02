@@ -64,15 +64,17 @@
                             <div id="overlay"></div>
 
                             <select required class="form-select"  name="inicial" id="inicial">
-                                <option value="">Seleccione una opción</option>
-                                <option value="30">SI</option>
+                               
+                                <option value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':0   !!}>SI</option>
+                              @if( $product->monto_inicial ==0)
                                 <option value="0" selected>NO</option>
+                                @endif
                             </select>
 
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase"  for="monto">Monto de la Inicial $:</label>
-                            <input readonly id="monto_Inicial"  value="0.00" class="form-control" type="text"  placeholder="">
+                            <input readonly id="monto_Inicial"  value="{!! $product->monto_inicial !!}" class="form-control" type="text"  placeholder="">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="inicial"> Nro de Cuotas</label>
