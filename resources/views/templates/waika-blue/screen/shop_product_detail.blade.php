@@ -497,8 +497,18 @@ $layout_page = shop_product_detail
     {{-- end owl --}}
   <script type="text/javascript">
 
-    const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
-    const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+
+ 
+
+
+
+  
+
+  var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
+    var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+    
 
 
 
@@ -506,14 +516,20 @@ $layout_page = shop_product_detail
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
-    console.log(valor_product_inicial)
+   
     // Agregar un evento onchange a cada botón de radio
+
+    select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" >SI</option>
+          <option value="0" selected>NO</option>
+        `;
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
     // Obtener el valor del botón de radio seleccionado
 
 
     var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+    
 
     if(seleccionado==1){
  
@@ -523,11 +539,14 @@ $layout_page = shop_product_detail
           <option value="${valor_product_inicial}" >SI</option>
           <option value="0" selected>NO</option>
         `;
-      document.getElementById('monto_Inicial').value =0;
+          document.getElementById('monto_Inicial').value =0;
 
     
             document.getElementById('monto_Inicial').value = 0.00
             gen_table(0)
+
+            
+            
 
 
     }else{
@@ -537,7 +556,12 @@ $layout_page = shop_product_detail
         
         `;
 
-    gen_table(30)
+        let  inicial = document.getElementById("inicial")
+
+
+        gen_table(inicial.value)
+
+        document.querySelector('input[name="inicial"]:checked').disabled;
 
     
     input_financamiento.value=2;
@@ -547,17 +571,17 @@ $layout_page = shop_product_detail
     }
     }
 
-      let  inicial = document.getElementById("inicial")
-      inicial.addEventListener('click' , function(e){
-      var iniciale = e.target.value
+      const inicialElement = document.getElementById("inicial")
+
+      function handleInicialChange() {
+        const inicialValue = inicialElement.value
+        gen_table(inicialValue)
+      }
+
+      inicialElement.addEventListener('change', handleInicialChange)
 
 
-          gen_table(iniciale)
-      
-
-      
-      
-    })
+    
 
     function gen_table(iniciale){
       document.getElementById("butto_modal").disabled = false;
@@ -573,11 +597,12 @@ $layout_page = shop_product_detail
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
       
+      
 
     
-console.log(inicial)
-      if(inicial>0){
 
+      if(inicial>0){
+       
           let precio_couta=  monto -inicial;
           
           let precio_monto_cuota = precio_couta / n2
@@ -586,7 +611,12 @@ console.log(inicial)
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-          document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          if(document.getElementById("cuotas_inmediatas").value > 0){
+            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          }
+         
 
 
 
@@ -595,7 +625,11 @@ console.log(inicial)
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+            if(document.getElementById("cuotas_inmediatas").value > 0){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+            }
+           
 
 
         

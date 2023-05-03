@@ -1,4 +1,5 @@
 <!-- Modal -->
+
 <style>
     #overlay {
   position: absolute;
@@ -10,32 +11,48 @@
   background-color: transparent;
   pointer-events: none;
 }
+
+
+
     </style>
 <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <form action="{{ sc_route('cart.add') }}" method="POST">
             {{ csrf_field() }}
-            <div class="modal-header">
+            <div class="modal-header ">
                 <h3 class="modal-title fs-5">{{ sc_language_render('customer.title_caculadora') }}</h3>
+
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="d-md-flex justify-content-between align-items-center">
                     <img class="" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="logo" width="100" height="30"/>
+
+                    <span class="  text-uppercase fs-6 ">{{$product->name}}</span>
                     <div class="form__checkbox">
-                        <div class="form-check">
+
+                        @if ( $product->cuotas_inmediatas > 0)
+                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta" value="2">
                             <label class="form-check-label" for="tipo_venta">
                                 {{sc_language_render('customer.title_ENTREGA INMEDIATA')}}
                             </label>
                         </div>
+                            
+                        @endif
+                       
+                       
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta2" checked value="1">
                             <label class="form-check-label" for="tipo_venta2">
                                 {{sc_language_render('customer.title_ENTREGA PROGRAMADA')}}
                             </label>
                         </div>
+                            
+                        
+                       
                     </div>
                 </div>
 
@@ -46,7 +63,7 @@
                             <label class="form-label text-uppercase" for="inicial">CON INICIAL</label>
                             <div id="overlay"></div>
 
-                            <select required class="form-select"  name="inicial" id="inicial">
+                            <select  class="form-select"  name="inicial" id="inicial">
                                
                                 <option value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':0   !!}>SI</option>
                               @if( $product->monto_inicial ==0)
