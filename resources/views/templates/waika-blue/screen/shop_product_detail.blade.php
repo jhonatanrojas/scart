@@ -425,7 +425,7 @@ $layout_page = shop_product_detail
             </div>
             @endif
    
-        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :'' !!}">
+        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
@@ -506,7 +506,7 @@ $layout_page = shop_product_detail
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
-  
+    console.log(valor_product_inicial)
     // Agregar un evento onchange a cada botón de radio
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
@@ -530,16 +530,17 @@ $layout_page = shop_product_detail
             gen_table(0)
 
 
-    }else {
-     
-      gen_table(valor_product_inicial)
+    }else{
 
       select_inicial.innerHTML = `
           <option value="${valor_product_inicial}" selected>SI</option>
         
         `;
 
-   
+        let  inicial = document.getElementById("inicial")
+
+
+        gen_table(inicial.value)
 
     
     input_financamiento.value=2;
@@ -585,8 +586,6 @@ $layout_page = shop_product_detail
           let precio_monto_cuota = precio_couta / n2
           let tola_inicial = inicial
           let monto_cuotas = monto/n2;
-
-          
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)

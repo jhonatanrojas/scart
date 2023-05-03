@@ -63,7 +63,7 @@
                             <label class="form-label text-uppercase" for="inicial">CON INICIAL</label>
                             <div id="overlay"></div>
 
-                            <select required class="form-select"  name="inicial" id="inicial">
+                            <select  class="form-select"  name="inicial" id="inicial">
                                
                                 <option value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':0   !!}>SI</option>
                               @if( $product->monto_inicial ==0)
