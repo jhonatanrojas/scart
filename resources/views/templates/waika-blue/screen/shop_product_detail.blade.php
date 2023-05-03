@@ -497,8 +497,18 @@ $layout_page = shop_product_detail
     {{-- end owl --}}
   <script type="text/javascript">
 
-    const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
-    const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+
+ 
+
+
+
+  
+
+  var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
+    var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+    
 
 
 
@@ -587,11 +597,12 @@ $layout_page = shop_product_detail
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
       
+      
 
     
 
       if(inicial>0){
-
+       
           let precio_couta=  monto -inicial;
           
           let precio_monto_cuota = precio_couta / n2
@@ -600,7 +611,12 @@ $layout_page = shop_product_detail
 
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-          document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          if(document.getElementById("cuotas_inmediatas").value > 0){
+            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          }
+         
 
 
 
@@ -609,7 +625,11 @@ $layout_page = shop_product_detail
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+            if(document.getElementById("cuotas_inmediatas").value > 0){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+            }
+           
 
 
         
