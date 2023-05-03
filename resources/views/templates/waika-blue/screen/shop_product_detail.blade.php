@@ -529,11 +529,14 @@ $layout_page = shop_product_detail
           <option value="${valor_product_inicial}" >SI</option>
           <option value="0" selected>NO</option>
         `;
-      document.getElementById('monto_Inicial').value =0;
+          document.getElementById('monto_Inicial').value =0;
 
     
             document.getElementById('monto_Inicial').value = 0.00
             gen_table(0)
+
+            
+            
 
 
     }else{
@@ -548,6 +551,8 @@ $layout_page = shop_product_detail
 
         gen_table(inicial.value)
 
+        document.querySelector('input[name="inicial"]:checked').disabled;
+
     
     input_financamiento.value=2;
     }
@@ -556,17 +561,17 @@ $layout_page = shop_product_detail
     }
     }
 
-      let  inicial = document.getElementById("inicial")
-      inicial.addEventListener('click' , function(e){
-      var iniciale = e.target.value
+      const inicialElement = document.getElementById("inicial")
+
+      function handleInicialChange() {
+        const inicialValue = inicialElement.value
+        gen_table(inicialValue)
+      }
+
+      inicialElement.addEventListener('change', handleInicialChange)
 
 
-          gen_table(iniciale)
-      
-
-      
-      
-    })
+    
 
     function gen_table(iniciale){
       document.getElementById("butto_modal").disabled = false;
