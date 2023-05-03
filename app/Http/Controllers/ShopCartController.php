@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ShopProduct;
 use SCart\Core\Admin\Models\AdminCustomer;
+use Termwind\Components\Dd;
 
 class ShopCartController extends RootFrontController
 {
@@ -707,7 +708,10 @@ class ShopCartController extends RootFrontController
         $arrCartDetail = [];
         foreach ($cart as $cartItem) {
 
-
+                //calcular porcentaje de $cartItem->inicial
+                $porcentaje =0;
+                if($cartItem->inicial > 0)
+                $porcentaje = ($cartItem->inicial * 100) / $cartItem->price;
  
             $arrDetail['product_id']  = $cartItem->id;
             $arrDetail['name']        = $cartItem->name;
@@ -715,7 +719,7 @@ class ShopCartController extends RootFrontController
             $arrDetail['qty']         = $cartItem->qty;
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
-            $arrDetail['abono_inicial']  = $cartItem->inicial;
+            $arrDetail['abono_inicial']  =   $porcentaje ;
 
             
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
@@ -723,11 +727,12 @@ class ShopCartController extends RootFrontController
             $arrDetail['store_id']    = $cartItem->storeId;
             $arrDetail['attribute']   = ($cartItem->options) ? $cartItem->options->toArray() : null;
             $arrDetail['total_price'] = $cartItem->price * $cartItem->qty;
-              $arrDetail['abono_inicial']  = $cartItem->inicial;
+       
             $arrCartDetail[]          = $arrDetail;
         }
-      
-      
+   
+
+   
         //Set session info order
         session(['dataOrder' => $dataOrder]);
         session(['arrCartDetail' => $arrCartDetail]);
@@ -790,6 +795,7 @@ class ShopCartController extends RootFrontController
           
         //Process escape
         $data      = sc_clean($data);
+     
         if(isset($data['financiamiento'])
             == '1'){
 

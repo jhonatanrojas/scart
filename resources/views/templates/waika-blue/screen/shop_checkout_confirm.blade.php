@@ -108,18 +108,13 @@
                                             <td>{{ $item->qty }}</td>
                                             <td>
                                                 @php
-                                              $product->price=$product->price-  $product->monto_cuota_entrega;
-                                                if($item->inicial>0){
-                                                $totalinicial= $item->inicial * $product->price/100;
-                                                $number1 = $product->price-($item->inicial * $product->price /100);
-                                                $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+                                              $item->inicial = $product->monto_inicial;
+                                              $product_precio=$product->price-  $product->monto_cuota_entrega -  $item->inicial;
+                                               
 
+                                                    $Precio_cuotas = number_format($product_precio / $product->nro_coutas,2);
 
-                                                }else{
-
-                                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
-
-                                                }
+                                                
                                                 @endphp
 
                                                 @if( $product->precio_de_cuota )
@@ -135,10 +130,9 @@
                                             @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                                 <td>{{ $item->Cuotas }}</td>
                                                 @php
-                                                    $inicial = '0.00';
-                                                    if ($item->inicial > 0) {
-                                                        $inicial = number_format(($product->price * $item->inicial) / 100, 2);
-                                                    }
+                                                
+                                                        $inicial = number_format($item->inicial, 2);
+                                                    
                                                     
                                                 @endphp
                                                 <td>${{ $inicial }} </td>
