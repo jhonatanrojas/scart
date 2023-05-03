@@ -508,12 +508,18 @@ $layout_page = shop_product_detail
     const valor_product_inicial =  $("#inicial_producto").val()
     console.log(valor_product_inicial)
     // Agregar un evento onchange a cada botón de radio
+
+    select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" >SI</option>
+          <option value="0" selected>NO</option>
+        `;
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
     // Obtener el valor del botón de radio seleccionado
 
 
     var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+    
 
     if(seleccionado==1){
  
