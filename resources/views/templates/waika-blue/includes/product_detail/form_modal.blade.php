@@ -28,7 +28,7 @@
             </div>
             <div class="modal-body">
                 <div class="d-md-flex justify-content-between align-items-center">
-                    <img class="" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="logo" width="100" height="100"/>
+                    <img class="" src="{{ sc_file(sc_store('logo', ($storeId ?? null))) }}" alt="logo" width="100" height="30"/>
 
                     <span class="  text-uppercase fs-6 ">{{$product->name}}</span>
                     <div class="form__checkbox">
