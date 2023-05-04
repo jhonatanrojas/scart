@@ -565,10 +565,10 @@ $layout_page = shop_product_detail
     }
     }
 
-    if(document.getElementById("Cuotas").value == 12  ){
+        if(document.getElementById("Cuotas").value == 12  ){
               document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
 
-            }
+          }
 
       const inicialElement = document.getElementById("inicial")
 
