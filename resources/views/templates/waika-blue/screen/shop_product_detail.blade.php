@@ -550,7 +550,6 @@ $layout_page = shop_product_detail
 
 
     }else{
-
       select_inicial.innerHTML = `
           <option value="${valor_product_inicial}" selected>SI</option>
         
@@ -560,11 +559,8 @@ $layout_page = shop_product_detail
 
 
         gen_table(inicial.value)
-
-        document.querySelector('input[name="inicial"]:checked').disabled;
-
     
-    input_financamiento.value=2;
+       input_financamiento.value=2;
     }
     
     }
