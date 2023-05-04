@@ -124,14 +124,19 @@ $layout_page = shop_profile
                         @php
                         $cuotas = $item->nro_coutas;
                    
-                        if($item->abono_inicial > 0){
-                          $totalinicial= $item->abono_inicial *$item->price/100;
                        
-                          $number1 = $item->price -($item->abono_inicial * $item->price /100) - $item->monto_cuota_entrega;
-                          $Precio_cuotas = round($number1 / $item->nro_coutas);
-                        }else{
-                          $Precio_cuotas = round(($item->price -  $item->monto_cuota_entrega) / $item->nro_coutas) ;
-                        }
+
+
+                        $precio_couta = 0;
+                        if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
+                               $inicial = ($item->abono_inicial * $item->total_price) / 100;
+                                 $total_price = ($item->total_price - $inicial) - $item->monto_cuota_entrega;
+                                  $precio_couta = round($total_price / $item->nro_coutas);
+                                  echo "$" . $precio_couta;
+                                  elseif ($item->nro_coutas > 0):
+                                      $precio_couta = $item->total_price;
+                                      echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
+                                          endif;
                         @endphp
                           <tr>
                             <td>
@@ -150,7 +155,7 @@ $layout_page = shop_profile
                               @if (empty($order->details[0]->modalidad_de_compra >= 1))
                                 <td class="product_qty">x  {{ $item->qty }}</td>
                                 <td>{{$item->nro_coutas}}</th>
-                                <td class="product_price">{{ $Precio_cuotas ?? '0' }}$</td>
+                                <td class="product_price">{{ $precio_couta ?? '0' }}$</td>
                                 <th> {{  $item->monto_cuota_entrega}}</th>
                                 <td class="product_total item_id_{{ $item->id }}">
                                   @if ($item->id_modalidad_pago == 2)
