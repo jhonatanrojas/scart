@@ -519,10 +519,7 @@ $layout_page = shop_product_detail
    
     // Agregar un evento onchange a cada botón de radio
 
-    select_inicial.innerHTML = `
-          <option value="${valor_product_inicial}" >SI</option>
-          <option value="0" selected>NO</option>
-        `;
+   
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
     // Obtener el valor del botón de radio seleccionado
@@ -544,6 +541,8 @@ $layout_page = shop_product_detail
     
             document.getElementById('monto_Inicial').value = 0.00
             gen_table(0)
+
+            
 
             
             
@@ -571,9 +570,17 @@ $layout_page = shop_product_detail
     }
     }
 
+    if(document.getElementById("Cuotas").value == 12  ){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+            }
+
       const inicialElement = document.getElementById("inicial")
 
-      function handleInicialChange() {
+      function handleInicialChange(e) {
+
+        
+
         const inicialValue = inicialElement.value
         gen_table(inicialValue)
       }
@@ -612,7 +619,7 @@ $layout_page = shop_product_detail
           document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
           document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
 
-          if(document.getElementById("cuotas_inmediatas").value > 0){
+          if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
 
           }
@@ -625,7 +632,7 @@ $layout_page = shop_product_detail
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
-            if(document.getElementById("cuotas_inmediatas").value > 0){
+            if(document.getElementById("Cuotas").value == 12){
               document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
 
             }
