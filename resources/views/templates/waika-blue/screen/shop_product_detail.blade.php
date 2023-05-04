@@ -536,11 +536,17 @@ $layout_page = shop_product_detail
           <option value="${valor_product_inicial}" >SI</option>
           <option value="0" selected>NO</option>
         `;
+
+        
           document.getElementById('monto_Inicial').value =0;
 
     
             document.getElementById('monto_Inicial').value = 0.00
             gen_table(0)
+
+           
+
+         
 
             
 
@@ -557,7 +563,10 @@ $layout_page = shop_product_detail
         let  inicial = document.getElementById("inicial")
 
 
+
         gen_table(inicial.value)
+
+       
     
        input_financamiento.value=2;
     }
@@ -598,15 +607,17 @@ $layout_page = shop_product_detail
       let inicial = parseFloat(iniciale);
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
+
+      console.log(document.getElementById("m_nro_cuotas").value);
+
+        
       
       
 
     
 
       if(inicial>0){
-       
           let precio_couta=  monto -inicial;
-          
           let precio_monto_cuota = precio_couta / n2
           let tola_inicial = inicial
           let monto_cuotas = monto/n2;
@@ -618,9 +629,11 @@ $layout_page = shop_product_detail
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
 
           }
-         
 
+          if(document.getElementById("m_nro_cuotas").value == 8  ){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`
 
+          }
 
       
       }else{
