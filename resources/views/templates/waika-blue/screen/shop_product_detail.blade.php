@@ -566,8 +566,7 @@ $layout_page = shop_product_detail
     
     input_financamiento.value=2;
     }
-    // Hacer algo con el valor seleccionado
-    console.log('El botón de radio seleccionado es: ' + seleccionado);
+    
     }
     }
 
