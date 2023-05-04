@@ -6,6 +6,7 @@ $counterBanners = 1;
 @if (!empty($banners))
 
 <div class="section-wrapper">
+  
   <style>
     .container-banners {
       width: 100%;
@@ -337,6 +338,7 @@ $counterBanners = 1;
       }
     }
   </style>
+
   <div class="container">
     <div class="row">
       <div class="col-12">

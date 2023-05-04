@@ -123,13 +123,14 @@ $layout_page = shop_profile
                       @foreach ($order->details as $item)
                         @php
                         $cuotas = $item->nro_coutas;
-                        $item->price=  $item->price - $item->monto_cuota_entrega; 
-                        if($item->abono_inicial > "0"){
+                   
+                        if($item->abono_inicial > 0){
                           $totalinicial= $item->abono_inicial *$item->price/100;
-                          $number1 = $item->price -($item->abono_inicial * $item->price /100);
-                          $Precio_cuotas = number_format($number1 / $item->nro_coutas,2);
+                       
+                          $number1 = $item->price -($item->abono_inicial * $item->price /100) - $item->monto_cuota_entrega;
+                          $Precio_cuotas = round($number1 / $item->nro_coutas);
                         }else{
-                          $Precio_cuotas = number_format($item->price / $item->nro_coutas,2);
+                          $Precio_cuotas = round(($item->price -  $item->monto_cuota_entrega) / $item->nro_coutas) ;
                         }
                         @endphp
                           <tr>
