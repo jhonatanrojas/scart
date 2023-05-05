@@ -234,7 +234,7 @@ class CartItem implements Arrayable, Jsonable
 
       
 
-        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId'] , $attributes['monto_Inicial'] ?? '' ,$attributes['monto_de_la_cuota']);
+        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId'] , $attributes['monto_Inicial'] ?? '' ,$attributes['monto_de_la_cuota'] ?? '');
     }
     public static function fromArray2(array $attributes)
     {
