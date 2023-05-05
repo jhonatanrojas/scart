@@ -607,7 +607,7 @@
                                                                     if ($item->abono_inicial > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = number_format($monto_inicial);
+                                                                        $monto_inicial = number_format($monto_inicial ,2);
                                                                     }
                                                                     
                                                                 @endphp;
@@ -637,7 +637,7 @@
                                                                     if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
-                                                                        $precio_couta = number_format($total_price / $item->nro_coutas);
+                                                                        $precio_couta = number_format($total_price / $item->nro_coutas ,2);
                                                                     
                                                                         echo "$" . $precio_couta;
                                                                     elseif ($item->nro_coutas > 0):
@@ -648,7 +648,7 @@
                                                                 @endphp
                                                             </td>
                                                             <td class="product_monto_cuota_entrega"> <a href="#"
-                                                              class="edit-item-detail"
+                                                              class="edit-item-detail "
                                                               data-value="{{ $item->monto_cuota_entrega }}" data-name="monto_cuota_entrega"
                                                               data-type="number" min=0
                                                               data-pk="{{ $item->id }}"

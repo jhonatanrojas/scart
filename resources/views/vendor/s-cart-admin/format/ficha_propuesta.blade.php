@@ -2,23 +2,57 @@
     integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <style>
     body {
-        margin-top: 20px;
         color: #2e323c;
         background: #f5f6fa;
         position: relative;
         height: 100%;
+         margin:0;
+        padding:0;
     }
 
+
+@media print {
+   @page {
+     margin-left: 0.8in;
+     margin-right: 0.8in;
+     margin-top: 0;
+     margin-bottom: 0;
+    
+   }
+}
+
+@media print {
+      body {
+        margin-bottom: 20px;
+        margin:0;
+        padding:0;
+       
+      }
+    }
+
+    body table{
+        margin-top: 0px;
+        margin-bottom: 0px;
+       
+    }
+ 
+.texto {
+	text-align: justify;
+  	text-justify: inter-word;
+}
+
     .invoice-container {
-        padding: 1rem;
+        padding: 1em;
     }
 
     .invoice-container .invoice-header .invoice-logo {
-        margin: 0.8rem 0 0 0;
+        margin: 0.2rem 0 0 0;
         display: inline-block;
         font-size: 1.6rem;
         font-weight: 700;
         color: #010205;
+          margin:0;
+            padding:0;
     }
 
     .invoice-container .invoice-header .invoice-logo img {
@@ -27,7 +61,9 @@
 
     address, .text-50 {
   text-transform: uppercase;
-  font-weight:600;
+  font-weight:800;
+  margin:0;
+  padding:0;
 }
 
 
@@ -37,11 +73,12 @@
         font-size: 1rem;
         color: #010508;
         margin: 0;
+        padding:0;
     }
 
     .invoice-container .invoice-details {
-        margin: 1rem 0 0 0;
-        padding: 1rem;
+        margin: 0;
+        margin:0;
         line-height: 180%;
         background: #f5f6fa;
     }
@@ -59,12 +96,6 @@
         text-align: center;
         font-size: 0.7rem;
         margin: 5px 0 0 0;
-    }
-
-      table td{
-        color: #01060a;
-        font-weight:bold;
-
     }
 
     .invoice-status {
@@ -138,6 +169,9 @@
 
     .custom-table>tbody td {
         border: 1px solid #202020;
+        font-size: 18px;
+        padding-top:5px;
+        margin:0;
     }
 
 
@@ -165,13 +199,41 @@
     }
 
     .custom-actions-btns .btn {
-        margin: .3rem 0 .3rem .3rem;
+        
+        
+    }
+
+    table td{
+        color: #01060a;
+        font-weight:800;
+         margin:0;
+        padding:0;
+
     }
 
     #address2 {
         font-size: 0.8rem;
         color: #01060a;
     }
+    li{
+        font-size: 15px;
+    }
+    table thead tr th{
+        font-size: 15px;
+    }
+    table tbody tr th{
+        font-size: 15px;
+        margin:0;
+        padding:0;
+    }
+
+    @media print {
+  div.nueva-pagina {
+    page-break-before: always;
+  }
+}
+
+   
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
     integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
@@ -189,10 +251,10 @@
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                     <div class="custom-actions-btns m">
                                         <div class="page-header text-blue-d2 mr-auto">
-                                            <img src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
+                                            <img class="mt-4" src="{{ sc_file(sc_store('logo')) }}" style="max-height:80px;">
                                             <div class="page-tools">
                                                 <div class="action-buttons">
-                                                    <!--<a class=" btn btn-primary mx-1px text-95 dont-print"
+                                                   <!-- <a class=" btn btn-primary mx-1px text-95 dont-print"
                                                         onclick="order_print_pdf()" data-title="Print">
                                                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                                                         PDF
@@ -212,27 +274,39 @@
                             <!-- Row end -->
                             <!-- Row start -->
                             <div class="row gutters">
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 m-0 p-0">
                                     <a href="index.html" class="invoice-logo">
                                         Waika Import
                                     </a>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <address class="text-right address2 " id="address2">
+                                <div  class="col-lg-6 col-md-6 col-sm-6">
+                                    <address style="font-weight: 800; font-size: 15px;" class="text-right  " id="address2">
                                         {{ sc_store('address') }}
-                                        <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
-                                                class="text-90">Nro solicitud:</span> #{{ $id }}</div>
+                                        
+                                                <span> Fecha:{{ sc_datetime_to_date($created_at, 'd-m-y') }}</span>
+                                                <br>
+
+                                                <span>Solicitud #{{ $order->id }}</span>
                                     </address>
+                                   
                                 </div>
+
+                               <div class="col-12">
+                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h2>
+                               </div>
+
+                               
                             </div>
                             <!-- Row end -->
                             <!-- Row start -->
                             <div  class="row gutters">
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
+
+                                       
                                         <address class=" text-uppercase">
-                                            <ul class="address">
-                                                <li><i class="fas fa-envelope"></i>Cliente: {{ $name }} - Cedula: {{ $cedula }}</li>
+                                            <ul  class="address">
+                                               
                                               <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
                                               
@@ -240,34 +314,32 @@
                                               <li><i class="fas fa-envelope"></i> nos conocio:{{ strtoupper($conocio) }}</li>
 
                                                <li><i class="fas fa-envelope"></i> Vendedor Asignado:{{ strtoupper($vendedor) }}</li>
+
+                                               @if ($comment)
+
+                                               <li><i class="fas fa-envelope"></i>{!!nl2br( $comment)?? '' !!}</li>
+                                                   
+                                               @endif
+                                             
+
+                                              
                                             </ul>
                                           </address>
                                           
                                     </div>
                                 </div>
                                 
-                                <div style="color: #000000;" class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 address">
-                                    <div class="invoice-details">
-                                        <div class="invoice-num text-uppercase ">
-                            
-                                            <div class="my-1\ "><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span class="text-90 ">Fecha:</span>
-                                                {{ sc_datetime_to_date($created_at, 'Y-m-d') }}</div>
-                                            <div class="my-1"><i class="fa fa-circle  text-xs mr-1"></i>
-                                                <span class="text-90">Nro convenio:</span> #{{ $nro_convenio }}</div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                             </div>
                             
                             <!-- Row end -->
                         </div>
                         <div class="invoice-body">
                             <!-- Row start -->
-                            <div class="row gutters">
+                            <div class="row gutters p-0 m-0">
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <div class="table-responsive">
-                                        <table class="table custom-table m-0">
+                                    <div class="">
+                                        <table  class="table custom-table m-0 p-0">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -276,17 +348,19 @@
                                                     <th>Modelo</th>
                                                     <th>Cant</th>
                                                     <th>Nro cuotas</th>
-                                                    <th>Inicial $</th>
-                                                    <th>Cuota $</th>
+                                                    <th>Inicial </th>
+                                                    <th>Cuota </th>
                                                     <th>Cuota de entrega $ </th>
-                                                    
+                                                    <th>Total</th>
 
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                @php $monto_total=0;
                                                $monto_cuota_total=0;
+                                               $inicial = 0;
                                                @endphp
+                                               
                                                 @foreach ($details as $detail)
                                                     <tr>
                                                         @php
@@ -295,14 +369,25 @@
                                                 if($detail['id_modalidad_pago'] == 3){
                                                 $AlContado = "Mensual";
                                                 }
-                                                            $inicial = 0;
-                                                            $precio = $detail['total_price']-$detail['monto_cuota_entrega'];
+                                                     
+                                                            $precio = $detail['price'];
+                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
+
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
-                                                                $precio = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
+                                                                $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
+                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+
+                                                                 
                                                             }
-                                                
-                                                            $monto_cuota = number_format($precio / $detail['nro_coutas'], 2);
+                                                         
+                            
+
+                                                         
+
+                                                            
+
+                                                          
                                                             
                                                         @endphp
                                                         <td>{{ $detail['no'] }}</td>
@@ -312,9 +397,10 @@
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
                                                         <td>${{ number_format($inicial) }}</td>
-                                                        <td>${{ $monto_cuota }} -  {{ $AlContado  }}</td>
+                                               
+                                                        <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
                                                         <td>${{  $detail['monto_cuota_entrega']  }}</td>
-                                                        
+                                                        <td>${{ $detail['total_price'] }}</td>
 
                                                         @php $monto_total+=$detail['total_price'] ;
                                                              $monto_cuota_total+=$monto_cuota;
@@ -324,7 +410,31 @@
 
                                                     </tr>
                                                 @endforeach
+                                                <tr>
+                                                  <td colspan="3" style="text-align:right "> Totales</td>
+                                                <td  colspan="2">
+                                                        
+                                                    <p> <strong>Subtotal: ${{ $order->subtotal}}</strong></strong></p>
+
+                                                </td>
+                                                <td>
+                                                    <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
+                                                </td>
+                                                <td colspan="2">
+                                                    <p> <strong>Inicial: -${{ round($inicial)}}</strong> </p>
+                                                </td>
+                                                <td >
+                                                    <p> <strong>Total: ${{  round($order->total,2) }}</p>
+                                                </td>
+                                                        
+                                                 
+                                                  
+                                                      
+                                                </tr>
                                                 
+                                               
+
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -332,19 +442,20 @@
                             </div>
                             <!-- Row end -->
                         </div>
-                        <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
-                            <p style="font-weight: 600;" >Notas:</p> <i>{!! $comment !!}</i>
-                        </div>
-                    <br>
-                         
-                    
+                       
+
+
                      
-                    <div class="invoice-footer">
+                    </div>
+
+                   
+                     
+                    <div style="font-weight:bold; font-size: 15px;" class="invoice-footer text-center">
                         Documento generado a través del sistema de Waika Import
                     </div>
                     <h5 class="text-center"  style="page-break-after:always"> </h5>
 
-                   
+                
                    
                     </div>
                 </div>
@@ -387,7 +498,7 @@
 
         function order_print(){
     $('.dont-print').hide();
-    window.print();
+        window.print();
     $('.dont-print').show();
   }
     </script>

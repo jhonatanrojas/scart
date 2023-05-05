@@ -1434,7 +1434,7 @@ class  AdminOrderController extends RootAdminController
 
     public function ficha_propuesta()
     {
-         $orderId = request('order_id') ?? null;
+        $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
 
@@ -1443,6 +1443,12 @@ class  AdminOrderController extends RootAdminController
         $constacia_trabajo='';
         $rif='';
         $cedula='';
+
+
+
+      
+
+       
        
         $nro_convenio = 'A/N';
 
@@ -1464,7 +1470,10 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia ,postcode ' )->first();
+
+
+          
 
   
             if($documento){
@@ -1491,6 +1500,11 @@ class  AdminOrderController extends RootAdminController
             $data['rif'] =  $rif;
             $data['doc_cedula'] =  $doc_cedula;
 
+
+
+            
+           
+
             $data['order'] =  $order;
             
             $data['datos_cliente']    =  $datos_cliente;
@@ -1508,11 +1522,14 @@ class  AdminOrderController extends RootAdminController
             $data['total']           = $order['total'];
             $data['received']        = $order['received'];
             $data['balance']         = $order['balance'];
-            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['other_fee']       = $order['other_fee'] ?? '';
             $data['comment']         = $order['comment'];
             $data['country']         = $order['country'];
             $data['id']              = $order->id;
             $data['details'] = [];
+
+
+           
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
             $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
@@ -1538,13 +1555,15 @@ class  AdminOrderController extends RootAdminController
                         foreach ($arrAtt as $groupAtt => $att) {
                             $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
                         }
-                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                        $name = $detail->name;
                     } else {
                         $name = $detail->name;
                     }
 
+                   
+
           
-                    $data['details'][] = [
+                    $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
@@ -1552,7 +1571,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega' =>$detail->monto_cuota_entrega,
+                        'monto_cuota_entrega'=> $detail->monto_cuota_entrega,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1560,6 +1579,8 @@ class  AdminOrderController extends RootAdminController
                     ];
                 }
             }
+
+           
 
             if ($action =='invoice_excel') {
                 $options = ['filename' => 'Order ' . $orderId];
