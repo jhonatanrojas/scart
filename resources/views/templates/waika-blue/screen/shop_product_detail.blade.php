@@ -595,8 +595,8 @@ $layout_page = shop_product_detail
           total_price = (monto - tola_inicial) ;
            precio_coutas = total_price / n2;
 
-          document.getElementById('monto_Inicial').value = Math.round(tola_inicial ,2)
-          document.getElementById('monto_de_la_cuota').value = Math.round(precio_coutas,2)
+          document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
+          document.getElementById('monto_de_la_cuota').value = precio_coutas.toFixed(2)
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
@@ -611,7 +611,7 @@ $layout_page = shop_product_detail
       
       }else{
           let monto_cuotass = monto/n2;
-          document.getElementById('monto_de_la_cuota').value = monto_cuotass.parseFloat(2)
+          document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
             if(document.getElementById("Cuotas").value == 12){
               document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`

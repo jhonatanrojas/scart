@@ -118,13 +118,13 @@
                                      
                                               if ($product->monto_cuota_entrega >0){
 
-                                                $Precio_cuota =number_format(($product->price/$item->Cuotas) * $item->qty ,2);
+                                                $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
 
 
                                                 }else if($item->inicial > 0){
 
                                                     $total_price = ($product->price - $item->inicial) ;
-                                                    $precio_coutas = round( $total_price / $item->Cuotas);
+                                                    $precio_coutas = number_format( $total_price / $item->Cuotas ,2);
 
 
                                                     $Precio_cuota = ($precio_coutas * $item->qty );  
