@@ -77,29 +77,26 @@
                         </td>
                     
                         @php
-                          $Precio_cuota = 0;
+                         
                        
                             if($cartItem[0]->financiamiento==2){
                                 $product->nro_coutas=$product->cuotas_inmediatas;
                                 $item->Cuotas=$product->cuotas_inmediatas;
                             }
                             
-                                                                    
+                                     
                             if ($product->monto_cuota_entrega >0){
-
-                                $Precio_cuota =number_format(($product->price/$item->Cuotas) * $item->qty ,2);
+                                $Precio_cuota = round(($product->price - $item->inicial) , 2) / $item->Cuotas;
 
 
                             }else if($item->inicial > 0){
 
                                 $total_price = ($product->price - $item->inicial) ;
-                                $precio_coutas = round( $total_price / $item->Cuotas);
-
-                               
+                                $precio_coutas = $total_price / $item->Cuotas;
                                 $Precio_cuota = ($precio_coutas * $item->qty );  
                                                     
                             }else{
-                                $Precio_cuota =number_format($product->price / $item->Cuotas ,2);  
+                                $Precio_cuota = $product->price / $item->Cuotas;  
 
                             }
                         

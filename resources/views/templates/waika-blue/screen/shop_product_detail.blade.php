@@ -487,37 +487,22 @@ $layout_page = shop_product_detail
 
     var monto_cuota_entrega = {!! json_encode($product->monto_cuota_entrega) !!};
 
-    
-
-    var radios_tipo_venta = document.getElementsByName('tipo_venta');
+     var radios_tipo_venta = document.getElementsByName('tipo_venta');
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
 
 
-    if(monto_cuota_entrega > 0){
-      var n2=Number(document.getElementById("Cuotas").value);
-      let monto=Number(document.getElementById("monto").value);
-
-
-      let tola_inicial = valor_product_inicial
-          let monto_cuotas = monto/n2;
-
-
-
-         
-          total_price = (monto - tola_inicial) ;
-           precio_coutas = total_price / n2;
-
-         
-          document.getElementById('monto_de_la_cuota').value = Math.round(monto_cuotas)
-      
-         
+    if(monto_cuota_entrega){
+      var n2=document.getElementById("Cuotas").value;
+      let monto = document.getElementById("monto").value;
+          const cuota = (monto - valor_product_inicial) / n2;
+          console.log(`La cuota mensual es de $${cuota.toFixed(2)}.`);
+          document.getElementById('monto_de_la_cuota').value = cuota.toFixed(2)
 
 }
-   
-  
-   
+
+
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
     // Obtener el valor del botón de radio seleccionado
@@ -626,7 +611,7 @@ $layout_page = shop_product_detail
       
       }else{
           let monto_cuotass = monto/n2;
-          document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+          document.getElementById('monto_de_la_cuota').value = monto_cuotass.parseFloat(2)
             document.getElementById('monto_Inicial').value = 0.00
             if(document.getElementById("Cuotas").value == 12){
               document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
@@ -637,6 +622,9 @@ $layout_page = shop_product_detail
 
         
       }
+
+
+      
 
 
         fechaInicio = new Date(document.getElementById('fecha').value)
