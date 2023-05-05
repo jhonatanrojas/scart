@@ -468,6 +468,8 @@ class ShopCartController extends RootFrontController
         // $shippingAddress = session('shippingAddress');
         $shippingAddress = auth()->user();
 
+       
+
 
         //Shipping method
         if (sc_config('shipping_off')) {
@@ -480,6 +482,11 @@ class ShopCartController extends RootFrontController
             $classShippingMethod = sc_get_class_plugin_config('Shipping', $shippingMethod);
             $shippingMethodData = (new $classShippingMethod)->getData();
         }
+
+
+       
+
+       
 
         //Payment method
         if (sc_config('payment_off')) {
@@ -510,8 +517,15 @@ class ShopCartController extends RootFrontController
         $objects = ShopOrderTotal::getObjectOrderTotal();
         $dataTotal = ShopOrderTotal::processDataTotal($objects);
 
+
+        
+
         //Set session dataTotal
         session(['dataTotal' => $dataTotal]);
+        
+
+
+
 
         $id = $shippingAddress['id'];
         
@@ -522,6 +536,11 @@ class ShopCartController extends RootFrontController
     }else{
         $dato = "";
     }
+
+
+   
+
+   
 
     
 
@@ -574,6 +593,11 @@ class ShopCartController extends RootFrontController
 
         $data = request()->all();
 
+
+
+
+        
+
         
         
 
@@ -591,13 +615,15 @@ class ShopCartController extends RootFrontController
             
             
         }
-       
+        $monto_de_la_cuota = 0;
 
         foreach($dataCheckout as $card_detalle){  
             
            $datos = [
             'modalidad_de_compra' => $card_detalle->financiamiento,
             'fecha_primer_pago' => $card_detalle->fecha ,
+            'monto_Inicial' => $card_detalle->monto_Inicial,
+            'monto_de_la_cuota' => $card_detalle->$monto_de_la_cuota
            ];
 
 
@@ -642,6 +668,7 @@ class ShopCartController extends RootFrontController
         $dataOrder['store_id']        = $storeCheckout;
         $dataOrder['modalidad_de_compra'] = $datos['modalidad_de_compra'];
         $dataOrder['fecha_primer_pago'] = $datos['fecha_primer_pago'];
+        $dataOrder['monto_de_la_cuota'] = $datos['monto_de_la_cuota'];
         $dataOrder['customer_id']     = $uID;
         $dataOrder['cedula']     = $customer->cedula;
         $dataOrder['subtotal']        = $total;
@@ -708,6 +735,10 @@ class ShopCartController extends RootFrontController
         $arrCartDetail = [];
         foreach ($cart as $cartItem) {
 
+
+
+          
+
                 //calcular porcentaje de $cartItem->inicial
                 $porcentaje =0;
                 if($cartItem->inicial > 0)
@@ -720,6 +751,9 @@ class ShopCartController extends RootFrontController
             $arrDetail['nro_coutas']  = $cartItem->Cuotas;
             $arrDetail['id_modalidad_pago']  = $cartItem->modalidad_pago;
             $arrDetail['abono_inicial']  =   $porcentaje ;
+            $arrDetail['monto_Inicial']  =    $cartItem->monto_Inicial ;
+            $arrDetail['monto_de_la_cuota'] = $cartItem->monto_de_la_cuota;
+
 
             
             $arrDetail['fecha_primer_pago']  = $cartItem->fecha;
@@ -791,12 +825,23 @@ class ShopCartController extends RootFrontController
     {
         $data      = request()->all();
 
+
+
+       
+
+       
+
       
      
         $this->clearCartStore();
           
         //Process escape
         $data      = sc_clean($data);
+
+        $inicial = 0;
+        $fecha = '';
+        $monto_Inicial = 0;
+        $monto_de_la_cuota = 0;
      
         if(isset($data['financiamiento'])
             == '1'){
@@ -812,16 +857,16 @@ class ShopCartController extends RootFrontController
             $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $Cuotas = $data['Cuotas'] ;
             $fecha = $data['fecha'] ?? '';
-            $inicial = $data['inicial'];
+            $inicial = $data['monto_Inicial'];
+            $monto_de_la_cuota =$data['monto_de_la_cuota'];
+            $monto_Inicial = $data['monto_Inicial'];
             // calcular porcentaje a partir del monto de la in
+
+            
+
            
 
 
-          
-
-
-
-          
 
         }else if(isset($data['financiamiento'])
             == '0'){
@@ -831,6 +876,7 @@ class ShopCartController extends RootFrontController
             $Cuotas = $data['Cuotas'] ?? 0;
             $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $storeId   = $data['storeId'] ?? config('app.storeId');
+            $monto_Inicial = $data['monto_Inicial'];
         }
 
 
@@ -871,13 +917,24 @@ class ShopCartController extends RootFrontController
                 'modalidad_pago'    => $modalidad_pago ,
                 'Cuotas'    => $Cuotas,
                 'fecha'    => $fecha,
-                'inicial'    => $inicial,
+                'inicial'    =>$inicial,
                 'qty'     => $qty,
                 'price'   => $product->getFinalPrice() + $optionPrice,
                 'tax'     => $product->getTaxValue(),
                 'storeId' => $storeId,
+                'monto_Inicial' => $monto_Inicial,
+                'monto_de_la_cuota' => $monto_de_la_cuota,
             );
             $dataCart['options'] = $options;
+
+
+
+
+
+          
+
+
+           
             
             Cart::add($dataCart);
 
@@ -900,6 +957,9 @@ class ShopCartController extends RootFrontController
                     'price'   => $product->getFinalPrice() + $optionPrice,
                     'tax'     => $product->getTaxValue(),
                     'storeId' => $storeId,
+                    'monto_Inicial' => $monto_Inicial,
+                    'monto_de_la_cuota' => $monto_de_la_cuota,
+                    
                 );
                 $dataCart['options'] = $options; 
                 Cart::add($dataCart);

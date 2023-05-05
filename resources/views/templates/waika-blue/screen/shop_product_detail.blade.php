@@ -553,7 +553,7 @@ $layout_page = shop_product_detail
 
         gen_table(inicial.value)
 
-        console.log(inicial.value)
+        
 
        
     
@@ -610,8 +610,8 @@ $layout_page = shop_product_detail
           total_price = (monto - tola_inicial) ;
            precio_coutas = total_price / n2;
 
-          document.getElementById('monto_Inicial').value = Math.round(tola_inicial)
-          document.getElementById('monto_de_la_cuota').value = Math.round(precio_coutas)
+          document.getElementById('monto_Inicial').value = Math.round(tola_inicial ,2)
+          document.getElementById('monto_de_la_cuota').value = Math.round(precio_coutas,2)
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`

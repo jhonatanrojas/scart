@@ -11,6 +11,9 @@
     - $products: paginate
     Use paginate: $products->appends(request()->except(['page','_token']))->links()
     */
+
+
+   
 @endphp
 
 
@@ -108,18 +111,35 @@
                                             <td>{{ $item->qty }}</td>
                                             <td>
                                                 @php
-                                              $item->inicial = $product->monto_inicial;
-                                              $product_precio=$product->price-  $product->monto_cuota_entrega -  $item->inicial;
-                                               
 
-                                                    $Precio_cuotas = number_format($product_precio / $product->nro_coutas,2);
+                                     
+                                              $Precio_cuota = 0;
+                       
+                                     
+                                              if ($product->monto_cuota_entrega >0){
+
+                                                $Precio_cuota =number_format(($product->price/$item->Cuotas) * $item->qty ,2);
+
+
+                                                }else if($item->inicial > 0){
+
+                                                    $total_price = ($product->price - $item->inicial) ;
+                                                    $precio_coutas = round( $total_price / $item->Cuotas);
+
+
+                                                    $Precio_cuota = ($precio_coutas * $item->qty );  
+                                                                                
+                                                            }else{
+                                                            $Precio_cuota =number_format($product->price / $item->Cuotas ,2);  
+
+                                                            }
 
                                                 
                                                 @endphp
 
                                                 @if( $product->precio_de_cuota )
 
-                                                    {{$Precio_cuotas}}
+                                                    {{$Precio_cuota}}
 
                                                 @else
                                                 {!! $product->showPrice() !!}
@@ -130,12 +150,13 @@
                                             @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                                 <td>{{ $item->Cuotas }}</td>
                                                 @php
+
+
                                                 
-                                                        $inicial = number_format($item->inicial, 2);
-                                                    
+                                                                                
                                                     
                                                 @endphp
-                                                <td>${{ $inicial }} </td>
+                                                <td>${{ $item->inicial }} </td>
                                                 <td>$ {{ $product->monto_cuota_entrega}}</td>
                                                 <td>{{ $item->modalidad_pago == '3' ? 'Mensual' : 'Quincenal' }}</td>
                                             @endif

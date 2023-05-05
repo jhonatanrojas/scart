@@ -2,7 +2,6 @@
 @php
 
 
-
 @endphp
     <div class="table-responsive">
         <style>
@@ -92,16 +91,15 @@
 
 
                             }else if($item->inicial > 0){
-                                $inicial = ($item->inicial * $product->price) / 100;
-                                $total_price = ($product->price - $inicial);
-                                $Precio_cuota = number_format(($total_price * $item->qty)/ $item->Cuotas ,2);   
+
+                                $total_price = ($product->price - $item->inicial) ;
+                                $precio_coutas = round( $total_price / $item->Cuotas);
+
+                               
+                                $Precio_cuota = ($precio_coutas * $item->qty );  
                                                     
-                            }else if($item->qty > 1){
-                                $Precio_cuota = number_format(($product->price / $item->Cuotas) *$item->qty  ,2);  
-
-
                             }else{
-                                $Precio_cuota =round($product->price / $item->Cuotas ,2);  
+                                $Precio_cuota =number_format($product->price / $item->Cuotas ,2);  
 
                             }
                         
@@ -115,26 +113,9 @@
                         <td>{{$item->Cuotas}} </td>
                         <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
-                        @php
-                            $inicial="0.00";
-                            if($item->inicial >0 && $item->qty > 1 ){
-                                $inicial = (($item->inicial * $product->price) *$item->qty ) / 100;
-
-                            }else if($product->monto_cuota_entrega > 0){
-                                $inicial=   $item->inicial;
-                               
                         
-                               
-                            }else if($item->inicial > 0){
-                                $inicial = (($item->inicial * $product->price)  ) / 100;
-                               
-
-                            }else{
-                                $inicial=  $item->inicial;
-                            }
-                        @endphp
                     
-                        <td>${!!number_format($inicial,2)!!}</td>
+                        <td>${!!number_format($inicial=  $item->inicial * $item->qty ,2)!!}</td>
   
                         <td>{{ $product->monto_cuota_entrega}}</td>
                         <td class="cart-col-qty">
