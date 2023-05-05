@@ -607,7 +607,7 @@
                                                                     if ($item->abono_inicial > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = number_format($monto_inicial ,2);
+                                                                        $monto_inicial = round($monto_inicial );
                                                                     }
                                                                     
                                                                 @endphp;
@@ -637,12 +637,12 @@
                                                                     if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
-                                                                        $precio_couta = number_format($total_price / $item->nro_coutas ,2);
+                                                                        $precio_couta = round($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
                                                                     elseif ($item->nro_coutas > 0):
                                                                         $precio_couta = $item->total_price;
-                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
+                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas);
                                                                     endif;
                                                                     
                                                                 @endphp
