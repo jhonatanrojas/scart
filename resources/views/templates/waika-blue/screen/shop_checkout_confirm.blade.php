@@ -156,7 +156,7 @@
                                                                                 
                                                     
                                                 @endphp
-                                                <td>${{ $item->inicial }} </td>
+                                                <td>${{number_format($inicial=  $item->inicial * $item->qty ,2) }} </td>
                                                 <td>$ {{ $product->monto_cuota_entrega}}</td>
                                                 <td>{{ $item->modalidad_pago == '3' ? 'Mensual' : 'Quincenal' }}</td>
                                             @endif
