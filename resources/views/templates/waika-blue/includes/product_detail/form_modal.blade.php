@@ -88,7 +88,7 @@
                             @php
                             $product->price=$product->price- $product->monto_cuota_entrega;
                             @endphp
-                            <input name="monto_de_la_cuota" id="monto_de_la_cuota" class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
+                            <input readonly name="monto_de_la_cuota" id="monto_de_la_cuota" class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
                         </div>
 
                         <div class="mb-3 col-md-6">
