@@ -790,6 +790,8 @@ class ShopCartController extends RootFrontController
     public function addToCart()
     {
         $data      = request()->all();
+
+      
      
         $this->clearCartStore();
           
@@ -800,6 +802,9 @@ class ShopCartController extends RootFrontController
             == '1'){
 
 
+               
+
+
             $productId = $data['product_id'];
             $qty       = $data['qty'] ?? 0;
             $storeId   = $data['storeId'] ?? config('app.storeId');
@@ -807,10 +812,12 @@ class ShopCartController extends RootFrontController
             $modalidad_pago = $data['modalidad_pago']  == 'Quincenal'? '2':'3' ;
             $Cuotas = $data['Cuotas'] ;
             $fecha = $data['fecha'] ?? '';
-            $inicial = $data['inicial']?? 0;
+            $inicial = $data['inicial'];
             // calcular porcentaje a partir del monto de la in
-            if($inicial > 0)
-            $inicial =  $inicial*100/  $data['monto'];    
+           
+
+
+          
 
 
 
@@ -873,6 +880,8 @@ class ShopCartController extends RootFrontController
             $dataCart['options'] = $options;
             
             Cart::add($dataCart);
+
+          
            
             return redirect(sc_route('cart'))
                 ->with(

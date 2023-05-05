@@ -63,6 +63,8 @@
                             <label class="form-label text-uppercase" for="inicial">CON INICIAL</label>
                             <div id="overlay"></div>
 
+                           
+
                             <select  class="form-select"  name="inicial" id="inicial">
                                
                                 <option value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':0   !!}>SI</option>
@@ -74,7 +76,7 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase"  for="monto">Monto de la Inicial $:</label>
-                            <input readonly id="monto_Inicial"  value="{!! $product->monto_inicial !!}" class="form-control" type="text"  placeholder="">
+                            <input readonly name="monto_Inicial" id="monto_Inicial"  value="{!! $product->monto_inicial !!}" class="form-control" type="text"  placeholder="">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="inicial"> Nro de Cuotas</label>
@@ -86,7 +88,7 @@
                             @php
                             $product->price=$product->price- $product->monto_cuota_entrega;
                             @endphp
-                            <input id="monto_de_la_cuota" disabled class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
+                            <input name="monto_de_la_cuota" id="monto_de_la_cuota" disabled class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas ,'2') !!}">
                         </div>
 
                         <div class="mb-3 col-md-6">

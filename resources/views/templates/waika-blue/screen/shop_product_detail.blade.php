@@ -385,7 +385,7 @@ $layout_page = shop_product_detail
 
               </div>
               @php 
-              $inicial_default= $product->price * 0.3;
+              $inicial_default=  30.00;
             @endphp
               <div class="col-lg-4">
                 @include($sc_templatePath.'.includes.product_detail.card_info')
@@ -424,6 +424,8 @@ $layout_page = shop_product_detail
               </div>
             </div>
             @endif
+
+          
    
         <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
@@ -442,24 +444,7 @@ $layout_page = shop_product_detail
 @push('scripts')
     {{-- lightSlider --}}
       <script>
-        // $(document).ready(function() {
-        //   $('#imageGallery').lightSlider({
-        //       gallery:true,
-        //       item:1,
-        //       adaptiveHeight:true,
-        //       loop:true,
-        //       thumbItem:2,
-        //       thumbMargin: 6,
-        //       slideMargin:0,
-        //       enableDrag: true,
-        //       currentPagerPosition:'left',
-        //       onSliderLoad: function(el) {
-        //           el.lightGallery({
-        //               selector: '#imageGallery .lslide'
-        //           });
-        //       }   
-        //   });  
-        // });
+     
         
         document.addEventListener( 'DOMContentLoaded', function () {
           var main = new Splide( '#main-carousel', {
@@ -497,28 +482,41 @@ $layout_page = shop_product_detail
     {{-- end owl --}}
   <script type="text/javascript">
 
-
-
- 
-
-
-
-  
-
-  var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
+    var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
     var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
 
+    var monto_cuota_entrega = {!! json_encode($product->monto_cuota_entrega) !!};
+
     
-
-
 
     var radios_tipo_venta = document.getElementsByName('tipo_venta');
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
     const valor_product_inicial =  $("#inicial_producto").val()
-   
-    // Agregar un evento onchange a cada botón de radio
 
+
+    if(monto_cuota_entrega > 0){
+      var n2=Number(document.getElementById("Cuotas").value);
+      let monto=Number(document.getElementById("monto").value);
+
+
+      let tola_inicial = valor_product_inicial
+          let monto_cuotas = monto/n2;
+
+
+
+         
+          total_price = (monto - tola_inicial) ;
+           precio_coutas = total_price / n2;
+
+         
+          document.getElementById('monto_de_la_cuota').value = Math.round(monto_cuotas)
+      
+         
+
+}
+   
+  
    
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
@@ -540,18 +538,7 @@ $layout_page = shop_product_detail
         
           document.getElementById('monto_Inicial').value =0;
 
-    
-            document.getElementById('monto_Inicial').value = 0.00
             gen_table(0)
-
-           
-
-         
-
-            
-
-            
-            
 
 
     }else{
@@ -565,6 +552,8 @@ $layout_page = shop_product_detail
 
 
         gen_table(inicial.value)
+
+        console.log(inicial.value)
 
        
     
@@ -608,22 +597,21 @@ $layout_page = shop_product_detail
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
 
-      console.log(document.getElementById("m_nro_cuotas").value);
-
-        
-      
-      
-
-    
-
+      let monto_inicial = 0.0;  
+      let precio_coutas = 0
       if(inicial>0){
-          let precio_couta=  monto -inicial;
-          let precio_monto_cuota = precio_couta / n2
-          let tola_inicial = inicial
+         
+          let tola_inicial = (inicial * monto ) / 100
           let monto_cuotas = monto/n2;
 
-          document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-          document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
+
+
+         
+          total_price = (monto - tola_inicial) ;
+           precio_coutas = total_price / n2;
+
+          document.getElementById('monto_Inicial').value = Math.round(tola_inicial)
+          document.getElementById('monto_de_la_cuota').value = Math.round(precio_coutas)
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`

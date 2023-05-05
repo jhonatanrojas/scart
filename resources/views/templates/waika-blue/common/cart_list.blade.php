@@ -78,26 +78,38 @@
                         </td>
                     
                         @php
+                          $Precio_cuota = 0;
+                       
                             if($cartItem[0]->financiamiento==2){
                                 $product->nro_coutas=$product->cuotas_inmediatas;
                                 $item->Cuotas=$product->cuotas_inmediatas;
                             }
-                            $item->inicial=   $product->monto_inicial;
-                     
-                                if($item->inicial>0){
-                                $totalinicial= $item->inicial ;
-                                $precio_final =( $product->price-$item->inicial ) - $product->monto_cuota_entrega;
-                         
-                                $Precio_cuotas = number_format($precio_final / $product->nro_coutas,2);
-                             
-                                }else{
-                                    $Precio_cuotas = number_format(($product->price- $product->monto_cuota_entrega) / $product->nro_coutas,2);
-                                }
+                            
+                                                                    
+                            if ($product->monto_cuota_entrega >0){
+
+                                $Precio_cuota =number_format(($product->price/$item->Cuotas) * $item->qty ,2);
+
+
+                            }else if($item->inicial > 0){
+                                $inicial = ($item->inicial * $product->price) / 100;
+                                $total_price = ($product->price - $inicial);
+                                $Precio_cuota = number_format(($total_price * $item->qty)/ $item->Cuotas ,2);   
+                                                    
+                            }else if($item->qty > 1){
+                                $Precio_cuota = number_format(($product->price / $item->Cuotas) *$item->qty  ,2);  
+
+
+                            }else{
+                                $Precio_cuota =round($product->price / $item->Cuotas ,2);  
+
+                            }
                         
+
                         @endphp
 
                         <td>
-                            {{$Precio_cuotas}} 
+                            {{$Precio_cuota}} 
                         </td> 
 
                         <td>{{$item->Cuotas}} </td>
@@ -105,13 +117,24 @@
                  
                         @php
                             $inicial="0.00";
-                            if($item->inicial>0){
+                            if($item->inicial >0 && $item->qty > 1 ){
+                                $inicial = (($item->inicial * $product->price) *$item->qty ) / 100;
+
+                            }else if($product->monto_cuota_entrega > 0){
+                                $inicial=   $item->inicial;
+                               
                         
-                                $inicial= number_format( ( $item->inicial),2);
+                               
+                            }else if($item->inicial > 0){
+                                $inicial = (($item->inicial * $product->price)  ) / 100;
+                               
+
+                            }else{
+                                $inicial=  $item->inicial;
                             }
                         @endphp
                     
-                        <td>${!!$inicial!!}</td>
+                        <td>${!!number_format($inicial,2)!!}</td>
   
                         <td>{{ $product->monto_cuota_entrega}}</td>
                         <td class="cart-col-qty">
@@ -130,7 +153,7 @@
   
                   
   
-                        <td align="center">
+                        <td >
                             <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
                                 class="cart_quantity_delete"
                                 href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
