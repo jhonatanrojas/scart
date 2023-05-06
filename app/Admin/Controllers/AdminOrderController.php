@@ -1589,7 +1589,7 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega'=> $order->monto_cuota_entrega,
+                        'monto_cuota_entrega'=> $order->monto_cuota_entrega > 0 ? $order->monto_cuota_entrega : $product->monto_cuota_entrega,
                         'monto_inicial'=>$product->monto_inicial,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
