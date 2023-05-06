@@ -602,6 +602,8 @@
                                                                 @php 
                                                                     $data_json_inicial = '';
                                                                     $monto_inicial = 0.0;   
+
+                                                                    
                                                         
                                                               
                                                                     if ($item->abono_inicial > 0) {
@@ -609,6 +611,10 @@
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
                                                                         $monto_inicial = round($monto_inicial );
                                                                     }
+
+                                                                  
+
+                                                                    
                                                                     
                                                                 @endphp;
                                                                 <a href="#" class="updateStatus"
@@ -628,33 +634,54 @@
                                                                 </a>
 
                                                             </td>
-
+                                                           
+                                                          
                                                             <td>
                                                                 @php
                                                                     
                                                                     $precio_couta = 0;
+
+
                                                                     
-                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
+                                                                    
+                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
                                                                         $precio_couta = round($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
-                                                                    elseif ($item->nro_coutas > 0):
+                                                                    elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $precio_couta = $item->total_price;
                                                                         echo "$" . number_format($precio_couta / $item->nro_coutas);
+
+
+                                                                       
                                                                     endif;
+
+
+                                                                    if ($monto_entrega > 0){
+
+                                                                         $valor = $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega;
+
+                                                                        $Precio_cuota = number_format(($item->total_price - $monto_Inicial - $valor) / $item->nro_coutas ,2) ;
+
+                                                                        echo "$" . $Precio_cuota;
+                                                                    }
+
+                                                                    
+                                                                   
+                                                                 
                                                                     
                                                                 @endphp
                                                             </td>
                                                             <td class="product_monto_cuota_entrega"> <a href="#"
                                                               class="edit-item-detail "
-                                                              data-value="{{ $item->monto_cuota_entrega }}" data-name="monto_cuota_entrega"
+                                                              data-value="{!! $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega !!}" data-name="monto_cuota_entrega"
                                                               data-type="number" min=0
                                                               data-pk="{{ $item->id }}"
                                                               data-url="{{ route('admin_order.edit_item') }}"
                                                               data-title="Couta de entrega">
-                                                              {{ $item->monto_cuota_entrega }}</a>
+                                                              {!! $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega !!}</a>
                                                             
                                                         </td>
 

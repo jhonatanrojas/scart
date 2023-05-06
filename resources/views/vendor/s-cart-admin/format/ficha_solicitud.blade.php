@@ -359,11 +359,17 @@
                                                @php $monto_total=0;
                                                $monto_cuota_total=0;
                                                $inicial = 0;
+
+                                              
                                                @endphp
                                                
                                                 @foreach ($details as $detail)
                                                     <tr>
                                                         @php
+
+                                                       
+
+                                                    
                                                                 
                                                 $AlContado = "Quincenal" ;
                                                 if($detail['id_modalidad_pago'] == 3){
@@ -377,6 +383,12 @@
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                                 $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
                                                                 $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+
+                                                                 
+                                                            }
+
+                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
+                                                                $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ,2) ;
 
                                                                  
                                                             }
