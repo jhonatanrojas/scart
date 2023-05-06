@@ -1449,6 +1449,8 @@ class  AdminOrderController extends RootAdminController
         $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
+        $product = AdminProduct::getProductAdmin($order->product_id);
+        
 
         $convenio=Convenio::where('order_id',$orderId)->first();
 
@@ -1559,7 +1561,13 @@ class  AdminOrderController extends RootAdminController
                         $modelo = $first_attributes->name ?? '';
                         
                     }
-                
+
+
+                    
+
+
+                    
+               
              
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
@@ -1572,9 +1580,7 @@ class  AdminOrderController extends RootAdminController
                         $name = $detail->name;
                     }
 
-                   
 
-          
                     $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
@@ -1583,7 +1589,8 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega'=> $detail->monto_cuota_entrega,
+                        'monto_cuota_entrega'=> $order->monto_cuota_entrega,
+                        'monto_inicial'=>$product->monto_inicial,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1591,7 +1598,6 @@ class  AdminOrderController extends RootAdminController
                     ];
                 }
             }
-
            
 
             if ($action =='invoice_excel') {

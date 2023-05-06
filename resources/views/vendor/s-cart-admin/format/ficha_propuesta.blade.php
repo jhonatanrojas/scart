@@ -361,55 +361,65 @@
                                                $inicial = 0;
                                                @endphp
                                                
-                                                @foreach ($details as $detail)
-                                                    <tr>
-                                                        @php
-                                                                
-                                                $AlContado = "Quincenal" ;
-                                                if($detail['id_modalidad_pago'] == 3){
-                                                $AlContado = "Mensual";
-                                                }
-                                                     
-                                                            $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
+                                               @foreach ($details as $detail)
+                                               <tr>
+                                                   @php
 
-                                                            if ($detail['abono_inicial'] > 0) {
-                                                                $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
-                                                                $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
-                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+                                                  
 
-                                                                 
-                                                            }
-                                                         
-                            
-
-                                                         
-
-                                                            
-
-                                                          
-                                                            
-                                                        @endphp
-                                                        <td>{{ $detail['no'] }}</td>
-                                                        <td>{{ $detail['name'] }}</td>
-                                                        <td>{{ $detail['marca'] }}</td>
-                                                        <td>{{ $detail['modelo'] }}</td>
-                                                        <td>{{ $detail['qty'] }}</td>
-                                                        <td>{{ $detail['nro_coutas'] }}</td>
-                                                        <td>${{ number_format($inicial) }}</td>
                                                
-                                                        <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
-                                                        <td>${{  $detail['monto_cuota_entrega']  }}</td>
-                                                        <td>${{ $detail['total_price'] }}</td>
+                                                           
+                                           $AlContado = "Quincenal" ;
+                                           if($detail['id_modalidad_pago'] == 3){
+                                           $AlContado = "Mensual";
+                                           }
+                                                
+                                                       $precio = $detail['price'];
+                                                       $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
 
-                                                        @php $monto_total+=$detail['total_price'] ;
-                                                             $monto_cuota_total+=$monto_cuota;
-                                                        
-                                                        @endphp
+                                                       if ($detail['abono_inicial'] > 0) {
+                                                           $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
+                                                           $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
+                                                           $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+
+                                                            
+                                                       }
+
+                                                         if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
+                                                           $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ,2) ;
+
+                                                            
+                                                       }
+                                                    
+                       
+
+                                                    
+
+                                                       
+
+                                                     
+                                                       
+                                                   @endphp
+                                                   <td>{{ $detail['no'] }}</td>
+                                                   <td>{{ $detail['name'] }}</td>
+                                                   <td>{{ $detail['marca'] }}</td>
+                                                   <td>{{ $detail['modelo'] }}</td>
+                                                   <td>{{ $detail['qty'] }}</td>
+                                                   <td>{{ $detail['nro_coutas'] }}</td>
+                                                   <td>${{ number_format($inicial) }}</td>
+                                          
+                                                   <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
+                                                   <td>${{  $detail['monto_cuota_entrega']  }}</td>
+                                                   <td>${{ $detail['total_price'] }}</td>
+
+                                                   @php $monto_total+=$detail['total_price'] ;
+                                                        $monto_cuota_total+=$monto_cuota;
+                                                   
+                                                   @endphp
 
 
-                                                    </tr>
-                                                @endforeach
+                                               </tr>
+                                           @endforeach
                                                 <tr>
                                                   <td colspan="3" style="text-align:right "> Totales</td>
                                                 <td  colspan="2">
