@@ -493,7 +493,7 @@ $layout_page = shop_product_detail
     const valor_product_inicial =  $("#inicial_producto").val()
 
 
-    if(monto_cuota_entrega){
+    if(monto_cuota_entrega > 0){
       var n2=document.getElementById("Cuotas").value;
       let monto = document.getElementById("monto").value;
           const cuota = (monto - valor_product_inicial) / n2;
@@ -582,21 +582,23 @@ $layout_page = shop_product_detail
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
 
-      let monto_inicial = 0.0;  
-      let precio_coutas = 0
+     
       if(inicial>0){
-         
-          let tola_inicial = (inicial * monto ) / 100
-          let monto_cuotas = monto/n2;
 
+            const montoTotal = monto; 
+            const inicialPorcentaje = 0.30;
+            const numeroCuotas = n2; 
+            const total_inicial = montoTotal * inicialPorcentaje;
+            const montoFinanciado = montoTotal - total_inicial;
 
+            
+            const montoCuota = montoFinanciado / numeroCuotas;
+            console.log(`Plan de pago:
+            Inicial: $${total_inicial.toFixed(2)}
+            Cuotas: ${numeroCuotas} de $${montoCuota.toFixed(2)} cada una`);
 
-         
-          total_price = (monto - tola_inicial) ;
-           precio_coutas = total_price / n2;
-
-          document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-          document.getElementById('monto_de_la_cuota').value = precio_coutas.toFixed(2)
+          document.getElementById('monto_Inicial').value = total_inicial.toFixed(2)
+          document.getElementById('monto_de_la_cuota').value = montoCuota.toFixed(2)
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
@@ -610,6 +612,7 @@ $layout_page = shop_product_detail
 
       
       }else{
+
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
