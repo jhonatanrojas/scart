@@ -1515,7 +1515,10 @@ class  AdminOrderController extends RootAdminController
             $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
-            $data['doc_cedula'] =  $doc_cedula;
+            $data['doc_cedula'] =  $product->image;
+
+
+            
 
 
 

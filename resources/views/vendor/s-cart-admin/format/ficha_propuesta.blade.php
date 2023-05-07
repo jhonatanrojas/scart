@@ -455,6 +455,10 @@
                             </div>
                             <!-- Row end -->
                         </div>
+
+                        <div class="nueva-pagina">
+                            <img  style=" max-width: 500px; height: auto; margin: auto" class="img-fluid" src="{!! $doc_cedula!!}" />  
+                            </div>
                        
 
 
