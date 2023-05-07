@@ -452,12 +452,14 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                <div class="col-12 text-center"  style=" width: 100%;  margin: auto;" >
+                                    <img  style="width:800px; height: 500px; margin: auto;" class="img-fluid" src="{!! $doc_cedula!!}" />  
+                                    </div>
                             </div>
                             <!-- Row end -->
 
-                             <div  style=" width: 100%;  margin: auto" >
-                            <img  style="width:500px; height: 500px; margin: auto" class="img-fluid" src="{!! $doc_cedula!!}" />  
-                            </div>
+                             
                         </div>
 
                        
