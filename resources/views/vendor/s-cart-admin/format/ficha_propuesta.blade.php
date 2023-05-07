@@ -454,7 +454,7 @@
                                 </div>
 
                                 <div class="col-12 text-center"  style=" width: 100%;  margin: auto;" >
-                                    <img  style="width:800px; height: 500px; margin: auto;" class="img-fluid" src="{!! $doc_cedula!!}" />  
+                                    <img  style="width:800px; height: 800px; margin: auto;" class="img-fluid" src="{!! $doc_cedula!!}" />  
                                     </div>
                             </div>
                             <!-- Row end -->
