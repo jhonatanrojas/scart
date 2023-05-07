@@ -613,7 +613,7 @@
                                                                     if ($item->abono_inicial > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = number_format($monto_inicial ,2);
+                                                                        $monto_inicial = number_format($monto_inicial);
                                                                     }
 
                                                                   
