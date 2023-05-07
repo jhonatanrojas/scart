@@ -2197,19 +2197,19 @@ class HistorialPagosController extends RootAdminController
        
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
-            $total_bs += round($monto * $row->tasa_cambio, 2);
+            $total_bs += floor($monto * $row->tasa_cambio);
 
             if ($moneda == 'USD') {
                 // El monto está en dólares
-                $monto_dolares = round($monto, 2);
-                $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                $monto_dolares = floor($monto);
+                $monto_bolivares = floor($monto * $row->tasa_cambio);
                 $Referencia = $monto_bolivares."Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
             } elseif ($moneda == 'Bs') {
                 // El monto está en bolívares
-                $monto_bolivares = round($monto, 2);
-                $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                $monto_bolivares = floor($monto);
+                $monto_dolares = floor($monto / $row->tasa_cambio);
                 $Referencia = $monto_dolares."$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
@@ -2252,7 +2252,7 @@ class HistorialPagosController extends RootAdminController
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['Cuotas_Pendientes'] =  floor($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';
