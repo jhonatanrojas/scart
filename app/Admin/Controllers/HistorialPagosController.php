@@ -30,6 +30,7 @@ use SCart\Core\Front\Models\ShopPaymentStatus;
 use SCart\Core\Front\Models\ShopOrderDetail;
 use DateTime;
 use DateInterval;
+use SCart\Core\Admin\Models\AdminProduct;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -1044,7 +1045,9 @@ class HistorialPagosController extends RootAdminController
             $estado = Estado::all();
             $municipio = Municipio::all();
             $parroquia = Parroquia::all();
-            $order = ShopOrder::where('id', $data['c_order_id'])->first();
+            
+            $order = AdminOrder::getOrderAdmin($data['c_order_id']);
+            $product = AdminProduct::getProductAdmin($order->product_id);
             $letraconvertir_nuber = new NumeroLetra;
 
 
@@ -1186,7 +1189,7 @@ class HistorialPagosController extends RootAdminController
              $total_price = $dato_usuario[0]['subtotal'];
             $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
             $cuotas = $dato_usuario[0]['cuotas'];
-            if ($dato_usuario[0]['abono_inicial'] > 0) {
+            if ($dato_usuario[0]['abono_inicial'] > 0 && $product->monto_cuota_entrega == 0) {
                 $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
                 $total_price = $dato_usuario[0]['subtotal'] - $inicial;
                 $precio_couta = number_format($total_price / $dato_usuario[0]['cuotas'], 2);
@@ -1194,6 +1197,15 @@ class HistorialPagosController extends RootAdminController
                 
 
             }
+
+
+            if ($product->monto_cuota_entrega > 0){
+                        $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
+
+                        $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
+
+                      
+                   }
 
             $number2 = $total_price * $cod_bolibares;
 

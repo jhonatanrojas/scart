@@ -1711,7 +1711,8 @@ class  AdminOrderController extends RootAdminController
             return 'inicia secion';
         }
 
-        $order = ShopOrder::where('id',$id)->first();
+        $order = AdminOrder::getOrderAdmin($id);
+         $product = AdminProduct::getProductAdmin($order->product_id);
         $letraconvertir_nuber = new NumeroLetra;
 
         if (!$order) {
@@ -1818,7 +1819,7 @@ class  AdminOrderController extends RootAdminController
                     $total_price = $order->subtotal;
                     $precio_couta =  $order->subtotal/ $productoDetail[0]->nro_coutas;
                     $cuotas = $productoDetail[0]->nro_coutas;
-                    if( $productoDetail[0]->abono_inicial>0){
+                    if( $productoDetail[0]->abono_inicial>0  && $product->monto_cuota_entrega == 0){
 
                         $inicial = ($productoDetail[0]->abono_inicial * $order->subtotal) / 100;
                                                                 $total_price = $order->subtotal - $inicial;
@@ -1830,6 +1831,16 @@ class  AdminOrderController extends RootAdminController
                                                                
                        
                       }
+
+                    
+
+                      if ($product->monto_cuota_entrega > 0){
+                        $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
+
+                        $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
+
+                      
+                   }
     
 
                   
