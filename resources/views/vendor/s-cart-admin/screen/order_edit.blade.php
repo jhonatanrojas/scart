@@ -310,6 +310,20 @@
                                     @endif
 
                                     <tr>
+                                        <td> Serial del articulo:</td>
+                                        <td>
+                                            <a id="serial"
+                                                data-index-number="{{ $order->nro_coutas }}"
+                                                href="#" class="updateStatus"
+                                                data-value="{{ $order->serial }}" data-name="serial"
+                                                data-type="text" min=0 data-pk="{{ $order->id }}"
+                                                data-url="{{ route('admin_order.edit_item') }}"
+                                                data-title="serial">{{ $order->serial ?? '' }}</a>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
                                         <td></i> {{ sc_language_render('admin.created_at') }}:</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
@@ -526,15 +540,14 @@
                                             <table class="table table-hover  table-bordered ">
                                                 <thead>
                                                     <tr>
-                                                        <th>{{ sc_language_render('product.name') }}</th>
+                                                        <th >{{ sc_language_render('product.name') }}</th>
                                                         <th>Cuotas</th>
-                                                        <th>Serial</th>
                                                         <th>Modalidad</th>
                                                         <th>Inicial %</th>
                                                         <th>Cuota $</th>
                                                         <th>Cuota de entrega $</th>
                                                         <th>Cant</th>
-                                                        <th>{{ sc_language_render('product.price') }}</th>
+                                                        <th >{{ sc_language_render('product.price') }}</th>
 
                                                         {{-- <th class="product_tax">{{ sc_language_render('product.tax') }}</th> --}}
                                                         <th class="product_total">Total</th>
@@ -576,16 +589,7 @@
                                                             </td>
 
 
-                                                            <td>
-                                                                <a id="serial"
-                                                                    data-index-number="{{ $item->nro_coutas }}"
-                                                                    href="#" class="updateStatus"
-                                                                    data-value="{{ $item->serial }}" data-name="serial"
-                                                                    data-type="text" min=0 data-pk="{{ $item->id }}"
-                                                                    data-url="{{ route('admin_order.edit_item') }}"
-                                                                    data-title="serial">{{ $item->serial ?? '' }}</a>
-
-                                                            </td>
+                                                            
 
 
                                                             <td>
@@ -647,7 +651,7 @@
                                                                     if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
-                                                                        $precio_couta = round($total_price / $item->nro_coutas,2);
+                                                                        $precio_couta = number_format($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
                                                                     elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
@@ -763,8 +767,8 @@
                         </form>
 
                         <table class="table table-hover box-body text-wrap table-bordered">
-                            <tr>
-                                <td class="td-title">Notas de la solicitud:</td>
+                            <tr >
+                                <td  class="td-title">Notas de la solicitud:</td>
                                 <td>
                                     <a href="#" class="updateInfo" data-name="comment" data-type="textarea"
                                         data-pk="{{ $order->id }}" data-url="{{ route('admin_order.update') }}"
@@ -785,7 +789,7 @@
                         @php
                             
                             $opcion_inicial = '  <option value="0"> Sin Inicial</option>
-                <option value="30">  Inicial 30%</option>';
+                                <option value="30">  Inicial 30%</option>';
                             
                             $htmlSelectProduct =
                                 '<tr>
@@ -811,7 +815,7 @@
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
 
 
-            <td><input type="text" name="add_serial[]"   class="add_serial form-control"  value="0"></td>
+         
 
             
 
