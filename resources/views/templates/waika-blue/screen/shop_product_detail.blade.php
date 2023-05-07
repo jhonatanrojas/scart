@@ -595,8 +595,8 @@ $layout_page = shop_product_detail
             const montoCuota = montoFinanciado / numeroCuotas;
            
 
-          document.getElementById('monto_Inicial').value = Math.floor(total_inicial) 
-          document.getElementById('monto_de_la_cuota').value = Math.floor(montoCuota) 
+          document.getElementById('monto_Inicial').value = total_inicial.toFixed(2) 
+          document.getElementById('monto_de_la_cuota').value = montoCuota.toFixed(2)
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
@@ -612,7 +612,7 @@ $layout_page = shop_product_detail
       }else{
 
           let monto_cuotass = monto/n2;
-          document.getElementById('monto_de_la_cuota').value = Math.floor(monto_cuotass)
+          document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
             if(document.getElementById("Cuotas").value == 12){
               document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`

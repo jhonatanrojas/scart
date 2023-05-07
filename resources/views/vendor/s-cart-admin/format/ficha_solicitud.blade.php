@@ -377,12 +377,12 @@
                                                 }
                                                      
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = floor(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas']);
+                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);
 
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                                 $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
-                                                                $monto_cuota = floor($total_price / $detail['nro_coutas']);
+                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'],2);
 
                                                                  
                                                             }
@@ -390,7 +390,7 @@
                                                            
 
                                                               if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
-                                                                $monto_cuota = floor(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ) ;
+                                                                $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'],2 ) ;
 
                                                                  
                                                             }
@@ -435,10 +435,10 @@
                                                     <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
                                                 </td>
                                                 <td colspan="2">
-                                                    <p> <strong>Inicial: -${{ round($inicial)}}</strong> </p>
+                                                    <p> <strong>Inicial: -${{ number_format($inicial,2)}}</strong> </p>
                                                 </td>
                                                 <td >
-                                                    <p> <strong>Total: ${{  round($order->total,2) }}</p>
+                                                    <p> <strong>Total: ${{ number_format($order->total,2) }}</p>
                                                 </td>
                                                         
                                                  

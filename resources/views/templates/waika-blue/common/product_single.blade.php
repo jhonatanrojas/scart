@@ -24,16 +24,16 @@
           @endphp
 
           <div class="product-price-wrap">
-            <div class="product-price">${!! floor($product->price/$product->nro_coutas) !!}</div>
+            <div class="product-price">${!! number_format($product->price/$product->nro_coutas,2) !!}</div>
           </div>
 
           <div class="product-price-wrap text-muted">
               @if( $product->monto_inicial > 0 )
-                Inicial de  ${!! floor($product->monto_inicial)  !!} <br>
+                Inicial de  ${!! number_format($product->monto_inicial,2)  !!} <br>
               @endif
 
               @if( $product->monto_cuota_entrega > 0 )
-              Cuota de  entrega   ${!!floor($product->monto_cuota_entrega)  !!} <br>
+              Cuota de  entrega  ${!!number_format($product->monto_cuota_entrega,2)  !!} <br>
             @endif
               
               <span class="product-cuotas">{{ $product->nro_coutas}} cuotas {!! $modalida_pago !!}</span>

@@ -613,7 +613,7 @@
                                                                     if ($item->abono_inicial > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = floor($monto_inicial );
+                                                                        $monto_inicial = number_format($monto_inicial ,2);
                                                                     }
 
                                                                   
@@ -651,12 +651,12 @@
                                                                     if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
-                                                                        $precio_couta = floor($total_price / $item->nro_coutas);
+                                                                        $precio_couta = number_format($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
                                                                     elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $precio_couta = $item->total_price;
-                                                                        echo "$" . floor($precio_couta / $item->nro_coutas );
+                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas ,2);
 
 
                                                                        
@@ -667,7 +667,7 @@
 
                                                                          $valor = $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega;
 
-                                                                        $Precio_cuota = floor(($item->total_price - $monto_Inicial - $valor) / $item->nro_coutas ) ;
+                                                                        $Precio_cuota = number_format(($item->total_price - $monto_Inicial - $valor) / $item->nro_coutas,2 ) ;
 
                                                                         echo "$" . $Precio_cuota;
                                                                     }

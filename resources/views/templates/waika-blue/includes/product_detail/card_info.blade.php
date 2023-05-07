@@ -74,7 +74,7 @@
                             @if( $product->precio_de_cuota)
                                 <div class="product-price-wrap">
                                     <span class="price__product_new">
-                                        ${!!  floor($product->price_con_inicial/$product->nro_coutas,) !!}
+                                        ${!! number_format($product->price_con_inicial/$product->nro_coutas,2) !!}
                                     </span>
                                 </div>
                             @else
@@ -99,7 +99,7 @@
 
                              @if( $product->monto_cuota_entrega > 0 )
                             <span class="price__product_initial_payment text-muted">
-                                Cuota de entrega ${!! floor($product->monto_cuota_entrega)  !!}
+                                Cuota de entrega ${!! number_format($product->monto_cuota_entrega,2)  !!}
                             </span>
                             @endif
                         </div>

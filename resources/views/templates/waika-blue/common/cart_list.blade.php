@@ -86,17 +86,17 @@
                             
                                      
                             if ($product->monto_cuota_entrega >0){
-                                $Precio_cuota = floor(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ) ;
+                                $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
 
 
                             }else if($item->inicial > 0){
 
                                 $total_price = ($product->price - $item->inicial) ;
                                 $precio_coutas = $total_price / $item->Cuotas;
-                                $Precio_cuota = floor(($precio_coutas * $item->qty ) );  
+                                $Precio_cuota = number_format(($precio_coutas * $item->qty ),2 );  
                                                     
                             }else{
-                                $Precio_cuota = floor($product->price / $item->Cuotas );  
+                                $Precio_cuota = number_format($product->price / $item->Cuotas,2 );  
 
                             }
                         
@@ -112,7 +112,7 @@
                  
                         
                     
-                        <td>${!!floor($inicial=  $item->inicial * $item->qty )!!}</td>
+                        <td>${!!number_format($inicial=  $item->inicial * $item->qty ,2)!!}</td>
   
                         <td>{{ $product->monto_cuota_entrega}}</td>
                         <td class="cart-col-qty">
