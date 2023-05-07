@@ -1,6 +1,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
     integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    
+    <head>
+        <title>Solicitud</title>
+    </head>
 <style>
+
+    
     body {
         color: #2e323c;
         background: #f5f6fa;
@@ -260,7 +267,7 @@
                                                         PDF
                                                     </a>-->
                                                     <a class=" btn btn-info mx-1px text-95 dont-print"
-                                                    onclick="order_print()" data-title="Print">
+                                                    onclick="order_print('Solicitud#{{$order->id}}')" data-title="Print">
                                                     <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
                                                     IMPRIMIR
                                                 </a>
@@ -734,9 +741,17 @@
             $('.dont-print').show();
         }
 
-        function order_print(){
+        function order_print(name){
     $('.dont-print').hide();
-        window.print();
+    var titleElement = document.getElementsByTagName("title")[0];
+    var documentTitle = (titleElement !== undefined && titleElement !== null) ? titleElement.innerHTML : "Nombre Personalizado";
+    if(titleElement !== undefined && titleElement !== null) {
+        titleElement.innerHTML = name;
+    }
+    window.print(documentTitle);
+    if(titleElement !== undefined && titleElement !== null) {
+        titleElement.innerHTML = documentTitle;
+    }
     $('.dont-print').show();
-  }
+}
     </script>

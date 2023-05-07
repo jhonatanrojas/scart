@@ -16,10 +16,14 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs" id="tab_ordenes" role="tablist">
+
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                         aria-controls="home" aria-selected="true">Solicitud</a>
                 </li>
+                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                    
+               
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabevaluaciones-tab" data-toggle="tab" href="#tabevaluaciones" role="tab"
                         aria-controls="tabevaluaciones" aria-selected="false">Evaluaciones</a>
@@ -28,16 +32,18 @@
                     <a class="nav-link" id="recibos-tab" data-toggle="tab" href="#recibos" role="tab"
                         aria-controls="recibos" aria-selected="false">Recibos</a>
                 </li>
+                @endif
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabacciones-tab" data-toggle="tab" href="#tabacciones" role="tab"
                         aria-controls="tabacciones" aria-selected="false">Historial Acciones</a>
                 </li>
-
+                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabtotales-tab" data-toggle="tab" href="#tabtotales" role="tab"
                         aria-controls="tabtotales" aria-selected="false">Totales</a>
                 </li>
+                @endif
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
@@ -74,8 +80,12 @@
                                     target="_blank">Editar Plantilla convenio</a>
                             @endif
                             @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
-                                <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"
-                                    target="_blank">Ver Borrador Convenio</a>
+                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                                    <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"
+                                        target="_blank">Ver Borrador Convenio</a>
+                                        
+                                    @endif
+                               
                             @endif
                         @endif
 
@@ -537,15 +547,15 @@
 
                                     <div class="card collapsed-card">
                                         <div class="table-responsive">
-                                            <table class="table table-hover  table-bordered ">
+                                            <table class="table table-hover  table-bordered text-center ">
                                                 <thead>
-                                                    <tr>
+                                                    <tr style="text-align: center">
                                                         <th >{{ sc_language_render('product.name') }}</th>
                                                         <th>Cuotas</th>
                                                         <th>Modalidad</th>
-                                                        <th>Inicial %</th>
-                                                        <th>Cuota $</th>
-                                                        <th>Cuota de entrega $</th>
+                                                        <th>Inicial</th>
+                                                        <th>Cuotas $</th>
+                                                        <th>Cuotas de entrega $</th>
                                                         <th>Cant</th>
                                                         <th >{{ sc_language_render('product.price') }}</th>
 
@@ -613,7 +623,7 @@
                                                                     if ($item->abono_inicial > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = number_format($monto_inicial);
+                                                                        $monto_inicial = number_format($monto_inicial );
                                                                     }
 
                                                                   
@@ -625,7 +635,9 @@
                                                                     data-name="abono_inicial" data-type="select"
                                                                     data-source='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial !!} }'
                                                                     data-pk="{{ $item->id }}"
-                                                                    data-value=" @if ($item->abono_inicial > 0) Con Inicial ${{ $monto_inicial }}
+                                                                    data-value="@if ($item->abono_inicial > 0)
+                                                                     Con Inicial $
+                                                                     {{ $monto_inicial }}
                                @else
                                Sin inicial @endif"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
