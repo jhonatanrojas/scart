@@ -368,7 +368,7 @@
                                                         @php
 
                                                        
-
+                                                                       
                                                     
                                                                 
                                                 $AlContado = "Quincenal" ;
@@ -377,18 +377,20 @@
                                                 }
                                                      
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
+                                                            $monto_cuota = floor(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas']);
 
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                                 $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
-                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+                                                                $monto_cuota = floor($total_price / $detail['nro_coutas']);
 
                                                                  
                                                             }
 
+                                                           
+
                                                               if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
-                                                                $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ,2) ;
+                                                                $monto_cuota = floor(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ) ;
 
                                                                  
                                                             }
@@ -408,7 +410,7 @@
                                                         <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
-                                                        <td>${{ number_format($inicial) }}</td>
+                                                        <td>${{ floor($inicial) }}</td>
                                                
                                                         <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
                                                         <td>${{  $detail['monto_cuota_entrega']  }}</td>

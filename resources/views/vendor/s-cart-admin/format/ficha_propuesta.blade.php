@@ -378,18 +378,18 @@
                                            }
                                                 
                                                        $precio = $detail['price'];
-                                                       $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
+                                                       $monto_cuota = floor(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas']);
 
                                                        if ($detail['abono_inicial'] > 0) {
                                                            $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                            $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
-                                                           $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+                                                           $monto_cuota = floor($total_price / $detail['nro_coutas']);
 
                                                             
                                                        }
 
                                                          if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
-                                                           $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'] ,2) ;
+                                                           $monto_cuota = floor(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas']) ;
 
                                                             
                                                        }
