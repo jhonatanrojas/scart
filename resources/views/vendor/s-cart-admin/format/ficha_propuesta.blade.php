@@ -454,11 +454,13 @@
                                 </div>
                             </div>
                             <!-- Row end -->
+
+                             <div  style=" width: 100%;  margin: auto" >
+                            <img  style="width: 100%; height: auto; margin: auto" class="img-fluid" src="{!! $doc_cedula!!}" />  
+                            </div>
                         </div>
 
-                        <div class="nueva-pagina">
-                            <img  style=" max-width: 500px; height: auto; margin: auto" class="img-fluid" src="{!! $doc_cedula!!}" />  
-                            </div>
+                       
                        
 
 
