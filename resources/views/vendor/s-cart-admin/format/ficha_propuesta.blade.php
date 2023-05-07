@@ -453,7 +453,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 text-center"  style=" width: 100%;  margin: auto;" >
+                                <div class="col-12 text-center mt-2"  style=" width: 100%;" >
                                     <img  style="width:500px; height:auto; margin: auto;" class="img-fluid" src="{!! $doc_cedula!!}" />  
                                     </div>
                             </div>
