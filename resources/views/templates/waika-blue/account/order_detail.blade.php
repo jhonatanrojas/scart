@@ -369,7 +369,11 @@ $layout_page = shop_profile
         }
 
         function bioPago (id){
-          location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
+
+          alert('En este momento no encontramos en mantenimiento ')
+
+          
+          //location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
         }
 </script>
 

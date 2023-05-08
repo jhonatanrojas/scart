@@ -90,13 +90,15 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
-                  console.log(returnedData)
+                  
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
                   $("#c_monto").val(returnedData.subtotal)
                   $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
                   $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
-                  $("#c_inicial").val(returnedData.subtotal * returnedData.details[0].abono_inicial/100)
+                  $("#c_inicial").val(Math.floor(returnedData.subtotal * returnedData.details[0].abono_inicial/100))
+
+                 
                 
                   if(fecha_p==false){
                     if(returnedData.fecha_primer_pago ==null){
@@ -299,7 +301,7 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
-                  console.log(returnedData)
+                  
     
                     node.find('.add_sku').val(returnedData.sku);
                     node.find('.add_qty').eq(0).val(1);
@@ -309,8 +311,8 @@
     
                   
                     var inicial=0;
-                
-    
+
+
                     if (parseFloat(returnedData.monto_inicial)>0){
                       inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
                       
@@ -831,7 +833,7 @@
     }
 
 
-    console.log(order_total)
+
        function round(number, precision) {
         const factor = Math.pow(10, precision);
         return Math.round(number * factor) / factor;
