@@ -189,6 +189,7 @@ class ShopOrder extends Model
                 $row['created_at'] = sc_time_now();
                 $dataTotal[$key] = $row;
             }
+ 
             ShopOrderTotal::insert($dataTotal);
             //End order total
 
@@ -211,11 +212,14 @@ class ShopOrder extends Model
 
                 $cartDetail['order_id'] = $orderID;
                 $cartDetail['currency'] = $currency;
+                $cartDetail['monto_cuota_entrega'] = $product->monto_cuota_entrega;
                 $cartDetail['exchange_rate'] = $exchange_rate;
                 $cartDetail['sku'] = $product->sku;
                 $cartDetail['tax'] = $tax;
                 $cartDetail['store_id'] = $cartDetail['store_id'];
                 $cartDetail['attribute'] = json_encode($cartDetail['attribute']);
+
+                
                 $this->addOrderDetail($cartDetail);
 
                 //Update stock flash sale

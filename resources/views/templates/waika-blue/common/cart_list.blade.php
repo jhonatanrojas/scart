@@ -2,7 +2,6 @@
 @php
 
 
-
 @endphp
     <div class="table-responsive">
         <style>
@@ -24,6 +23,7 @@
                         <th>Cuotas</th>
                         <th>Frecuencia</th>
                         <th>Inicial</th>
+                        <th> Cuota de entrega</th>
                         <th>{{ sc_language_render('product.quantity') }}</th>
                     
                         <th></th>
@@ -77,39 +77,44 @@
                         </td>
                     
                         @php
+                         
+                       
                             if($cartItem[0]->financiamiento==2){
                                 $product->nro_coutas=$product->cuotas_inmediatas;
                                 $item->Cuotas=$product->cuotas_inmediatas;
                             }
-                
+                            
+                                     
+                            if ($product->monto_cuota_entrega >0){
+                                $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
+
+
+                            }else if($item->inicial > 0){
+
+                                $total_price = ($product->price - $item->inicial) ;
+                                $precio_coutas = $total_price / $item->Cuotas;
+                                $Precio_cuota = number_format(($precio_coutas * $item->qty ),2 );  
+                                                    
+                            }else{
+                                $Precio_cuota = number_format($product->price / $item->Cuotas,2 );  
+
+                            }
                         
-                                if($item->inicial>0){
-                                $totalinicial= $item->inicial * $product->price/100;
-                                $number1 = $product->price-($item->inicial * $product->price /100);
-                                $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
-                                }else{
-                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
-                                }
-                        
+
                         @endphp
 
                         <td>
-                            {{$Precio_cuotas}} 
+                            {{$Precio_cuota}} 
                         </td> 
 
                         <td>{{$item->Cuotas}} </td>
                         <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
-                        @php
-                            $inicial="0.00";
-                            if($item->inicial>0){
                         
-                                $inicial= number_format( ($product->price * $item->inicial) /100,2);
-                            }
-                        @endphp
                     
-                        <td>${!!$inicial!!}</td>
+                        <td>${!!number_format($inicial=  $item->inicial * $item->qty ,2)!!}</td>
   
+                        <td>{{ $product->monto_cuota_entrega}}</td>
                         <td class="cart-col-qty">
                             <div class="cart-qty">
                                 <input style="width: 100px;" type="number" data-id="{{ $item->id }}"
@@ -126,7 +131,7 @@
   
                   
   
-                        <td align="center">
+                        <td >
                             <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
                                 class="cart_quantity_delete"
                                 href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">

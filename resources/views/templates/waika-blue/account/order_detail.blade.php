@@ -110,6 +110,7 @@ $layout_page = shop_profile
                         <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                         <th class="product_price">Cuota</th>
                         <th class="product_price">Monto de la  Cuota</th>
+                        <th>Cuota de entrega</th>
                         <th class="product_total">Frecuencia</th>
                       @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>
@@ -122,13 +123,20 @@ $layout_page = shop_profile
                       @foreach ($order->details as $item)
                         @php
                         $cuotas = $item->nro_coutas;
-                        if($item->abono_inicial > "0"){
-                          $totalinicial= $item->abono_inicial *$item->price/100;
-                          $number1 = $item->price -($item->abono_inicial * $item->price /100);
-                          $Precio_cuotas = number_format($number1 / $item->nro_coutas,2);
-                        }else{
-                          $Precio_cuotas = number_format($item->price / $item->nro_coutas,2);
-                        }
+                   
+                       
+
+
+                        $precio_couta = 0;
+                        if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
+                               $inicial = ($item->abono_inicial * $item->total_price) / 100;
+                                 $total_price = ($item->total_price - $inicial) - $item->monto_cuota_entrega;
+                                  $precio_couta = round($total_price / $item->nro_coutas);
+                                  echo "$" . $precio_couta;
+                                  elseif ($item->nro_coutas > 0):
+                                      $precio_couta = $item->total_price;
+                                      echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
+                                          endif;
                         @endphp
                           <tr>
                             <td>
@@ -147,7 +155,8 @@ $layout_page = shop_profile
                               @if (empty($order->details[0]->modalidad_de_compra >= 1))
                                 <td class="product_qty">x  {{ $item->qty }}</td>
                                 <td>{{$item->nro_coutas}}</th>
-                                <td class="product_price">{{ $Precio_cuotas ?? '0' }}$</td>
+                                <td class="product_price">{{ $precio_couta ?? '0' }}$</td>
+                                <th> {{  $item->monto_cuota_entrega}}</th>
                                 <td class="product_total item_id_{{ $item->id }}">
                                   @if ($item->id_modalidad_pago == 2)
                                     Quincenal
@@ -360,7 +369,11 @@ $layout_page = shop_profile
         }
 
         function bioPago (id){
-          location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
+
+          alert('En este momento no encontramos en mantenimiento puedes usar transferencia o pago móvil ')
+
+          
+          //location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
         }
 </script>
 

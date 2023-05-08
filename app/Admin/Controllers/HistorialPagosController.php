@@ -30,6 +30,7 @@ use SCart\Core\Front\Models\ShopPaymentStatus;
 use SCart\Core\Front\Models\ShopOrderDetail;
 use DateTime;
 use DateInterval;
+use SCart\Core\Admin\Models\AdminProduct;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -1044,7 +1045,9 @@ class HistorialPagosController extends RootAdminController
             $estado = Estado::all();
             $municipio = Municipio::all();
             $parroquia = Parroquia::all();
-            $order = ShopOrder::where('id', $data['c_order_id'])->first();
+            
+            $order = AdminOrder::getOrderAdmin($data['c_order_id']);
+            $product = AdminProduct::getProductAdmin($order->product_id);
             $letraconvertir_nuber = new NumeroLetra;
 
 
@@ -1166,11 +1169,17 @@ class HistorialPagosController extends RootAdminController
 
             $file_html = Declaracion_jurada::all();
 
+
+           
+
             $pieces = explode(" ", $dato_usuario['cedula']);
             if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
                 $mesualQuinsena = "MENSUAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            } else {
+            } else if($dato_usuario[0]['id_modalidad_pago'] == 2 && $dato_usuario[0]['cuotas'] >= 24 ) {
+                $mesualQuinsena = "QUINCENAL";
+                $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+            }else{
                 $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
                 $mesualQuinsena = " QUINCENAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
@@ -1186,7 +1195,7 @@ class HistorialPagosController extends RootAdminController
              $total_price = $dato_usuario[0]['subtotal'];
             $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
             $cuotas = $dato_usuario[0]['cuotas'];
-            if ($dato_usuario[0]['abono_inicial'] > 0) {
+            if ($dato_usuario[0]['abono_inicial'] > 0 && $product->monto_cuota_entrega == 0) {
                 $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
                 $total_price = $dato_usuario[0]['subtotal'] - $inicial;
                 $precio_couta = number_format($total_price / $dato_usuario[0]['cuotas'], 2);
@@ -1194,6 +1203,15 @@ class HistorialPagosController extends RootAdminController
                 
 
             }
+
+
+            if ($product->monto_cuota_entrega > 0){
+                        $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
+
+                        $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
+
+                      
+                   }
 
             $number2 = $total_price * $cod_bolibares;
 
@@ -2185,19 +2203,19 @@ class HistorialPagosController extends RootAdminController
        
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
-            $total_bs += round($monto * $row->tasa_cambio, 2);
+            $total_bs += floor($monto * $row->tasa_cambio);
 
             if ($moneda == 'USD') {
                 // El monto está en dólares
-                $monto_dolares = round($monto, 2);
-                $monto_bolivares = round($monto * $row->tasa_cambio, 2);
+                $monto_dolares = floor($monto);
+                $monto_bolivares = floor($monto * $row->tasa_cambio);
                 $Referencia = $monto_bolivares."Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
             } elseif ($moneda == 'Bs') {
                 // El monto está en bolívares
-                $monto_bolivares = round($monto, 2);
-                $monto_dolares = round($monto / $row->tasa_cambio, 2);
+                $monto_bolivares = floor($monto);
+                $monto_dolares = floor($monto / $row->tasa_cambio);
                 $Referencia = $monto_dolares."$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
@@ -2240,7 +2258,7 @@ class HistorialPagosController extends RootAdminController
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['Cuotas_Pendientes'] =  floor($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';

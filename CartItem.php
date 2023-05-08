@@ -44,6 +44,8 @@ class CartItem implements Arrayable, Jsonable
     public $Cuotas;
     public $fecha;
     public $inicial;
+    public $monto_Inicial;
+    public $monto_de_la_cuota;
 
     /**
      * The price without TAX of the cart item.
@@ -90,7 +92,7 @@ class CartItem implements Arrayable, Jsonable
      * @param int        $tax
      * @param int        $storeId
      */
-    public function __construct($id, $name,  $financiamiento,$modalidad_pago,$Cuotas,$fecha,$inicial, $price, array $options = [], $tax = 0, $storeId = null)
+    public function __construct($id, $name,  $financiamiento,$modalidad_pago,$Cuotas,$fecha,$inicial,  $price, array $options = [], $tax = 0, $storeId = null , $monto_Inicial ,$monto_de_la_cuota)
     {
         $storeId = empty($storeId) ? config('app.storeId') : $storeId;
 
@@ -116,6 +118,8 @@ class CartItem implements Arrayable, Jsonable
         $this->options = new CartItemOptions($options);
         $this->rowId   = $this->generateRowId($id, $options);
         $this->storeId = $storeId;
+        $this->$monto_Inicial;
+        $this-> $monto_de_la_cuota;
     }
 
     /**
@@ -228,13 +232,15 @@ class CartItem implements Arrayable, Jsonable
     {
         $options = array_get($attributes, 'options', []);
 
-        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId']);
+      
+
+        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId'] , $attributes['monto_Inicial'] ?? '' ,$attributes['monto_de_la_cuota'] ?? '');
     }
     public static function fromArray2(array $attributes)
     {
         $options = array_get($attributes, 'options', []);
 
-        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId']);
+        return new self($attributes['id'], $attributes['name'], $attributes['financiamiento']?? '', $attributes['modalidad_pago']?? '',$attributes['Cuotas']??'',$attributes['fecha']?? '',$attributes['inicial']??'', $attributes['price'], $options, $attributes['tax'], $attributes['storeId'] , $attributes['monto_Inicial'] ?? '' ,$attributes['monto_de_la_cuota'] ?? '' );
     }
 
     /**
@@ -276,7 +282,9 @@ class CartItem implements Arrayable, Jsonable
             'storeId'  => $this->storeId,
             'options'  => $this->options->toArray(),
             'subtotal' => $this->subtotal,
-            'total'    => $this->total
+            'total'    => $this->total,
+            'monto_Inicial' => $this->monto_Inicial,
+            'monto_de_la_cuota' => $this->monto_de_la_cuota
         ];
     }
 

@@ -16,10 +16,14 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs" id="tab_ordenes" role="tablist">
+
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                         aria-controls="home" aria-selected="true">Solicitud</a>
                 </li>
+                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                    
+               
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabevaluaciones-tab" data-toggle="tab" href="#tabevaluaciones" role="tab"
                         aria-controls="tabevaluaciones" aria-selected="false">Evaluaciones</a>
@@ -28,16 +32,18 @@
                     <a class="nav-link" id="recibos-tab" data-toggle="tab" href="#recibos" role="tab"
                         aria-controls="recibos" aria-selected="false">Recibos</a>
                 </li>
+                @endif
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabacciones-tab" data-toggle="tab" href="#tabacciones" role="tab"
                         aria-controls="tabacciones" aria-selected="false">Historial Acciones</a>
                 </li>
-
+                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabtotales-tab" data-toggle="tab" href="#tabtotales" role="tab"
                         aria-controls="tabtotales" aria-selected="false">Totales</a>
                 </li>
+                @endif
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
@@ -74,8 +80,12 @@
                                     target="_blank">Editar Plantilla convenio</a>
                             @endif
                             @if ($order->total > 0 && $order->modalidad_de_compra >= 1 && empty($convenio))
-                                <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"
-                                    target="_blank">Ver Borrador Convenio</a>
+                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                                    <a class="dropdown-item" href="{{ route('borrador_pdf', ['id' => $order->id]) }}"
+                                        target="_blank">Ver Borrador Convenio</a>
+                                        
+                                    @endif
+                               
                             @endif
                         @endif
 
@@ -310,6 +320,20 @@
                                     @endif
 
                                     <tr>
+                                        <td> Serial del articulo:</td>
+                                        <td>
+                                            <a id="serial"
+                                                data-index-number="{{ $order->nro_coutas }}"
+                                                href="#" class="updateStatus"
+                                                data-value="{{ $order->serial }}" data-name="serial"
+                                                data-type="text" min=0 data-pk="{{ $order->id }}"
+                                                data-url="{{ route('admin_order.edit_item') }}"
+                                                data-title="serial">{{ $order->serial ?? '' }}</a>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
                                         <td></i> {{ sc_language_render('admin.created_at') }}:</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
@@ -523,18 +547,17 @@
 
                                     <div class="card collapsed-card">
                                         <div class="table-responsive">
-                                            <table class="table table-hover  table-bordered ">
+                                            <table class="table table-hover  table-bordered text-center ">
                                                 <thead>
-                                                    <tr>
-                                                        <th>{{ sc_language_render('product.name') }}</th>
+                                                    <tr style="text-align: center">
+                                                        <th >{{ sc_language_render('product.name') }}</th>
                                                         <th>Cuotas</th>
-                                                        <th>Serial</th>
                                                         <th>Modalidad</th>
-                                                        <th>Inicial %</th>
-                                                        <th>Cuota $</th>
-                                                        <th>Cuota de entrega $</th>
+                                                        <th>Inicial</th>
+                                                        <th>Cuotas $</th>
+                                                        <th>Cuotas de entrega $</th>
                                                         <th>Cant</th>
-                                                        <th>{{ sc_language_render('product.price') }}</th>
+                                                        <th >{{ sc_language_render('product.price') }}</th>
 
                                                         {{-- <th class="product_tax">{{ sc_language_render('product.tax') }}</th> --}}
                                                         <th class="product_total">Total</th>
@@ -576,16 +599,7 @@
                                                             </td>
 
 
-                                                            <td>
-                                                                <a id="serial"
-                                                                    data-index-number="{{ $item->nro_coutas }}"
-                                                                    href="#" class="updateStatus"
-                                                                    data-value="{{ $item->serial }}" data-name="serial"
-                                                                    data-type="text" min=0 data-pk="{{ $item->id }}"
-                                                                    data-url="{{ route('admin_order.edit_item') }}"
-                                                                    data-title="serial">{{ $item->serial ?? '' }}</a>
-
-                                                            </td>
+                                                            
 
 
                                                             <td>
@@ -599,20 +613,31 @@
 
                                                             </td>
                                                             <td>
-                                                                @php
+                                                                @php 
                                                                     $data_json_inicial = '';
-                                                                    $monto_inicial = 0.0;
+                                                                    $monto_inicial = 0.0;   
+
+                                                                    
+                                                        
+                                                              
                                                                     if ($item->abono_inicial > 0) {
-                                                                        $monto_inicial = round(($item->abono_inicial * ($item->total_price - $item->monto_cuota_entrega)) / 100);
+                                                                        $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
+                                                                        $monto_inicial = number_format($monto_inicial );
                                                                     }
+
+                                                                  
+
+                                                                    
                                                                     
                                                                 @endphp;
                                                                 <a href="#" class="updateStatus"
                                                                     data-name="abono_inicial" data-type="select"
                                                                     data-source='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial !!} }'
                                                                     data-pk="{{ $item->id }}"
-                                                                    data-value=" @if ($item->abono_inicial > 0) Con Inicial ${{ $monto_inicial }}
+                                                                    data-value="@if ($item->abono_inicial > 0)
+                                                                     Con Inicial $
+                                                                     {{ $monto_inicial }}
                                @else
                                Sin inicial @endif"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
@@ -625,33 +650,54 @@
                                                                 </a>
 
                                                             </td>
-
+                                                           
+                                                          
                                                             <td>
                                                                 @php
                                                                     
                                                                     $precio_couta = 0;
+
+
                                                                     
-                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
+                                                                    
+                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
-                                                                        $total_price = ($item->total_price - $inicial) - $item->monto_cuota_entrega;
-                                                                        $precio_couta = number_format($total_price / $item->nro_coutas, 2);
+                                                                        $total_price = ($item->total_price - $inicial);
+                                                                        $precio_couta = number_format($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
-                                                                    elseif ($item->nro_coutas > 0):
+                                                                    elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
                                                                         $precio_couta = $item->total_price;
-                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
+                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas ,2);
+
+
+                                                                       
                                                                     endif;
+
+
+                                                                    if ($monto_entrega > 0){
+
+                                                                         $valor = $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega;
+
+                                                                        $Precio_cuota = number_format(($item->total_price - $monto_Inicial - $valor) / $item->nro_coutas,2 ) ;
+
+                                                                        echo "$" . $Precio_cuota;
+                                                                    }
+
+                                                                    
+                                                                   
+                                                                 
                                                                     
                                                                 @endphp
                                                             </td>
                                                             <td class="product_monto_cuota_entrega"> <a href="#"
-                                                              class="edit-item-detail"
-                                                              data-value="{{ $item->monto_cuota_entrega }}" data-name="monto_cuota_entrega"
+                                                              class="edit-item-detail "
+                                                              data-value="{!! $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega !!}" data-name="monto_cuota_entrega"
                                                               data-type="number" min=0
                                                               data-pk="{{ $item->id }}"
                                                               data-url="{{ route('admin_order.edit_item') }}"
                                                               data-title="Couta de entrega">
-                                                              {{ $item->monto_cuota_entrega }}</a>
+                                                              {!! $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega !!}</a>
                                                             
                                                         </td>
 
@@ -733,8 +779,8 @@
                         </form>
 
                         <table class="table table-hover box-body text-wrap table-bordered">
-                            <tr>
-                                <td class="td-title">Notas de la solicitud:</td>
+                            <tr >
+                                <td  class="td-title">Notas de la solicitud:</td>
                                 <td>
                                     <a href="#" class="updateInfo" data-name="comment" data-type="textarea"
                                         data-pk="{{ $order->id }}" data-url="{{ route('admin_order.update') }}"
@@ -755,7 +801,7 @@
                         @php
                             
                             $opcion_inicial = '  <option value="0"> Sin Inicial</option>
-                <option value="30">  Inicial 30%</option>';
+                                <option value="30">  Inicial 30%</option>';
                             
                             $htmlSelectProduct =
                                 '<tr>
@@ -781,7 +827,7 @@
             <td><input type="number" name="add_nro_cuota[]"  min="0" class="add_nro_cuota form-control"  value="0"></td>
 
 
-            <td><input type="text" name="add_serial[]"   class="add_serial form-control"  value="0"></td>
+         
 
             
 

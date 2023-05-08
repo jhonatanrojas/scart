@@ -384,7 +384,9 @@ $layout_page = shop_product_detail
                 </section>
 
               </div>
-              
+              @php 
+              $inicial_default=  30.00;
+            @endphp
               <div class="col-lg-4">
                 @include($sc_templatePath.'.includes.product_detail.card_info')
               </div>
@@ -422,7 +424,10 @@ $layout_page = shop_product_detail
               </div>
             </div>
             @endif
-      
+
+          
+   
+        <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
@@ -439,24 +444,7 @@ $layout_page = shop_product_detail
 @push('scripts')
     {{-- lightSlider --}}
       <script>
-        // $(document).ready(function() {
-        //   $('#imageGallery').lightSlider({
-        //       gallery:true,
-        //       item:1,
-        //       adaptiveHeight:true,
-        //       loop:true,
-        //       thumbItem:2,
-        //       thumbMargin: 6,
-        //       slideMargin:0,
-        //       enableDrag: true,
-        //       currentPagerPosition:'left',
-        //       onSliderLoad: function(el) {
-        //           el.lightGallery({
-        //               selector: '#imageGallery .lslide'
-        //           });
-        //       }   
-        //   });  
-        // });
+     
         
         document.addEventListener( 'DOMContentLoaded', function () {
           var main = new Splide( '#main-carousel', {
@@ -494,64 +482,91 @@ $layout_page = shop_product_detail
     {{-- end owl --}}
   <script type="text/javascript">
 
-    const title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
-    const title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+    var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
+    var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
 
+    var monto_cuota_entrega = {!! json_encode($product->monto_cuota_entrega) !!};
 
-
-    var radios_tipo_venta = document.getElementsByName('tipo_venta');
+     var radios_tipo_venta = document.getElementsByName('tipo_venta');
     const input_financamiento =document.getElementById("financiamiento");
     var select_inicial = document.getElementById("inicial");
-    // Agregar un evento onchange a cada botón de radio
+    const valor_product_inicial =  $("#inicial_producto").val()
+
+
+    if(monto_cuota_entrega > 0){
+      var n2=document.getElementById("Cuotas").value;
+      let monto = document.getElementById("monto").value;
+          const cuota = (monto - valor_product_inicial) / n2;
+          console.log(`La cuota mensual es de $${cuota.toFixed(2)}.`);
+          document.getElementById('monto_de_la_cuota').value = Math.floor( cuota)
+
+}
+
+
     for (var i = 0; i < radios_tipo_venta.length; i++) {
     radios_tipo_venta[i].onchange = function() {
     // Obtener el valor del botón de radio seleccionado
 
 
     var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
+    
 
     if(seleccionado==1){
+ 
       input_financamiento.value=1;
-      select_inicial.querySelector('option[value="30"]').removeAttribute("selected");
-      select_inicial.removeAttribute("readonly");
-      document.getElementById('monto_Inicial').value =0;
+     
+      select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" >SI</option>
+          <option value="0" selected>NO</option>
+        `;
 
-    
-            document.getElementById('monto_Inicial').value = 0.00
+        
+          document.getElementById('monto_Inicial').value =0;
+
             gen_table(0)
 
 
     }else{
+      select_inicial.innerHTML = `
+          <option value="${valor_product_inicial}" selected>SI</option>
+        
+        `;
+
+        let  inicial = document.getElementById("inicial")
 
 
-        var option = select_inicial.querySelector('option[value="30"]');
-        select_inicial.querySelector('option[value="0"]').removeAttribute("selected");
-    if (option) {
-    option.setAttribute("selected", "selected");
-    select_inicial.setAttribute("readonly", "readonly");
-    gen_table(30)
 
+        gen_table(inicial.value)
+
+        
+
+       
+    
+       input_financamiento.value=2;
     }
-    input_financamiento.value=2;
-    }
-    // Hacer algo con el valor seleccionado
-    console.log('El botón de radio seleccionado es: ' + seleccionado);
+    
     }
     }
 
-      let  inicial = document.getElementById("inicial")
-      inicial.addEventListener('click' , function(e){
-      var iniciale = e.target.value
+        if(document.getElementById("Cuotas").value == 12  ){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
 
-      if(iniciale == '0' || iniciale == '30'){
-          gen_table(iniciale)
-      }else if(!iniciale == '0' || !iniciale == '30'){
-          alert('el campo inicial es obligatorio')
+          }
+
+      const inicialElement = document.getElementById("inicial")
+
+      function handleInicialChange(e) {
+
+        
+
+        const inicialValue = inicialElement.value
+        gen_table(inicialValue)
       }
 
-      
-      
-    })
+      inicialElement.addEventListener('change', handleInicialChange)
+
+
+    
 
     function gen_table(iniciale){
       document.getElementById("butto_modal").disabled = false;
@@ -563,37 +578,54 @@ $layout_page = shop_product_detail
 
       let monto=Number(document.getElementById("monto").value);
 
-      let inicial = iniciale;
+      let inicial = parseFloat(iniciale);
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
-      
 
-    
-
+     
       if(inicial>0){
 
-          let precio_couta=  monto -(inicial* monto / 100 );
-          
-          let precio_monto_cuota = precio_couta / n2
-          let tola_inicial = inicial * monto / 100
-          let monto_cuotas = monto/n2;
+            const montoTotal = monto; 
+            const inicialPorcentaje = 0.30;
+            const numeroCuotas = n2; 
+            const total_inicial = montoTotal * inicialPorcentaje;
+            const montoFinanciado = montoTotal - total_inicial;
 
-          document.getElementById('monto_Inicial').value = tola_inicial.toFixed(2)
-          document.getElementById('monto_de_la_cuota').value = precio_monto_cuota.toFixed(2)
-          document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+            
+            const montoCuota = montoFinanciado / numeroCuotas;
+           
 
+          document.getElementById('monto_Inicial').value = total_inicial.toFixed(2) 
+          document.getElementById('monto_de_la_cuota').value = montoCuota.toFixed(2)
 
+          if(document.getElementById("Cuotas").value == 12){
+            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          }
+
+          if(document.getElementById("m_nro_cuotas").value == 8  ){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`
+
+          }
 
       
       }else{
+
           let monto_cuotass = monto/n2;
           document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
             document.getElementById('monto_Inicial').value = 0.00
-            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+            if(document.getElementById("Cuotas").value == 12){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+            }
+           
 
 
         
       }
+
+
+      
 
 
         fechaInicio = new Date(document.getElementById('fecha').value)
@@ -621,7 +653,7 @@ $layout_page = shop_product_detail
 
           var finansiamiento = document.getElementById("finansiamiento");
 
-          finansiamiento.classList.replace("btn-success", "btn-primary")
+        //  finansiamiento.classList.replace("btn-success", "btn-primary")
           
       
       

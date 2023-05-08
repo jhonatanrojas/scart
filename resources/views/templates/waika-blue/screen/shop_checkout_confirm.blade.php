@@ -11,6 +11,9 @@
     - $products: paginate
     Use paginate: $products->appends(request()->except(['page','_token']))->links()
     */
+
+
+   
 @endphp
 
 
@@ -59,6 +62,7 @@
                                         @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                             <th>Nro Cuotas</th>
                                             <th>Inicial</th>
+                                            <th>Cuota de entrega</th>
                                             <th>Frecuencia de pago</th>
                                         @endif
                                         
@@ -80,7 +84,7 @@
                                             }
                                             $product->nro_coutas=      $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                                             if( $product->precio_de_cuota > 0 ):
-                                                $product->precio=  $product->price-$product->monto_inicial;
+                                                $product->precio=  ($product->price-$product->monto_inicial )- $product->monto_cuota_entrega;
                                             endif;
                                         @endphp
 
@@ -107,22 +111,35 @@
                                             <td>{{ $item->qty }}</td>
                                             <td>
                                                 @php
-                                                if($item->inicial>0){
-                                                $totalinicial= $item->inicial * $product->price/100;
-                                                $number1 = $product->price-($item->inicial * $product->price /100);
-                                                $Precio_cuotas = number_format($number1 / $product->nro_coutas,2);
+
+                                     
+                                              $Precio_cuota = 0;
+                       
+                                     
+                                              if ($product->monto_cuota_entrega >0){
+
+                                                $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
 
 
-                                                }else{
+                                                }else if($item->inicial > 0){
 
-                                                    $Precio_cuotas = number_format($product->price / $product->nro_coutas,2);
+                                                    $total_price = ($product->price - $item->inicial) ;
+                                                    $precio_coutas = number_format( $total_price / $item->Cuotas ,2);
 
-                                                }
+
+                                                    $Precio_cuota = ($precio_coutas * $item->qty );  
+                                                                                
+                                                            }else{
+                                                            $Precio_cuota =number_format($product->price / $item->Cuotas ,2);  
+
+                                                            }
+
+                                                
                                                 @endphp
 
                                                 @if( $product->precio_de_cuota )
 
-                                                    {{$Precio_cuotas}}
+                                                    {{$Precio_cuota}}
 
                                                 @else
                                                 {!! $product->showPrice() !!}
@@ -133,13 +150,14 @@
                                             @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                                 <td>{{ $item->Cuotas }}</td>
                                                 @php
-                                                    $inicial = '0.00';
-                                                    if ($item->inicial > 0) {
-                                                        $inicial = number_format(($product->price * $item->inicial) / 100, 2);
-                                                    }
+
+
+                                                
+                                                                                
                                                     
                                                 @endphp
-                                                <td>${{ $inicial }} </td>
+                                                <td>${{number_format($inicial=  $item->inicial * $item->qty ,2) }} </td>
+                                                <td>$ {{ $product->monto_cuota_entrega}}</td>
                                                 <td>{{ $item->modalidad_pago == '3' ? 'Mensual' : 'Quincenal' }}</td>
                                             @endif
                                             

@@ -96,7 +96,9 @@
                   $("#c_monto").val(returnedData.subtotal)
                   $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
                   $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
-                  $("#c_inicial").val(returnedData.subtotal * returnedData.details[0].abono_inicial/100)
+                  $("#c_inicial").val(Math.floor(returnedData.subtotal * returnedData.details[0].abono_inicial/100))
+
+                 
                 
                   if(fecha_p==false){
                     if(returnedData.fecha_primer_pago ==null){
@@ -130,11 +132,13 @@
                   
                   document.getElementById("tbodyconvenio").innerHTML="";
               document.getElementById("butto_modal").disabled = false;
-              let monto=Number(returnedData.subtotal);
+             const monto_cuota_entrega= parseFloat(returnedData.details[0].monto_cuota_entrega)
+
+              let monto=Number(returnedData.subtotal - monto_cuota_entrega);
               let n2=Number(returnedData.details[0].nro_coutas);
               let n3=Number(returnedData.details[0].abono_inicial);
               let inicial = parseInt(n3);
-              if(inicial>0){
+              if(inicial>0){ 
                 totalinicial=(inicial*monto)/100;
                 monto = monto -totalinicial;
               }
@@ -297,7 +301,7 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
-                  console.log(returnedData)
+                  
     
                     node.find('.add_sku').val(returnedData.sku);
                     node.find('.add_qty').eq(0).val(1);
@@ -307,8 +311,8 @@
     
                   
                     var inicial=0;
-                
-    
+
+
                     if (parseFloat(returnedData.monto_inicial)>0){
                       inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
                       
@@ -828,8 +832,8 @@
       });
     }
 
-    console.log(total_pagado)
-    console.log(order_total)
+
+
        function round(number, precision) {
         const factor = Math.pow(10, precision);
         return Math.round(number * factor) / factor;

@@ -650,6 +650,9 @@ class  AdminOrderController extends RootAdminController
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
 
+        $product = AdminProduct::getProductAdmin($order->product_id);
+
+
         $pagadoCount =  count($historialPagos);
 
         
@@ -697,6 +700,8 @@ class  AdminOrderController extends RootAdminController
             [
                 "title" => $Titulo,
                 "subTitle" => '',
+                "monto_Inicial" => $product->monto_inicial ?? '',
+                'monto_entrega' => $product->monto_cuota_entrega ?? '',
                 'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
@@ -1275,6 +1280,11 @@ class  AdminOrderController extends RootAdminController
          $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
+        $product = AdminProduct::getProductAdmin($order->product_id);
+
+
+      
+        
 
         $convenio=Convenio::where('order_id',$orderId)->first();
 
@@ -1385,7 +1395,13 @@ class  AdminOrderController extends RootAdminController
                         $modelo = $first_attributes->name ?? '';
                         
                     }
-                
+
+
+                    
+
+
+                    
+               
              
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
@@ -1398,9 +1414,7 @@ class  AdminOrderController extends RootAdminController
                         $name = $detail->name;
                     }
 
-                   
 
-          
                     $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
@@ -1409,7 +1423,8 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega'=> $detail->monto_cuota_entrega,
+                        'monto_cuota_entrega'=> $product->monto_cuota_entrega,
+                        'monto_inicial'=>$product->monto_inicial,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1434,15 +1449,23 @@ class  AdminOrderController extends RootAdminController
 
     public function ficha_propuesta()
     {
-         $orderId = request('order_id') ?? null;
+        $orderId = request('order_id') ?? null;
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
+        $product = AdminProduct::getProductAdmin($order->product_id);
+        
 
         $convenio=Convenio::where('order_id',$orderId)->first();
 
         $constacia_trabajo='';
         $rif='';
         $cedula='';
+
+
+
+      
+
+       
        
         $nro_convenio = 'A/N';
 
@@ -1464,7 +1487,10 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('estado', 'estado.codigoestado', '=', 'sc_shop_customer.cod_estado')
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
-            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia' )->first();
+            ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia ,postcode ' )->first();
+
+
+          
 
   
             if($documento){
@@ -1489,7 +1515,15 @@ class  AdminOrderController extends RootAdminController
             $data['nro_convenio'] =  $nro_convenio  ;
             $data['constacia_trabajo'] =  $constacia_trabajo;
             $data['rif'] =  $rif;
-            $data['doc_cedula'] =  $doc_cedula;
+            $data['doc_cedula'] =  $product->image;
+
+
+            
+
+
+
+            
+           
 
             $data['order'] =  $order;
             
@@ -1508,11 +1542,14 @@ class  AdminOrderController extends RootAdminController
             $data['total']           = $order['total'];
             $data['received']        = $order['received'];
             $data['balance']         = $order['balance'];
-            $data['other_fee']       = $order['other_fee'] ?? 0;
+            $data['other_fee']       = $order['other_fee'] ?? '';
             $data['comment']         = $order['comment'];
             $data['country']         = $order['country'];
             $data['id']              = $order->id;
             $data['details'] = [];
+
+
+           
 
             $attributesGroup =  ShopAttributeGroup::pluck('name', 'id')->all();
             $id_attribute_modelo =ShopAttributeGroup::where('name','Modelo')->first()->id ?? '';
@@ -1530,7 +1567,13 @@ class  AdminOrderController extends RootAdminController
                         $modelo = $first_attributes->name ?? '';
                         
                     }
-                
+
+
+                    
+
+
+                    
+               
              
                     $arrAtt = json_decode($detail->attribute, true);
                     if ($arrAtt) {
@@ -1538,13 +1581,13 @@ class  AdminOrderController extends RootAdminController
                         foreach ($arrAtt as $groupAtt => $att) {
                             $htmlAtt .= $attributesGroup[$groupAtt] .':'.sc_render_option_price($att, $order['currency'], $order['exchange_rate']);
                         }
-                        $name = $detail->name.'('.strip_tags($htmlAtt).')';
+                        $name = $detail->name;
                     } else {
                         $name = $detail->name;
                     }
 
-          
-                    $data['details'][] = [
+
+                    $data['details'][] = [ 
                         'no' => $key + 1, 
                         'sku' => $detail->sku, 
                         'name' => $name, 
@@ -1552,7 +1595,8 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega' =>$detail->monto_cuota_entrega,
+                        'monto_cuota_entrega'=> $order->monto_cuota_entrega > 0 ? $order->monto_cuota_entrega : $product->monto_cuota_entrega,
+                        'monto_inicial'=>$product->monto_inicial,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 
@@ -1560,6 +1604,7 @@ class  AdminOrderController extends RootAdminController
                     ];
                 }
             }
+           
 
             if ($action =='invoice_excel') {
                 $options = ['filename' => 'Order ' . $orderId];
@@ -1672,7 +1717,8 @@ class  AdminOrderController extends RootAdminController
             return 'inicia secion';
         }
 
-        $order = ShopOrder::where('id',$id)->first();
+        $order = AdminOrder::getOrderAdmin($id);
+         $product = AdminProduct::getProductAdmin($order->product_id);
         $letraconvertir_nuber = new NumeroLetra;
 
         if (!$order) {
@@ -1779,7 +1825,7 @@ class  AdminOrderController extends RootAdminController
                     $total_price = $order->subtotal;
                     $precio_couta =  $order->subtotal/ $productoDetail[0]->nro_coutas;
                     $cuotas = $productoDetail[0]->nro_coutas;
-                    if( $productoDetail[0]->abono_inicial>0){
+                    if( $productoDetail[0]->abono_inicial>0  && $product->monto_cuota_entrega == 0){
 
                         $inicial = ($productoDetail[0]->abono_inicial * $order->subtotal) / 100;
                                                                 $total_price = $order->subtotal - $inicial;
@@ -1791,6 +1837,16 @@ class  AdminOrderController extends RootAdminController
                                                                
                        
                       }
+
+                    
+
+                      if ($product->monto_cuota_entrega > 0){
+                        $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
+
+                        $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
+
+                      
+                   }
     
 
                   

@@ -9,8 +9,11 @@
         @php
         $product->nro_coutas=$product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
           if( $product->precio_de_cuota > 0 ):
-            $product->price=  $product->price-$product->monto_inicial;
+            $product->price=  ($product->price-$product->monto_inicial) - $product->monto_cuota_entrega;
           endif;
+
+
+        
         @endphp
         
         @if( $product->precio_de_cuota)
@@ -24,10 +27,14 @@
             <div class="product-price">${!! number_format($product->price/$product->nro_coutas,2) !!}</div>
           </div>
 
-          <div class="product-price-wrap">
+          <div class="product-price-wrap text-muted">
               @if( $product->monto_inicial > 0 )
-                Inicial de  ${!! number_format($product->monto_inicial,0)  !!} <br>
+                Inicial de  ${!! number_format($product->monto_inicial,2)  !!} <br>
               @endif
+
+              @if( $product->monto_cuota_entrega > 0 )
+              Cuota de  entrega  ${!!number_format($product->monto_cuota_entrega,2)  !!} <br>
+            @endif
               
               <span class="product-cuotas">{{ $product->nro_coutas}} cuotas {!! $modalida_pago !!}</span>
           </div>

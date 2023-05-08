@@ -71,10 +71,10 @@
             <a href="{{ sc_route('customer.reportar_pago', ['id' => $order->id ]) }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Reportar pago</a>
             @endif
 
-            <br>
+            {{-- <br>
             @if ($order->status == 5 )
             <a target="_blank" class="d-flex" href="{{route('borrador_cliente', ['id' => $order->id]) }}"><i style="display:{{$inconoAlert ?? "" }} ;"  class=""><img width="30px" class="img-fluid" src="/images/documento.gif" alt=""></i>Convenio</a>
-            @endif
+            @endif --}}
 
           </td>
         </tr>

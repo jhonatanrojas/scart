@@ -33,8 +33,8 @@ class AdminOrder extends ShopOrder
     public static function getOrderAdmin($id, $storeId = null)
     {
         $data  = self::with(['details', 'orderTotal'])->
-        leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
-        ->select('sc_shop_order.*', 'sc_admin_user.name as usuario')
+        leftjoin('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
+        ->select('sc_shop_order.*', 'sc_admin_user.name as usuario' ,'sc_shop_order_detail.product_id' ,'sc_shop_order_detail.monto_cuota_entrega')
 
         ->where('sc_shop_order.id', $id);
         if ($storeId) {

@@ -1,6 +1,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
     integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    
+    <head>
+        <title>Solicitud</title>
+    </head>
 <style>
+
+    
     body {
         color: #2e323c;
         background: #f5f6fa;
@@ -260,7 +267,7 @@
                                                         PDF
                                                     </a>-->
                                                     <a class=" btn btn-info mx-1px text-95 dont-print"
-                                                    onclick="order_print()" data-title="Print">
+                                                    onclick="order_print('Solicitud#{{$order->id}}')" data-title="Print">
                                                     <i class="mr-1 fas fa-print text-primary-m1 text-120 w-2"></i>
                                                     IMPRIMIR
                                                 </a>
@@ -359,11 +366,17 @@
                                                @php $monto_total=0;
                                                $monto_cuota_total=0;
                                                $inicial = 0;
+
+                                              
                                                @endphp
                                                
                                                 @foreach ($details as $detail)
                                                     <tr>
                                                         @php
+
+                                                       
+                                                                       
+                                                    
                                                                 
                                                 $AlContado = "Quincenal" ;
                                                 if($detail['id_modalidad_pago'] == 3){
@@ -371,12 +384,20 @@
                                                 }
                                                      
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'], 2);
+                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);
 
                                                             if ($detail['abono_inicial'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                                 $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
-                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'], 2);
+                                                                $monto_cuota = number_format($total_price / $detail['nro_coutas'],2);
+
+                                                                 
+                                                            }
+
+                                                           
+
+                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
+                                                                $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'],2 ) ;
 
                                                                  
                                                             }
@@ -396,7 +417,7 @@
                                                         <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
-                                                        <td>${{ number_format($inicial) }}</td>
+                                                        <td>${{ floor($inicial) }}</td>
                                                
                                                         <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
                                                         <td>${{  $detail['monto_cuota_entrega']  }}</td>
@@ -421,10 +442,10 @@
                                                     <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
                                                 </td>
                                                 <td colspan="2">
-                                                    <p> <strong>Inicial: -${{ round($inicial)}}</strong> </p>
+                                                    <p> <strong>Inicial: -${{ number_format($inicial,2)}}</strong> </p>
                                                 </td>
                                                 <td >
-                                                    <p> <strong>Total: ${{  round($order->total,2) }}</p>
+                                                    <p> <strong>Total: ${{ number_format($order->total,2) }}</p>
                                                 </td>
                                                         
                                                  
@@ -720,9 +741,17 @@
             $('.dont-print').show();
         }
 
-        function order_print(){
+        function order_print(name){
     $('.dont-print').hide();
-        window.print();
+    var titleElement = document.getElementsByTagName("title")[0];
+    var documentTitle = (titleElement !== undefined && titleElement !== null) ? titleElement.innerHTML : "Nombre Personalizado";
+    if(titleElement !== undefined && titleElement !== null) {
+        titleElement.innerHTML = name;
+    }
+    window.print(documentTitle);
+    if(titleElement !== undefined && titleElement !== null) {
+        titleElement.innerHTML = documentTitle;
+    }
     $('.dont-print').show();
-  }
+}
     </script>
