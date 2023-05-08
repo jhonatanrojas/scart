@@ -98,11 +98,16 @@
                         <!--a href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</a -->
 
 
-
+                                
                         @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor', 'administracion']) &&
                                 $order->modalidad_de_compra == 3)
                             <a class="dropdown-item" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"
                                 target="_blank">Descargar propuesta</a>
+                        @endif
+
+                        @if (isset($estatus_user) == 'Vendedor_Propuesta')
+                        <a class="dropdown-item" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"
+                            target="_blank">Descargar propuesta</a>
                         @endif
 
 
