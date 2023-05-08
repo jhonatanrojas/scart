@@ -431,6 +431,19 @@ class  AdminOrderController extends RootAdminController
     {
         $users = AdminCustomer::getListAll();
 
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser;
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
+
+
+      
+        
+        
+
         $data = [
             'title'             => sc_language_render('order.admin.add_new_title'),
             'subTitle'          => '',
@@ -452,7 +465,9 @@ class  AdminOrderController extends RootAdminController
         $countries              = $this->country;
         $currenciesRate         = json_encode(ShopCurrency::getListRate());
         $users                  = $users;
+        $propuestas             = $role->name;
         $data['users']          = $users;
+        $data['propuestas']     = $propuestas;
         $data['currencies']     = $currencies;
         $data['countries']      = $countries;
         $data['orderStatus']    = $orderStatus;

@@ -1,5 +1,8 @@
 @extends($templatePathAdmin.'layout')
 
+
+
+
 @section('main')
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -215,16 +218,27 @@
                                 </div>
                             </div>
 
-                          
+                           
 
                             <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
                                 <label for="Modalidad" class="col-sm-2 col-form-label">Modalidad de compra</label>
                                 <div class="col-sm-8">
                                     <select class="form-control status " style="width: 100%;" name="modalidad_compra">
-                                        <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }} selected>Financiamento</option>
+
+                                       
+                                        @if ($propuestas == 'Vendedor_Propuesta' )
+                                       
+                                                <option value="3" >Propuesta</option>
+                                            @else
+                                            <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }} selected>Financiamento</option>
                                             <option value="0" >Al contado</option>
                                             <option value="2" >Entraga inmediata</option>
-                                            <option value="3" >Propuesta</option>
+
+                                            @endif
+                                        
+                                            
+
+                                           
                                          
                                     </select>
                                         @if ($errors->has('modalidad_compra'))
