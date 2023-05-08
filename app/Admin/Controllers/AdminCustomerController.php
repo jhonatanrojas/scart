@@ -145,15 +145,12 @@ class AdminCustomerController extends RootAdminController
 
         
        
-        if($role->name == 'Vendedor_Propuesta' && !empty($dataSearch['keyword'])){
-            
+        if ($role->name == 'Vendedor_Propuesta' && !empty($dataSearch['keyword'])) {
             $data['dataTr'] = $dataTr;
-
-        }else if($role->name == 'Vendedor_Propuesta'){
-            $data['dataTr'] = [];
-        }else{
-            $data['dataTr'] = $dataTr;
-        }
+         } else {
+            $data['dataTr'] = ($role->name == 'Vendedor_Propuesta') ? [] : $dataTr;
+         }
+         
 
         
        
