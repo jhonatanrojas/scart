@@ -100,16 +100,12 @@
 
                                 
                         @if (in_array(strtolower($estatus_user), ['administrator', 'administracion']) &&
-                                $order->modalidad_de_compra == 3)
+                                $order->modalidad_de_compra == 3 || $estatus_user == 'Vendedor_Propuesta' )
                             <a class="dropdown-item" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"
                                 target="_blank">Descargar propuesta</a>
                         @endif
 
-                        @if (isset($estatus_user) == 'Vendedor_Propuesta' &&
-                        $order->modalidad_de_compra == 3)
-                        <a class="dropdown-item" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"
-                            target="_blank">Descargar propuesta</a>
-                        @endif
+                       
 
 
 
