@@ -2742,7 +2742,7 @@ class  AdminOrderController extends RootAdminController
                        
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Buscar por Cedula:</label>
+                                <label>Buscar por Cedula/Solicitud:</label>
                                 <div class="input-group">
                                     <input type="text" name="email" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('order.admin.search_email') . '" value="' . $email . '">
                                     <div class="input-group-append">
