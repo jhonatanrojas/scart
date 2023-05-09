@@ -1476,12 +1476,6 @@ class  AdminOrderController extends RootAdminController
         $rif='';
         $cedula='';
 
-
-
-      
-
-       
-       
         $nro_convenio = 'A/N';
 
         if(!empty($convenio))$nro_convenio = $convenio->nro_convenio ;
@@ -2443,6 +2437,14 @@ class  AdminOrderController extends RootAdminController
 
           $arr_pach= explode('/',request()->path());
           $perfil =$arr_pach[2] ?? false;
+          $id_usuario_rol = Admin::user()->id;
+          $dminUser = new AdminUser();
+           $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+           ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+           ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+           ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+           $role = AdminRole::find($user_roles->role_id);
+          
 
           
         
@@ -2657,13 +2659,18 @@ class  AdminOrderController extends RootAdminController
             $dataTr[$row['id']] = $dataMap;
         }
 
-        
+       
+       
+        if ($role->name == 'Vendedor_Propuesta' && !empty($dataSearch['Cedula'])) {
 
-        
+            
+            $data['dataTr'] = $dataTr;
+         } else {
+            $data['dataTr'] = ($role->name == 'Vendedor_Propuesta') ? [] : $dataTr;
+         }
 
        
         $data['listTh'] = $listTh;
-        $data['dataTr'] = $dataTr;
         $data['pagination'] = $dataTmp->appends(request()->except(['_token', '_pjax']))->links($this->templatePathAdmin.'component.pagination');
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
 
@@ -2735,7 +2742,7 @@ class  AdminOrderController extends RootAdminController
                        
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Buscar por Nombre/Cedula:</label>
+                                <label>Buscar por Cedula:</label>
                                 <div class="input-group">
                                     <input type="text" name="email" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('order.admin.search_email') . '" value="' . $email . '">
                                     <div class="input-group-append">

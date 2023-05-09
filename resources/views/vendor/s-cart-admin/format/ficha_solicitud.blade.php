@@ -299,7 +299,7 @@
                                 </div>
 
                                <div class="col-12">
-                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h2>
+                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }}  Cedula: {{ $cedula }}</h2>
                                </div>
 
                                
@@ -442,7 +442,7 @@
                                                     <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
                                                 </td>
                                                 <td colspan="2">
-                                                    <p> <strong>Inicial: -${{ number_format($inicial,2)}}</strong> </p>
+                                                    <p> <strong>Inicial:${{ number_format($inicial,2)}}</strong> </p>
                                                 </td>
                                                 <td >
                                                     <p> <strong>Total: ${{ number_format($order->total,2) }}</p>

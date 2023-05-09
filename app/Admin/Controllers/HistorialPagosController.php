@@ -1176,10 +1176,7 @@ class HistorialPagosController extends RootAdminController
             if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
                 $mesualQuinsena = "MENSUAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            } else if($dato_usuario[0]['id_modalidad_pago'] == 2 && $dato_usuario[0]['cuotas'] >= 24 ) {
-                $mesualQuinsena = "QUINCENAL";
-                $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            }else{
+            } else{
                 $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
                 $mesualQuinsena = " QUINCENAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
@@ -1460,7 +1457,6 @@ class HistorialPagosController extends RootAdminController
 
     public function obtener_pago()
     {
-
 
         $id = request('id');
         $pago = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
