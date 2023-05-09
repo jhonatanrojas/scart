@@ -97,7 +97,7 @@
 
                         <td>
                             @if ($historial->moneda == 'USD')
-                                <span class="item_21_sku">{!! floor($historial->importe_pagado * $tasa_cambio) !!} bs</span>
+                                <span class="item_21_sku">{!! number_format($historial->importe_pagado * $tasa_cambio, 2) !!} bs</span>
                             @else
                                 <span class="item_21_sku">{!! number_format($historial->importe_pagado / $tasa_cambio,2) !!} $</span>
                             @endif
@@ -128,12 +128,12 @@
                         <span class="item_21_sku">{{ $total_pagado }}$</span>
                     </th>
                     <th>
-                        Cuotas Pendiente: {!!number_format( $total_pendiente,2 )!!}
+                        Cuotas Pendiente: {!!number_format( $total_pendiente,2)!!}
                         
                     </th>
                    
                     <th>
-                        <span class="item_21_sku">Por Pagar: {!! number_format($order->total - $total_pagado ,2)!!}$</span>
+                        <span class="item_21_sku">Por Pagar: {!! number_format($order->total - $total_pagado ,2,',', '.')!!}$</span>
                         <br>
                     </th>
                 </tr>

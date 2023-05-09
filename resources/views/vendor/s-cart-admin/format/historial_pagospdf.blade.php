@@ -180,7 +180,7 @@
                               <tr>
                     
                                 <td colspan="4"></td> 
-                                <td colspan="2">Total Bs: {!!floor($total_bs  )!!}   BS</td>
+                                <td colspan="2">Total Bs: {!!number_format($total_bs ,2)!!}   BS</td>
                          
                                                                <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
@@ -213,7 +213,7 @@
                                     <ul class="" style="list-style: none">
                                         <li class="">Total Convenio : {{$totales}}$</li>
                                         <li>Total Pagado para la Fecha :{{$total_monto_pagado}}$</li>
-                                        <li>Total Monto Adeudado : {{floor($totalPor_pagar )}}$</li>
+                                        <li>Total Monto Adeudado : {{number_format($totalPor_pagar ,2,',','.')}}$</li>
                                         <li></li>
                                     </ul>
 
