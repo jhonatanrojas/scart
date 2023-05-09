@@ -5,7 +5,7 @@
       <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <img class="img-fluid" src="{{ sc_file('images/waiy.gif')}}" alt="logo">
+              <img class="img-fluid" src="{{ sc_file('images/waika2.gif')}}" alt="logo">
              
             </div>
         </div>
