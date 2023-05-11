@@ -226,15 +226,15 @@
                                     <select class="form-control status " style="width: 100%;" name="modalidad_compra">
 
                                        
-                                        @if ($propuestas == 'Vendedor_Propuesta' )
+                                        
                                        
                                                 <option value="3" >Propuesta</option>
-                                            @else
+                                           
                                             <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }} selected>Financiamento</option>
                                             <option value="0" >Al contado</option>
                                             <option value="2" >Entraga inmediata</option>
 
-                                            @endif
+                                          
                                         
                                             
 
