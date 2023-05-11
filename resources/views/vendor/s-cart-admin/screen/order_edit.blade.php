@@ -339,7 +339,7 @@
                                         <td></i> {{ sc_language_render('admin.created_at') }}:</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2)
+                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2 || $order->modalidad_de_compra == 3)
                                         <tr>
                                             <td class="td-title">
                                                 Vendedor Asignado:</td>
