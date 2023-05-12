@@ -319,10 +319,17 @@
                 <div class="modal-body">
                     @csrf
                     <div class="form-group">
+                       
+
+                       
+                       
                         <label for="estatus_pagos"></label>
                         <select class="form-control" id="estatus_pagos" name="estatus_pagos">
                             @foreach ($statusPayment as $key => $item)
-                                <option value="@php echo $key @endphp  "> @php  echo $item @endphp</option>
+                                @if ($key == 1 || $key == 8)
+                                    <option value="{{ $key }}">{{ $item }}</option>
+                                   
+                                @endif
                             @endforeach
                         </select>
                     </div>

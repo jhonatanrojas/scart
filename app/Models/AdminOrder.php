@@ -16,6 +16,7 @@ class AdminOrder extends ShopOrder
         '4' => 'danger', //Cancel
         '5' => 'success', //Success
         '6' => 'default', //Failed
+        '8' => 'danger', //Failed
     ];
 
     public function modalidad(){

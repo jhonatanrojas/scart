@@ -1532,6 +1532,9 @@ class HistorialPagosController extends RootAdminController
         ]);
 
 
+       
+
+
         $balance = 0;
         $pago = HistorialPago::where('id', $request->id_pago)->first();
         // Obtén el cliente a partir de su ID
@@ -1567,6 +1570,10 @@ class HistorialPagosController extends RootAdminController
                 break;
             case 5:
                 $Estatus = 'PAGADO';
+                break;
+
+                 case 8:
+                $Estatus = 'pagado en mora';
                 break;
 
             default:
@@ -2134,7 +2141,7 @@ class HistorialPagosController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($keyword);
      
         //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6])->orderBy('nro_coutas')->get();
+        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $keyword)
         ->where('payment_status', 1)
         ->orWhere('payment_status', 7)->where('order_id', $keyword)
@@ -2182,26 +2189,28 @@ class HistorialPagosController extends RootAdminController
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
 
+    
+         
+
+           
 
          
-            $pagado += $row->importe_couta;
+           
 
+          
 
+           
+            if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
 
-            $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+                $pagado += $row->importe_couta;
 
+                $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+    
+                $moneda = $row->moneda;
+                $monto = $row->importe_pagado;
+                $total_bs += floor($monto * $row->tasa_cambio);
 
-
-
-
-
-
-       
-            $moneda = $row->moneda;
-            $monto = $row->importe_pagado;
-            $total_bs += floor($monto * $row->tasa_cambio);
-
-            if ($moneda == 'USD') {
+                if ($moneda == 'USD') {
                 // El monto está en dólares
                 $monto_dolares = number_format($monto,2);
                 $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
@@ -2218,18 +2227,29 @@ class HistorialPagosController extends RootAdminController
 
             }
 
+            }else if($row->payment_status == 8){
+                $monto_dolares = 0.00;
+                $monto_bolivares =0.00;
+                $Referencia ='N/A';
+                $diVisA = 'N/A';
+                $Reportado = 0;
+                
+            }
+            
+            
+
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
                 'MONTO' => $row->importe_couta . '$',
                 'Reportado' => $Reportado ?? 0,
-                'DIVISA' => $diVisA,
-                'CONVERSION' => $Referencia  ,
+                'DIVISA' => $diVisA ?? 'N/A',
+                'CONVERSION' => $Referencia ?? 0 ,
                 'tasa_cambio' => $row->tasa_cambio ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
-                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? '',
-                'REFRENCIA' => $row->referencia,
-                'FECHA_DE_PAGO' => $fecha_formateada
+                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
+                'REFRENCIA' => $row->referencia ?? 0,
+                'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
 
             ];
 
