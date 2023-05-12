@@ -76,11 +76,15 @@
     }
     
     function gen_table(fecha_p=false){
-    var con_inicia = {!! json_encode($monto_Inicial  == 'Undefined' ? 0: $monto_Inicial) !!};
+    var con_inicia = {!! json_encode($monto_Inicial  == 'Undefined' ? $order->details: $monto_Inicial) !!};
+    var Monto_product = {!! json_encode($order->details  == 'Undefined' ? 0: $order->details) !!};
+
+    var monto_cuota_entregas = {!! json_encode($monto_entrega) !!};
 
     
+ 
          
-    console.log(con_inicia)
+   
         $.ajax({
                     url : '{{ sc_route_admin('obtener_orden') }}',
                     type : "get",
@@ -200,25 +204,18 @@
                   var cuotaTotal = monto / n2
                   let Inicial = montoTotal/inicial
                   Inicial == Infinity ? Inicial = 0 : Inicial
+                  let Precio_cuota = 0
                   
+                 if(con_inicia > 0 && monto_cuota_entregas >0){
+                  iniciale = (con_inicia * Monto_product[0].total_price) / 100;
+                  monto = Monto_product[0].total_price ;
+                    
+                  montoTotal = Monto_product[0].total_price
+                  Inicial = montoTotal/con_inicia
 
-                  if(con_inicia > 0 && returnedData.details[0].monto_cuota_entrega >0){
-
-                  //     montoTotal =monto
-                  //     cuotaTotal =(monto - con_inicia) / n2
-
-                  //     console.log(montoTotal)
-                  //     Inicial = montoTotal/con_inicia
-                  //     Inicial == Infinity ? Inicial = 0 : Inicial
-
-                 
-                  let Precio_cuota = Math.floor((5984 - con_inicia - returnedData.details[0].monto_cuota_entrega) / n2 ) ;
-
+                  Precio_cuota = Math.floor(((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / n2 ) ;
                   cuotaTotal = Precio_cuota
 
-                 
-
-                     
                  }
                    
                   
