@@ -208,8 +208,7 @@
                   
                  if(con_inicia > 0 && monto_cuota_entregas >0){
                   iniciale = (con_inicia * Monto_product[0].total_price) / 100;
-                  monto = Monto_product[0].total_price ;
-                    
+                 
                   montoTotal = Monto_product[0].total_price
                   Inicial = montoTotal/con_inicia
 
