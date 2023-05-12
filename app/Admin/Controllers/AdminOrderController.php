@@ -1468,7 +1468,16 @@ class  AdminOrderController extends RootAdminController
         $action = request('action') ?? '';
         $order = AdminOrder::getOrderAdmin($orderId);
         $product = AdminProduct::getProductAdmin($order->product_id);
-        
+
+        if(empty($product)){
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $orderId]))
+            ->with(['error' => 'Agrega un producto']);
+
+
+        }
+
+         
+   
 
         $convenio=Convenio::where('order_id',$orderId)->first();
 
