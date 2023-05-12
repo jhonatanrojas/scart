@@ -715,8 +715,8 @@ class  AdminOrderController extends RootAdminController
             [
                 "title" => $Titulo,
                 "subTitle" => '',
-                "monto_Inicial" => $product->monto_inicial ?? '',
-                'monto_entrega' => $product->monto_cuota_entrega ?? '',
+                "monto_Inicial" => $product->monto_inicial ?? 0,
+                'monto_entrega' => $product->monto_cuota_entrega ??0,
                 'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',
