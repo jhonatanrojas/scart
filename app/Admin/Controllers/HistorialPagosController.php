@@ -2225,8 +2225,8 @@ class HistorialPagosController extends RootAdminController
             }else if($row->payment_status == 8){
                 $monto_dolares = 0.00;
                 $monto_bolivares =0.00;
-                $Referencia ='N/A';
-                $diVisA = 'N/A';
+                $Referencia =0;
+                $diVisA = 0;
                 $Reportado = 0;
                 
             }
