@@ -200,7 +200,7 @@
                   var cuotaTotal = monto / n2
                   let Inicial = montoTotal/inicial
                   Inicial == Infinity ? Inicial = 0 : Inicial
-                  let total_price = 0
+                  
 
                   if(con_inicia > 0 && returnedData.details[0].monto_cuota_entrega >0){
 
@@ -211,11 +211,12 @@
                   //     Inicial = montoTotal/con_inicia
                   //     Inicial == Infinity ? Inicial = 0 : Inicial
 
-                  Inicial = (con_inicia *monto) / 100;
-                  $total_price = (monto - Inicial);
-                  $precio_couta = $total_price / n2;
-                  montoTotal = $total_price
-                  cuotaTotal = $precio_couta
+                 
+                  let Precio_cuota = Math.floor((5984 - con_inicia - returnedData.details[0].monto_cuota_entrega) / n2 ) ;
+
+                  cuotaTotal = Precio_cuota
+
+                 
 
                      
                  }
