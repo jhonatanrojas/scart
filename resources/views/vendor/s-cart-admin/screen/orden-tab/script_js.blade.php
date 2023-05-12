@@ -76,7 +76,10 @@
     }
     
     function gen_table(fecha_p=false){
-        
+    var con_inicia = {!! json_encode($monto_inicial) !!};
+
+    console.log(con_inicia)
+         
     
         $.ajax({
                     url : '{{ sc_route_admin('obtener_orden') }}',
@@ -192,10 +195,27 @@
                     break
                 }
     
+               
                 let  montoTotal = monto
-                var cuotaTotal = monto / n2
-                let Inicial = montoTotal/inicial
-                Inicial == Infinity ? Inicial = 0 : Inicial
+                  var cuotaTotal = monto / n2
+                  let Inicial = montoTotal/inicial
+                  Inicial == Infinity ? Inicial = 0 : Inicial
+                
+
+                  // if(con_inicia > 0 && returnedData.details[0].monto_cuota_entrega >0){
+
+                  //     montoTotal =monto
+                  //     cuotaTotal =(monto - con_inicia) / n2
+
+                  //     console.log(montoTotal)
+                  //     Inicial = montoTotal/con_inicia
+                  //     Inicial == Infinity ? Inicial = 0 : Inicial
+
+                     
+
+                  // }
+                   
+                  
                
                  
                 var texto=0;

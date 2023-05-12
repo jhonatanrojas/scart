@@ -326,7 +326,7 @@
                         <label for="estatus_pagos"></label>
                         <select class="form-control" id="estatus_pagos" name="estatus_pagos">
                             @foreach ($statusPayment as $key => $item)
-                                @if ($key == 1 || $key == 8)
+                                @if ($key == 8)
                                     <option value="{{ $key }}">{{ $item }}</option>
                                    
                                 @endif
