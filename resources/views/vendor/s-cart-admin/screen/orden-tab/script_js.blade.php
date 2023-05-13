@@ -165,7 +165,6 @@
              
     
               let periodo = selected;
-          
               let totalPagos ,  plazo ,fechaPago;
               var primerFechaPago = true;
     
@@ -207,8 +206,6 @@
                   let Precio_cuota = 0
                   
                  if(con_inicia > 0 && monto_cuota_entregas >0){
-                  iniciale = (con_inicia * Monto_product[0].total_price) / 100;
-                 
                   montoTotal = Monto_product[0].total_price
                   Inicial = montoTotal/con_inicia
 
@@ -216,10 +213,7 @@
                   cuotaTotal = Precio_cuota
 
                  }
-                   
-                  
-               
-                 
+
                 var texto=0;
                 for(i=1;i<=n2;i++){  
                   texto = (i + 1)

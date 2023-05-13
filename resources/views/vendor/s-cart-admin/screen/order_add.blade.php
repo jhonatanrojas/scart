@@ -106,7 +106,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                                 </div>
-                                                <input type="email" id="email" name="email" required value="{{ old('email') }}" class="form-control email" placeholder="" />
+                                                <input type="email" id="email" name="email"  value="{{ old('email') }}" class="form-control email" placeholder="" />
                                             </div>
                                                 @if ($errors->has('email'))
                                                     <span class="text-sm">

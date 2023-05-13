@@ -135,13 +135,6 @@ class HistorialPagosController extends RootAdminController
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
 
-
-
-
-
-
-
-
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
             $Referencia = "";
@@ -830,11 +823,14 @@ class HistorialPagosController extends RootAdminController
             } else if ($sort_order == 3) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
 
+            }else if ($sort_order == 8) {
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+
             }
 
 
         } else {
-            $orderList->where('sc_historial_pagos.payment_status', '<>', 5)
+            $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
                 ->orderBy('fecha_pago', 'desc');
         }
         $orderList = $orderList->paginate(20);
