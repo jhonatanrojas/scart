@@ -67,16 +67,16 @@
 
                             <select  class="form-select"  name="inicial" id="inicial">
                                
-                                <option value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':0   !!}>SI</option>
+                                <option value="{!! $product->monto_inicial == 0 ? 'si' :$product->monto_inicial !!}" {!! $product->monto_inicial>0 ? 'selected':'si'   !!}>SI</option>
                               @if( $product->monto_inicial ==0)
-                                <option value="0" selected>NO</option>
+                                <option value="no" selected>NO</option>
                                 @endif
                             </select>
 
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase"  for="monto">Monto de la Inicial $:</label>
-                            <input readonly name="monto_Inicial" id="monto_Inicial"  value="{!! $product->monto_inicial !!}" class="form-control" type="text"  placeholder="">
+                            <input readonly name="monto_Inicial" id="monto_Inicial"  value="{!! $product->monto_inicial > 0 ? $product->monto_inicial:0!!}" class="form-control" type="text"  placeholder="">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="inicial"> Nro de Cuotas</label>
@@ -86,9 +86,9 @@
                         <div class="mb-3 col-md-6">
                             <label class="form-label text-uppercase" for="monto_de_la_cuota">Monto de la cuota$</label>
                             @php
-                            $product->price=$product->price- $product->monto_cuota_entrega;
+                                    $valo =$product->monto_inicial > 0 ? number_format(($product->price- $product->monto_inicial)/$product->nro_coutas,2):number_format($product->price /$product->nro_coutas,2)
                             @endphp
-                            <input readonly name="monto_de_la_cuota" id="monto_de_la_cuota" class="form-control" type="text" value="{!!number_format($product->price /$product->nro_coutas,2) !!}">
+                            <input readonly name="monto_de_la_cuota" id="monto_de_la_cuota" class="form-control" type="text" value="{!!$valo!!}">
                         </div>
 
                         <div class="mb-3 col-md-6">
