@@ -69,14 +69,30 @@
                             @php
                             $product->nro_coutas = $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                             $product->price_con_inicial = ($product->price-$product->monto_inicial - $product->monto_cuota_entrega);
+
+
+                            if($product->cuotas_inmediatas > 0 && $product->nro_coutas == 1){
+                               
+                                $total_inicial = number_format(($product->price  - $product->monto_inicial)/$product->cuotas_inmediatas,2);
+                                
+
+                            }
+
+                               
+           
+
+
+
                             @endphp
                             
                             @if( $product->precio_de_cuota)
                                 <div class="product-price-wrap">
                                     <span class="price__product_new">
-                                        ${!! number_format($product->price_con_inicial/$product->nro_coutas,2) !!}
+                                        ${!! $product->nro_coutas > 1 ? number_format($product->price_con_inicial/$product->nro_coutas,2):$total_inicial!!}
                                     </span>
                                 </div>
+
+                                
                             @else
                                 {!! $product->showPriceDetail() !!}
                             @endif
@@ -87,6 +103,8 @@
                                     $product->nro_coutas = $product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
                                     $total_cuotas = $product->price / $product->nro_coutas;  
                                 }
+
+                               
                             @endphp
                         </div>
                         <div>

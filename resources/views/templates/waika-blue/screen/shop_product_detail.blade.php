@@ -481,13 +481,19 @@ $layout_page = shop_product_detail
     {{-- owl --}}
     {{-- end owl --}}
   <script type="text/javascript">
+
  var title_sin_inicia = {!! json_encode(sc_language_render('customer.title_sin_inicia')) !!};
   var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
+
+  if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
+                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+              }
   var monto_cuota_entrega = {!! json_encode($product->monto_cuota_entrega) !!};
   var product_nro_coutas = {!! json_encode($product->nro_coutas) !!};
   const valor_product_inicial =  $("#inicial_producto").val()
   let montos=Number(document.getElementById("monto").value);
-  
+  var n2=Number(document.getElementById("cuotas_inmediatas").value);
 
 var radios_tipo_venta = document.getElementsByName('tipo_venta');
 var monto_Inicial = document.getElementById('monto_Inicial');
@@ -500,14 +506,14 @@ for (var i = 0; i < radios_tipo_venta.length; i++) {
 radios_tipo_venta[i].onchange = function() {
 var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
 if(seleccionado==1){
-
- 
-
- 
   document.getElementById('monto_Inicial').value = 0.00
   document.getElementById("m_nro_cuotas").value = product_nro_coutas
   let monto_cuotass = montos/document.getElementById("Cuotas").value;
   document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+  if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
+                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+              }
 
 
 
@@ -519,94 +525,72 @@ select_inicial.innerHTML = `
   `;
 
 
-}else if(seleccionado==2){
-
-
-
-select_inicial.innerHTML = `
-    <option value="si" selected>SI</option>`;
-
-
-    var n2=Number(document.getElementById("cuotas_inmediatas").value);
-    let monto=Number(document.getElementById("monto").value);
-      if(n2>1)
-      document.getElementById("m_nro_cuotas").value=n2;
-      Valor = (monto- product_monto_inicial)/n2
-
-      document.getElementById('monto_de_la_cuota').value = Valor.toFixed(2)
-      document.getElementById('monto_Inicial').value = product_monto_inicial
-
-          if(document.getElementById("Cuotas").value == 12){
-            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
-
-          }
-
-          if(document.getElementById("m_nro_cuotas").value == 8  ){
-              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`
-
-          }
-
-
-          if(product_monto_inicial == 0 && seleccionado==2){
-
-           
-            document.getElementById("butto_modal").disabled = false;
-
-              var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
-            if(seleccionado==1){
-             var n2=Number(document.getElementById("Cuotas").value);
-            }else{
-            var n2=Number(document.getElementById("cuotas_inmediatas").value);
-        
-               }
-      
-
-            let monto=Number(document.getElementById("monto").value);
-
-          
-    
-      if(n2>1)
-        document.getElementById("m_nro_cuotas").value=n2;
-            const montoTotal = monto; 
-            const inicialPorcentaje = 0.30;
-            const numeroCuotas = n2; 
-            const total_inicial = montoTotal * inicialPorcentaje;
-            const montoFinanciado = montoTotal - total_inicial;  
-            const montoCuota = montoFinanciado / numeroCuotas;
-           
-          document.getElementById('monto_Inicial').value = total_inicial.toFixed(2) 
-          document.getElementById('monto_de_la_cuota').value = montoCuota.toFixed(2)
-
-          if(document.getElementById("Cuotas").value == 12){
-            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
-
-          }
-
-          if(document.getElementById("m_nro_cuotas").value == 8  ){
-              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`
-
-          }
-
+}else if (seleccionado == 2) {
+  select_inicial.innerHTML = `
+    <option value="si" selected>SI</option>
+  `;
+  
+  const n2 = Number(document.getElementById("cuotas_inmediatas").value);
+  const monto = Number(document.getElementById("monto").value);
+  
+  if (n2 > 1) {
+    document.getElementById("m_nro_cuotas").value = n2;
   }
-
-
-
-
- input_financamiento.value=2;
-
-
-
+  
+  const product_monto_inicial = 0;
+  
+  const Valor = (monto - product_monto_inicial) / n2;
+  
+  document.getElementById('monto_de_la_cuota').value = Valor.toFixed(2);
+  document.getElementById('monto_Inicial').value = product_monto_inicial;
+  
+  const CuotasValue = document.getElementById("Cuotas").value;
+  const mensajeDiv = document.getElementById('mensaje');
+  
+  if (CuotasValue == 12) {
+    mensajeDiv.innerHTML = `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`;
+  }
+  
+  if (n2 == 8) {
+    mensajeDiv.innerHTML = `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`;
+  }
+  
+  if (product_monto_inicial == 0 && seleccionado == 2) {
+    document.getElementById("butto_modal").disabled = false;
+    
+    const tipoVentaInput = document.querySelector('input[name="tipo_venta"]:checked');
+    const tipoVentaValue = Number(tipoVentaInput.value);
+    const newN2 = tipoVentaValue == 1 ? Number(document.getElementById("Cuotas").value) : Number(document.getElementById("cuotas_inmediatas").value);
+    
+    const montoTotal = monto; 
+    const inicialPorcentaje = 0.30;
+    const numeroCuotas = newN2; 
+    const total_inicial = montoTotal * inicialPorcentaje;
+    const montoFinanciado = montoTotal - total_inicial;  
+    const montoCuota = montoFinanciado / numeroCuotas;
+   
+    document.getElementById('monto_Inicial').value = total_inicial.toFixed(2);
+    document.getElementById('monto_de_la_cuota').value = montoCuota.toFixed(2);
+    
+    if (CuotasValue == 12) {
+      mensajeDiv.innerHTML = `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`;
+    }
+    
+    if (newN2 == 8) {
+      mensajeDiv.innerHTML = `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`;
+    }
+  }
+  
+  input_financamiento.value = 2;
 }
+}}
 
-}
-}
-
-if(monto_cuota_entrega > 0){
-      var n2=document.getElementById("Cuotas").value;
-      let monto = document.getElementById("monto").value;
-          const cuota = (monto - product_monto_inicial -monto_cuota_entrega) / n2;
-          console.log(`La cuota mensual es de $${cuota.toFixed(2)}.`);
-          document.getElementById('monto_de_la_cuota').value = cuota.toFixed(2)
+if (monto_cuota_entrega > 0) {
+  const n2 = document.getElementById("Cuotas").value;
+  const monto = document.getElementById("monto").value;
+  const cuota = (monto - product_monto_inicial - monto_cuota_entrega) / n2;
+  console.log(`La cuota mensual es de $${cuota.toFixed(2)}.`);
+  document.getElementById('monto_de_la_cuota').value = cuota.toFixed(2);
 }
 
 select_inicial.addEventListener('change', function(e) {
@@ -625,9 +609,6 @@ select_inicial.addEventListener('change', function(e) {
 
       let monto=Number(document.getElementById("monto").value);
 
-
-
-    
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
        
@@ -651,11 +632,6 @@ select_inicial.addEventListener('change', function(e) {
 
           }
 
-
-      
-      
-   
-
         fechaInicio = new Date(document.getElementById('fecha').value)
         fechaInicio.setDate(fechaInicio.getDate() + 1) // fecha actual
       
@@ -664,12 +640,6 @@ select_inicial.addEventListener('change', function(e) {
         var fechaInicio = fechaInicio.toLocaleDateString('en-US');
         // obtener la fecha de hoy en formato `MM/DD/YYYY`
         }
-
-
-
-  
-  
-    
 
   }else if(product_monto_inicial > 0 && e.target.value == 'si'){
     Valor = (monto.value - product_monto_inicial)/document.getElementById("Cuotas").value
@@ -692,10 +662,35 @@ select_inicial.addEventListener('change', function(e) {
 
 
 
+if(n2 > 0 &&  product_nro_coutas == 1){
+  const input = document.querySelector('input[name="tipo_venta"][value="2"]');
+  input.checked = true;
+ 
+      select_inicial.innerHTML = `
+    <option value="si" selected>SI</option>`;
+
+    var n2=Number(document.getElementById("cuotas_inmediatas").value);
+    let monto=Number(document.getElementById("monto").value);
+      if(n2>1)
+      document.getElementById("m_nro_cuotas").value=n2;
+      Valor = (monto- product_monto_inicial)/n2
+
+      document.getElementById('monto_de_la_cuota').value = Valor.toFixed(2)
+      document.getElementById('monto_Inicial').value = product_monto_inicial
+
+          if(document.getElementById("Cuotas").value == 12){
+            document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`
+
+          }
+
+          if(document.getElementById("m_nro_cuotas").value == 8  ){
+              document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i>Entrega inmediata posterior a la firma del convenio y pago de la inicial </div>`
+
+          }
 
 
-   
-            
+    }
+
         document.getElementById('msg').style.display = "none";
         document.getElementById("group").style.display = "none";
       function validachecke2(){
