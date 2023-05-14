@@ -45,7 +45,7 @@
 
            
                        
-                        @if ($product->nro_coutas > 1 && $product->cuotas_inmediatas == 0)
+                        @if ($product->nro_coutas > 1 )
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="tipo_venta" id="tipo_venta2" checked value="1">
                             <label class="form-check-label" for="tipo_venta2">
