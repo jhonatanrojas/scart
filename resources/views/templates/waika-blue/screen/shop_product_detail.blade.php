@@ -660,6 +660,15 @@ select_inicial.addEventListener('change', function(e) {
 
 });
 
+let monto_cuotass = monto.value/document.getElementById("Cuotas").value;
+            document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+              document.getElementById('monto_Inicial').value = 0.00
+              if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
+                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+              }
+        
+
 
 
 if(n2 > 0 &&  product_nro_coutas == 1){
