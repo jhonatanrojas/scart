@@ -80,6 +80,9 @@
     var Monto_product = {!! json_encode($order->details  == 'Undefined' ? 0: $order->details) !!};
 
     var monto_cuota_entregas = {!! json_encode($monto_entrega) !!};
+    var cuotas_inmediatas = {!! json_encode($cuotas_inmediatas) !!};
+
+    
 
     
  
@@ -97,13 +100,24 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
+                  var cuotaS = 0
+
+                 if(returnedData.details[0].nro_coutas > 0){
+                    cuotaS = returnedData.details[0].nro_coutas
+                    
+                 }else if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas == 0){
+                  cuotaS = cuotas_inmediatas
+
+                 
+                 }
                   
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
                   $("#c_monto").val(returnedData.subtotal)
-                  $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
+                  $("#c_nro_coutas").val(cuotaS )
                   $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
                   $("#c_inicial").val(Math.floor(returnedData.subtotal * returnedData.details[0].abono_inicial/100))
+                  
 
                  
                 
@@ -142,10 +156,10 @@
              const monto_cuota_entrega= parseFloat(returnedData.details[0].monto_cuota_entrega)
 
               let monto=Number(returnedData.subtotal - monto_cuota_entrega);
-              let n2=Number(returnedData.details[0].nro_coutas);
+              let n2=Number(cuotaS);
               let n3=Number(returnedData.details[0].abono_inicial);
               let inicial = parseInt(n3);
-              if(inicial>0){ 
+              if(inicial>0 && returnedData.details[0].nro_coutas >0){ 
                 totalinicial=(inicial*monto)/100;
                 monto = monto -totalinicial;
               }
@@ -199,11 +213,19 @@
                 }
     
                
-                let  montoTotal = monto
+                if(returnedData.details[0].nro_coutas > 0){
+                  let  montoTotal = monto
                   var cuotaTotal = monto / n2
                   let Inicial = montoTotal/inicial
                   Inicial == Infinity ? Inicial = 0 : Inicial
                   let Precio_cuota = 0
+                }else if(cuotas_inmediatas > 0 && returnedData.details[0].nro_coutas == 0 ){
+                     cuotaTotal = (returnedData.subtotal - con_inicia)/cuotas_inmediatas;
+                     monto = returnedData.subtotal- con_inicia
+                    Inicial = cuotaTotal
+                    Inicial == Infinity ? Inicial = 0 : Inicial
+
+                }
                   
                  if(con_inicia > 0 && monto_cuota_entregas >0){
                   montoTotal = Monto_product[0].total_price

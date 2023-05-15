@@ -74,7 +74,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="monto">Cuotas: </label>
-                                    <input readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   "
+                                    <input readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : $cuotas_inmediatas !!}" class="form-control   "
                                         type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
                                 </div>
 
