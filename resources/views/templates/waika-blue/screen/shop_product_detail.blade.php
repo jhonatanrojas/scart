@@ -696,6 +696,9 @@ if(n2 > 0 &&  product_nro_coutas == 1){
 
       document.getElementById('monto_de_la_cuota').value = valorCuota.toFixed(2)
       document.getElementById('monto_Inicial').value = product_monto_inicial
+      document.getElementById('Cuotas').value = n2
+
+      
 
           if(document.getElementById("Cuotas").value == 12){
             document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_con_inicia}</div>`

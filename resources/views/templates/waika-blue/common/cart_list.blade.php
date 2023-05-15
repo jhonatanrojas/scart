@@ -107,7 +107,9 @@
                             {{$Precio_cuota}} 
                         </td> 
 
-                        <td>{{$item->Cuotas}} </td>
+                    
+
+                        <td>{!!$item->Cuotas!!} </td>
                         <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
                         

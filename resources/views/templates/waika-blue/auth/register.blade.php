@@ -638,8 +638,16 @@ input.invalid {
                     </div>
                     
                     <div class="row">
+                       
                         <div class="col-12 py-3">
+                            <div style="float:left;">
+                                <button type="button"  class="btn btn-secondary btn-sm" >Ya estoy registrado Inicia sesión </button>
+                              
+                              </div>
+                            
                             <div style="overflow:auto;">
+
+                               
                               <div style="float:right;">
                                 <button type="button" id="prevBtn" class="btn btn-secondary btn-sm"  onclick="nextPrev(-1)">Anterior</button>
                                 <button type="button" id="nextBtn" class="btn btn-secondary btn-sm" onclick="nextPrev(1)">Siguiente</button>
