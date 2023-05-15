@@ -109,7 +109,7 @@ $layout_page = shop_profile
                       @if (empty($order->details[0]->modalidad_de_compra >= 1))
                         <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                         <th class="product_price">Cuota</th>
-                        <th class="product_price">Monto de la  Cuota</th>
+                        <th class="product_price"> $Cuota</th>
                         <th>Cuota de entrega</th>
                         <th class="product_total">Frecuencia</th>
                       @else
@@ -123,9 +123,6 @@ $layout_page = shop_profile
                       @foreach ($order->details as $item)
                         @php
                         $cuotas = $item->nro_coutas;
-                   
-                       
-
 
                         $precio_couta = 0;
                         if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
@@ -137,6 +134,12 @@ $layout_page = shop_profile
                                       $precio_couta = $item->total_price;
                                       echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
                                           endif;
+
+                          if($cuotas_inmediatas > 0 && $monto_inicial > 0 && $item->nro_coutas == 0){
+
+                              $precio_couta = number_format(($item->total_price - $monto_inicial)/$cuotas_inmediatas,2);
+                              
+                       }
                         @endphp
                           <tr>
                             <td>
@@ -154,7 +157,7 @@ $layout_page = shop_profile
                               </td>
                               @if (empty($order->details[0]->modalidad_de_compra >= 1))
                                 <td class="product_qty">x  {{ $item->qty }}</td>
-                                <td>{{$item->nro_coutas}}</th>
+                                <td>{!!$item->nro_coutas > 0 ?$item->nro_coutas:$cuotas_inmediatas!!}</th>
                                 <td class="product_price">{{ $precio_couta ?? '0' }}$</td>
                                 <th> {{  $item->monto_cuota_entrega}}</th>
                                 <td class="product_total item_id_{{ $item->id }}">

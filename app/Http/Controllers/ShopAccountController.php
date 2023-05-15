@@ -32,6 +32,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Cart;
 use Illuminate\Support\Facades\File;
+use SCart\Core\Admin\Models\AdminProduct;
 use SCart\Core\Admin\Models\AdminUser;
 use SCart\Core\Front\Models\ShopOrderDetail;
 use SCart\Core\Front\Models\ShopPaymentStatus;
@@ -550,6 +551,7 @@ class ShopAccountController extends RootFrontController
         $statusShipping = ShopShippingStatus::getIdAll();
         $attributesGroup = ShopAttributeGroup::pluck('name', 'id')->all();
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
+        $order2 = AdminOrder::getOrderAdmin($order->id);
         if ($order) {
             $title = sc_language_render('customer.order_detail') . ' #' . $order->id;
         } else {
@@ -558,8 +560,6 @@ class ShopAccountController extends RootFrontController
         $fecha_actual = date('Y-m-d');
 
         $fech_p = date('Y-m-d',strtotime($fecha_actual . "+5 day"));
-
-       
 
         if ($order->modalidad_de_compra == 0) {
             $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
@@ -594,12 +594,18 @@ class ShopAccountController extends RootFrontController
         } else {
             $dato = "";
         }
+
+        $product = AdminProduct::getProductAdmin($order2->product_id);
+
+        
         sc_check_view($this->templatePath . '.account.order_detail');
         return view($this->templatePath . '.account.order_detail')
             ->with(
                 [
                     'title'           => $title,
                     'referencia'           => $referencia,
+                    'cuotas_inmediatas' =>$product->cuotas_inmediatas ?? 0,
+                    'monto_inicial' => $product->monto_inicial?? 0,
                     'statusOrder'     => $statusOrder,
                     'mensaje'     => $dato,
                     'mapStyleStatus' => $mapStyleStatus,

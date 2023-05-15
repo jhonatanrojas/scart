@@ -641,7 +641,7 @@ input.invalid {
                        
                         <div class="col-12 py-3">
                             <div style="float:left;">
-                                <button type="button"  class="btn btn-secondary btn-sm" >Ya estoy registrado Inicia sesión </button>
+                                <a href="{{sc_route('login')}}" type="button"  class="btn btn-secondary btn-sm" >Ya estoy registrado Inicia sesión </a>
                               
                               </div>
                             
