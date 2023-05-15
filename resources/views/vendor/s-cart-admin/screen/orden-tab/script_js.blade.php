@@ -338,15 +338,16 @@
                   
                     var inicial=0;
 
-                    if(returnedData.nro_coutas > 0 ){
                       if (parseFloat(returnedData.monto_inicial)>0){
                       inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
 
-                      var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
-                    node.find('.monto_cuota_text').eq(0).text("$"+monto_iniciaL.toFixed(2));
+                      
                       
                     } 
-                  }else{
+                    var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
+                    node.find('.monto_cuota_text').eq(0).text("$"+monto_iniciaL.toFixed(2));
+                  
+                  if(returnedData.cuotas_inmediatas > 0 && returnedData.nro_coutas == 0 ){
 
                     const montoTotal = returnedData.price_final;
                     const inicial = returnedData.monto_inicial;
