@@ -714,6 +714,7 @@ class  AdminOrderController extends RootAdminController
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
                 "title" => $Titulo,
+                'cuotas_inmediatas' => $product->cuotas_inmediatas ?? 0,
                 "subTitle" => '',
                 "monto_Inicial" => $product->monto_inicial ?? 0,
                 'monto_entrega' => $product->monto_cuota_entrega ??0,

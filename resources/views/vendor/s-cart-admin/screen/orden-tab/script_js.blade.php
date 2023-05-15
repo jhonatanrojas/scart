@@ -317,24 +317,47 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
+                  let cuotas = 0
+
+                
+
+                  if(returnedData.nro_coutas > 0 ){
+                    cuotas = returnedData.nro_coutas
+                  }else{
+                    cuotas = 0
+
+                  }
                   
     
                     node.find('.add_sku').val(returnedData.sku);
                     node.find('.add_qty').eq(0).val(1);
     
-                    node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                    node.find('.add_nro_cuota').eq(0).val(cuotas);
                     node.find('.add_serial').eq(0).val(returnedData.serial);
     
                   
                     var inicial=0;
 
-
-                    if (parseFloat(returnedData.monto_inicial)>0){
+                    if(returnedData.nro_coutas > 0 ){
+                      if (parseFloat(returnedData.monto_inicial)>0){
                       inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
-                      
-                    }    
-                    var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
+
+                      var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
                     node.find('.monto_cuota_text').eq(0).text("$"+monto_iniciaL.toFixed(2));
+                      
+                    } 
+                  }else{
+
+                    const montoTotal = returnedData.price_final;
+                    const inicial = returnedData.monto_inicial;
+                    const numeroCuotas = returnedData.cuotas_inmediatas;
+                    const montoRestante = montoTotal - inicial;
+                    const valorCuota = montoRestante / numeroCuotas;
+                    node.find('.monto_cuota_text').eq(0).text("$"+valorCuota.toFixed(2));
+
+                  }
+                       
+                    
                     
                     node.find('.add_inicial ').eq(0).val(inicial.toFixed(2));
                     if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});
