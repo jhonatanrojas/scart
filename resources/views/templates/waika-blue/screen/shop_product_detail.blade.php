@@ -596,6 +596,9 @@ if (monto_cuota_entrega > 0) {
 select_inicial.addEventListener('change', function(e) {
 
   if(product_monto_inicial == 0 && e.target.value == 'si'){
+
+
+    
     document.getElementById("butto_modal").disabled = false;
 
       var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
@@ -682,9 +685,16 @@ if(n2 > 0 &&  product_nro_coutas == 1){
     let monto=Number(document.getElementById("monto").value);
       if(n2>1)
       document.getElementById("m_nro_cuotas").value=n2;
-      Valor = (monto- product_monto_inicial)/n2
+  
+      const montoTotal = monto;
+      const inicial = product_monto_inicial;
+      const numeroCuotas = n2;
+      const montoRestante = montoTotal - inicial;
+      const valorCuota = montoRestante / numeroCuotas;
 
-      document.getElementById('monto_de_la_cuota').value = Valor.toFixed(2)
+      console.log("El valor de cada cuota a pagar es: $" + valorCuota.toFixed(2));
+
+      document.getElementById('monto_de_la_cuota').value = valorCuota.toFixed(2)
       document.getElementById('monto_Inicial').value = product_monto_inicial
 
           if(document.getElementById("Cuotas").value == 12){
