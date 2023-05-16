@@ -388,9 +388,14 @@
                                                             $precio = $detail['price'];
                                                             $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);   }
 
-                                                            if ($detail['nro_coutas'] == 0 && $detail['monto_inicial'] > 0) {
+                                                            if ($detail['nro_coutas'] == 1 && $detail['monto_inicial'] > 0) {
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial']) / 6,2);   }
+                                                            $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial']) / 6,2);   
+
+                                                            $detail['nro_coutas'] = 6;
+                                                        
+                                                        
+                                                        }
 
                                                             if ($detail['abono_inicial'] > 0 && $detail['nro_coutas'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
@@ -402,8 +407,10 @@
 
                                                            
 
-                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0 && $detail['nro_coutas'] > 0) {
+                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0 && $detail['nro_coutas'] > 1) {
                                                                 $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'],2 ) ;
+
+                                                               
 
                                                                  
                                                             }

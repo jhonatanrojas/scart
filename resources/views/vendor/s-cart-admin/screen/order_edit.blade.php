@@ -651,7 +651,7 @@
                                                                     data-title="Inicial">
                                                                     @if ($item->abono_inicial > 0 && $item->nro_coutas > 0)
                                                                         Con Inicial ${{ $monto_inicial }}
-                                                                    @elseif($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 0)
+                                                                    @elseif($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1)
                                                                     Con Inicial ${{ $monto_inicial }}
 
                                                                         @else
@@ -668,25 +668,29 @@
                                                                     $precio_couta = 0;
 
 
+                                                                   
                                                                     
-                                                                    
-                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
+                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 1 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
                                                                         $precio_couta = number_format($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
-                                                                    elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
+                                                                    elseif ($item->nro_coutas > 1 && $monto_entrega == 0):
                                                                         $precio_couta = $item->total_price;
                                                                         echo "$" . number_format($precio_couta / $item->nro_coutas ,2);
 
-                                                                    elseif ($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 0):
+                                                                    elseif ($monto_Inicial > 0 && $cuotas_inmediatas > 0 ):
                                                                     $precio_couta = $item->total_price;
                                                                     echo "$" . number_format(($item->total_price - $monto_Inicial)/$cuotas_inmediatas ,2);
+
+                                                                    
 
                                                                    
                                                                        
                                                                     endif;
+
+                                                                    
 
 
                                                                     if ($monto_entrega > 0){
