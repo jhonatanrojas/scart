@@ -591,12 +591,12 @@
                                                             <td>
                                                                 <a id="cuotas_nro"
                                                                     data-index-number="{{ $item->nro_coutas }}"
-                                                                    href="#" class="edit-item-detail"
+                                                                    href="#" class="{!!$item->nro_coutas > 1  ? 'edit-item-detail':''!!}"
                                                                     data-value="{{ $item->nro_coutas }}"
                                                                     data-name="nro_coutas" data-type="text" min=0
                                                                     data-pk="{{ $item->id }}"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
-                                                                    data-title="Cuotas">{{ $item->nro_coutas > 0 ?$item->nro_coutas:$cuotas_inmediatas }}</a>
+                                                                    data-title="Cuotas">{{ $item->nro_coutas > 1 ?$item->nro_coutas:$cuotas_inmediatas }}</a>
 
                                                             </td>
 
@@ -628,7 +628,7 @@
                                                                         $monto_inicial = number_format($monto_inicial );
                                                                     }
 
-                                                                    if ($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 0) {
+                                                                    if ($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1) {
                                                                        
                                                                         $monto_inicial = $monto_Inicial;
                                                                     }
