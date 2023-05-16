@@ -1090,7 +1090,7 @@ class HistorialPagosController extends RootAdminController
                 }
 
 
-
+               
 
 
                 $dato_usuario = [
@@ -1178,11 +1178,13 @@ class HistorialPagosController extends RootAdminController
                 $Nacionalidad = "Extranjer(A)";
 
 
+                
 
-
-             $total_price = $dato_usuario[0]['subtotal'];
+             if($dato_usuario[0]['cuotas'] > 0){
+                $cuotas = $dato_usuario[0]['cuotas'];
+                $total_price = $dato_usuario[0]['subtotal'];
             $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
-            $cuotas = $dato_usuario[0]['cuotas'];
+           
             if ($dato_usuario[0]['abono_inicial'] > 0 && $product->monto_cuota_entrega == 0) {
                 $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
                 $total_price = $dato_usuario[0]['subtotal'] - $inicial;
@@ -1191,14 +1193,25 @@ class HistorialPagosController extends RootAdminController
                 
 
             }
+             }
 
+             
+             
+             if($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] == 0){
+                $cuotas =  $product->cuotas_inmediatas;
+                 $inicial = $product->monto_inicial;
+                $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
+                $precio_couta = number_format(($dato_usuario[0]['subtotal'] - $product->monto_inicial)/$product->cuotas_inmediatas,2);
+
+             }
+
+           
 
             if ($product->monto_cuota_entrega > 0){
+                        $cuotas = $dato_usuario[0]['cuotas'];
                         $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
-
+                        $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
                         $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
-
-                      
                    }
 
             $number2 = $total_price * $cod_bolibares;
