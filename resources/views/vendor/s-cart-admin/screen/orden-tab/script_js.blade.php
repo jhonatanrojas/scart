@@ -102,11 +102,19 @@
                 success: function(returnedData){
                   var cuotaS = 0
 
-                 if(returnedData.details[0].nro_coutas > 0){
+              let n3=Number(returnedData.details[0].abono_inicial);
+              let inicial = parseInt(con_inicia);
+
+                 if(returnedData.details[0].nro_coutas > 1 || returnedData.details[0].nro_coutas > 0){
                     cuotaS = returnedData.details[0].nro_coutas
+                    inicial = parseInt(returnedData.details[0].abono_inicial);
                     
-                 }else if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas == 1 || returnedData.details[0].nro_coutas == 0){
+                 }
+                 
+                 if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas === 1 || returnedData.details[0].nro_coutas === 0){
                   cuotaS = cuotas_inmediatas
+                  inicial = parseInt(con_inicia);
+                  $("#c_inicial").val(con_inicia)
 
                  
                  }
@@ -114,7 +122,7 @@
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
                   $("#c_monto").val(returnedData.subtotal)
-                  $("#c_nro_coutas").val(cuotaS )
+                  $("#c_nro_coutas").val(cuotaS)
                   $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
                   $("#c_inicial").val(Math.floor(returnedData.subtotal * returnedData.details[0].abono_inicial/100))
                   
@@ -157,11 +165,15 @@
 
               let monto=Number(returnedData.subtotal - monto_cuota_entrega);
               let n2=Number(cuotaS);
-              let n3=Number(returnedData.details[0].abono_inicial);
-              let inicial = parseInt(n3);
-              if(inicial>0 && returnedData.details[0].nro_coutas >0){ 
+              
+              if(inicial>0 && returnedData.details[0].nro_coutas >1){ 
                 totalinicial=(inicial*monto)/100;
                 monto = monto -totalinicial;
+
+                
+              }else if( returnedData.details[0].nro_coutas == 1 && cuotas_inmediatas > 0 ){
+                monto = monto - con_inicia;
+
               }
               var total_inicial= (returnedData.details[0].abono_inicial)
               var selected =returnedData.details[0].id_modalidad_pago;
@@ -215,26 +227,17 @@
 
                 
     
-               
-               
+              
                   let  montoTotal = monto
                   var cuotaTotal = monto / n2
-                  let Inicial = montoTotal/inicial
+                  let Inicial = inicial
                   Inicial == Infinity ? Inicial = 0 : Inicial
                   let Precio_cuota = 0
                   
                 
                 
-                if(cuotas_inmediatas > 0 && returnedData.details[0].nro_coutas == 1 || returnedData.details[0].nro_coutas == 0 ){
-                     cuotaTotal = (returnedData.subtotal - con_inicia)/cuotas_inmediatas;
-                     monto = returnedData.subtotal- con_inicia
-                    Inicial = cuotaTotal
-                    Inicial == Infinity ? Inicial = 0 : Inicial
-                    n2 = cuotas_inmediatas
+              // Se verifica si hay cuotas inmediatas y si la cantidad de cuotas es 0 o 1
 
-                   
-
-                }
                   
                  if(con_inicia > 0 && monto_cuota_entregas >0){
                   montoTotal = Monto_product[0].total_price
@@ -245,6 +248,8 @@
 
                  }
 
+
+                 var deudas =0;
                 var texto=0;
                 for(i=1;i<=n2;i++){  
                   texto = (i + 1)
@@ -270,8 +275,8 @@
                 if(mesf<10)
                 mesf='0'+mesf; //agrega cero si el menor de 10
     
-                
-    
+ 
+
                       monto -= cuotaTotal
                       ca=monto;
                       d1=ca.toFixed(2) ;
@@ -289,6 +294,10 @@
                                   <td> ${d3} </td>
                                   <td> <input   class="form-control"  name="fechas_pago_cuotas[]" type="date" value="${ anof+"-"+mesf+"-"+diaf}"> </td>
                               </tr>`;
+
+                        
+
+                              
                   }
                   n1= monto/n2;
                   t_i=i2*n2;

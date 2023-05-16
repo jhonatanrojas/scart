@@ -1195,9 +1195,9 @@ class HistorialPagosController extends RootAdminController
             }
              }
 
+            
              
-             
-             if($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] == 0){
+             if($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] === 1 || $dato_usuario[0]['cuotas'] === 0){
                 $cuotas =  $product->cuotas_inmediatas;
                  $inicial = $product->monto_inicial;
                 $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;

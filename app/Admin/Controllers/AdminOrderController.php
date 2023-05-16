@@ -630,6 +630,8 @@ class  AdminOrderController extends RootAdminController
 
             $styleStatus = $this->statusOrder;
 
+          
+
 
 
         
@@ -664,6 +666,9 @@ class  AdminOrderController extends RootAdminController
         }
         $historialPagos =  HistorialPago::Where('order_id',$id)
         ->orderBy('fecha_venciento')->get();
+
+
+        
 
         $product = AdminProduct::getProductAdmin($order->product_id);
 
@@ -710,6 +715,8 @@ class  AdminOrderController extends RootAdminController
 
             }
 
+    
+
 
         return view($this->templatePathAdmin.'screen.order_edit')->with(
             [
@@ -718,6 +725,7 @@ class  AdminOrderController extends RootAdminController
                 "subTitle" => '',
                 "monto_Inicial" => $product->monto_inicial ?? 0,
                 'monto_entrega' => $product->monto_cuota_entrega ??0,
+                'product' => $product,
                 'metodos_pagos' => MetodoPago::all() ,
                 'pagadoCount'=> $pagadoCount ?? 0,
                 'icon' => 'fa fa-file-text-o',

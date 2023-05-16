@@ -54,7 +54,7 @@
                     $total_pendiente++;
                 }
            
-                
+            
                 @endphp
                     <tr>
                         <td>
@@ -72,6 +72,8 @@
                                 <a href="#" onclick="obtener_detalle_pago({{ $historial->id }})"><span
                                         title="Detalle del pago" type="button"
                                         class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></a>
+
+                                       
 
                                         
                             @endif
@@ -149,6 +151,8 @@
                         Cuotas Pendiente: {!!round( $total_pendiente)!!}
                         
                     </th>
+
+                   
                    
                     <th>
                         <span class="item_21_sku">Por Pagar: {!! number_format($order->total - $total_pagado ,2,',', '.')!!}$</span>
