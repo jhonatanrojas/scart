@@ -148,7 +148,7 @@
                                             </td>
                                             
                                             @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
-                                                <td>{{ $item->Cuotas }}</td>
+                                                <td>{!! $item->Cuotas > 1 ?$item->Cuotas :$product->cuotas_inmediatas !!}</td>
                                                 @php
 
 

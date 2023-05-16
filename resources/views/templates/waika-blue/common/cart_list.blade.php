@@ -109,7 +109,7 @@
 
                     
 
-                        <td>{!!$item->Cuotas!!} </td>
+                        <td>{!!$item->Cuotas >1  ?$item->Cuotas :$product->cuotas_inmediatas !!} </td>
                         <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
                         

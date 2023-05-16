@@ -427,11 +427,12 @@ $layout_page = shop_product_detail
 
           
    
+        <input type="hidden" id="entrega_inmediata" value="1">
         <input type="hidden" id="inicial_producto" value="{!! $product->monto_inicial == 0 ? $inicial_default :$product->monto_inicial !!}">
       @include($sc_templatePath.'.includes.product_detail.form_modal')
       
 
-
+      
 
 
 @endsection
@@ -696,7 +697,7 @@ if(n2 > 0 &&  product_nro_coutas == 1){
 
       document.getElementById('monto_de_la_cuota').value = valorCuota.toFixed(2)
       document.getElementById('monto_Inicial').value = product_monto_inicial
-      document.getElementById('Cuotas').value = n2
+      document.getElementById('entrega_inmediata').value = 1
 
       
 

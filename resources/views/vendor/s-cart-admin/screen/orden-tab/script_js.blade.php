@@ -105,7 +105,7 @@
                  if(returnedData.details[0].nro_coutas > 0){
                     cuotaS = returnedData.details[0].nro_coutas
                     
-                 }else if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas == 0){
+                 }else if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas == 1){
                   cuotaS = cuotas_inmediatas
 
                  
@@ -211,6 +211,9 @@
                     alert('No seleccionaste ningún periodo de pagos')
                     break
                 }
+
+
+                
     
                
                 if(returnedData.details[0].nro_coutas > 0){
@@ -220,11 +223,16 @@
                   Inicial == Infinity ? Inicial = 0 : Inicial
                   let Precio_cuota = 0
                   
-                }else if(cuotas_inmediatas > 0 && returnedData.details[0].nro_coutas == 0 ){
+                }
+                
+                if(cuotas_inmediatas > 0 && returnedData.details[0].nro_coutas == 1 ){
                      cuotaTotal = (returnedData.subtotal - con_inicia)/cuotas_inmediatas;
                      monto = returnedData.subtotal- con_inicia
                     Inicial = cuotaTotal
                     Inicial == Infinity ? Inicial = 0 : Inicial
+                    n2 = cuotas_inmediatas
+
+                   
 
                 }
                   

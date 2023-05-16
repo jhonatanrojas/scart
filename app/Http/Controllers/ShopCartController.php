@@ -594,14 +594,9 @@ class ShopCartController extends RootFrontController
         $data = request()->all();
 
 
-
-
         
 
-        
-        
 
-       
         if (!$data) {
             return redirect(sc_route('cart'));
         } else {
@@ -628,6 +623,9 @@ class ShopCartController extends RootFrontController
 
 
         }
+
+
+        
 
     
 
@@ -664,6 +662,8 @@ class ShopCartController extends RootFrontController
 
       
         //end total
+
+        
 
         $dataOrder['store_id']        = $storeCheckout;
         $dataOrder['modalidad_de_compra'] = $datos['modalidad_de_compra'];
@@ -764,9 +764,7 @@ class ShopCartController extends RootFrontController
        
             $arrCartDetail[]          = $arrDetail;
         }
-   
 
-   
         //Set session info order
         session(['dataOrder' => $dataOrder]);
         session(['arrCartDetail' => $arrCartDetail]);
