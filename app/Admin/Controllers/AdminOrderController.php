@@ -1443,6 +1443,8 @@ class  AdminOrderController extends RootAdminController
                         $name = $detail->name;
                     }
 
+               
+
 
                     $data['details'][] = [ 
                         'no' => $key + 1, 
@@ -1452,8 +1454,9 @@ class  AdminOrderController extends RootAdminController
                         'marca'=>$producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago, 
                         'modelo'=>$modelo ?? '',
-                        'monto_cuota_entrega'=> $product->monto_cuota_entrega,
-                        'monto_inicial'=>$product->monto_inicial,
+                        'monto_cuota_entrega'=> $product->monto_cuota_entrega ?? 0,
+                        'monto_inicial'=>$product->monto_inicial ?? 0,
+                        'cuotas_inmediatas'=>$product->cuotas_inmediatas ?? 0,
                         'price' => $detail->price, 
                         'abono_inicial' => $detail->abono_inicial, 
                         'nro_coutas' => $detail->nro_coutas, 

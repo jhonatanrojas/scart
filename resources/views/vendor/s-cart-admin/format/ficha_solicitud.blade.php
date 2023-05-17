@@ -393,11 +393,12 @@
                                                             $precio = $detail['price'];
                                                             $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);   }
 
-                                                            if ($detail['nro_coutas'] == 1 && $detail['monto_inicial'] > 0) {
+                                                            if ($detail['cuotas_inmediatas'] > 1 && $detail['monto_inicial'] > 0 && $detail['nro_coutas'] === 0 ||$detail['nro_coutas'] === 1 ) {
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial']) / 6,2);   
+                                                            $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial']) / $detail['cuotas_inmediatas'],2);   
 
-                                                            $detail['nro_coutas'] = 6;
+                                                            $detail['nro_coutas'] = $detail['cuotas_inmediatas'];
+                                                            $inicial= $detail['monto_inicial'];
                                                         
                                                         
                                                         }
