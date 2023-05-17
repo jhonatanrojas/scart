@@ -241,6 +241,8 @@ class  AdminOrderController extends RootAdminController
             ->select('sc_shop_customer.phone', 'sc_shop_customer.cedula', 'sc_shop_customer.cedula','sc_shop_customer.cedula', 'estado.nombre as estado','municipio.nombre as municipio','sc_shop_customer.email' ,'parroquia.nombre as parroquia')->first();
 
 
+
+
          
             $btn_pagos='';
             $btn_pagos='';
@@ -1343,6 +1345,9 @@ class  AdminOrderController extends RootAdminController
             ->leftJoin('municipio', 'municipio.codigomunicipio', '=', 'sc_shop_customer.cod_municipio')
             ->leftJoin('parroquia', 'parroquia.codigoparroquia', '=', 'sc_shop_customer.cod_parroquia')
             ->select('sc_shop_customer.*', 'estado.nombre as estado','municipio.nombre as municipio','parroquia.nombre as parroquia ,postcode ' )->first();
+
+
+   
 
 
           
