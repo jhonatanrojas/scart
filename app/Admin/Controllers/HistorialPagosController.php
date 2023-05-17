@@ -759,7 +759,7 @@ class HistorialPagosController extends RootAdminController
                
 
                 $convenio = Convenio::where('nro_convenio', $keyword)->first();
-                $keyworde = $convenio['order_id'];
+                $keyworde = $convenio['order_id'] ?? 0;
 
                
                
