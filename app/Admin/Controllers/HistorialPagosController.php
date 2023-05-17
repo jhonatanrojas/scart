@@ -745,10 +745,46 @@ class HistorialPagosController extends RootAdminController
         }
         if ($keyword) {
 
+             
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('order_id', $keyword);
+
+                
             });
+
+            $resultado = $orderList->get();
+
+            if ($resultado->isEmpty() && $keyword) {
+                $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id') ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
+               
+
+                $convenio = Convenio::where('nro_convenio', $keyword)->first();
+                $keyworde = $convenio['order_id'];
+
+               
+               
+                    $orderList = $orderList->where(function ($sql) use ($keyworde) {
+                        $sql->Where('order_id', $keyworde);
+        
+                        
+                    });
+
+                    $orderList = $orderList->paginate(20);
+
+        
+
+                    return $orderList;
+                   
+                
+            }
+
+
         }
+
+      
+
+
+       
         if ($fechas1 || $fechas2 || $keyword) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $keyword) {
                 if ($keyword) {
@@ -769,6 +805,8 @@ class HistorialPagosController extends RootAdminController
             });
 
         }
+
+
         if ($fechas1 || $fechas2) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $sort_order) {
 
@@ -833,7 +871,10 @@ class HistorialPagosController extends RootAdminController
             $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
                 ->orderBy('fecha_pago', 'desc');
         }
+
         $orderList = $orderList->paginate(20);
+
+        
 
         return $orderList;
     }
