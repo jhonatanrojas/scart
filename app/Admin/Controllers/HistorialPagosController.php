@@ -86,8 +86,8 @@ class HistorialPagosController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
-            'Nro orden' => 'Nro de orden /<br> Cliente',
             'Convenio' => 'Convenio',
+            'solicitud' => 'Solicitud /<br> Cliente',
             'Importe pagado' => 'Pagado',
             'Referencia' => 'Referencia',
             'Metodo de pago' => 'Metodo',
@@ -167,17 +167,14 @@ class HistorialPagosController extends RootAdminController
 
             
             $dataTr[$row->id] = [
-
-                'Nro orden' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
                 'Convenio' => $Nr_convenio->nro_convenio,
+                'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
                 'Importe pagado' => $row->importe_pagado,
                 'Referencia' => $row->referencia,
-
                 'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : '',
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
                 'Comentario' => $row->comment,
                 'fecha_pago' => $row->fecha_pago,
-
                 'Creado' => $row->created_at->format('d/m/Y'),
 
 
@@ -736,9 +733,8 @@ class HistorialPagosController extends RootAdminController
         $arrSort = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId = $dataSearch['storeId'] ?? '';
-        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
-            ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
         if ($storeId) {
             $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>', 1)
                 ->orderBy('fecha_pago', 'desc');
@@ -780,9 +776,6 @@ class HistorialPagosController extends RootAdminController
 
 
         }
-
-      
-
 
        
         if ($fechas1 || $fechas2 || $keyword) {
