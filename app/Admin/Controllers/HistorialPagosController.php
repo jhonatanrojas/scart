@@ -87,6 +87,7 @@ class HistorialPagosController extends RootAdminController
 
         $listTh = [
             'Nro orden' => 'Nro de orden /<br> Cliente',
+            'Convenio' => 'Convenio',
             'Importe pagado' => 'Pagado',
             'Referencia' => 'Referencia',
             'Metodo de pago' => 'Metodo',
@@ -162,10 +163,13 @@ class HistorialPagosController extends RootAdminController
 
 
 
+            $Nr_convenio = Convenio::where('order_id' , $row->order_id)->first();
 
+            
             $dataTr[$row->id] = [
 
-                'Nro orden' => $row->order_id . '<br>' . $order->first_name . '  ' . $order->last_name,
+                'Nro orden' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
+                'Convenio' => $Nr_convenio->nro_convenio,
                 'Importe pagado' => $row->importe_pagado,
                 'Referencia' => $row->referencia,
 
@@ -756,13 +760,9 @@ class HistorialPagosController extends RootAdminController
 
             if ($resultado->isEmpty() && $keyword) {
                 $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id') ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
-               
-
                 $convenio = Convenio::where('nro_convenio', $keyword)->first();
                 $keyworde = $convenio['order_id'] ?? 0;
 
-               
-               
                     $orderList = $orderList->where(function ($sql) use ($keyworde) {
                         $sql->Where('order_id', $keyworde);
         
@@ -868,7 +868,7 @@ class HistorialPagosController extends RootAdminController
 
 
         } else {
-            $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
+            $orderList->where('sc_historial_pagos.payment_status', '<>', 8)
                 ->orderBy('fecha_pago', 'desc');
         }
 
