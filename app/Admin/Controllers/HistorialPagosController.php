@@ -99,18 +99,10 @@ class HistorialPagosController extends RootAdminController
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
 
-
-
-
         $keyword = sc_clean(request('keyword') ?? '');
         $fechas1 = sc_clean(request('fecha1') ?? '');
         $fechas2 = sc_clean(request('fecha2') ?? '');
         $statusPayment = PaymentStatus::select(['name', 'id'])->get();
-
-
-
-
-
 
 
         foreach ($statusPayment as $key => $value) {
@@ -245,8 +237,7 @@ class HistorialPagosController extends RootAdminController
                         <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/> 
                         </div>
                     </div>
-               
-               
+
                     <div class=" col-md-3 form-group">
                         <label>' . sc_language_render('action.to') . ':</label>
                         <div class="input-group">
@@ -254,27 +245,18 @@ class HistorialPagosController extends RootAdminController
                         </div>
                     </div>
 
-                    
-                   
-               
-                      
+
                 <div class="col-md-3 d-flex mt-4 align-items-center   form-group ">
                 
               
                 <input type="text" name="keyword" class="form-control input-sm  " placeholder="Buscar por numero de orden" value="' . $keyword . '">
                 <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
                 
-               
-                   
                 
             </div>
            
                 </div>
-                
-           
-                
 
-                
                 </form>';
 
 
