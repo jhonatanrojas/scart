@@ -487,9 +487,8 @@ $layout_page = shop_product_detail
   var title_con_inicia = {!! json_encode(sc_language_render('customer.title_con_inicia')) !!};
 
   if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
-                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+  document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`}
 
-              }
   var monto_cuota_entrega = {!! json_encode($product->monto_cuota_entrega) !!};
   var product_nro_coutas = {!! json_encode($product->nro_coutas) !!};
   const valor_product_inicial =  $("#inicial_producto").val()
@@ -498,6 +497,9 @@ $layout_page = shop_product_detail
 
 var radios_tipo_venta = document.getElementsByName('tipo_venta');
 var monto_Inicial = document.getElementById('monto_Inicial');
+
+
+
 
 
 const select_inicial = document.getElementById("inicial");
@@ -512,12 +514,7 @@ if(seleccionado==1){
   let monto_cuotass = montos/document.getElementById("Cuotas").value;
   document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
   if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
-                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
-
-              }
-
-
-
+  document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`}
 input_financamiento.value=1;
 
 select_inicial.innerHTML = `
@@ -597,9 +594,6 @@ if (monto_cuota_entrega > 0) {
 select_inicial.addEventListener('change', function(e) {
 
   if(product_monto_inicial == 0 && e.target.value == 'si'){
-
-
-    
     document.getElementById("butto_modal").disabled = false;
 
       var seleccionado = document.querySelector('input[name="tipo_venta"]:checked').value;
@@ -650,7 +644,17 @@ select_inicial.addEventListener('change', function(e) {
     document.getElementById('monto_de_la_cuota').value = Valor.toFixed(2)
     document.getElementById('monto_Inicial').value = product_monto_inicial
 
+  }else{
+    let monto_cuotass = monto.value/document.getElementById("Cuotas").value;
+            document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
+              document.getElementById('monto_Inicial').value = 0.00
+              if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
+                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
+
+              }
   }
+  
+ 
    if(e.target.value == 'no'){
           let monto_cuotass = monto.value/document.getElementById("Cuotas").value;
             document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
@@ -664,14 +668,8 @@ select_inicial.addEventListener('change', function(e) {
 
 });
 
-let monto_cuotass = monto.value/document.getElementById("Cuotas").value;
-            document.getElementById('monto_de_la_cuota').value = monto_cuotass.toFixed(2)
-              document.getElementById('monto_Inicial').value = 0.00
-              if(document.getElementById("Cuotas").value == 12 || document.getElementById("Cuotas").value == 10){
-                document.getElementById('mensaje').innerHTML= `<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info"></i> ${title_sin_inicia}</div>`
 
-              }
-        
+
 
 
 
