@@ -213,6 +213,7 @@ class Biopago
     }	
 	
 	 public function getMessageDescription($code) {
+
 		 return $this->messages[$code];
 	 }
 }

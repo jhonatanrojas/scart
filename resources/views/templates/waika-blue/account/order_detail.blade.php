@@ -373,10 +373,10 @@ $layout_page = shop_profile
 
         function bioPago (id){
 
-          alert('En este momento no encontramos en mantenimiento puedes usar transferencia o pago móvil ')
+          //alert('En este momento no encontramos en mantenimiento puedes usar transferencia o pago móvil ')
 
           
-          //location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
+          location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
         }
 </script>
 

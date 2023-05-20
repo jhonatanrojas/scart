@@ -63,6 +63,8 @@ class ShopAccountController extends RootFrontController
         $dataUser = Auth::user();
         $id_pedido = $request->get('id');
         $id_pago= $request->get('id_pago');
+
+      
         $order = ShopOrder::where('id', $id_pedido)->first();
   
         $monedas = sc_currency_all();
