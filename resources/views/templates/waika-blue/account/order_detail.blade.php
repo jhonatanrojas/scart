@@ -125,15 +125,18 @@ $layout_page = shop_profile
                         $cuotas = $item->nro_coutas;
 
                         $precio_couta = 0;
-                        if ($item->abono_inicial > 0 && $item->nro_coutas > 0):
-                               $inicial = ($item->abono_inicial * $item->total_price) / 100;
-                                 $total_price = ($item->total_price - $inicial) - $item->monto_cuota_entrega;
-                                  $precio_couta = round($total_price / $item->nro_coutas);
-                                  echo "$" . $precio_couta;
-                                  elseif ($item->nro_coutas > 0):
-                                      $precio_couta = $item->total_price;
-                                      echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
-                                          endif;
+                        if ($item->abono_inicial > 0 && $item->nro_coutas > 0){
+
+                          $totalInicial = ($item->abono_inicial * $item->total_price)/100;
+                          $totalPrecio = $item->total_price - $totalInicial;
+                          $precio_couta = number_format( $totalPrecio / $item->nro_coutas,2);
+                        }else{
+
+                          $precio_couta =  number_format($item->total_price / $item->nro_coutas, 2);
+                                      
+
+                        }
+
 
                           if($cuotas_inmediatas > 0 && $monto_inicial > 0 && $item->nro_coutas == 1){
 
@@ -156,7 +159,7 @@ $layout_page = shop_profile
                               {!! $html !!}
                               </td>
                               @if (empty($order->details[0]->modalidad_de_compra >= 1))
-                                <td class="product_qty">x  {{ $item->qty }}</td>
+                                <td class="product_qty"> {{ $item->qty }}</td>
                                 <td>{!!$item->nro_coutas > 1 || $item->nro_coutas == 0?$item->nro_coutas:$cuotas_inmediatas!!}</th>
                                 <td class="product_price">{{ $precio_couta ?? '0' }}$</td>
                                 <th> {{  $item->monto_cuota_entrega}}</th>
