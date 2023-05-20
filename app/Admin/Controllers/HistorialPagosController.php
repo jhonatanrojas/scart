@@ -718,7 +718,7 @@ class HistorialPagosController extends RootAdminController
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
         if ($storeId) {
-            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>', 1)
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>',1)
                 ->orderBy('fecha_pago', 'desc');
         }
 
@@ -843,9 +843,11 @@ class HistorialPagosController extends RootAdminController
 
 
         } else {
-            $orderList->where('sc_historial_pagos.payment_status', '<>', 8)
+            $orderList->where('sc_historial_pagos.payment_status',  8)
                 ->orderBy('fecha_pago', 'desc');
         }
+
+        
 
         $orderList = $orderList->paginate(20);
 
