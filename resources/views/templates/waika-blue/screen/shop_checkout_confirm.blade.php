@@ -134,6 +134,15 @@
 
                                                             }
 
+                                                            if($product->cuotas_inmediatas > 0 && $item->inicial && $item->Cuotas == 0 || $item->Cuotas == 1){
+                                $total_price = ($product->price - $item->inicial)/$product->cuotas_inmediatas ;
+                               
+                                $Precio_cuota = number_format(($total_price * $item->qty ),2 );  
+
+
+
+                            }
+
                                                 
                                                 @endphp
 

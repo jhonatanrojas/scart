@@ -135,7 +135,7 @@ $layout_page = shop_profile
                                       echo "$" . number_format($precio_couta / $item->nro_coutas, 2);
                                           endif;
 
-                          if($cuotas_inmediatas > 0 && $monto_inicial > 0 && $item->nro_coutas == 0){
+                          if($cuotas_inmediatas > 0 && $monto_inicial > 0 && $item->nro_coutas == 1){
 
                               $precio_couta = number_format(($item->total_price - $monto_inicial)/$cuotas_inmediatas,2);
                               
@@ -157,7 +157,7 @@ $layout_page = shop_profile
                               </td>
                               @if (empty($order->details[0]->modalidad_de_compra >= 1))
                                 <td class="product_qty">x  {{ $item->qty }}</td>
-                                <td>{!!$item->nro_coutas > 0 ?$item->nro_coutas:$cuotas_inmediatas!!}</th>
+                                <td>{!!$item->nro_coutas > 1 || $item->nro_coutas == 0?$item->nro_coutas:$cuotas_inmediatas!!}</th>
                                 <td class="product_price">{{ $precio_couta ?? '0' }}$</td>
                                 <th> {{  $item->monto_cuota_entrega}}</th>
                                 <td class="product_total item_id_{{ $item->id }}">
