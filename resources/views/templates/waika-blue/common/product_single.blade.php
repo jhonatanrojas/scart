@@ -19,8 +19,8 @@
         @if( $product->precio_de_cuota)
           @php
 
-            $total_inicial = 0;
-            
+            $total_inicial = 0.03;
+
             $modalida_pago='Quincenales';
             if($product->id_modalidad_pagos==3)
             $modalida_pago='Mensuales';
