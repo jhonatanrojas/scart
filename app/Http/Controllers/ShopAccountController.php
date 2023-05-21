@@ -73,16 +73,18 @@ class ShopAccountController extends RootFrontController
         //Creación de solicitud de pago
         $Payment = new \stdClass;
         $Payment->idLetter = 'V'; //Letra de la cédula - V, E o P
-        $Payment->idNumber = '11994584'; //Número de cédula
-      
+        $Payment->idNumber =  trim(substr($order->cedula,1)); //Número de cédula
+      //  dd( substr($order->cedula,1) ); 
         if( $id_pago==null){
         $Payment->amount = $order->total * $tasa_cambio; //Monto a combrar, DECIMAL
         }else{
-           $historial_pago= HistorialPago::where('id',$id_pago)->first();
+       
 
-          
+            $historial_pago= HistorialPago::where('id',$id_pago)->first();
            $Payment->amount =  $historial_pago->importe_couta  * $tasa_cambio;
         }
+       
+      
 
         $Payment->currency = 1; //Moneda del pago, 0 - Bolivar Fuerte, 1 - Dolar
         $Payment->reference =  $id_pedido; //Código de referecia o factura
@@ -569,10 +571,12 @@ class ShopAccountController extends RootFrontController
             
         }else{
             $historial_pagos =   HistorialPago::where('order_id', $id)
-            ->where('fecha_venciento','<' ,$fech_p)
-            ->orWhere('payment_status', 5)->where('order_id', $id)
-            ->orWhere('payment_status', 4)->where('order_id', $id)
-            ->orderBy('fecha_venciento')->get();
+            ->where('fecha_venciento','<' ,$fech_p) ->where('fecha_venciento','<' ,$fech_p)
+            ->orWhere('payment_status', 8)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
+            ->orWhere('payment_status', 7)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
+            ->orWhere('payment_status', 1)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
+            ->orderBy('fecha_venciento')->limit(1)
+            ->get();
 
             
         }

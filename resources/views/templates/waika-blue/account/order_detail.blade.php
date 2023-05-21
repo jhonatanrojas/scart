@@ -229,15 +229,15 @@ $layout_page = shop_profile
                   </div>
                 @endif
               </div>
+              <h3 class="text-center">Pagos pendientes</h3>
               <div class="table-responsive">
                 <table class="table table-bordered">
                   <thead class="">
                     <tr>
                       <th>No.</th>
-                      <th>Pagado</th>
-                      <th>Tasa</th>
-                      <th>Divisa</th>
-                      <th class="text-center">Forma de pago</th>
+                      <th>Monto</th>
+                           <th>Divisa</th>
+                      <th class="text-center">Vence</th>
                       <th class="text-center">estatus del pago</th>
                       @if($order->modalidad_de_compra==0)
                       <th>
@@ -245,13 +245,22 @@ $layout_page = shop_profile
                       </th>
                        @endif
                       @if($order->modalidad_de_compra>=1)
-                      <th class="text-center">Fecha de Pago</th>
+                      <th class="text-center">Tasa de cambio</th>
                       @endif
-                      <th>Accione</th>
+                      <th>Acciones</th>
                       
                     </tr>
                   </thead>
             
+                  @php
+                    $monedaBs ='';
+foreach (sc_currency_all()  as $moneda) {
+    if ($moneda->code === "Bs") {
+        $monedaBs = $moneda;
+        break;
+    }
+}
+                  @endphp
                   <tbody>
                     @foreach($historial_pagos as $historial)
                       <tr>
@@ -267,16 +276,14 @@ $layout_page = shop_profile
                           </span>
                         </td>
                         <td>
-                          <span class="badge text-bg-{{ $mapStyleStatus[$historial->payment_status]??'' }} item_21_sku z">{{ $historial->importe_pagado}}</span>
+                          <span class="badge text-bg-{{ $mapStyleStatus[$historial->payment_status]??'' }} item_21_sku z">${{ $historial->importe_couta}}</span>
                         </td>
+                     
+                        <td>{{'USD' }}</td>
                         <td>
-                          <span class="item_21_sku">{{ $historial->tasa_cambio}}</span>
-                        </td>
-                        <td>{{$historial->moneda ?? 'xx' }}</td>
-                        <td>
-                          <span class="item_21_sku">{!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : 'x' !!}
+                          <span class="item_21_sku">{!! $historial->fecha_vencimiento !!}
                           </span>
-                        </td>
+                        </td> 
                         <td>
                           <span class="item_21_sku badge text-bg-{{ $mapStyleStatus[$historial->payment_status]??'' }}">
                               {{ $historial->estatus->name }}
@@ -284,16 +291,10 @@ $layout_page = shop_profile
                         </td>
                         @if($order->modalidad_de_compra>=1)
                           <td colspan="1">
-                            {{$historial->fecha_pago}}
+                           {!!   $monedaBs->exchange_rate !!} Bs
                           </td>
                         @endif
                         
-                        @if($order->modalidad_de_compra==0)
-                          <td>
-                            <span class="item_21_sku">
-                              {{$historial->fecha_pago}}</span>
-                          </td>
-                          @endif
                         @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2  && $historial->payment_status !=5)
                           <td>   
                             <button onclick="pagar({{$historial->order_id,$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
@@ -314,7 +315,7 @@ $layout_page = shop_profile
                             @if($order->modalidad_de_compra>=1)
                               <div class="modal-body  d-flex justify-content-between">
                                   <div class="btn__biopago">
-                                    <a onclick="bioPago({{$historial->id}})" id="bioPago" class="btn btn-danger">
+                                    <a  href="{{ route('biopago',['id' => $order->id ,'id_pago'=>$historial->id])}}"  id="bioPago" class="btn btn-danger">
                                       <span class="d-flex">
                                         <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
                                         Biopago BDV
@@ -379,7 +380,7 @@ $layout_page = shop_profile
           //alert('En este momento no encontramos en mantenimiento puedes usar transferencia o pago móvil ')
 
           
-          location.href=`{{ sc_route('biopago',['id' => $order->id ,'id_pago'])}}=${id}&BIOPAGO BDV=PBIOPAGO BDV`
+          location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id+"])}}" 
         }
 </script>
 

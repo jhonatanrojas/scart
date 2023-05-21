@@ -625,7 +625,7 @@
                                                                     if ($item->abono_inicial > 0 && $item->nro_coutas > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
-                                                                        $monto_inicial = number_format($monto_inicial );
+                                                                        $monto_inicial = number_format($monto_inicial,2);
                                                                     }
 
                                                                     if ($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1) {
