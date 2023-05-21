@@ -1418,6 +1418,8 @@ class  AdminOrderController extends RootAdminController
                     //cosultamos la marca y modelo del producto
                     $producto = AdminProduct::getProductAdmin($detail->product_id);
                     $modelo='';
+
+              
                     if(  $producto->attributes->count()){                     
                             //obtener el atributo modelo por el id de $producto->attributes con $id_attribute_modelo
                         $first_attributes = $producto->attributes->where('attribute_group_id',$id_attribute_modelo)->first();

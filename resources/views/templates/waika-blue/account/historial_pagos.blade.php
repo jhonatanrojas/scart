@@ -83,7 +83,7 @@ $layout_page = shop_profile
               $statusstyle = 'success';
 
             }else if($historial->payment_status === 2 ){
-              $statusstyle = 'info';
+              $statusstyle = 'primary';
 
             }else if($historial->payment_status === 4 ){
               $statusstyle = 'warning';
