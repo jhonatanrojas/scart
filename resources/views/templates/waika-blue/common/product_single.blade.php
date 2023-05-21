@@ -34,7 +34,7 @@
           @endphp
 
           <div class="product-price-wrap">
-            <div class="product-price">${!!$product->nro_coutas > 1 ? number_format($product->price/$product->nro_coutas,2):$total_inicial !!}</div>
+            <div class="product-price">${!!$product->nro_coutas > 1 ? number_format($product->price/$product->nro_coutas,2):$total_inicial ?? 0 !!}</div>
           </div>
 
           <div class="product-price-wrap text-muted">

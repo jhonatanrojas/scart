@@ -380,7 +380,7 @@ foreach (sc_currency_all()  as $moneda) {
           alert('En este momento no encontramos en mantenimiento puedes usar transferencia o pago móvil ')
 
           
-          location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id+"])}}" 
+          //location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id+"])}}" 
         }
 </script>
 
