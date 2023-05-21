@@ -98,12 +98,14 @@
                         <!--a href="{{ sc_route_admin('admin_order.invoice', ['order_id' => $order->id]) }}" target="_blank">{{ sc_language_render('order.invoice') }}</a -->
 
 
-
-                        @if (in_array(strtolower($estatus_user), ['administrator', 'vendedor', 'administracion']) &&
-                                $order->modalidad_de_compra == 3)
+                                
+                        @if (in_array(strtolower($estatus_user), ['administrator', 'administracion']) &&
+                                $order->modalidad_de_compra == 3 || $estatus_user == 'Vendedor_Propuesta' || $estatus_user == 'Vendedor' )
                             <a class="dropdown-item" href="{{ sc_route_admin('propuesta', ['order_id' => $order->id]) }}"
                                 target="_blank">Descargar propuesta</a>
                         @endif
+
+                       
 
 
 
@@ -337,7 +339,7 @@
                                         <td></i> {{ sc_language_render('admin.created_at') }}:</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2)
+                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2 || $order->modalidad_de_compra == 3)
                                         <tr>
                                             <td class="td-title">
                                                 Vendedor Asignado:</td>
@@ -589,12 +591,12 @@
                                                             <td>
                                                                 <a id="cuotas_nro"
                                                                     data-index-number="{{ $item->nro_coutas }}"
-                                                                    href="#" class="edit-item-detail"
+                                                                    href="#" class="{!!$item->nro_coutas > 1  ? 'edit-item-detail':''!!}"
                                                                     data-value="{{ $item->nro_coutas }}"
                                                                     data-name="nro_coutas" data-type="text" min=0
                                                                     data-pk="{{ $item->id }}"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
-                                                                    data-title="Cuotas">{{ $item->nro_coutas }}</a>
+                                                                    data-title="Cuotas">{{ $item->nro_coutas > 1 ?$item->nro_coutas:$cuotas_inmediatas }}</a>
 
                                                             </td>
 
@@ -618,12 +620,17 @@
                                                                     $monto_inicial = 0.0;   
 
                                                                     
-                                                        
+                                                       
                                                               
-                                                                    if ($item->abono_inicial > 0) {
+                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0) {
                                                                         $monto_inicial = ($item->abono_inicial * ($item->total_price )) / 100;
                                                                         $data_json_inicial = ',"' . $item->abono_inicial . '":"Inicial ' . $item->abono_inicial . '%"';
                                                                         $monto_inicial = number_format($monto_inicial );
+                                                                    }
+
+                                                                    if ($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1) {
+                                                                       
+                                                                        $monto_inicial = $monto_Inicial;
                                                                     }
 
                                                                   
@@ -642,9 +649,12 @@
                                Sin inicial @endif"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
                                                                     data-title="Inicial">
-                                                                    @if ($item->abono_inicial > 0)
+                                                                    @if ($item->abono_inicial > 0 && $item->nro_coutas > 0)
                                                                         Con Inicial ${{ $monto_inicial }}
-                                                                    @else
+                                                                    @elseif($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1)
+                                                                    Con Inicial ${{ $monto_inicial }}
+
+                                                                        @else
                                                                         Sin inicial
                                                                     @endif
                                                                 </a>
@@ -658,21 +668,29 @@
                                                                     $precio_couta = 0;
 
 
+                                                                   
                                                                     
-                                                                    
-                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 0 && $monto_entrega == 0):
+                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 1 && $monto_entrega == 0):
                                                                         $inicial = ($item->abono_inicial * $item->total_price) / 100;
                                                                         $total_price = ($item->total_price - $inicial);
                                                                         $precio_couta = number_format($total_price / $item->nro_coutas,2);
                                                                     
                                                                         echo "$" . $precio_couta;
-                                                                    elseif ($item->nro_coutas > 0 && $monto_entrega == 0):
+                                                                    elseif ($item->nro_coutas > 1 && $monto_entrega == 0):
                                                                         $precio_couta = $item->total_price;
                                                                         echo "$" . number_format($precio_couta / $item->nro_coutas ,2);
 
+                                                                    elseif ($monto_Inicial > 0 && $cuotas_inmediatas > 0 ):
+                                                                    $precio_couta = $item->total_price;
+                                                                    echo "$" . number_format(($item->total_price - $monto_Inicial)/$cuotas_inmediatas ,2);
 
+                                                                    
+
+                                                                   
                                                                        
                                                                     endif;
+
+                                                                    
 
 
                                                                     if ($monto_entrega > 0){

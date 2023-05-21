@@ -21,10 +21,20 @@
             $modalida_pago='Quincenales';
             if($product->id_modalidad_pagos==3)
             $modalida_pago='Mensuales';
+
+
+            if($product->cuotas_inmediatas > 0 && $product->nro_coutas == 1){
+                               
+                               $total_inicial = number_format(($product->cost  - $product->monto_inicial)/$product->cuotas_inmediatas,2);
+
+                              
+                               
+
+                           }
           @endphp
 
           <div class="product-price-wrap">
-            <div class="product-price">${!! number_format($product->price/$product->nro_coutas,2) !!}</div>
+            <div class="product-price">${!!$product->nro_coutas > 1 ? number_format($product->price/$product->nro_coutas,2):$total_inicial !!}</div>
           </div>
 
           <div class="product-price-wrap text-muted">
@@ -33,10 +43,10 @@
               @endif
 
               @if( $product->monto_cuota_entrega > 0 )
-              Cuota de  entrega  ${!!number_format($product->monto_cuota_entrega,2)  !!} <br>
+              Cuota de  entrega  ${!!number_format($product->monto_cuota_entrega,2)!!} <br>
             @endif
               
-              <span class="product-cuotas">{{ $product->nro_coutas}} cuotas {!! $modalida_pago !!}</span>
+              <span class="product-cuotas">{!!$product->nro_coutas > 1 ? $product->nro_coutas :$product->cuotas_inmediatas!!} cuotas {!! $modalida_pago !!}</span>
           </div>
   
           

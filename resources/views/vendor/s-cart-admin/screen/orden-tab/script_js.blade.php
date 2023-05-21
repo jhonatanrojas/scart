@@ -76,8 +76,18 @@
     }
     
     function gen_table(fecha_p=false){
-        
+    var con_inicia = {!! json_encode($monto_Inicial  == 'Undefined' ? $order->details: $monto_Inicial) !!};
+    var Monto_product = {!! json_encode($order->details  == 'Undefined' ? 0: $order->details) !!};
+
+    var monto_cuota_entregas = {!! json_encode($monto_entrega) !!};
+    var cuotas_inmediatas = {!! json_encode($cuotas_inmediatas) !!};
+
     
+
+    
+ 
+         
+   
         $.ajax({
                     url : '{{ sc_route_admin('obtener_orden') }}',
                     type : "get",
@@ -90,13 +100,32 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
+                  var cuotaS = 0
+
+              let n3=Number(returnedData.details[0].abono_inicial);
+              let inicial = parseInt(con_inicia);
+
+                 if(returnedData.details[0].nro_coutas > 1 || returnedData.details[0].nro_coutas > 0){
+                    cuotaS = returnedData.details[0].nro_coutas
+                    inicial = parseInt(returnedData.details[0].abono_inicial);
+                    
+                 }
+                 
+                 if(cuotas_inmediatas > 0  && returnedData.details[0].nro_coutas === 1 || returnedData.details[0].nro_coutas === 0){
+                  cuotaS = cuotas_inmediatas
+                  inicial = parseInt(con_inicia);
+                  $("#c_inicial").val(con_inicia)
+
+                 
+                 }
                   
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
                   $("#c_monto").val(returnedData.subtotal)
-                  $("#c_nro_coutas").val(returnedData.details[0].nro_coutas )
+                  $("#c_nro_coutas").val(cuotaS)
                   $("#c_modalidad").val(returnedData.details[0].id_modalidad_pago  ==3 ?'Mensual' : 'Quincenal' )
                   $("#c_inicial").val(Math.floor(returnedData.subtotal * returnedData.details[0].abono_inicial/100))
+                  
 
                  
                 
@@ -135,12 +164,16 @@
              const monto_cuota_entrega= parseFloat(returnedData.details[0].monto_cuota_entrega)
 
               let monto=Number(returnedData.subtotal - monto_cuota_entrega);
-              let n2=Number(returnedData.details[0].nro_coutas);
-              let n3=Number(returnedData.details[0].abono_inicial);
-              let inicial = parseInt(n3);
-              if(inicial>0){ 
+              let n2=Number(cuotaS);
+              
+              if(inicial>0 && returnedData.details[0].nro_coutas >1){ 
                 totalinicial=(inicial*monto)/100;
                 monto = monto -totalinicial;
+
+                
+              }else if( returnedData.details[0].nro_coutas == 1 && cuotas_inmediatas > 0 ){
+                monto = monto - con_inicia;
+
               }
               var total_inicial= (returnedData.details[0].abono_inicial)
               var selected =returnedData.details[0].id_modalidad_pago;
@@ -158,7 +191,6 @@
              
     
               let periodo = selected;
-          
               let totalPagos ,  plazo ,fechaPago;
               var primerFechaPago = true;
     
@@ -191,13 +223,33 @@
                     alert('No seleccionaste ningún periodo de pagos')
                     break
                 }
+
+
+                
     
-                let  montoTotal = monto
-                var cuotaTotal = monto / n2
-                let Inicial = montoTotal/inicial
-                Inicial == Infinity ? Inicial = 0 : Inicial
-               
-                 
+              
+                  let  montoTotal = monto
+                  var cuotaTotal = monto / n2
+                  let Inicial = inicial
+                  Inicial == Infinity ? Inicial = 0 : Inicial
+                  let Precio_cuota = 0
+                  
+                
+                
+              // Se verifica si hay cuotas inmediatas y si la cantidad de cuotas es 0 o 1
+
+                  
+                 if(con_inicia > 0 && monto_cuota_entregas >0){
+                  montoTotal = Monto_product[0].total_price
+                  Inicial = montoTotal/con_inicia
+
+                  Precio_cuota = Math.floor(((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / n2 ) ;
+                  cuotaTotal = Precio_cuota
+
+                 }
+
+
+                 var deudas =0;
                 var texto=0;
                 for(i=1;i<=n2;i++){  
                   texto = (i + 1)
@@ -223,8 +275,8 @@
                 if(mesf<10)
                 mesf='0'+mesf; //agrega cero si el menor de 10
     
-                
-    
+ 
+
                       monto -= cuotaTotal
                       ca=monto;
                       d1=ca.toFixed(2) ;
@@ -242,6 +294,10 @@
                                   <td> ${d3} </td>
                                   <td> <input   class="form-control"  name="fechas_pago_cuotas[]" type="date" value="${ anof+"-"+mesf+"-"+diaf}"> </td>
                               </tr>`;
+
+                        
+
+                              
                   }
                   n1= monto/n2;
                   t_i=i2*n2;
@@ -301,24 +357,48 @@
                     $('#loading').show();
                 },
                 success: function(returnedData){
+                  let cuotas = 0
+
+                
+
+                  if(returnedData.nro_coutas > 0 ){
+                    cuotas = returnedData.nro_coutas
+                  }else{
+                    cuotas = 0
+
+                  }
                   
     
                     node.find('.add_sku').val(returnedData.sku);
                     node.find('.add_qty').eq(0).val(1);
     
-                    node.find('.add_nro_cuota').eq(0).val(returnedData.nro_coutas);
+                    node.find('.add_nro_cuota').eq(0).val(cuotas);
                     node.find('.add_serial').eq(0).val(returnedData.serial);
     
                   
                     var inicial=0;
 
-
-                    if (parseFloat(returnedData.monto_inicial)>0){
+                      if (parseFloat(returnedData.monto_inicial)>0){
                       inicial=  (parseFloat(returnedData.monto_inicial) *100) / parseFloat(returnedData.price_final)
+
                       
-                    }    
+                      
+                    } 
                     var monto_iniciaL= parseFloat((returnedData.price_final-returnedData.monto_inicial) /returnedData.nro_coutas);
                     node.find('.monto_cuota_text').eq(0).text("$"+monto_iniciaL.toFixed(2));
+                  
+                  if(returnedData.cuotas_inmediatas > 0 && returnedData.nro_coutas == 0 ){
+
+                    const montoTotal = returnedData.price_final;
+                    const inicial = returnedData.monto_inicial;
+                    const numeroCuotas = returnedData.cuotas_inmediatas;
+                    const montoRestante = montoTotal - inicial;
+                    const valorCuota = montoRestante / numeroCuotas;
+                    node.find('.monto_cuota_text').eq(0).text("$"+valorCuota.toFixed(2));
+
+                  }
+                       
+                    
                     
                     node.find('.add_inicial ').eq(0).val(inicial.toFixed(2));
                     if(!{!!$order->exchange_rate!!} == 0) node.find('.add_price').eq(0).val(returnedData.price_final * {!! $order->exchange_rate!!});

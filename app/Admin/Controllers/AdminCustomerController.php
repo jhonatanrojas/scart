@@ -17,10 +17,13 @@ use SCart\Core\Admin\Controllers\RootAdminController;
 use SCart\Core\Front\Models\ShopCountry;
 use SCart\Core\Front\Models\ShopLanguage;
 use App\Models\AdminCustomer;
+use App\Models\AdminRole;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCustomFieldDetail;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use Illuminate\Support\Facades\Validator;
+use SCart\Core\Admin\Admin;
+use SCart\Core\Admin\Models\AdminUser;
 
 class AdminCustomerController extends RootAdminController
 {
@@ -37,6 +40,14 @@ class AdminCustomerController extends RootAdminController
 
     public function index()
     {
+
+        $id_usuario_rol = Admin::user()->id;
+        $dminUser = new AdminUser();
+         $user_roles = $dminUser::where('sc_admin_user.id' ,$id_usuario_rol)->orderBy('id')
+         ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
+         ->join('sc_admin_role', 'sc_admin_role.id', '=', 'sc_admin_role_user.role_id')
+         ->select('sc_admin_user.id', 'sc_admin_user.id','sc_admin_role.name as rol','role_id' )->first();
+         $role = AdminRole::find($user_roles->role_id);
         $data = [
             
             'title'         => sc_language_render('customer.admin.list'),
@@ -70,6 +81,9 @@ class AdminCustomerController extends RootAdminController
             'created_at' => sc_language_render('admin.created_at'),
             
         ];
+
+
+        
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword    = sc_clean(request('keyword') ?? '');
 
@@ -128,8 +142,21 @@ class AdminCustomerController extends RootAdminController
 
         $data['listTh'] = $listTh;
 
+
+        
+       
+        if ($role->name == 'Vendedor_Propuesta' && !empty($dataSearch['keyword'])) {
+            $data['dataTr'] = $dataTr;
+         } else {
+            $data['dataTr'] = ($role->name == 'Vendedor_Propuesta') ? [] : $dataTr;
+         }
+         
+
+        
+       
+
    
-        $data['dataTr'] = $dataTr;
+       
         $data['pagination'] = $dataTmp->links($this->templatePathAdmin.'component.pagination') ?? '';
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' =>  $dataTmp->total()]);
 

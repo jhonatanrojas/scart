@@ -55,7 +55,7 @@ $orderNew = \App\Models\AdminOrder::getCountOrderNew()
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
         <span class="dropdown-item dropdown-header">Tienes {!!$orderNew['fecha_vencimineto'] ?? '0'!!}  pago vencido </span>
         <div class="dropdown-divider"></div>
-          <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=4" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
+          <a href="{{ sc_route_admin('historial_pagos.index') }}?sort_order=8" class="dropdown-item dropdown-footer">{{ sc_language_render('action.view_more') }}</a>
       </div>
       </li>
     @endif

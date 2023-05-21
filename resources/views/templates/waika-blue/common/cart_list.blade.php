@@ -89,7 +89,9 @@
                                 $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
 
 
-                            }else if($item->inicial > 0){
+                            }else if($item->inicial > 0 ){
+
+                                
 
                                 $total_price = ($product->price - $item->inicial) ;
                                 $precio_coutas = $total_price / $item->Cuotas;
@@ -97,6 +99,15 @@
                                                     
                             }else{
                                 $Precio_cuota = number_format($product->price / $item->Cuotas,2 );  
+
+                            }
+
+                             if($product->cuotas_inmediatas > 0 && $item->inicial && $item->Cuotas == 0 || $item->Cuotas == 1){
+                                $total_price = ($product->price - $item->inicial)/$product->cuotas_inmediatas ;
+                               
+                                $Precio_cuota = number_format(($total_price * $item->qty ),2 );  
+
+
 
                             }
                         
@@ -107,7 +118,9 @@
                             {{$Precio_cuota}} 
                         </td> 
 
-                        <td>{{$item->Cuotas}} </td>
+                    
+
+                        <td>{!!$item->Cuotas > 1  ?$item->Cuotas :$product->cuotas_inmediatas !!} </td>
                         <td>{{$item->modalidad_pago  == "3" ? "Mensual":"Quincenal"}}</td>
                  
                         

@@ -86,7 +86,8 @@ class HistorialPagosController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
         $listTh = [
-            'Nro orden' => 'Nro de orden /<br> Cliente',
+            'Convenio' => 'Convenio',
+            'solicitud' => 'Solicitud /<br> Cliente',
             'Importe pagado' => 'Pagado',
             'Referencia' => 'Referencia',
             'Metodo de pago' => 'Metodo',
@@ -98,18 +99,10 @@ class HistorialPagosController extends RootAdminController
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
 
-
-
-
         $keyword = sc_clean(request('keyword') ?? '');
         $fechas1 = sc_clean(request('fecha1') ?? '');
         $fechas2 = sc_clean(request('fecha2') ?? '');
         $statusPayment = PaymentStatus::select(['name', 'id'])->get();
-
-
-
-
-
 
 
         foreach ($statusPayment as $key => $value) {
@@ -134,13 +127,6 @@ class HistorialPagosController extends RootAdminController
 
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
-
-
-
-
-
-
-
 
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
@@ -169,18 +155,18 @@ class HistorialPagosController extends RootAdminController
 
 
 
+            $Nr_convenio = Convenio::where('order_id' , $row->order_id)->first();
 
+            
             $dataTr[$row->id] = [
-
-                'Nro orden' => $row->order_id . '<br>' . $order->first_name . '  ' . $order->last_name,
+                'Convenio' => $Nr_convenio->nro_convenio,
+                'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
                 'Importe pagado' => $row->importe_pagado,
                 'Referencia' => $row->referencia,
-
                 'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : '',
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
                 'Comentario' => $row->comment,
                 'fecha_pago' => $row->fecha_pago,
-
                 'Creado' => $row->created_at->format('d/m/Y'),
 
 
@@ -251,8 +237,7 @@ class HistorialPagosController extends RootAdminController
                         <input type="text" name="fecha1"  class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd"/> 
                         </div>
                     </div>
-               
-               
+
                     <div class=" col-md-3 form-group">
                         <label>' . sc_language_render('action.to') . ':</label>
                         <div class="input-group">
@@ -260,27 +245,18 @@ class HistorialPagosController extends RootAdminController
                         </div>
                     </div>
 
-                    
-                   
-               
-                      
+
                 <div class="col-md-3 d-flex mt-4 align-items-center   form-group ">
                 
               
                 <input type="text" name="keyword" class="form-control input-sm  " placeholder="Buscar por numero de orden" value="' . $keyword . '">
                 <button type="submit"  class="btn btn-primary"><i class="fas fa-search"></i></button>
                 
-               
-                   
                 
             </div>
            
                 </div>
-                
-           
-                
 
-                
                 </form>';
 
 
@@ -739,11 +715,10 @@ class HistorialPagosController extends RootAdminController
         $arrSort = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId = $dataSearch['storeId'] ?? '';
-        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
-            ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
         if ($storeId) {
-            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>', 1)
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>',1)
                 ->orderBy('fecha_pago', 'desc');
         }
 
@@ -752,10 +727,39 @@ class HistorialPagosController extends RootAdminController
         }
         if ($keyword) {
 
+             
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('order_id', $keyword);
+
+                
             });
+
+            $resultado = $orderList->get();
+
+            if ($resultado->isEmpty() && $keyword) {
+                $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id') ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
+                $convenio = Convenio::where('nro_convenio', $keyword)->first();
+                $keyworde = $convenio['order_id'] ?? 0;
+
+                    $orderList = $orderList->where(function ($sql) use ($keyworde) {
+                        $sql->Where('order_id', $keyworde);
+        
+                        
+                    });
+
+                    $orderList = $orderList->paginate(20);
+
+        
+
+                    return $orderList;
+                   
+                
+            }
+
+
         }
+
+       
         if ($fechas1 || $fechas2 || $keyword) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $keyword) {
                 if ($keyword) {
@@ -776,6 +780,8 @@ class HistorialPagosController extends RootAdminController
             });
 
         }
+
+
         if ($fechas1 || $fechas2) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $sort_order) {
 
@@ -830,14 +836,22 @@ class HistorialPagosController extends RootAdminController
             } else if ($sort_order == 3) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
 
+            }else if ($sort_order == 8) {
+                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+
             }
 
 
         } else {
-            $orderList->where('sc_historial_pagos.payment_status', '<>', 5)
+            $orderList->where('sc_historial_pagos.payment_status',  8)
                 ->orderBy('fecha_pago', 'desc');
         }
+
+        
+
         $orderList = $orderList->paginate(20);
+
+        
 
         return $orderList;
     }
@@ -1029,14 +1043,9 @@ class HistorialPagosController extends RootAdminController
         ]);
 
 
-
-
-
-
-
         if (Convenio::where('nro_convenio', $data['nro_convenio'])->exists()) {
             return redirect()->back()
-                ->with(['error' => 'Convenio ya creado']);
+                ->with(['error' => 'Convenio ya Creado']);
         } else {
 
 
@@ -1099,7 +1108,7 @@ class HistorialPagosController extends RootAdminController
                 }
 
 
-
+               
 
 
                 $dato_usuario = [
@@ -1176,10 +1185,7 @@ class HistorialPagosController extends RootAdminController
             if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
                 $mesualQuinsena = "MENSUAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            } else if($dato_usuario[0]['id_modalidad_pago'] == 2 && $dato_usuario[0]['cuotas'] >= 24 ) {
-                $mesualQuinsena = "QUINCENAL";
-                $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            }else{
+            } else{
                 $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
                 $mesualQuinsena = " QUINCENAL";
                 $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
@@ -1190,11 +1196,13 @@ class HistorialPagosController extends RootAdminController
                 $Nacionalidad = "Extranjer(A)";
 
 
+                
 
-
-             $total_price = $dato_usuario[0]['subtotal'];
+             if($dato_usuario[0]['cuotas'] > 0){
+                $cuotas = $dato_usuario[0]['cuotas'];
+                $total_price = $dato_usuario[0]['subtotal'];
             $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
-            $cuotas = $dato_usuario[0]['cuotas'];
+           
             if ($dato_usuario[0]['abono_inicial'] > 0 && $product->monto_cuota_entrega == 0) {
                 $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
                 $total_price = $dato_usuario[0]['subtotal'] - $inicial;
@@ -1203,14 +1211,25 @@ class HistorialPagosController extends RootAdminController
                 
 
             }
+             }
 
+            
+             
+             if($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] === 1 || $dato_usuario[0]['cuotas'] === 0){
+                $cuotas =  $product->cuotas_inmediatas;
+                 $inicial = $product->monto_inicial;
+                $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
+                $precio_couta = number_format(($dato_usuario[0]['subtotal'] - $product->monto_inicial)/$product->cuotas_inmediatas,2);
+
+             }
+
+           
 
             if ($product->monto_cuota_entrega > 0){
+                        $cuotas = $dato_usuario[0]['cuotas'];
                         $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
-
+                        $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
                         $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
-
-                      
                    }
 
             $number2 = $total_price * $cod_bolibares;
@@ -1461,7 +1480,6 @@ class HistorialPagosController extends RootAdminController
     public function obtener_pago()
     {
 
-
         $id = request('id');
         $pago = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
             ->join('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
@@ -1536,6 +1554,9 @@ class HistorialPagosController extends RootAdminController
         ]);
 
 
+       
+
+
         $balance = 0;
         $pago = HistorialPago::where('id', $request->id_pago)->first();
         // Obtén el cliente a partir de su ID
@@ -1571,6 +1592,10 @@ class HistorialPagosController extends RootAdminController
                 break;
             case 5:
                 $Estatus = 'PAGADO';
+                break;
+
+                 case 8:
+                $Estatus = 'pagado en mora';
                 break;
 
             default:
@@ -2138,7 +2163,7 @@ class HistorialPagosController extends RootAdminController
         $order = AdminOrder::getOrderAdmin($keyword);
      
         //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6])->orderBy('nro_coutas')->get();
+        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $keyword)
         ->where('payment_status', 1)
         ->orWhere('payment_status', 7)->where('order_id', $keyword)
@@ -2186,54 +2211,67 @@ class HistorialPagosController extends RootAdminController
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
 
+    
+         
+
+           
 
          
-            $pagado += $row->importe_couta;
+           
 
+          
 
+           
+            if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
 
-            $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+                $pagado += $row->importe_couta;
 
+                $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+    
+                $moneda = $row->moneda;
+                $monto = $row->importe_pagado;
+                $total_bs += floor($monto * $row->tasa_cambio);
 
-
-
-
-
-
-       
-            $moneda = $row->moneda;
-            $monto = $row->importe_pagado;
-            $total_bs += floor($monto * $row->tasa_cambio);
-
-            if ($moneda == 'USD') {
+                if ($moneda == 'USD') {
                 // El monto está en dólares
-                $monto_dolares = floor($monto);
-                $monto_bolivares = floor($monto * $row->tasa_cambio);
+                $monto_dolares = number_format($monto,2);
+                $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
                 $Referencia = $monto_bolivares."Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
             } elseif ($moneda == 'Bs') {
                 // El monto está en bolívares
-                $monto_bolivares = floor($monto);
-                $monto_dolares = floor($monto / $row->tasa_cambio);
+                $monto_bolivares = number_format($monto ,2);
+                $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
                 $Referencia = $monto_dolares."$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
 
             }
 
+            }else if($row->payment_status == 8){
+                $monto_dolares = 0.00;
+                $monto_bolivares =0.00;
+                $Referencia =0;
+                $diVisA = 0;
+                $Reportado = 0;
+                
+            }
+            
+            
+
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
                 'MONTO' => $row->importe_couta . '$',
                 'Reportado' => $Reportado ?? 0,
-                'DIVISA' => $diVisA,
-                'CONVERSION' => $Referencia  ,
+                'DIVISA' => $diVisA ?? 'N/A',
+                'CONVERSION' => $Referencia ?? 0 ,
                 'tasa_cambio' => $row->tasa_cambio ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
-                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? '',
-                'REFRENCIA' => $row->referencia,
-                'FECHA_DE_PAGO' => $fecha_formateada
+                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
+                'REFRENCIA' => $row->referencia ?? 0,
+                'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
 
             ];
 
@@ -2258,7 +2296,7 @@ class HistorialPagosController extends RootAdminController
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  floor($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';

@@ -16,6 +16,7 @@ class AdminOrder extends ShopOrder
         '4' => 'danger', //Cancel
         '5' => 'success', //Success
         '6' => 'default', //Failed
+        '8' => 'danger', //Failed
     ];
 
     public function modalidad(){
@@ -568,7 +569,7 @@ class AdminOrder extends ShopOrder
         $Pago_relizado= HistorialPago::where('payment_status',5)->where('fecha_pago' , $fecha_hoy)->count();
 
 
-        $fecha_vencimineto =   HistorialPago::where('payment_status',4)->count();
+        $fecha_vencimineto =   HistorialPago::where('payment_status',8)->count();
 
         $resultado = array(
             'total_ordenes' => $datos = self::where('status', 1)

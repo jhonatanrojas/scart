@@ -299,7 +299,7 @@
                                 </div>
 
                                <div class="col-12">
-                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }} - Cedula: {{ $cedula }}</h2>
+                                <h2 style="font-weight: 800; font-size: 20px;" class="p-0 m-0  "> <i class="fas fa-envelope">Cliente: {{ $name }}  Cedula: {{ $cedula }}</h2>
                                </div>
 
                                
@@ -310,11 +310,16 @@
                                 <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                                     <div class="invoice-details">
 
+
                                        
                                         <address class=" text-uppercase">
                                             <ul  class="address">
                                                
-                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  Codigo Postal:{{$datos_cliente->postcode}}.</li>
+                                              <li><i class="fas fa-map-marker-alt text-dark"></i>ubicacion:{{ strtoupper($datos_cliente->estado) }} {{ strtoupper($datos_cliente->municipio) }}, {{ strtoupper($datos_cliente->parroquia) }}. {{ strtoupper($datos_cliente->address1) }}.  </li>
+                                              <li>@if (!empty($datos_cliente->address2))
+                                                SEGUNDA DIRECCIÓN:{{ strtoupper($datos_cliente->address2)}}
+                                              @endif</li>
+                                              <li> Codigo Postal:{{$datos_cliente->postcode}}.</li>
                                               <li><i class="fas fa-phone"></i> Telefono:{{ $phone }} /{{$phone2 }}</li>
                                               
                                               <li><i class="fas fa-envelope"></i> Correo:{{ strtoupper($email) }}</li>
@@ -375,6 +380,8 @@
                                                         @php
 
                                                        
+
+                                                     
                                                                        
                                                     
                                                                 
@@ -382,11 +389,21 @@
                                                 if($detail['id_modalidad_pago'] == 3){
                                                 $AlContado = "Mensual";
                                                 }
-                                                     
+                                                if ($detail['nro_coutas'] > 0) {
                                                             $precio = $detail['price'];
-                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);
+                                                            $monto_cuota = number_format(($detail['total_price'] -$detail['monto_cuota_entrega']) / $detail['nro_coutas'],2);   }
 
-                                                            if ($detail['abono_inicial'] > 0) {
+                                                            if ($detail['cuotas_inmediatas'] > 1 && $detail['monto_inicial'] > 0 && $detail['nro_coutas'] === 0 ||$detail['nro_coutas'] === 1 ) {
+                                                            $precio = $detail['price'];
+                                                            $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial']) / $detail['cuotas_inmediatas'],2);   
+
+                                                            $detail['nro_coutas'] = $detail['cuotas_inmediatas'];
+                                                            $inicial= $detail['monto_inicial'];
+                                                        
+                                                        
+                                                        }
+
+                                                            if ($detail['abono_inicial'] > 0 && $detail['nro_coutas'] > 0) {
                                                                 $inicial = ($detail['abono_inicial'] * $detail['total_price']) / 100;
                                                                 $total_price = ($detail['total_price'] - $inicial) -$detail['monto_cuota_entrega'];
                                                                 $monto_cuota = number_format($total_price / $detail['nro_coutas'],2);
@@ -396,8 +413,10 @@
 
                                                            
 
-                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0) {
+                                                              if ($detail['abono_inicial'] > 0 && $detail['monto_cuota_entrega'] > 0 && $detail['nro_coutas'] > 1) {
                                                                 $monto_cuota = number_format(($detail['total_price'] - $detail['monto_inicial'] - $detail['monto_cuota_entrega']) / $detail['nro_coutas'],2 ) ;
+
+                                                               
 
                                                                  
                                                             }
@@ -442,7 +461,7 @@
                                                     <p> <strong>Descuento: </strong> <strong>${{ $order->discount}}</strong></p>
                                                 </td>
                                                 <td colspan="2">
-                                                    <p> <strong>Inicial: -${{ number_format($inicial,2)}}</strong> </p>
+                                                    <p> <strong>Inicial:${{ number_format($inicial,2)}}</strong> </p>
                                                 </td>
                                                 <td >
                                                     <p> <strong>Total: ${{ number_format($order->total,2) }}</p>

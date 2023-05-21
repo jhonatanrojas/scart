@@ -1,5 +1,8 @@
 @extends($templatePathAdmin.'layout')
 
+
+
+
 @section('main')
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -103,7 +106,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                                 </div>
-                                                <input type="email" id="email" name="email" required value="{{ old('email') }}" class="form-control email" placeholder="" />
+                                                <input type="email" id="email" name="email"  value="{{ old('email') }}" class="form-control email" placeholder="" />
                                             </div>
                                                 @if ($errors->has('email'))
                                                     <span class="text-sm">
@@ -215,16 +218,27 @@
                                 </div>
                             </div>
 
-                          
+                           
 
                             <div class="form-group row  {{ $errors->has('status') ? ' text-red' : '' }}">
                                 <label for="Modalidad" class="col-sm-2 col-form-label">Modalidad de compra</label>
                                 <div class="col-sm-8">
                                     <select class="form-control status " style="width: 100%;" name="modalidad_compra">
-                                        <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }} selected>Financiamento</option>
+
+                                       
+                                        
+                                       
+                                                <option value="3" >Propuesta</option>
+                                           
+                                            <option value="1" {{ (old('modalidad_compra') ==1) ? 'selected':'' }} selected>Financiamento</option>
                                             <option value="0" >Al contado</option>
                                             <option value="2" >Entraga inmediata</option>
-                                            <option value="3" >Propuesta</option>
+
+                                          
+                                        
+                                            
+
+                                           
                                          
                                     </select>
                                         @if ($errors->has('modalidad_compra'))

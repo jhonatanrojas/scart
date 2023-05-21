@@ -74,7 +74,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="monto">Cuotas: </label>
-                                    <input readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : 0 !!}" class="form-control   "
+                                    <input readonly value="{!! count($order->details) ? $order->details[0]->nro_coutas : $cuotas_inmediatas !!}" class="form-control   "
                                         type="text" name="c_nro_coutas" id="c_nro_coutas" placeholder="_nro_cuotas">
                                 </div>
 
@@ -319,10 +319,17 @@
                 <div class="modal-body">
                     @csrf
                     <div class="form-group">
+                       
+
+                       
+                       
                         <label for="estatus_pagos"></label>
                         <select class="form-control" id="estatus_pagos" name="estatus_pagos">
                             @foreach ($statusPayment as $key => $item)
-                                <option value="@php echo $key @endphp  "> @php  echo $item @endphp</option>
+                                @if ($key == 8)
+                                    <option value="{{ $key }}">{{ $item }}</option>
+                                   
+                                @endif
                             @endforeach
                         </select>
                     </div>

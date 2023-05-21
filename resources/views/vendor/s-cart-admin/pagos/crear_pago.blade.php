@@ -223,6 +223,8 @@
                   
                                   </div>
                       </div>
+
+              
         
             <input type="hidden" name="order_id" value="{{ $order->id}}">
             <input type="hidden" name="id_pago" value="{{ $id_pago}}">
