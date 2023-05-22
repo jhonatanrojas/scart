@@ -93,6 +93,9 @@ class AdminProductController extends RootAdminController
             'category' => sc_language_render('product.category'),
         ];
         $listTh['cuotas'] = 'Cuotas';
+        $listTh['Cuotas Inmediatas
+        '] = 'Cuotas Inmediatas
+        ';
         if (sc_config_admin('product_cost')) {
             $listTh['cost'] = sc_language_render('product.cost');
         }
@@ -172,6 +175,7 @@ class AdminProductController extends RootAdminController
 
 
            $dataMap['cuotas'] = $row['nro_coutas'];
+           $dataMap['Cuotas Inmediatas'] = $row['cuotas_inmediatas'];
 
             if (sc_config_admin('product_cost')) {
                 $dataMap['cost'] = $row['cost'];
