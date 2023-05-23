@@ -115,7 +115,7 @@
                                         name="nro_convenio" id="nro_convenio" placeholder="numero de convenio " required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="lote">Lote: </label>
+                                    <label for="lote">Sección: </label>
                                     <input class="form-control   " type="text" name="lote" id="lote" 
                                         placeholder="Lote ">
                                 </div>
