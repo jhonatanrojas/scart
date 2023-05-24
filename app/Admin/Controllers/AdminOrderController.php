@@ -110,6 +110,7 @@ class  AdminOrderController extends RootAdminController
             'Vendedor Asignado' => 'Vendedor Asignado',
             'Articulo'          => 'Articulo',
             'Cuotas' => 'Cuotas',
+            'entrega inmediata' => 'Entrega inmediata',
             'Cedula'          => 'Cedula',
             'Telefono'          => 'Telefono',
             'Correo'          => 'correo',
@@ -217,6 +218,15 @@ class  AdminOrderController extends RootAdminController
             $Articulo = shop_order_detail::where('order_id', $row->id)->first();
             $convenio = Convenio::where('order_id',$row->id)->first();
             $user_roles = AdminUser::where('id' ,$row->vendedor_id)->first();
+            if (isset($Articulo) && !is_null($Articulo)) {
+                $result = AdminProduct::where('id', $Articulo->product_id)->first() ?? 0;
+                $cuotas_inmediatas = $result->cuotas_inmediatas;
+            } else {
+                $cuotas_inmediatas = 0;
+            }
+            
+
+           
 
             
 
@@ -266,6 +276,7 @@ class  AdminOrderController extends RootAdminController
                  'Vendedor Asignado:'=> $user_roles->name ?? 'N/A',
                 'Articulo' => $Articulo->name ?? 'N/A',
                 'Cuotas' => $Articulo->nro_coutas ?? 'N/A',
+                'entrega inmediata' => $cuotas_inmediatas ,
                 'Cedula'          => $datos_cliente->cedula ?? 'N/A',
                 'Telefono'          => $datos_cliente->phone ?? 'N/A',
                 'Correo'          => $datos_cliente->email ?? 'N/A',
