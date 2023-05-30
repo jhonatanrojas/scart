@@ -118,6 +118,15 @@
 
                  
                  }
+
+                 if(con_inicia > 0 && monto_cuota_entregas >0){
+                  Inicial = con_inicia
+                  $("#c_inicial").val(con_inicia)
+
+                  Precio_cuota = Math.floor(((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / returnedData.details[0].nro_coutas ) ;
+                  
+
+                 }
                   
                   $("#modal_convenio").modal('show')
                   $('#loading').hide();
@@ -172,6 +181,9 @@
 
                 
               }else if( returnedData.details[0].nro_coutas == 1 && cuotas_inmediatas > 0 ){
+                monto = monto - con_inicia;
+
+              }else if(con_inicia > 0 && monto_cuota_entregas >0){
                 monto = monto - con_inicia;
 
               }
@@ -238,16 +250,7 @@
                 
               // Se verifica si hay cuotas inmediatas y si la cantidad de cuotas es 0 o 1
 
-                  
-                 if(con_inicia > 0 && monto_cuota_entregas >0){
-                  montoTotal = Monto_product[0].total_price
-                  Inicial = montoTotal/con_inicia
-
-                  Precio_cuota = Math.floor(((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / n2 ) ;
-                  cuotaTotal = Precio_cuota
-
-                 }
-
+         
 
                  var deudas =0;
                 var texto=0;

@@ -2110,13 +2110,7 @@ class HistorialPagosController extends RootAdminController
         $dminUser = new AdminUser;
         $list_usuarios = $dminUser->pluck('name', 'id')->all();
         $user_roles = $dminUser::where('id', Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id', 'sc_admin_role_user.role_id as role_user')->get();
-
-        $emitido_por = $user_roles[0]->name;
-
-
-
-
-
+        
 
         $data = [];
 
@@ -2157,7 +2151,13 @@ class HistorialPagosController extends RootAdminController
 
 
 
+        $convenio = Convenio::where('order_id', $keyword)->first();
 
+        $emitido_por = $user_roles[0]->name;
+        if ($convenio == null) {
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
+            ->with(['error' => 'Numero de convenio no generado ']);
+        }
 
 
         $order = AdminOrder::getOrderAdmin($keyword);
@@ -2179,7 +2179,7 @@ class HistorialPagosController extends RootAdminController
 
         $nro_total_pagos = 0;
 
-        $convenio = Convenio::where('order_id', $keyword)->first();
+       
 
 
         $dataTr = [];
@@ -2278,6 +2278,9 @@ class HistorialPagosController extends RootAdminController
 
         } //fin foreach
 
+
+        
+
         $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
         $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
         $data['id_solicitud'] = $order->id ?? 0;
@@ -2289,7 +2292,7 @@ class HistorialPagosController extends RootAdminController
         $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
         $data['vendedor'] = $user_roles->name ?? '';
         $data['cedula'] = $order->cedula ?? '';
-        $data['cuota_pendiente'] =$cuota_pendiente;
+        $data['cuota_pendiente'] =$cuota_pendiente ;
         $data['lote'] = $convenio->lote ?? '';
         $data['total_bs'] = $total_bs ;
         
