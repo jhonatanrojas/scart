@@ -120,10 +120,11 @@
                  }
 
                  if(con_inicia > 0 && monto_cuota_entregas >0){
-                  Inicial = con_inicia
+                
                   $("#c_inicial").val(con_inicia)
+                  Inicial = con_inicia
 
-                  Precio_cuota = Math.floor(((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / returnedData.details[0].nro_coutas ) ;
+                  
                   
 
                  }
@@ -183,8 +184,9 @@
               }else if( returnedData.details[0].nro_coutas == 1 && cuotas_inmediatas > 0 ){
                 monto = monto - con_inicia;
 
-              }else if(con_inicia > 0 && monto_cuota_entregas >0){
-                monto = monto - con_inicia;
+              }
+               if(con_inicia > 0 && monto_cuota_entregas >0){
+                monto = Monto_product[0].total_price - con_inicia;
 
               }
               var total_inicial= (returnedData.details[0].abono_inicial)
@@ -238,13 +240,25 @@
 
 
                 
-    
+                
               
                   let  montoTotal = monto
                   var cuotaTotal = monto / n2
                   let Inicial = inicial
                   Inicial == Infinity ? Inicial = 0 : Inicial
                   let Precio_cuota = 0
+
+                  if(con_inicia > 0 && monto_cuota_entregas >0){
+                    cuotaTotal = ((Monto_product[0].total_price - con_inicia) - monto_cuota_entregas) / returnedData.details[0].nro_coutas   ;
+
+                  }
+                 
+
+                
+
+                  
+
+                 
                   
                 
                 
