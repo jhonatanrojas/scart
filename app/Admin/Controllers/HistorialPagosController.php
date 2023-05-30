@@ -2219,7 +2219,8 @@ class HistorialPagosController extends RootAdminController
          
            
 
-          
+            $moneda = '';
+            $sumarReportaso = 0;
 
            
             if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
@@ -2230,7 +2231,7 @@ class HistorialPagosController extends RootAdminController
     
                 $moneda = $row->moneda;
                 $monto = $row->importe_pagado;
-                $total_bs += floor($monto * $row->tasa_cambio);
+                
 
                 if ($moneda == 'USD') {
                 // El monto está en dólares
@@ -2239,17 +2240,20 @@ class HistorialPagosController extends RootAdminController
                 $Referencia = $monto_bolivares."Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
-            } elseif ($moneda == 'Bs') {
+            } else if ($moneda == 'Bs') {
                 // El monto está en bolívares
                 $monto_bolivares = number_format($monto ,2);
                 $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
                 $Referencia = $monto_dolares."$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
+                $total_bs += $Reportado ;
+
+                
 
             }
 
-            }else if($row->payment_status == 8){
+            }else if($row->payment_status == 8 ){
                 $monto_dolares = 0.00;
                 $monto_bolivares =0.00;
                 $Referencia =0;
