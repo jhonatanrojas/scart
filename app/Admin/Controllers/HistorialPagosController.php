@@ -1234,7 +1234,14 @@ class HistorialPagosController extends RootAdminController
 
             $number2 = $total_price * $cod_bolibares;
 
+            $nro_convenio = $data['nro_convenio'];
+            $dataView = [];
+
+            
+
             foreach ($borrado_html as $replacee) {
+
+                
                 $nro_convenio = $data['nro_convenio'];
                 $dataFind = [
                     '/\{\{\$numero_de_convenio\}\}/',
@@ -1304,11 +1311,16 @@ class HistorialPagosController extends RootAdminController
                     'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
                 ];
                 $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
-                $dataView = [
+                $dataView[] = [
                     'content' => $content,
                 ];
 
             }
+
+            
+
+
+      
 
 
             foreach ($file_html as $jurada) {
@@ -1384,7 +1396,7 @@ class HistorialPagosController extends RootAdminController
                 ];
 
 
-                $contente = preg_replace($dataFind, $dataReplace, $jurada->file_html);
+                $contente = preg_replace($dataFind, $dataReplaces, $jurada->file_html);
                 $dataViewe = [
                     'content' => $contente,
                 ];
@@ -1392,7 +1404,7 @@ class HistorialPagosController extends RootAdminController
 
             }
 
-
+            
 
             $r_convenio = Convenio::create([
                 'order_id' => request()->c_order_id,
