@@ -1161,14 +1161,22 @@ class HistorialPagosController extends RootAdminController
 
 
 
-            switch ($dato_usuario['natural_jurídica']) {
+           
+
+
+           
+            switch ($dato_usuario['natural_jurídica'] == 1) {
+
+               
                 case 'N':
                     $borrado_html = $abono_inicial > 0
                         ?
-                        Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                        $borrado_html = Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
 
                         :
-                        Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                        $borrado_html = Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                        
+                        
 
                     break;
                 case 'J':
@@ -1177,6 +1185,9 @@ class HistorialPagosController extends RootAdminController
             }
 
             $file_html = Declaracion_jurada::all();
+
+
+           
 
 
            
@@ -1311,11 +1322,14 @@ class HistorialPagosController extends RootAdminController
                     'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
                 ];
                 $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
-                $dataView[] = [
+                $dataView = [
                     'content' => $content,
                 ];
 
             }
+
+
+           
 
             
 
