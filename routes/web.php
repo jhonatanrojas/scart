@@ -50,8 +50,9 @@ Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propues
 
 
 Route::get('sc_admin/export_product', [AdminProductController::class,'export_product'])->name('export_product');
+Route::get('sc_admin/actualizar_imagenes', [AdminProductController::class,'actualizar_imagenes'])->name('actualizar_imagenes');
 
-
+ 
 
 //[ 'middleware' => 'admin']
 

@@ -14,7 +14,7 @@
           {{-- FORM HEADER --}}
           <form class="form-header d-flex flex-fill mb-0" action="{{ sc_route('search') }}"  method="GET" role="search">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="{{ sc_language_render('search.placeholder') }}" aria-label="{{ sc_language_render('search.placeholder') }}" aria-describedby="button-Search">
+              <input type="text" name="keyword" class="form-control" placeholder="{{ sc_language_render('search.placeholder') }}" aria-label="{{ sc_language_render('search.placeholder') }}" aria-describedby="button-Search">
               <button class="btn btn-outline-secondary" type="submit" id="button-Search"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
           </form>
