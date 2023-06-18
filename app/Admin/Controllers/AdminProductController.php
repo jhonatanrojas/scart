@@ -302,7 +302,9 @@ $products = \Illuminate\Support\Facades\DB::table('sc_shop_product')
 $imagePaths = [
     '/data/product/LANVIGATOR.webp',
     '/data/product/PIRELLI.jpg',
-    '/data/product/rockblade.jfif'
+    '/data/product/rockblade.jfif',
+    '/data/product/netxen.png',
+    '/data/product/Seiberling.jpg'
 ];
 
 // Actualizar los productos con imágenes aleatorias
