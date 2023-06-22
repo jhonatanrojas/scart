@@ -1146,7 +1146,6 @@ class HistorialPagosController extends RootAdminController
             }
 
 
-
             $Moneda_CAMBIOBS = sc_currency_all();
             foreach ($Moneda_CAMBIOBS as $cambio) {
                 if ($cambio->name == "Bolivares") {
@@ -1155,17 +1154,10 @@ class HistorialPagosController extends RootAdminController
             }
 
 
-
             $borrado_html = [];
             $file_html = [];
 
-
-
-           
-
-
-           
-            switch ($dato_usuario['natural_jurídica'] == 1) {
+            switch ($dato_usuario['natural_jurídica']) {
 
                
                 case 'N':
@@ -1175,8 +1167,6 @@ class HistorialPagosController extends RootAdminController
 
                         :
                         $borrado_html = Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
-                        
-                        
 
                     break;
                 case 'J':
@@ -1185,12 +1175,6 @@ class HistorialPagosController extends RootAdminController
             }
 
             $file_html = Declaracion_jurada::all();
-
-
-           
-
-
-           
 
             $pieces = explode(" ", $dato_usuario['cedula']);
             if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
@@ -1328,6 +1312,8 @@ class HistorialPagosController extends RootAdminController
 
             }
 
+           
+
 
            
 
@@ -1417,6 +1403,8 @@ class HistorialPagosController extends RootAdminController
 
 
             }
+
+           
 
             
 
