@@ -71,7 +71,7 @@ class AdminController extends Controller
             $dataInsert['brand_id']     = $row['brand_id'] ?? 0;
             $dataInsert['supplier_id']  = $row['supplier_id'] ?? 0;
             $dataInsert['price']        = (float)($row['price'] ?? 0);
-            $dataInsert['cost']         = (int)($row['cost'] ?? 0);
+            $dataInsert['cost']         = (float)($row['cost'] ?? 0);
             $dataInsert['stock']        = (int)($row['stock'] ?? 0);
             $dataInsert['minimum']      = (int)($row['minimum'] ?? 0);
             $dataInsert['weight_class'] = $row['weight_class'] ?? '';
@@ -89,7 +89,7 @@ class AdminController extends Controller
             $dataInsert['monto_inicial']         = (int)$row['monto_inicial'] ?? 1;
             $dataInsert['id_modalidad_pagos']  = (int)$row['modalidad_de_pago_2_3'] ?? 2;
       
-            $alias = $row['alias'] ?? ($row['name'] ?? '');
+            $alias = trim($row['alias']) ?? (trim($row['name']) ?? '');
             $alias = sc_word_format_url($alias);
             $dataInsert['alias'] = sc_word_limit($alias, 100);
 

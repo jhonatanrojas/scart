@@ -94,7 +94,7 @@ class ShopAccountController extends RootFrontController
         $Payment->cellphone = $order->phone;
         $Payment->urlToReturn = route('pago_exitoso'); //URL de retrono al finalizar el pago
 
-        $PaymentProcess = new Biopago("72426762", "n3yENa9n"); //Instanciación de la API de pago con usuario y clave
+        $PaymentProcess = new Biopago($_ENV['AFILIADOBDV'],$_ENV['CLAVEBDV']); //Instanciación de la API de pago con usuario y clave
         $response = $PaymentProcess->createPayment($Payment);
      //   dd(  $response->paymentId );
         if ($response->success == true) // Se procesó correctamente y es necesario redirigir a la página de pago
@@ -106,14 +106,14 @@ class ShopAccountController extends RootFrontController
                        
             'customer_id' => $cId,
            'referencia' =>$response->paymentId,      
-            'metodo_pago_id' =>3,
+            'metodo_pago_id' =>7,
             'fecha_pago' =>  $hoy,
             'importe_pagado' =>$Payment->amount,
             'comment' =>'BDV',
             'moneda' =>'Bs',
             'tasa_cambio' => $tasa_cambio,
             'comprobante'=>   '',
-            'payment_status' => 1
+            'payment_status' => 5
    
            ];
            if( $id_pago==null){

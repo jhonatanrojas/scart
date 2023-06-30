@@ -34,6 +34,8 @@ Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('
 Route::post('/sc_admin/historial_pagos/eliminar', [HistorialPagosController::class ,'eliminar_pago'])->name('historial_pagos.delete')->middleware('admin');;
 //ruta para obtener pagos de un arden
 Route::get('/sc_admin/historial_pagos/getpagosajax', [HistorialPagosController::class ,'getpagosajax'])->name('getPagosAjax');
+Route::get('/sc_admin/historial_pagos/getPagosBdvAjax', [HistorialPagosController::class ,'getPagosBdvAjax'])->name('getPagosBdvAjax');
+
 //ruta para crear un nuevo pago en sc_historial_pagos
 Route::post('/sc_admin/historial_pagos/create', [HistorialPagosController::class ,'postCreate'])->name('historial_pagos.postCreate');
 

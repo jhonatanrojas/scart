@@ -131,6 +131,13 @@
                                         {{ $historial->referencia }}
                                     @endif - {!! isset($historial->metodo_pago->name) ? $historial->metodo_pago->name : '' !!}
                                 </small>
+                                @if ($historial->payment_status == 5 && $historial->metodo_pago_id==7 )
+
+                                <a href="#" onclick="consultar_pago_bdv('{{$historial->referencia}}')"><span
+                                    title="Consultar pago" type="button"
+                                    class="btn btn-flat btn-sm btn-info"><i class="fas fa-search"></i></span></a>
+
+                                    @endif 
                             </span></td>
 
                         <td><span class="item_21_sku">{!! fecha_europea($historial->fecha_venciento) !!}</span></td>

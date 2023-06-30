@@ -58,7 +58,7 @@
         {!! $product->showPrice() !!} 
         @endif
 
-        <h3 class="card-title"><a href="{{ $product->getUrl() }}">{{ $product->name }}</a></h3>
+        <h3 class="card-title"><a href="{{ $product->getUrl('es') }}">{{ $product->name }}</a></h3>
         {!! $product->displayVendor() !!}
 
       {{-- @if (empty($hiddenStore))

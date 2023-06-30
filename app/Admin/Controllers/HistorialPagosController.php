@@ -1,6 +1,7 @@
 <?php
 namespace App\Admin\Controllers;
 
+use App\Events\Biopago;
 use SCart\Core\Admin\Admin;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -859,7 +860,11 @@ class HistorialPagosController extends RootAdminController
     /**
      * obtener la lista de pagos via ajax func getpagosajax where('sc_historial_pagos.order_id
      */
-
+    public function getPagosBdvAjax(){
+       $biopago= new Biopago($_ENV['AFILIADOBDV'],$_ENV['CLAVEBDV']);
+       $data_pago =$biopago->checkPayment(request()->id_pago);
+       return response()->json($data_pago);
+    }
     public function getPagosAjax()
     {
         $result_pagos = HistorialPago::where('order_id', request()->pId)->get();

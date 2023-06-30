@@ -41,6 +41,8 @@ return [
 
     'debug' => env('APP_DEBUG', false),
 
+    'afiliadoBDV' => env('AFILIADOBDV', null),
+    'claveBDV' => env('CLAVEBDV', null),
     /*
     |--------------------------------------------------------------------------
     | Application URL
