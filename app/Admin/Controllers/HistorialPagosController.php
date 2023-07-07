@@ -1145,7 +1145,7 @@ class HistorialPagosController extends RootAdminController
 
             }
 
-
+            $cod_bolibares = 0;
 
             $Moneda_CAMBIOBS = sc_currency_all();
             foreach ($Moneda_CAMBIOBS as $cambio) {
@@ -1163,9 +1163,9 @@ class HistorialPagosController extends RootAdminController
 
            
 
-
+       
            
-            switch ($dato_usuario['natural_jurídica'] == 1) {
+            switch ($dato_usuario['natural_jurídica']) {
 
                
                 case 'N':
