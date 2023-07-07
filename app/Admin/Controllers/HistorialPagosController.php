@@ -1159,13 +1159,6 @@ class HistorialPagosController extends RootAdminController
                 }
             }
 
-
-            dd($cod_bolibares);
-
-
-           
-
-
             $borrado_html = [];
             $file_html = [];
 
