@@ -7,6 +7,7 @@ Use paginate: $subCategory->appends(request()->except(['page','_token']))->links
 - $products: paginate
 Use paginate: $products->appends(request()->except(['page','_token']))->links()
 */  
+
 @endphp
 
 @extends($sc_templatePath.'.layout')
@@ -47,8 +48,16 @@ Use paginate: $products->appends(request()->except(['page','_token']))->links()
   <div class="product-top-panel row align-items-center">
     <div class="col-6">
       <!-- Render pagination result -->
-      @include($sc_templatePath.'.common.pagination_result', ['items' => $products])
+      {{-- @include($sc_templatePath.'.common.pagination_result', ['items' => $products]) --}}
       <!--// Render pagination result -->
+
+      <form class="form-header d-flex flex-fill mb-0" action="{{ sc_route('search') }}" method="GET" role="search">
+        <div class="input-group">
+          <input type="text" value="<?php echo isset($_REQUEST['keyword']) ? $_REQUEST['keyword']:'' ?>" name="keyword" class="form-control" placeholder="buscar ej.  265/70R-17 " aria-label="Introducir parametros de busqueda" aria-describedby="button-Search">
+          <button class="btn btn-outline-secondary" type="submit" id="button-Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+  
     </div>
     <div class="col-6">
       <!-- Render include filter sort -->
@@ -57,7 +66,7 @@ Use paginate: $products->appends(request()->except(['page','_token']))->links()
     </div>
     
   </div>
-
+ 
 
     <!-- Product list -->
     <article class="product_grip_shop py-3">

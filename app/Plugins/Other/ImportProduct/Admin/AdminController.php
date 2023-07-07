@@ -12,6 +12,7 @@ use SCart\Core\Front\Models\ShopProductDescription;
 use SCart\Core\Front\Models\ShopProductGroup;
 use SCart\Core\Front\Models\ShopProductImage;
 use SCart\Core\Front\Models\ShopProductPromotion;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -69,8 +70,8 @@ class AdminController extends Controller
             $dataInsert['image']        = $row['image'] ?? '';
             $dataInsert['brand_id']     = $row['brand_id'] ?? 0;
             $dataInsert['supplier_id']  = $row['supplier_id'] ?? 0;
-            $dataInsert['price']        = (int)($row['price'] ?? 0);
-            $dataInsert['cost']         = (int)($row['cost'] ?? 0);
+            $dataInsert['price']        = (float)($row['price'] ?? 0);
+            $dataInsert['cost']         = (float)($row['cost'] ?? 0);
             $dataInsert['stock']        = (int)($row['stock'] ?? 0);
             $dataInsert['minimum']      = (int)($row['minimum'] ?? 0);
             $dataInsert['weight_class'] = $row['weight_class'] ?? '';
@@ -88,7 +89,7 @@ class AdminController extends Controller
             $dataInsert['monto_inicial']         = (int)$row['monto_inicial'] ?? 1;
             $dataInsert['id_modalidad_pagos']  = (int)$row['modalidad_de_pago_2_3'] ?? 2;
       
-            $alias = $row['alias'] ?? ($row['name'] ?? '');
+            $alias = trim($row['alias']) ?? (trim($row['name']) ?? '');
             $alias = sc_word_format_url($alias);
             $dataInsert['alias'] = sc_word_limit($alias, 100);
 
@@ -151,6 +152,7 @@ class AdminController extends Controller
         }
         $dataUpload = (new Import)->readFile($data['file_info'],'xls');
         $headings = array_shift($dataUpload); // title line 1
+
         array_walk(
             $dataUpload,
             function (&$row) use ($headings) {
@@ -165,26 +167,54 @@ class AdminController extends Controller
                 $arrayError[] = [$row['sku'] => 'Product not found'];
                 continue;
             }
-            $lang = $row['lang'] ?? 'en';
+            $lang = $row['lang'] ?? 'es';
+         
             try {
             $description = strip_tags(($row['description'] ?? ''));
             $name = strip_tags(($row['name'] ?? ''));
             $keyword = strip_tags(($row['keyword'] ?? ''));
             $content = strip_tags(($row['content'] ?? ''));
             $content = str_replace("\n","<br>", $content);
+            $dataInsert['lang'] = 'es';
             $dataInsert['name'] = $name;
             $dataInsert['keyword'] = $keyword;
             $dataInsert['description'] = $description;
             $dataInsert['content'] = $content;
-            
-            ShopProductDescription::updateOrCreate(
-                ['product_id' => $product->id, 'lang' => $lang],
+      
+
+            $productDescription = ShopProductDescription::where('product_id', $product->id)->first();
+                $accion='insert';
+
+            if(is_null($productDescription)) {
+        
+
+              $ProductD= new ShopProductDescription ($dataInsert);
+     
+              $ProductD->save();
+
+            }else{
+                $accion='update';
+                $productDescription->name= $name; 
+                $productDescription->description= $description;
+                $productDescription->content= $content;
+               // $productDescription->save();
+
+                $affected = DB::update(
+                    'update sc_shop_product_description set name = "'.$name.'",description="'.$description.'", content="'.$content.'" where product_id = ?',
+                    [ $product->id]
+                );
+            }
+            /*ShopProductDescription::updateOrCreate(
+                ['product_id' => $product->id],
                 $dataInsert
-            );
+            );*/
+
             $arraySuccess[] = $row['sku'].'_'.$lang;
             } catch (\Throwable $th) {
+         
+
                 $indexSku = $row['sku'].'_'.$lang;
-                $arrayError[] = [$indexSku => $th->getMessage()];
+                $arrayError[] = [$indexSku => $th->getMessage(),  "accion"=>$accion, 'id_product'=> $product->id];
             }
         }
         return redirect()->back()->with(['arrayError' => $arrayError, 'arraySuccess' => $arraySuccess, 'step' => 'product-info']);

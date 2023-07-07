@@ -845,6 +845,42 @@
         }
       })
     }
+
+      function consultar_pago_bdv(id_pago) {
+
+            Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor, espera...',
+        icon: 'info',
+        showConfirmButton: false,
+        allowOutsideClick: false
+      });
+    $.ajax({
+      method: 'get',
+      url: '{{ route("getPagosBdvAjax") }}',
+      data: {
+        'id_pago': id_pago,
+        _token: '{{ csrf_token() }}',
+      },
+      success: function (response) {
+        // Obtener los datos de la respuesta JSON
+        var responseData = response;
+        Swal.close();
+        // Crear la alerta con Swal.fire
+        Swal.fire({
+          title: responseData.responseMessage,
+          html:
+            '<b>Monto:</b> ' + responseData.amount + '<br>' +
+            '<b>ID de transacción:</b> ' + responseData.transactionId + '<br>' +
+            '<b>Referencia:</b> ' + responseData.reference + '<br>' +
+            '<b>Fecha de pago:</b> ' + responseData.paymentDate,
+          icon: 'success'
+        });
+      }
+    });
+    }
+
+  
     
     function obtener_historial_pagos(){
       console.log('obtener_historial_pagos');

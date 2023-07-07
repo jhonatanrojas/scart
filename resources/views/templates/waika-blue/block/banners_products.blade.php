@@ -269,7 +269,7 @@ $counterBanners = 1;
       }
       .banner2 img{
         max-width: 260px;
-        max-height: 250px;
+        max-height: 220px;
       }
       .banner3 img, .banner4 img{
         max-width: 130px;
@@ -330,7 +330,7 @@ $counterBanners = 1;
       }
       .banner2 img{
         max-width: 260px;
-        max-height: 250px;
+        max-height: 220px;
       }
       .banner3 img, .banner4 img{
         max-width: 130px;

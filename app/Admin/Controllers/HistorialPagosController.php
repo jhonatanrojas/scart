@@ -1,6 +1,7 @@
 <?php
 namespace App\Admin\Controllers;
 
+use App\Events\Biopago;
 use SCart\Core\Admin\Admin;
 use App\Http\Controllers\NumeroLetra;
 use SCart\Core\Admin\Controllers\RootAdminController;
@@ -859,7 +860,11 @@ class HistorialPagosController extends RootAdminController
     /**
      * obtener la lista de pagos via ajax func getpagosajax where('sc_historial_pagos.order_id
      */
-
+    public function getPagosBdvAjax(){
+       $biopago= new Biopago($_ENV['AFILIADOBDV'],$_ENV['CLAVEBDV']);
+       $data_pago =$biopago->checkPayment(request()->id_pago);
+       return response()->json($data_pago);
+    }
     public function getPagosAjax()
     {
         $result_pagos = HistorialPago::where('order_id', request()->pId)->get();
@@ -1146,25 +1151,24 @@ class HistorialPagosController extends RootAdminController
             }
 
             $cod_bolibares = 0;
-
             $Moneda_CAMBIOBS = sc_currency_all();
             foreach ($Moneda_CAMBIOBS as $cambio) {
-                if ($cambio->name == "Bolivares") {
+                
+                if ($cambio->code == "Bs") {
                     $cod_bolibares = $cambio->exchange_rate;
                 }
             }
 
 
+            dd($cod_bolibares);
+
+
+           
+
 
             $borrado_html = [];
             $file_html = [];
 
-
-
-           
-
-       
-           
             switch ($dato_usuario['natural_jurídica']) {
 
                
@@ -1175,8 +1179,6 @@ class HistorialPagosController extends RootAdminController
 
                         :
                         $borrado_html = Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
-                        
-                        
 
                     break;
                 case 'J':
@@ -1185,12 +1187,6 @@ class HistorialPagosController extends RootAdminController
             }
 
             $file_html = Declaracion_jurada::all();
-
-
-           
-
-
-           
 
             $pieces = explode(" ", $dato_usuario['cedula']);
             if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
@@ -1328,6 +1324,8 @@ class HistorialPagosController extends RootAdminController
 
             }
 
+           
+
 
            
 
@@ -1417,6 +1415,8 @@ class HistorialPagosController extends RootAdminController
 
 
             }
+
+           
 
             
 

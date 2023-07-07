@@ -69,7 +69,7 @@ class AdminController extends Controller
             $dataInsert['image']        = $row['image'] ?? '';
             $dataInsert['brand_id']     = $row['brand_id'] ?? 0;
             $dataInsert['supplier_id']  = $row['supplier_id'] ?? 0;
-            $dataInsert['price']        = (int)($row['price'] ?? 0);
+            $dataInsert['price']        = (float)($row['price'] ?? 0);
             $dataInsert['cost']         = (int)($row['cost'] ?? 0);
             $dataInsert['stock']        = (int)($row['stock'] ?? 0);
             $dataInsert['minimum']      = (int)($row['minimum'] ?? 0);
@@ -161,6 +161,7 @@ class AdminController extends Controller
         );
         $arraySuccess = [];
         $arrayError = [];
+      
         foreach ($dataUpload as $k => $row) {
             $product = ShopProduct::where('sku', $row['sku'])->first();
             if(!$product) {

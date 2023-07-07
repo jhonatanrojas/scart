@@ -285,6 +285,39 @@ class AdminProductController extends RootAdminController
      * Form create new item in admin
      * @return [type] [description]
      */
+    public function actualizar_imagenes(){
+
+
+
+// Obtener los productos que se desean actualizar
+$products = \Illuminate\Support\Facades\DB::table('sc_shop_product')
+    ->leftJoin('sc_shop_product_description', 'sc_shop_product_description.product_id', '=', 'sc_shop_product.id')
+    ->leftJoin('sc_shop_product_category', 'sc_shop_product_category.product_id', '=', 'sc_shop_product.id')
+    ->select('sc_shop_product.*', 'sc_shop_product_description.name', 'sc_shop_product_description.keyword', 'sc_shop_product_description.description')
+    ->where('sc_shop_product_description.lang', 'es')
+    ->whereIn('sc_shop_product_category.category_id', ['98e83294-9c5a-49df-96fc-23076067e805'])
+    ->get();
+
+// Rutas de las imágenes disponibles
+$imagePaths = [
+    '/data/product/LANVIGATOR.webp',
+    '/data/product/PIRELLI.jpg',
+    '/data/product/rockblade.jfif',
+    '/data/product/netxen.png',
+    '/data/product/Seiberling.jpg'
+];
+
+// Actualizar los productos con imágenes aleatorias
+foreach ($products as $product) {
+    $randomImagePath = $imagePaths[array_rand($imagePaths)];
+
+    AdminProduct::where('id', $product->id)->update(['image' => $randomImagePath]);
+}
+
+// Confirmación de la actualización
+echo 'Se han actualizado las imágenes de los productos correctamente.';
+
+    }
     public function create()
     {
 

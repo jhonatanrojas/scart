@@ -10,7 +10,8 @@ class Biopago
     public $user;
     public $pass;
 	public $messages;
-	private $urlApi = 'https://biodemo.ex-cle.com:4443/ipg/web/api/Payment';
+	private $urlApi = 'https://biopago.banvenez.com/ipg/api/Payment';
+	//'https://biodemo.ex-cle.com:4443/ipg/web/api/Payment';
 
 	public function __construct($user1,$pass1)
     {
