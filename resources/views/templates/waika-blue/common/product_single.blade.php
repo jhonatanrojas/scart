@@ -7,8 +7,9 @@
     
     <div class="card-body">
         @php
+     
         $product->nro_coutas=$product->nro_coutas == 0 ? 1 : $product->nro_coutas; 
-          if( $product->precio_de_cuota > 0 ):
+          if( $product->precio_de_cuota > 0 && $product->precio_de_cuota ):
             $product->price=  ($product->price-$product->monto_inicial) - $product->monto_cuota_entrega;
           endif;
 
