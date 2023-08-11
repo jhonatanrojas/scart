@@ -821,20 +821,7 @@ class  AdminOrderController extends RootAdminController
         $fecha_primer_pago = request('fecha_primer_pago');
         $ordert = AdminOrder::getOrderAdmin($id);
 
-        $estatus = SC_shop_order_status::where('id', $value)->first();
-
-
-
-        $email_estatus = [
-            'first_name' => $ordert->first_name ?? '',
-            'last_name' => $ordert->last_name ?? '',
-            'email' => $ordert->email ?? '',
-            'estatus' => $estatus->name ?? '',
-            'estatus_mensaje' => $estatus->mensaje ?? '',
-            'numero_del_pedido' => $ordert->id ?? '',
-
-
-        ];
+       
 
 
 
@@ -856,10 +843,7 @@ class  AdminOrderController extends RootAdminController
 
 
 
-
-        if ( $estatus->enviar_mail) {
-            estatus_del_pedido($email_estatus);
-        }
+  
 
 
 
@@ -918,6 +902,24 @@ class  AdminOrderController extends RootAdminController
             $oldValue = $order->{$code};
             $order->update([$code => $value]);
 
+            $estatusOrden = SC_shop_order_status::where('id', $value)->first();
+
+
+
+            $email_estatus = [
+                'first_name' => $ordert->first_name ?? '',
+                'last_name' => $ordert->last_name ?? '',
+                'email' => $ordert->email ?? '',
+                'estatus' => $estatusOrden->name ?? '',
+                'estatus_mensaje' => $estatusOrden->mensaje ?? '',
+                'numero_del_pedido' => $ordert->id ?? '',
+    
+    
+            ];
+            $enviar_mail=$estatusOrden->enviar_mail?? false;
+            if ($enviar_mail) {
+                estatus_del_pedido($email_estatus);
+            }
 
             if ($code == 'status') {
                 //Process finish order

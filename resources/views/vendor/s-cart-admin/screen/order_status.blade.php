@@ -32,13 +32,23 @@
 
               <div class="form-group">
                 <label for="mensaje">Mensaje de correo</label>
-                <textarea name="mensaje" class="form-control" id="mensaje" rows="3">
-                  {{ old()?old('mensaje'):$order_status['mensaje']??'' }}
+                <textarea name="mensaje" class="form-control" id="mensaje" rows="3">{{ old()?old('mensaje'):$order_status['mensaje']??'' }}
                 </textarea>
               </div>
               <div class="form-check">
+       @php
+       $chekedbtm='';
+
+       if(isset($order_status['enviar_mail']) && $order_status['enviar_mail']){
+        $chekedbtm='checked';
+       }
+
+        @endphp
                 <input name="enviar_mail" type="checkbox" class="form-check-input" id="enviar_email"
-                {{$order_status['enviar_mail']? 'checked':'' }}
+         
+                {{
+                $chekedbtm
+                 }}
                 
                 >
                 <label class="form-check-label" for="enviar_email">Enviar Email</label>

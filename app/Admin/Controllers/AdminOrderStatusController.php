@@ -145,6 +145,7 @@ class AdminOrderStatusController extends RootAdminController
             'name' => $row['name'] ?? 'N/A',
             'mensaje' => $row['mensaje'] ?? 'N/A',
             'email' => $row['enviar_mail'] ? 'SI':'NO',
+        
             'action' => '
                 <a href="' . sc_route_admin('admin_order_status.edit', ['id' => $row['id'] ? $row['id'] : 'not-found-id']) . '"><span title="' . sc_language_render('action.edit') . '" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;
 
