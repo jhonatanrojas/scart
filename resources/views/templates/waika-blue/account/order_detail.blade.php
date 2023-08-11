@@ -297,7 +297,7 @@ foreach (sc_currency_all()  as $moneda) {
                         
                         @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2  && $historial->payment_status !=5)
                           <td>   
-                            <button onclick="pagar({{$historial->order_id,$historial->id}})" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
+                            <button onclick="pagar('{{$historial->order_id,$historial->id}}')" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
                               PAGAR
                             </button>
                           </td>
@@ -313,36 +313,73 @@ foreach (sc_currency_all()  as $moneda) {
                             </div>
                   
                             @if($order->modalidad_de_compra>=1)
-                              <div class="modal-body  d-flex justify-content-between">
-                                  <div class="btn__biopago">
-                                    <a  href="{{ route('biopago',['id' => $order->id ,'id_pago'=>$historial->id])}}"  id="bioPago" class="btn btn-danger">
-                                      <span class="d-flex">
-                                        <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
-                                        Biopago BDV
-                                      </span>
-                                    </a>
+                              <div class="modal-body m-auto ">
+
+
+                                  <div class="row mb-5">
+                                    <div class="col-md-12">
+                                
+                                        <button type="button"  href="{{ route('biopago',['id' => $order->id ,'id_pago'=>$historial->id])}}"  id="bioPago" class="btn btn-danger btn-block">
+                                          <span class="d-flex">
+                                            <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
+                                            Biopago BDV
+                                          </span>
+                                        </button>
+                              
+                           
+                                    </div>
                                   </div>
-                                  <div class="btn__transferencia">
-                                    <a onclick="transferencia({{$historial->id}})" id="tranferencia" class="btn btn-info">
-                                      <span class="d-flex">
-                                        <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
-                                        Transferencia
-                                      </span>
-                                    </a>
+                                  <div class="row  mb-5">
+                                    <div class="col-12">
+                                      <div class="puntoDeventa">
+                                        <button class="btn btn-danger btn-block" id="py-client" onclick="puntoYabioPago('{{$historial->importe_couta}}')">
+                                          <span class="d-flex">
+                                            <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
+                                            PuntoYaBDV
+                                          </span>
+                                        </button>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="btn__pagomovil">
-                                    <a id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning">
-                                      <span class="d-flex">
-                                        <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
-                                        Pago movil
-                                      </span>
-                  
-                                    </a>
+                                  <div class="row mb-5">
+                                    <div class="col-12">
+                                      <div class="btn__transferencia">
+                                        <button type="button" onclick="transferencia({{$historial->id}})" id="tranferencia" class="btn btn-info btn-block">
+                                          <span class="d-flex">
+                                            <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
+                                            Transferencia
+                                          </span>
+                                        </button>
+                                      </div>
+                                    </div>
                                   </div>
+                              
+                                  <div class="row mb-5 ">
+                                    <div class="col-12">
+                                      <div class="btn__pagomovil">
+                                        <button type="button" id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning btn-block">
+                                          <span class="d-flex">
+                                            <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
+                                            Pago movil
+                                          </span>
+                      
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                               
+
+                                
+                              
+                                                       
+                                
+                                  
+                           
+                                 
                               </div>
                             @endif  
                               <div class="modal-footer mb-4">
-                                <button  type="button" class="btn btn-ligh" data-dismiss="modal">
+                                <button  type="button" class="btn btn-ligh " data-dismiss="modal" id="cerrarmodal">
                                   Cancelar
                                 </button>
                               </div>
@@ -365,7 +402,36 @@ foreach (sc_currency_all()  as $moneda) {
 @endsection
 
 
+@push('scripts')
+<script src="https://puntoyapos.com.ve/pos/assets/scripts/py-script.js"></script>
 <script type="text/javascript">
+    const callback = (responseData) => {
+      console.log(responseData)
+      Swal.fire({
+          title: responseData.responseMessage,
+          html:
+            '<b>Monto:</b> ' + responseData.amount + '<br>' +
+            '<b>ID de transacción:</b> ' + responseData.transactionId + '<br>' +
+            '<b>Referencia:</b> ' + responseData.reference + '<br>' +
+            '<b>Fecha de pago:</b> ' + responseData.paymentDate,
+          icon: 'success'
+        });
+      // Los valores de la respuesta son: 
+      // ok: boolean, (true en caso de ser exitosa, false en caso de ser fallida)
+      // description: string, (descripción de la transacción)
+      // transactionId: string, (referencia bancaria de la transacción)
+      // Ejemplo: { ok: true, description: 'Pago exitoso', transactionId: '1858749961512' }
+    };
+  function puntoYabioPago(monto){
+    $("#cerrarmodal").click()
+    console.log(monto)
+    var tasa_cambio = '{{$monedaBs->exchange_rate }}';
+    console.log()
+    monto= parseFloat(tasa_cambio)*parseFloat(monto);
+    console.log(monto)
+    payWithPuntoYa(monto, callback);
+ 
+  }
         function transferencia (id){
            number = id
             location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Transferencia=Transferencia`
@@ -380,3 +446,4 @@ foreach (sc_currency_all()  as $moneda) {
         }
 </script>
 
+@endpush
