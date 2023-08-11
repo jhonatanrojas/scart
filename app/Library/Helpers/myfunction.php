@@ -1190,7 +1190,8 @@ function exito_biopago_email(array $data)
 function estatus_del_pedido(array $data)
 
 {
-    if (sc_config('customer_estatus_del_pedido')) {
+
+
         $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_del_pedido')->where('status', 1)->first();
 
         if ($checkContent) {
@@ -1224,14 +1225,14 @@ function estatus_del_pedido(array $data)
 
             $config = [
                 'to' => $data['email'],
-                'subject' => 'ESTATUS DEl PAGO',
+                'subject' => 'ESTATUS DE SOLICITUD',
             ];
 
            
 
             sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
         }
-    }
+    
    
 }
 

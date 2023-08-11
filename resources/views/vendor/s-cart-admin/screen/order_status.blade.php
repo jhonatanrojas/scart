@@ -30,6 +30,20 @@
                 <input type="text" id="name" name="name" value="{{ old()?old('name'):$order_status['name']??'' }}" class="form-control name {{ $errors->has('name') ? ' is-invalid' : '' }}">
               </div>
 
+              <div class="form-group">
+                <label for="mensaje">Mensaje de correo</label>
+                <textarea name="mensaje" class="form-control" id="mensaje" rows="3">
+                  {{ old()?old('mensaje'):$order_status['mensaje']??'' }}
+                </textarea>
+              </div>
+              <div class="form-check">
+                <input name="enviar_mail" type="checkbox" class="form-check-input" id="enviar_email"
+                {{$order_status['enviar_mail']? 'checked':'' }}
+                
+                >
+                <label class="form-check-label" for="enviar_email">Enviar Email</label>
+              </div>
+
               @if ($errors->has('name'))
               <span class="text-sm">
                 <i class="fa fa-info-circle"></i> {{ $errors->first('name') }}
@@ -64,6 +78,7 @@
                  <table class="table table-hover box-body text-wrap table-bordered">
                     <thead>
                        <tr>
+                     
                         @if (!empty($removeList))
                         <th></th>
                         @endif
@@ -72,7 +87,8 @@
                         @endforeach
                        </tr>
                     </thead>
-                    <tbody>
+                    <tbody> 
+                 
                         @foreach ($dataTr as $keyRow => $tr)
                             <tr class="{{ (request('id') == $keyRow) ? 'active': '' }}">
                                 @if (!empty($removeList))
