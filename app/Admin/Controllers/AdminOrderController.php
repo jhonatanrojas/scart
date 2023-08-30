@@ -221,13 +221,14 @@ class  AdminOrderController extends RootAdminController
             $user_roles = AdminUser::where('id', $row->vendedor_id)->first();
             if (isset($Articulo) && !is_null($Articulo)) {
                 $result = AdminProduct::where('id', $Articulo->product_id)->first() ?? 0;
-                $cuotas_inmediatas = $result->cuotas_inmediatas;
+          
+                $cuotas_inmediatas = $result->cuotas_inmediatas ?? 0;
             } else {
                 $cuotas_inmediatas = 0;
             }
 
 
-
+ 
 
 
 
@@ -1000,6 +1001,7 @@ class  AdminOrderController extends RootAdminController
     {
 
 
+    
         $addIds = request('add_id');
         $add_price = request('add_price');
         $add_qty = request('add_qty');
@@ -1013,6 +1015,7 @@ class  AdminOrderController extends RootAdminController
         $serial = request('add_serial');
 
         $items = [];
+        
 
         $order = AdminOrder::getOrderAdmin($orderId);
 
@@ -1023,6 +1026,11 @@ class  AdminOrderController extends RootAdminController
                 if (!$product) {
                     return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => '#' . $id]), 'detail' => '']);
                 }
+                $porcentaje_inicial=0;
+                if($add_inicial[$key]>0){
+                 $porcentaje_inicial=   round($add_inicial[$key] *100 / ($add_price[$key] * $add_qty[$key]),3);
+                }
+
                 $pAttr = json_encode($add_att[$id] ?? []);
                 $items[] = array(
                     'id' => sc_uuid(),
@@ -1034,7 +1042,7 @@ class  AdminOrderController extends RootAdminController
                     'total_price' => $add_price[$key] * $add_qty[$key],
                     'nro_coutas' =>  $add_nro_cuota[$key],
                     'id_modalidad_pago' => $add_modalidad[$key],
-                    'abono_inicial' => $add_inicial[$key],
+                    'abono_inicial' => $porcentaje_inicial,
                     'sku' => $product->sku,
                     'tax' => $add_tax[$key],
                     'attribute' => $pAttr,
@@ -1092,6 +1100,17 @@ class  AdminOrderController extends RootAdminController
             if ($field == 'qty' || $field == 'price') {
                 $item->total_price = $value * (($field == 'qty') ? $item->price : $item->qty);
             }
+
+      
+            $porcentaje_inicial=0;
+            if ($field == 'abono_inicial' ) {
+                
+       
+                if($value>0){
+                    $item->{$field}=   round($value *100 / $item->total_price ,3);
+                   }
+            }
+           
             $item->save();
             $item = $item->fresh();
             $order = AdminOrder::getOrderAdmin($orderId);

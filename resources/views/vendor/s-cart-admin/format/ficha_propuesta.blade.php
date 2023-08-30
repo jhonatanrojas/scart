@@ -357,7 +357,7 @@
                                                     <th>Nro cuotas</th>
                                                     <th>Inicial </th>
                                                     <th>Cuota </th>
-                                                    <th>Cuota de entrega $ </th>
+                                                    <th>Cuota Especial $ </th>
                                                     <th>Total</th>
 
                                                 </tr>

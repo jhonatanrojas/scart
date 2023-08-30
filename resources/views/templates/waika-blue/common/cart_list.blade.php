@@ -23,7 +23,7 @@
                         <th>Cuotas</th>
                         <th>Frecuencia</th>
                         <th>Inicial</th>
-                        <th> Cuota de entrega</th>
+                        <th> Cuota Especial</th> 
                         <th>{{ sc_language_render('product.quantity') }}</th>
                     
                         <th></th>

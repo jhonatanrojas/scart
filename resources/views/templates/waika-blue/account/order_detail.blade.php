@@ -110,7 +110,7 @@ $layout_page = shop_profile
                         <th class="product_qty">{{ sc_language_render('product.quantity') }}</th>
                         <th class="product_price">Cuota</th>
                         <th class="product_price"> $Cuota</th>
-                        <th>Cuota de entrega</th>
+                        <th>Cuota especial</th>
                         <th class="product_total">Frecuencia</th>
                       @else
                         <th class="product_price">{{ sc_language_render('product.price') }}</th>

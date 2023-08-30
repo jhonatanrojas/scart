@@ -113,7 +113,7 @@
                         </div>   
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="text-uppercase" for="">Monto cuota de entrega $</label>
+                                <label class="text-uppercase" for="">Monto cuota Especial $</label>
                                 <input class="form-control" type="text" value="{{$product->monto_cuota_entrega}}" disabled >
                             </div>
                         </div>                   
