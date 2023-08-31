@@ -409,24 +409,38 @@ class ShopAccountController extends RootFrontController
         $cId = $user->id;
         $data = request()->all();
 
+        $usuario = AdminCustomer::find($cId);
 
-        $usuario = AdminCustomer::where('id' ,$cId )->update([
-            'first_name' => $data['first_name'] ?? '',
-            'last_name' => $data['last_name'] ?? '',
-            'phone' => $data['phone'] ?? '',
-            'postcode' => $data['postcode'] ?? '',
-            'address1' => $data['address1' ?? ''],
-            'address2' => $data['address2' ?? ''],
-            'sex' => $data['sex' ?? '']
+            if (!$usuario) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Usuario no encontrado'])
+                    ->withInput();
+            }
 
-        ]);
+            $validatedData = [
+                'first_name' => $data['first_name'] ?? '',
+                'last_name' => $data['last_name'] ?? '',
+                'phone' => $data['phone'] ?? '',
+                'postcode' => $data['postcode'] ?? '',
+                'address1' => $data['address1'] ?? '',
+                'address2' => $data['address2'] ?? '',
+                'sex' => $data['sex'] ?? '',
+            ];
+
+            $socialMediaFields = ['re_facebook', 're_Twitter', 're_Instagram', 'LinkedIn'];
+
+            foreach ($socialMediaFields as $field) {
+                if (isset($data[$field]) && !filter_var($data[$field], FILTER_VALIDATE_URL)) {
+                    return redirect()->back()
+                        ->withErrors(['message' => 'URL no válida para ' . $field])
+                        ->withInput();
+                }
+                $validatedData[$field] = $data[$field] ?? '';
+            }
+
+            $usuario->update($validatedData);
 
 
-        if (!$usuario) {
-            return redirect()->back()
-                ->withErrors($v)
-                ->withInput();
-        }
         
 
         return redirect(sc_route('customer.index'))
@@ -522,6 +536,7 @@ class ShopAccountController extends RootFrontController
                     ],
                 ]
             );
+            
     }
 
     /**

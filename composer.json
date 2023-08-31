@@ -63,8 +63,10 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-	"platform-check":false
+	    "platform-check":false,
+        "process-timeout": 600
     },
+    
     "minimum-stability": "dev",
     "prefer-stable": true,
     "ignore-platform-reqs": true

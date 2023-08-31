@@ -106,7 +106,11 @@ $layout_page = shop_profile
 
                 </div>
             </div>
+
+
         @endif
+
+        
 
         {{-- <div class="form-group  {{ $errors->has('email') ? ' has-error' : '' }}">
             <label for="email"
@@ -182,6 +186,75 @@ $layout_page = shop_profile
         </div>
         @endif
 
+        <div id="redes_sociales" class="col-12 col-md-12 ">
+            <h5 class="text-center fas fa-star">REDES SOCIALES</h5>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                                  </svg>
+                            </span>
+                        </div>
+                        <input name="re_facebook" value="{{ (old('re_facebook'))?old('re_facebook'):$customer['re_facebook']}}" type="text" class="form-control" placeholder="Ingrese la URL de su perfil de Facebook">
+                        @if($errors->has('re_facebook'))
+                            <span class="help-block">{{ $errors->first('re_facebook') }}</span>
+                            @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text p-2">
+                                <i class="fab fa-twitter"></i>
+                            </span>
+                        </div>
+                       
+                        <input name="re_Twitter" 
+                        value="{{ (old('re_Twitter'))?old('re_Twitter'):$customer['re_Twitter']}}"
+                         type="text" class="form-control" placeholder="Ingrese la URL de su perfil de Twitter">
+                        @if($errors->has('re_Twitter'))
+                            <span class="help-block">{{ $errors->first('re_Twitter') }}</span>
+                            @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text p-2">
+                                <i class="fab fa-instagram"></i>
+                            </span>
+                        </div>
+                        
+                        <input name="re_Instagram"
+                         value="{{ (old('re_Instagram'))?old('re_Instagram'):$customer['re_Instagram']}}"
+                          type="text" class="form-control" placeholder="Ingrese la URL de su perfil de Instagram">
+                        @if($errors->has('re_Instagram'))
+                            <span class="help-block">{{ $errors->first('re_Instagram') }}</span>
+                            @endif
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text p-2">
+                                <i class="fab fa-linkedin"></i>
+                            </span>
+                        </div>
+                       
+                        
+                        <input name="LinkedIn" value="{{ (old('LinkedIn'))?old('LinkedIn'):$customer['LinkedIn']}}"
+                         type="text" class="form-control" placeholder="Ingrese la URL de su perfil de LinkedIn">
+                        @if($errors->has('LinkedIn'))
+                            <span class="LinkedIn">{{ $errors->first('LinkedIn') }}</span>
+                            @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         @if (sc_config('customer_sex'))
             @php
@@ -222,6 +295,8 @@ $layout_page = shop_profile
             </div>
         </div>
         @endif
+
+        
 
 
         {{-- Custom fields --}}
