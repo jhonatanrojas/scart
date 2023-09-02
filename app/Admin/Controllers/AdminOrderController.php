@@ -1001,6 +1001,8 @@ class  AdminOrderController extends RootAdminController
     {
 
 
+
+ 
     
         $addIds = request('add_id');
         $add_price = request('add_price');
@@ -1030,6 +1032,7 @@ class  AdminOrderController extends RootAdminController
                 if($add_inicial[$key]>0){
                  $porcentaje_inicial=   round($add_inicial[$key] *100 / ($add_price[$key] * $add_qty[$key]),3);
                 }
+
 
                 $pAttr = json_encode($add_att[$id] ?? []);
                 $items[] = array(

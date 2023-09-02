@@ -97,6 +97,8 @@ Route::post('/sc_admin/fecha_delete/{id}', [AdminOrderController::class,'fecha_d
 
 Route::post('convenio', [HistorialPagosController::class ,'postUpdate'])->name('convenio');
 
+Route::get('/sc_admin/descargar-excel-pagos', [HistorialPagosController::class ,'descargarExcel'])->name('descargarExcelPagos');
+
 
 Route::post('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'post_crear_tasa'])->name('tasa_cambio.crear');
 Route::get('/sc_admin/tasa_cambio', [HistorialPagosController::class ,'crear_tasa_cambio'])->name('tasa_cambio');
