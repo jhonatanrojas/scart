@@ -1,11 +1,4 @@
-@php 
-$customer = auth()->user();
-$nr= 1;
-$nro = 1;
-$order_id = '';
 
-
-@endphp
 
 <ul class="list-group mb-3">
         {{-- <span style="display:{{$inconoAlert ?? "" }} ;"  class="iconoAlert">
