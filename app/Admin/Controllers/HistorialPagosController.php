@@ -32,6 +32,8 @@ use SCart\Core\Front\Models\ShopOrderDetail;
 use DateTime;
 use DateInterval;
 use SCart\Core\Admin\Models\AdminProduct;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -60,7 +62,8 @@ class HistorialPagosController extends RootAdminController
     {
 
 
-
+        $arr_pach = explode('/', request()->path());
+        $perfil = $arr_pach[2] ?? false;
 
         $data = [
             'title' => 'Historial de pagos',
@@ -76,6 +79,7 @@ class HistorialPagosController extends RootAdminController
             'css' => '',
             'js' => '',
         ];
+        $ruta_exel = route('descargar.excelpago');
 
 
 
@@ -85,6 +89,8 @@ class HistorialPagosController extends RootAdminController
         $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
         $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
+
+        
 
         $listTh = [
             'Convenio' => 'Convenio',
@@ -106,6 +112,9 @@ class HistorialPagosController extends RootAdminController
         $statusPayment = PaymentStatus::select(['name', 'id'])->get();
 
 
+        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to=' . $fechas1 . '&end_to=' . $fechas2 . '&from_to=' . $fechas1 . '&keyword=' . $keyword . '&order_status=' . $sort_order . '"><i class="fa fa-download"></i>Export Ecxel </a>';
+
+
         foreach ($statusPayment as $key => $value) {
             $arrSort[$value->id] = $value->name;
             # code...
@@ -123,11 +132,26 @@ class HistorialPagosController extends RootAdminController
             'fechas2' => $fechas2,
             'sort_order' => $sort_order,
             'arrSort' => $arrSort,
+            'order_status' => $sort_order,
+            'perfil' => $perfil,
+        ];
+        $dataSearch2= [
+            'keyword' => $keyword,
+            'from_to' => $fechas1,
+            'end_to' => $fechas2,
+            'sort_order' => $sort_order,
+            'order_status' => $sort_order,
+            'perfil' => $perfil,
         ];
 
 
+        
+
+       
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
+
+       
 
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
@@ -168,7 +192,7 @@ class HistorialPagosController extends RootAdminController
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
                 'Comentario' => $row->comment,
                 'fecha_pago' => $row->fecha_pago,
-                'Creado' => $row->created_at->format('d/m/Y'),
+                'Creado' => $row->created_at,
 
 
 
@@ -191,6 +215,13 @@ class HistorialPagosController extends RootAdminController
 
 
             ];
+        }
+        $inpuExcel = '';
+
+
+        $ruta_exel = route('descargar.excelpago');
+        foreach ($dataSearch2 as $key => $value) {
+            $inpuExcel .= '<input required type="hidden" name="' . $key . '" value="' . $value . '">';
         }
 
         $data['listTh'] = $listTh;
@@ -258,7 +289,19 @@ class HistorialPagosController extends RootAdminController
            
                 </div>
 
-                </form>';
+                </form>
+                
+                <div class="m-auto" >
+                <div class=" ml-1" style="width: 150px;">
+                    <form action="' . $ruta_exel . '?from_to=' .  $fechas1 . '&end_to=' .  $fechas2 . '&from_to=' . $fechas1 .  '&order_status=' . $sort_order . '" method="GET" accept-charset="UTF-8">
+
+                     ' . $inpuExcel . '
+                  
+                    </form>
+                
+                </div>
+            </div>
+                ';
 
 
         //=menuSearch
@@ -453,7 +496,7 @@ class HistorialPagosController extends RootAdminController
         $data['topMenuRight'][] = '
                 <form action="' . sc_route_admin('historial_pagos.detalle') . '" id="button_search">
                 <div class="input-group input-group" style="width: 350px;">
-                    <input type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('search.placeholder') . '" value="' . $keyword . '">
+                    <input  type="text" name="keyword" class="form-control rounded-0 float-right" placeholder="' . sc_language_render('search.placeholder') . '" value="' . $keyword . '">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </div>
@@ -706,6 +749,8 @@ class HistorialPagosController extends RootAdminController
     }
     public static function getPagosListAdmin(array $dataSearch)
     {
+
+        
         $keyword = $dataSearch['keyword'] ?? '';
         $fechas1 = $dataSearch['fechas1'] ?? '';
         $fechas2 = $dataSearch['fechas2'] ?? '';
@@ -723,9 +768,7 @@ class HistorialPagosController extends RootAdminController
                 ->orderBy('fecha_pago', 'desc');
         }
 
-        if ($order_status) {
-            $orderList = $orderList->where('status', $order_status);
-        }
+       
         if ($keyword) {
 
              
@@ -787,11 +830,13 @@ class HistorialPagosController extends RootAdminController
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $sort_order) {
 
                 if ($fechas1 && $fechas2) {
-                    $sql->Where('fecha_pago', '>=', $fechas1)
+                    $fromTo = date('Y-m-d H:i:s', strtotime($fechas1));
+                    $sql->Where('fecha_pago', '>=', $fromTo)
                     ;
                 }
                 if ($fechas1 && $fechas2) {
-                    $sql->Where('fecha_pago', '<=', $fechas2)
+                    $fromTo = date('Y-m-d H:i:s', strtotime($fechas2));
+                    $sql->Where('fecha_pago', '<=', $fromTo)
                     ;
                 }
 
@@ -820,7 +865,8 @@ class HistorialPagosController extends RootAdminController
 
         if ($sort_order && array_key_exists($sort_order, $arrSort)) {
 
-           
+            
+        
             if ($sort_order == 1) {
                 $fecha_hoy = date('y-m-d');
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
@@ -840,15 +886,8 @@ class HistorialPagosController extends RootAdminController
             }else if ($sort_order == 8) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
 
-            }
-
-
-        } else {
-            $orderList->where('sc_historial_pagos.payment_status',  8)
-                ->orderBy('fecha_pago', 'desc');
-        }
-
-        
+            } 
+            } 
 
         $orderList = $orderList->paginate(20);
 
@@ -891,7 +930,7 @@ class HistorialPagosController extends RootAdminController
     public static function getPagosListAdmin2(array $dataSearch)
     {
 
-
+       
         $keyword = $dataSearch['keyword'] ?? '';
         $historial_pago = $dataSearch['historial_pago'] ?? '';
         $fechas1 = $dataSearch['fecha1'] ?? '';
@@ -909,7 +948,7 @@ class HistorialPagosController extends RootAdminController
             ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
             ->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
             ->orderBy('nro_coutas')
-            ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name', 'sc_metodos_pagos.name as metodoPago', 'sc_convenios.total as cb_total', 'sc_shop_order_detail.name as nombre_product', 'sc_shop_order_detail.qty as cantidad', 'sc_shop_order_detail.total_price as tota_product', 'sc_convenios.fecha_maxima_entrega', 'sc_convenios.nro_coutas as cuaotas_pendiente', 'sc_shop_customer.address1 as direccion', 'sc_shop_order.cedula', 'sc_shop_order.vendedor_id');
+            ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'sc_convenios.nro_convenio', 'sc_shop_order.last_name', 'sc_metodos_pagos.name as metodoPago', 'sc_convenios.total as cb_total', 'sc_shop_order_detail.name as nombre_product', 'sc_shop_order_detail.qty as cantidad', 'sc_shop_order_detail.total_price as tota_product', 'sc_convenios.fecha_maxima_entrega', 'sc_convenios.nro_coutas as cuaotas_pendiente', 'sc_shop_customer.address1 as direccion', 'sc_shop_order.cedula', 'sc_shop_order.vendedor_id');
 
 
 
@@ -934,10 +973,7 @@ class HistorialPagosController extends RootAdminController
                 ->where('sc_historial_pagos.order_id', $keyword);
         }
 
-        if ($order_status) {
-
-            $orderList = $orderList->where('status', $order_status);
-        }
+    
 
 
         if ($fechas1 || $fechas2) {
@@ -953,11 +989,6 @@ class HistorialPagosController extends RootAdminController
 
 
                 }
-
-
-
-
-
 
             });
 
@@ -2537,4 +2568,139 @@ class HistorialPagosController extends RootAdminController
 
 
     }
+
+
+    public function descargar()
+    {
+
+        $search = request()->all();
+
+
+      
+
+        $dataSearch = [
+            'keyword'      => $search['keyword'] ?? '',
+            'from_to'      => $search['from_to'] ?? '',
+            'end_to'       => $search['end_to'] ?? '',
+            'order_status' => $search['order_status'] ?? 0,
+        ];
+        
+        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+            ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
+            ->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
+            ->select('sc_historial_pagos.*', 
+                'sc_shop_order.first_name', 
+                'sc_shop_order.last_name',
+                'sc_convenios.lote',
+                'sc_shop_order.last_name',
+                'sc_metodos_pagos.name as metodoPago',
+                'sc_convenios.total as cb_total',
+                'sc_convenios.fecha_maxima_entrega',
+                'sc_convenios.nro_convenio',
+                'sc_convenios.nro_coutas as cuotas_pendientes',
+                'sc_shop_order.cedula', 'sc_shop_order.vendedor_id',
+                'sc_historial_pagos.order_id');
+        
+        if ($dataSearch['order_status'] != 'id_desc') {
+            $orderList->where('sc_historial_pagos.payment_status', $dataSearch['order_status']);
+        }
+        
+        if ($dataSearch['end_to'] && $dataSearch['order_status']) {
+            $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
+            $orderList->where(function($query) use ($fromTo, $dataSearch) {
+                $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
+                    ->where('sc_historial_pagos.created_at', '<=', $fromTo);
+            });
+        }
+        
+        if ($dataSearch['from_to'] && $dataSearch['order_status']) {
+            $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['from_to']));
+            $orderList->where(function($query) use ($fromTo, $dataSearch) {
+                $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
+                    ->where('sc_historial_pagos.created_at', '>=', $fromTo);
+            });
+        }
+        
+        if ($dataSearch['keyword']) {
+            $keyword = $dataSearch['keyword'];
+            $orderList->where('sc_historial_pagos.order_id', $keyword);
+        }
+        
+        $orderList->orderBy('fecha_pago', 'desc');
+        
+        $Resultado = $orderList->get();
+
+     if(empty($Resultado)){
+            return redirect(sc_route_admin('historial_pagos.index'))
+                ->with(['error' => 'Selecciona un status de pago']);
+
+        }
+    
+
+        $spreadsheet = new Spreadsheet();
+
+        // Obtener la hoja activa
+        $hoja = $spreadsheet->getActiveSheet();
+
+        // Agregar el encabezado de las columnas
+        $hoja->setCellValue('A1', 'Convenio');
+        $hoja->setCellValue('B1', 'Solicitud /Cliente');
+        $hoja->setCellValue('C1', 'Pagado');
+        $hoja->setCellValue('D1', 'Referencia');
+        $hoja->setCellValue('E1', 'Metodo');
+        $hoja->setCellValue('F1', 'Estatus');
+        $hoja->setCellValue('G1', 'Comentario');
+        $hoja->setCellValue('H1', 'Fecha pago');
+        $hoja->setCellValue('I1', 'Creado');
+    
+        
+
+        $datos =  $Resultado;
+        // Obtener los datos de la base de datos
+       
+
+        $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
+
+
+       
+
+        // Establecer los datos de la tabla
+        $fila = 2;
+
+        foreach ($datos as  $dato) {
+
+            dd($dato);
+
+             
+
+         
+            $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
+            $hoja->setCellValue('B' . $fila, $dato->first_name . $dato->order_id);
+            $hoja->setCellValue('C' . $fila, $dato->tota_product ?? 'N/A');
+            $hoja->setCellValue('D' . $fila, $dato->referencia ?? 'N/A');
+            $hoja->setCellValue('E' . $fila,  $dato->metodoPago ?? 'N/A');
+            $hoja->setCellValue('F' . $fila,  $statusPayment[$dato->payment_status] ?? 'N/A');
+            $hoja->setCellValue('G' . $fila, $dato->comment);
+            $hoja->setCellValue('H' . $fila, $dato->fecha_pago);
+            $hoja->setCellValue('I' . $fila, $dato->created_at);
+           
+           
+
+            $fila++;
+        }
+
+    
+
+        // Configurar la descarga del archivo
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="reporte.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+
+        exit;
+    }
+
+
+    
 }

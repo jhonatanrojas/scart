@@ -2434,10 +2434,13 @@ class  AdminOrderController extends RootAdminController
             $fila++;
         }
 
+
+      
+
         // Configurar la descarga del archivo
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="reporte.xlsx"');
+        header('Content-Disposition: attachment; filename="reporte de pagos.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
 

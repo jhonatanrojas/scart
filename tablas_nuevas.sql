@@ -153,3 +153,9 @@ CREATE TABLE `sc_auditoria` (
   `content` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
   `add_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+--redes sociales 
+ALTER TABLE `sc_shop_customer` ADD `re_facebook` VARCHAR(255) NULL DEFAULT NULL AFTER `nivel`, ADD `re_Twitter` VARCHAR(255) NULL DEFAULT NULL AFTER `re_facebook`, ADD `re_Instagram` VARCHAR(255) NULL DEFAULT NULL AFTER `re_Twitter`, ADD `LinkedIn` VARCHAR(255) NULL DEFAULT NULL AFTER `re_Instagram`;
+--redes sociales 

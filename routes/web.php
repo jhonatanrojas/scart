@@ -79,6 +79,7 @@ Route::post('sc_admin/create_convenio/{id}', [AdminOrderController::class,'postC
 Route::get('/QR_historial/{id}', 'ShopAccountController@view_QR')->name('view_QR');
 
 Route::get('sc_admin/descargar-excel', [AdminOrderController::class,'descargar'])->name('descargar.excel');
+Route::get('sc_admin/descargar-excelpago', [HistorialPagosController::class,'descargar'])->name('descargar.excelpago');
 Route::get('sc_admin/order/ventas',  [AdminOrderController::class,'index'])->name('pedidos_ventas');
 Route::get('sc_admin/order/riesgo',  [AdminOrderController::class,'index'])->name('pedidos_riesgo');
 Route::get('sc_admin/order/administracion',  [AdminOrderController::class,'index'])->name('pedidos_administracion');

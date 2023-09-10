@@ -39,6 +39,8 @@ class HistorialPago extends Model
         return $this->hasOne(SC_shop_customer::class, 'id', 'customer_id');
 
     }
+
+   
   
   
 }
