@@ -555,9 +555,9 @@
                                                         <th >{{ sc_language_render('product.name') }}</th>
                                                         <th>Cuotas</th>
                                                         <th>Modalidad</th>
-                                                        <th>Inicial</th>
+                                                        <th>Inicial $</th>
                                                         <th>Cuotas $</th>
-                                                        <th>Cuotas de entrega $</th>
+                                                        <th>Cuotas Especial $</th>
                                                         <th>Cant</th>
                                                         <th >{{ sc_language_render('product.price') }}</th>
 
@@ -639,16 +639,13 @@
                                                                     
                                                                 @endphp;
                                                                 <a href="#" class="updateStatus"
-                                                                    data-name="abono_inicial" data-type="select"
+                                                                    data-name="abono_inicial" data-type="text"
+                                                                    min=0
                                                                     data-source='{"0":"Sin inicial","30":"Con inicial  30%" {!! $data_json_inicial !!} }'
                                                                     data-pk="{{ $item->id }}"
-                                                                    data-value="@if ($item->abono_inicial > 0)
-                                                                     Con Inicial $
-                                                                     {{ $monto_inicial }}
-                               @else
-                               Sin inicial @endif"
+                                                                    data-value="{{ $monto_inicial }}"
                                                                     data-url="{{ route('admin_order.edit_item') }}"
-                                                                    data-title="Inicial">
+                                                                    data-title="Inicial $">
                                                                     @if ($item->abono_inicial > 0 && $item->nro_coutas > 0)
                                                                         Con Inicial ${{ $monto_inicial }}
                                                                     @elseif($monto_Inicial > 0 && $cuotas_inmediatas > 0 && $item->nro_coutas == 1)
@@ -669,38 +666,25 @@
 
 
                                                                    
-                                                                    
-                                                                    if ($item->abono_inicial > 0 && $item->nro_coutas > 1 && $monto_entrega == 0):
-                                                                        $inicial = ($item->abono_inicial * $item->total_price) / 100;
-                                                                        $total_price = ($item->total_price - $inicial);
-                                                                        $precio_couta = number_format($total_price / $item->nro_coutas,2);
-                                                                    
-                                                                        echo "$" . $precio_couta;
-                                                                    elseif ($item->nro_coutas > 1 && $monto_entrega == 0):
-                                                                        $precio_couta = $item->total_price;
-                                                                        echo "$" . number_format($precio_couta / $item->nro_coutas ,2);
+                                                                    $inicial = ($item->abono_inicial * $item->total_price) / 100;
+                                                                    $total_inicial= $item->monto_cuota_entrega +$inicial;
 
-                                                                    elseif ($monto_Inicial > 0 && $cuotas_inmediatas > 0 ):
-                                                                    $precio_couta = $item->total_price;
-                                                                    echo "$" . number_format(($item->total_price - $monto_Inicial)/$cuotas_inmediatas ,2);
-
+                                                            
+                                                                    if ($item->nro_coutas > 1):
+                                                             
+                                                               
+                                                                  
+                                                                        
+                                                                        $total_price = ($item->total_price -  $total_inicial);
+                                                                   $precio_couta = "$" . number_format($total_price / $item->nro_coutas,2);
                                                                     
 
                                                                    
                                                                        
                                                                     endif;
 
-                                                                    
+                                                                    echo   $precio_couta ;
 
-
-                                                                    if ($monto_entrega > 0){
-
-                                                                         $valor = $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega;
-
-                                                                        $Precio_cuota = number_format(($item->total_price - $monto_Inicial - $valor) / $item->nro_coutas,2 ) ;
-
-                                                                        echo "$" . $Precio_cuota;
-                                                                    }
 
                                                                     
                                                                    

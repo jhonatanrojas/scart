@@ -12,9 +12,8 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
-use App\Models\SC_admin_role;
 use App\Models\ClientLevelCalculator;
-use App\Models\Estado;
+use App\Models\Estado; 
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\Sc_plantilla_convenio;
@@ -25,15 +24,12 @@ use SCart\Core\Admin\Models\AdminUser;
 use App\Models\TipoCambioBcv;
 use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
-use Carbon\Carbon;
+use Carbon\Carbon; 
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Models\ShopPaymentStatus;
-use SCart\Core\Front\Models\ShopOrderDetail;
-use DateTime;
-use DateInterval;
-use SCart\Core\Admin\Models\AdminProduct;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use SCart\Core\Admin\Models\AdminProduct;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -95,7 +91,10 @@ class HistorialPagosController extends RootAdminController
         $listTh = [
             'Convenio' => 'Convenio',
             'solicitud' => 'Solicitud /<br> Cliente',
+            'Importe' => 'Monto Couta $',
             'Importe pagado' => 'Pagado',
+            'Moneda' => 'Moneda',
+            'tasa_cambio'=> 'Tasa de cambio',
             'Referencia' => 'Referencia',
             'Metodo de pago' => 'Metodo',
             'Estatus' => 'Estatus',
@@ -124,6 +123,7 @@ class HistorialPagosController extends RootAdminController
 
         $arrSort['0'] = 'Todos';
 
+        $from_to      = sc_clean(request('from_to') ?? '');
 
 
         $dataSearch = [
@@ -186,7 +186,11 @@ class HistorialPagosController extends RootAdminController
             $dataTr[$row->id] = [
                 'Convenio' => $Nr_convenio->nro_convenio,
                 'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
+                'Importe' => $row->importe_couta,
                 'Importe pagado' => $row->importe_pagado,
+                'Moneda' => $row->moneda,
+                'tasa_cambio' => $row->tasa_cambio." Bs",
+                
                 'Referencia' => $row->referencia,
                 'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : '',
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
@@ -235,6 +239,7 @@ class HistorialPagosController extends RootAdminController
         $data['resultItems'] = sc_language_render('admin.result_item', ['item_from' => $dataTmp->firstItem(), 'item_to' => $dataTmp->lastItem(), 'total' => $dataTmp->total()]);
 
 
+        $ruta_exel = route('descargarExcelPagos');
         //=menuRight
 
         //menuSort
@@ -246,6 +251,7 @@ class HistorialPagosController extends RootAdminController
         }
         $data['urlSort'] = sc_route_admin('historial_pagos.index', request()->except(['_token', '_pjax', 'sort_order']));
         $data['optionSort'] = $optionSort;
+        $data['topMenuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?sort_order=' . $sort_order . '&fecha1=' . $fechas1 . '&fecha2=' . $fechas2 . '&keyword=' . $keyword . '"><i class="fa fa-download"></i>Export Ecxel </a>';
 
         //menuSearch
         $data['topMenuRight'][] = '
@@ -313,6 +319,80 @@ class HistorialPagosController extends RootAdminController
 
     }
 
+    public function descargarExcel(){
+        
+        $search = request()->all();
+        $spreadsheet = new Spreadsheet();
+
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+
+        $keyword = sc_clean(request('keyword') ?? '');
+        $fechas1 = sc_clean(request('fecha1') ?? '');
+        $fechas2 = sc_clean(request('fecha2') ?? '');
+        $statusPayment = PaymentStatus::select(['name', 'id'])->get();
+
+        $arrSort =[];
+        foreach ($statusPayment as $key => $value) {
+            $arrSort[$value->id] = $value->name;
+            # code...
+        }
+
+
+       
+        $dataSearch = [
+            'keyword' => $keyword,
+            'fechas1' => $fechas1,
+            'fechas2' => $fechas2,
+            'sort_order' => $sort_order,
+            'arrSort' => $arrSort,
+        ];
+        // Obtener la hoja activa
+        $hoja = $spreadsheet->getActiveSheet();
+
+        // Agregar el encabezado de las columnas
+        $hoja->setCellValue('A1', 'Convenio');
+        $hoja->setCellValue('B1', 'Cliente');
+        $hoja->setCellValue('C1', 'Monto Couta $');
+        $hoja->setCellValue('D1', 'Reportado');
+        $hoja->setCellValue('E1', 'Moneda');
+        $hoja->setCellValue('F1', 'Tasa de Cambio');
+        $hoja->setCellValue('G1', 'Referencia');
+        $hoja->setCellValue('H1', 'Metodo');
+        $hoja->setCellValue('I1', 'Estatus');
+        $hoja->setCellValue('J1', 'Comentario');
+        $hoja->setCellValue('K1', 'Fecha pago');
+        $hoja->setCellValue('L1', 'Creado');
+
+        $dataTmp = $this->getPagosListAdmin($dataSearch);
+        $fila=2;
+        foreach ($dataTmp as $key => $row) {
+
+
+            $Nr_convenio = Convenio::where('order_id' , $row->order_id)->first();
+            $hoja->setCellValue('A' . $fila, $Nr_convenio->nro_convenio);
+            $hoja->setCellValue('B' . $fila, $row->order_id . '<br>' .  $row->first_name . '  ' . $row->last_name);
+            $hoja->setCellValue('C' . $fila,$row->importe_couta ?? 'N/A');
+            $hoja->setCellValue('D' . $fila, $row->importe_pagado?? 'N/A');
+            $hoja->setCellValue('E' .  $fila,     $row->moneda?? 'N/A');
+        
+            $hoja->setCellValue('F' . $fila,  $row->tasa_cambio." Bs");
+            $hoja->setCellValue('G' . $fila,  $row->referencia ?? 'N/A');
+            $hoja->setCellValue('H' . $fila,$row->metodo_pago->name ?? '');
+            $hoja->setCellValue('I' . $fila,  $row->estatus->name . '<br><small>' . $row->observacion . '</small>');
+            $hoja->setCellValue('J' . $fila,  $row->comment);
+            $hoja->setCellValue('K' . $fila, $row->fecha_pago ?? 'N/A');
+            $hoja->setCellValue('L' . $fila, $row->created_at->format('d/m/Y') ?? 'N/A');
+
+
+            $fila++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="reportePagos.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+    }
     /**
      *  function create para crear un nuevo pago post recibe los datas mediante el request
      *
@@ -747,7 +827,7 @@ class HistorialPagosController extends RootAdminController
             ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
 
     }
-    public static function getPagosListAdmin(array $dataSearch)
+    public static function getPagosListAdmin(array $dataSearch,$excel=false)
     {
 
         
@@ -886,8 +966,15 @@ class HistorialPagosController extends RootAdminController
             }else if ($sort_order == 8) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
 
-            } 
-            } 
+            }
+
+
+        } else {
+            $orderList->where('sc_historial_pagos.payment_status',  8)
+                ->orderBy('fecha_pago', 'desc');
+        }
+
+        
 
         $orderList = $orderList->paginate(20);
 

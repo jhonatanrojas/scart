@@ -62,7 +62,7 @@
                                         @if ($cart[0]->financiamiento == '1' || $cart[0]->financiamiento == 2)
                                             <th>Nro Cuotas</th>
                                             <th>Inicial</th>
-                                            <th>Cuota de entrega</th>
+                                            <th>Cuota especial</th>
                                             <th>Frecuencia de pago</th>
                                         @endif
                                         
