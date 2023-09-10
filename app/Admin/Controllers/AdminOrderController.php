@@ -137,7 +137,7 @@ class  AdminOrderController extends RootAdminController
         $end_to       = sc_clean(request('end_to') ?? '');
         $order_status = sc_clean(request('order_status') ?? '');
 
-        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to=' . $from_to . '&end_to=' . $from_to . '&from_to=' . $from_to . '&email=' . $email . '&order_status=' . $order_status . '"><i class="fa fa-download"></i>Export Ecxel </a>';
+        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to=' . $from_to . '&end_to=' . $end_to . '&from_to=' . $from_to . '&email=' . $email . '&order_status=' . $order_status . '"><i class="fa fa-download"></i>Export Ecxel </a>';
 
 
         $arrSort = [
@@ -373,7 +373,7 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>' . sc_language_render('action.from') . ':</label>
                                 <div class="input-group">
-                                <input type="text" name="from_to" id="from_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                <input type="text" name="from_to" id="from_to" value="'. $from_to .'" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
                                 </div>
                             </div>
                         </div>
@@ -381,7 +381,7 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>' . sc_language_render('action.to') . ':</label>
                                 <div class="input-group">
-                                <input type="text" name="end_to" id="end_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                <input type="text" name="end_to" value="'. $end_to .'" id="end_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
                                 </div>
                             </div>
                         </div>
@@ -414,7 +414,7 @@ class  AdminOrderController extends RootAdminController
 
                     <div class="m-auto" >
                     <div class=" ml-1" style="width: 150px;">
-                        <form action="' . $ruta_exel . '?from_to=' . $from_to . '&end_to=' . $from_to . '&from_to=' . $from_to . '&email=' . $email . '&order_status=' . $order_status . '" method="GET" accept-charset="UTF-8">
+                        <form action="' . $ruta_exel . '?from_to=' . $from_to . '&end_to=' . $end_to . '&from_to=' . $from_to . '&email=' . $email . '&order_status=' . $order_status . '" method="GET" accept-charset="UTF-8">
 
                          ' . $inpuExcel . '
                       
@@ -2352,6 +2352,7 @@ class  AdminOrderController extends RootAdminController
             'perfil' => $search['perfil'] ?? '',
         ];
 
+  
 
 
 
@@ -2400,8 +2401,10 @@ class  AdminOrderController extends RootAdminController
 
 
         // Obtener los datos de la base de datos
-        $datos = (new AdminOrder)->excel_export($dataSearch, $id_status);
+    $datos = (new AdminOrder)->excel_export($dataSearch, $id_status);
+   //    $datos = (new AdminOrder)->getOrderListAdmin($dataSearch, $id_status);
 
+    
         // Establecer los datos de la tabla
         $fila = 2;
 
@@ -2412,6 +2415,7 @@ class  AdminOrderController extends RootAdminController
         $styleStatus = $this->statusOrder;
 
         foreach ($datos as $dato) {
+           
             $Articulo = shop_order_detail::where('order_id', $dato->id)->first();
             $convenio = Convenio::where('order_id', $dato->id)->first();
             $user_roles = AdminUser::where('id', $dato->vendedor_id)->first();
@@ -2431,23 +2435,22 @@ class  AdminOrderController extends RootAdminController
                     'sc_shop_customer.email',
                     'parroquia.nombre as parroquia'
                 )->first();
+            
 
 
 
-
-
-            $hoja->setCellValue('A' . $fila, $datos_cliente->first_name . $datos_cliente->last_name);
-            $hoja->setCellValue('B' . $fila, $datos_cliente->id);
+            $hoja->setCellValue('A' . $fila, $datos_cliente->first_name ?? '' . $datos_cliente->last_name ?? '');
+            $hoja->setCellValue('B' . $fila, $datos_cliente->id ?? '');
             $hoja->setCellValue('C' . $fila, $convenio->nro_convenio ?? 'N/A');
             $hoja->setCellValue('D' . $fila, $user_roles->name ?? 'N/A');
             $hoja->setCellValue('E' . $fila,  $Articulo->name ?? 'N/A');
             $hoja->setCellValue('F' . $fila,  $Articulo->nro_coutas ?? 'N/A');
-            $hoja->setCellValue('G' . $fila, $datos_cliente->cedula);
-            $hoja->setCellValue('H' . $fila, $datos_cliente->phone);
-            $hoja->setCellValue('I' . $fila, $datos_cliente->email);
+            $hoja->setCellValue('G' . $fila, $datos_cliente->cedula ?? '');
+            $hoja->setCellValue('H' . $fila, $datos_cliente->phone ?? '');
+            $hoja->setCellValue('I' . $fila, $datos_cliente->email ?? '');
             $hoja->setCellValue('J' . $fila, $datos_cliente->estado ?? 'N/A');
             $hoja->setCellValue('K' . $fila, $datos_cliente->municipio ?? 'N/A');
-            $hoja->setCellValue('L' . $fila, $datos_cliente->parroquia);
+            $hoja->setCellValue('L' . $fila, $datos_cliente->parroquia ?? '');
             $hoja->setCellValue('M' . $fila, sc_currency_render_symbol($dato['total'] ?? 0, 'USD'));
             $hoja->setCellValue('N' . $fila, $styleStatus[$dato['status']] ?? $dato['status']);
             $hoja->setCellValue('O' . $fila, $AlContado ?? 'N/A');
@@ -2763,7 +2766,7 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>' . sc_language_render('action.from') . ':</label>
                                 <div class="input-group">
-                                <input type="text" name="from_to" id="from_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                <input type="text" name="from_to" id="from_to" value="'.$from_to.'" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
                                 </div>
                             </div>
                         </div>
@@ -2771,7 +2774,7 @@ class  AdminOrderController extends RootAdminController
                             <div class="form-group">
                                 <label>' . sc_language_render('action.to') . ':</label>
                                 <div class="input-group">
-                                <input type="text" name="end_to" id="end_to" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
+                                <input type="text" name="end_to" id="end_to"  value="'.$end_to.'" class="form-control input-sm date_time rounded-0" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" /> 
                                 </div>
                             </div>
                         </div>
