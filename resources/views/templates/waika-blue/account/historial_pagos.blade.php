@@ -47,8 +47,8 @@ $layout_page = shop_profile
         Convenio #{{ $pedido->nro_convenio}}- {{ $itemDetail->name ??''  }}
       </button>
     </h2>
-  @foreach ( $historial_pagos as $pago)
-    
+
+
 
     <div id="flush-{{$pedido->id}}" class="accordion-collapse collapse" aria-labelledby="{{$pedido->id}}" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
@@ -146,7 +146,7 @@ $layout_page = shop_profile
         </div>
       </div>
     </div>
-    @endforeach
+
   </div>
  
  @endforeach
