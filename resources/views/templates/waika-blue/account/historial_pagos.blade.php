@@ -58,7 +58,7 @@ $layout_page = shop_profile
             <thead class="text-center">
               <tr>
                
-                <th >Convenio</th>
+                <th >#</th>
                 <th >Solicitud</th>
                 <th >Articulo</th>
                 <th>Pagado</th>
@@ -76,7 +76,7 @@ $layout_page = shop_profile
               @foreach($historial_pagos as $historial)
                 <tr>
                   
-                <td><span class="item_21_sku">{{$historial->nro_convenio}}</span></td>
+                <td><span class="item_21_sku">{{$historial->id}}</span></td>
                 <td>
                   <span class="item_21_sku"> {!!substr($historial->order_id, 0, -5)!!}</span>
                 </td>
