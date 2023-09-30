@@ -103,6 +103,7 @@ Route::group(
         'middleware' => $midlware
     ],
     function ($router) use ($suffix, $nameSpaceFrontCustomer) {
+        Route::get('/reportePagos', $nameSpaceFrontCustomer.'\ShopAccountController@reportePagos')->name('reportePagos');
         $router->get('/historial-pagos', $nameSpaceFrontCustomer.'\ShopAccountController@historialPagos')
             ->name('customer.historial_pagos');
 

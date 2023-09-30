@@ -44,8 +44,9 @@ $layout_page = shop_profile
   <div class="accordion-item">
     <h2 class="accordion-header" id="{{$pedido->id}}">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-{{$pedido->id}}" aria-expanded="false" aria-controls="flush-collapseOne">
-        Convenio #{{ $pedido->nro_convenio}}- {{ $itemDetail->name ??''  }}
+        Convenio #{{ $pedido->nro_convenio}}- {{ $itemDetail->name ??''  }}   
       </button>
+
     </h2>
 
 
@@ -53,97 +54,10 @@ $layout_page = shop_profile
     <div id="flush-{{$pedido->id}}" class="accordion-collapse collapse" aria-labelledby="{{$pedido->id}}" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
 
-        <div class="table-responsive">
-          <table class="table table-hover box-body text-wrap " width="100%">
-            <thead class="text-center">
-              <tr>
-               
-                <th >#</th>
-                <th >Solicitud</th>
-                <th >Articulo</th>
-                <th>Pagado</th>
-                <th style="width: 90px">Divisa</th>
-                <th style="width: 100px ; text-align: center; margin: auto">Referencia$</th>
-                <th>Tasa</th>
-                <th>Pago</th>
-                <th>Estatus</th>
-                <th>Fecha de reporte</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-              @foreach($historial_pagos as $historial)
-                <tr>
-                  
-                <td><span class="item_21_sku">{{$historial->id}}</span></td>
-                <td>
-                  <span class="item_21_sku"> {!!substr($historial->order_id, 0, -5)!!}</span>
-                </td>
-    
-               
-    
-                <td>
-                  <span class="item_21_sku">{{ $itemDetail->name }}</span>
-                </td>
-    
-    
-                <td><span class="text-dark">
-                  {{ $historial->importe_pagado}}
-                </span></td>
-                <td>{{$historial->moneda}}</td>
-                <td class="text-dark">
-                  @php
-                    $monedas = $historial->importe_pagado;
-                      if($historial->moneda == 'Bs'){
-                        $monedas =  number_format((float)$historial->importe_pagado / $historial->tasa_cambio, 2, '.', ''); ;
-    
-                      }
-                  @endphp
-    
-                  {{$monedas}}
-                 
-                </td>
-                <td>{{$historial->tasa_cambio}}</td>
-                <td><span class="item_21_sku ">
-                  {!! isset($historial->metodo_pago->name ) ?$historial->metodo_pago->name  :'';  !!}
-                </span></td>
-    
-    
-                @php
-    
-                $statusstyle= '';
-                if($historial->payment_status === 5 ){
-                  $statusstyle = 'success';
-    
-                }else if($historial->payment_status === 2 ){
-                  $statusstyle = 'primary';
-    
-                }else if($historial->payment_status === 4 ){
-                  $statusstyle = 'warning';
-    
-                }else if($historial->payment_status === 8 ){
-                  $statusstyle = 'danger';
-    
-                }
-                    
-                @endphp
-    
-                
-             
-                <td><span class="item_21_sku  text-{{ $statusstyle }}">{!! isset($historial->estatus->name ) ?$historial->estatus->name  :'';  !!}</span></td>
-                <td><span class="item_21_sku">{{ $historial->fecha_pago}}</span></td>
-                <td>              <a href="{{ sc_route('customer.order_detail', ['id' =>  $historial->order_id ]) }}"><i class="fa fa-indent" aria-hidden="true"></i> {{ sc_language_render('order.detail') }}</a><br>
-                </td>
-              </tr>
-    
-             
-    
-    @endforeach
-            </tbody>
-          </table>
-    
-        </div>
+        @php
+    echo reportePagosH($pedido->id,true);
+      @endphp
+
       </div>
     </div>
 

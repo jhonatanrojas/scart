@@ -2234,11 +2234,11 @@ class HistorialPagosController extends RootAdminController
 
         $dataTr = [];
 
-        $totales = [];
+     
         $totale = [];
      
         $total_usd_pagado = 0;
-        $vendedor = '';
+       
  
 
         if (!$historialPago->count() >0) {
@@ -2270,7 +2270,7 @@ class HistorialPagosController extends RootAdminController
            
 
             $moneda = '';
-            $sumarReportaso = 0;
+          
 
            
             if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){

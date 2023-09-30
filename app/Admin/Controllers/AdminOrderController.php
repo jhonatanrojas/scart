@@ -1472,8 +1472,8 @@ class  AdminOrderController extends RootAdminController
                         'marca' => $producto->brand->name ?? '',
                         'id_modalidad_pago' => $detail->id_modalidad_pago,
                         'modelo' => $modelo ?? '',
-                        'monto_cuota_entrega' => $product->monto_cuota_entrega ?? 0,
-                        'monto_inicial' => $product->monto_inicial ?? 0,
+                        'monto_cuota_entrega' => $detail->monto_cuota_entrega ?? 0,
+                        'monto_inicial' =>  $detail->monto_Inicial ?? 0,
                         'cuotas_inmediatas' => $product->cuotas_inmediatas ?? 0,
                         'price' => $detail->price,
                         'abono_inicial' => $detail->abono_inicial,
@@ -1482,7 +1482,7 @@ class  AdminOrderController extends RootAdminController
                     ];
                 }
             }
-
+  
 
 
             if ($action == 'invoice_excel') {
