@@ -13,8 +13,239 @@ Use App\Models\Estado;
 Use App\Models\Municipio;
 Use App\Models\Parroquia;
 Use App\Models\ShopOrder;
+use App\Models\AdminOrder;
+use App\Models\Convenio;
+use App\Models\Catalogo\PaymentStatus;
+use App\Models\HistorialPago;
+use SCart\Core\Front\Models\ShopPaymentStatus;
+use Carbon\Carbon;
+use App\Models\SC_shop_customer;
+
+ function reportePagosH($keyword,$historial_pago){
+        
+    
+
+    $data = [];
 
 
+
+    $listTh = [
+        'N° de Pago' => 'N°',
+        'MONTO' => 'Importe',
+        'Reportado' => 'Reportado',
+        'DIVISA' => 'Moneda',
+        'CONVERSION' => 'Conversión',
+        'tasa_cambio' => 'Tasa ',
+        'estatus' => 'Estatus',
+        'FORMA_DE_PAGO' => 'Forma de pago',
+        'REFRENCIA' => 'Referencia',
+        'FECHA_DE_PAGO' => 'Fecha de pago',
+
+    ];
+    $sort_order =  'id_desc';
+
+
+
+    $statusPayment = PaymentStatus::select(['name', 'id'])->get();
+
+
+
+    foreach ($statusPayment as $key => $value) {
+        $arrSort[$value->id] = $value->name;
+        # code...
+    }
+
+    $dataSearch = [
+        'keyword' => $keyword,
+        'historial_pago' => $historial_pago,
+        'sort_order' => $sort_order,
+        'arrSort' => $arrSort,
+        'arrSort' => $arrSort,
+    ];
+
+
+
+    $convenio = Convenio::where('order_id', $keyword)->first();
+
+    $emitido_por = '';
+   
+
+    $order = AdminOrder::getOrderAdmin($keyword);
+ 
+    //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
+    $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
+    $cuota_pendientes = HistorialPago::where('order_id', $keyword)
+    ->where('payment_status', 1)
+    ->orWhere('payment_status', 7)->where('order_id', $keyword)
+    ->orderBy('nro_coutas')->first();
+
+            $cuota_pendiente = 0;
+
+            if ($cuota_pendientes != null) {
+                if ($cuota_pendientes->exists()) {
+                    $cuota_pendiente = $cuota_pendientes->importe_couta;
+                }
+            }
+
+    $nro_total_pagos = 0;
+
+   
+
+
+    $dataTr = [];
+
+ 
+    $totale = [];
+ 
+    $total_usd_pagado = 0;
+   
+
+
+
+  
+
+    $pagado = 0;
+    $total_bs=0;
+    foreach ($historialPago as $key => $row) {
+
+
+        $nro_total_pagos++;
+
+
+        $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
+         $styleStatusPayment = $statusPayment;
+        array_walk($styleStatusPayment, function (&$v, $k) {
+            $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+        });
+
+
+     
+
+       
+
+     
+       
+
+        $moneda = '';
+      
+
+       
+        if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
+
+            $pagado += $row->importe_couta;
+
+            $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+
+            $moneda = $row->moneda;
+            $monto = $row->importe_pagado;
+            
+
+            if ($moneda == 'USD') {
+            // El monto está en dólares
+            $monto_dolares = number_format($monto,2);
+            $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
+            $Referencia = $monto_bolivares."Bs";
+            $diVisA = $moneda;
+            $Reportado = $monto;
+        } else if ($moneda == 'Bs') {
+            // El monto está en bolívares
+            $monto_bolivares = number_format($monto ,2);
+            $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
+            $Referencia = $monto_dolares."$";
+            $diVisA = $moneda;
+            $Reportado = $monto;
+            $total_bs += $Reportado ;
+
+            
+
+        }
+
+        }else if($row->payment_status == 8 ){
+            $monto_dolares = 0.00;
+            $monto_bolivares =0.00;
+            $Referencia =0;
+            $diVisA = 0;
+            $Reportado = 0;
+            
+        }
+        
+        
+
+
+        $dataTr[$row->id] = [
+            'N° de Pago' => $row->nro_coutas,
+            'MONTO' => $row->importe_couta . '$',
+            'Reportado' => $Reportado ?? 0,
+            'DIVISA' => $diVisA ?? 'N/A',
+            'CONVERSION' => $Referencia ?? 0 ,
+            'tasa_cambio' => $row->tasa_cambio ?? 0,
+            'estatus' => $styleStatusPayment[$row->payment_status],
+            'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
+            'REFRENCIA' => $row->referencia ?? 0,
+            'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
+
+        ];
+
+
+    } //fin foreach
+
+
+    
+
+    $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
+    $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
+    $data['id_solicitud'] = $order->id ?? 0;
+    $data['descuento'] = $order->discount ?? 0;
+    $data['subtotal'] = $order->subtotal ?? 0;
+    $data['totales'] = $order->total;
+    $data['emitido_por'] = $emitido_por ?? '';
+    $data['totalPor_pagar'] = $order->total - $pagado;
+    $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
+    $data['vendedor'] =  '';
+    $data['cedula'] = $order->cedula ?? '';
+    $data['cuota_pendiente'] =$cuota_pendiente ;
+    $data['lote'] = $convenio->lote ?? '';
+    $data['total_bs'] = $total_bs ;
+    
+    $data['direccion'] = $cliente->address1 ?? '';
+    $data['total_monto_pagado'] = $pagado;
+    $data['total_usd_pagado'] = $total_usd_pagado;
+    $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
+    $data['fecha_pago'] = $fechaActual ?? '';
+    $data['order_id'] = $order->id ?? '';
+    $data['nro_convenio'] = $convenio->nro_convenio ?? '';
+    $data['order'] =   $order;
+
+    $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? fechaEs($order->fecha_maxima_entrega) : '';
+
+
+
+
+
+    $data['totaleudsBS'] = $totale;
+    $data['listTh'] = $listTh;
+    $data['dataTr'] = $dataTr;
+    return view( 'templates.waika-blue.account.historial_pagospdf')
+        ->with($data);
+
+
+
+}
+
+function fechaEs($fecha) {
+    $fecha = substr($fecha, 0, 10);
+    $numeroDia = date('d', strtotime($fecha));
+    $dia = date('l', strtotime($fecha));
+    $mes = date('F', strtotime($fecha));
+    $anio = date('Y', strtotime($fecha));
+    $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+    $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+    $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+    $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+    $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+    return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+}
 function sc_event_order_created(ShopOrder $order)
 {
     OrderCreated::dispatch($order);

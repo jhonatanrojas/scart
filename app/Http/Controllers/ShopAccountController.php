@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use App\Models\Catalogo\MetodoPago;
+use App\Models\Catalogo\PaymentStatus;
 use App\Models\Convenio;
 use App\Models\Estado;
 use App\Models\HistorialPago;
@@ -217,7 +218,7 @@ class ShopAccountController extends RootFrontController
        
 
 
-
+ 
         $documento = SC__documento::where('id_usuario', $id)->get();
         $order = AdminOrder::where('customer_id', $id)->get();
         $Combenio = [];
@@ -781,6 +782,223 @@ class ShopAccountController extends RootFrontController
         return redirect(sc_route('customer.historial_pagos'))
             ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
     }
+
+    public function reportePagos(){
+        
+    
+
+        $data = [];
+
+
+
+        $listTh = [
+            'N° de Pago' => 'N°',
+            'MONTO' => 'Importe',
+            'Reportado' => 'Reportado',
+            'DIVISA' => 'Moneda',
+            'CONVERSION' => 'Conversión',
+            'tasa_cambio' => 'Tasa ',
+            'estatus' => 'Estatus',
+            'FORMA_DE_PAGO' => 'Forma de pago',
+            'REFRENCIA' => 'Referencia',
+            'FECHA_DE_PAGO' => 'Fecha de pago',
+
+        ];
+        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $keyword = sc_clean(request('keyword') ?? '');
+        $historial_pago = sc_clean(request('historial_pago') ?? '');
+        $statusPayment = PaymentStatus::select(['name', 'id'])->get();
+
+
+
+        foreach ($statusPayment as $key => $value) {
+            $arrSort[$value->id] = $value->name;
+            # code...
+        }
+
+        $dataSearch = [
+            'keyword' => $keyword,
+            'historial_pago' => $historial_pago,
+            'sort_order' => $sort_order,
+            'arrSort' => $arrSort,
+            'arrSort' => $arrSort,
+        ];
+
+
+
+        $convenio = Convenio::where('order_id', $keyword)->first();
+
+        $emitido_por = '';
+        if ($convenio == null) {
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
+            ->with(['error' => 'Numero de convenio no generado ']);
+        }
+
+
+        $order = AdminOrder::getOrderAdmin($keyword);
+     
+        //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
+        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
+        $cuota_pendientes = HistorialPago::where('order_id', $keyword)
+        ->where('payment_status', 1)
+        ->orWhere('payment_status', 7)->where('order_id', $keyword)
+        ->orderBy('nro_coutas')->first();
+
+                $cuota_pendiente = 0;
+
+                if ($cuota_pendientes != null) {
+                    if ($cuota_pendientes->exists()) {
+                        $cuota_pendiente = $cuota_pendientes->importe_couta;
+                    }
+                }
+
+        $nro_total_pagos = 0;
+
+       
+
+
+        $dataTr = [];
+
+     
+        $totale = [];
+     
+        $total_usd_pagado = 0;
+       
+ 
+
+        if (!$historialPago->count() >0) {
+            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
+                ->with(['error' => 'no se encontraron pagos reportado']);
+        }
+      
+
+        $pagado = 0;
+        $total_bs=0;
+        foreach ($historialPago as $key => $row) {
+
+
+            $nro_total_pagos++;
+
+
+            $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
+             $styleStatusPayment = $statusPayment;
+            array_walk($styleStatusPayment, function (&$v, $k) {
+                $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
+            });
+
+    
+         
+
+           
+
+         
+           
+
+            $moneda = '';
+          
+
+           
+            if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
+
+                $pagado += $row->importe_couta;
+
+                $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
+    
+                $moneda = $row->moneda;
+                $monto = $row->importe_pagado;
+                
+
+                if ($moneda == 'USD') {
+                // El monto está en dólares
+                $monto_dolares = number_format($monto,2);
+                $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
+                $Referencia = $monto_bolivares."Bs";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+            } else if ($moneda == 'Bs') {
+                // El monto está en bolívares
+                $monto_bolivares = number_format($monto ,2);
+                $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
+                $Referencia = $monto_dolares."$";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+                $total_bs += $Reportado ;
+
+                
+
+            }
+
+            }else if($row->payment_status == 8 ){
+                $monto_dolares = 0.00;
+                $monto_bolivares =0.00;
+                $Referencia =0;
+                $diVisA = 0;
+                $Reportado = 0;
+                
+            }
+            
+            
+
+
+            $dataTr[$row->id] = [
+                'N° de Pago' => $row->nro_coutas,
+                'MONTO' => $row->importe_couta . '$',
+                'Reportado' => $Reportado ?? 0,
+                'DIVISA' => $diVisA ?? 'N/A',
+                'CONVERSION' => $Referencia ?? 0 ,
+                'tasa_cambio' => $row->tasa_cambio ?? 0,
+                'estatus' => $styleStatusPayment[$row->payment_status],
+                'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
+                'REFRENCIA' => $row->referencia ?? 0,
+                'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
+
+            ];
+
+
+        } //fin foreach
+
+
+        
+
+        $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
+        $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
+        $data['id_solicitud'] = $order->id ?? 0;
+        $data['descuento'] = $order->discount ?? 0;
+        $data['subtotal'] = $order->subtotal ?? 0;
+        $data['totales'] = $order->total;
+        $data['emitido_por'] = $emitido_por ?? '';
+        $data['totalPor_pagar'] = $order->total - $pagado;
+        $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
+        $data['vendedor'] =  '';
+        $data['cedula'] = $order->cedula ?? '';
+        $data['cuota_pendiente'] =$cuota_pendiente ;
+        $data['lote'] = $convenio->lote ?? '';
+        $data['total_bs'] = $total_bs ;
+        
+        $data['direccion'] = $cliente->address1 ?? '';
+        $data['total_monto_pagado'] = $pagado;
+        $data['total_usd_pagado'] = $total_usd_pagado;
+        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
+        $data['fecha_pago'] = $fechaActual ?? '';
+        $data['order_id'] = $order->id ?? '';
+        $data['nro_convenio'] = $convenio->nro_convenio ?? '';
+        $data['order'] =   $order;
+
+        $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '';
+
+
+
+
+    
+        $data['totaleudsBS'] = $totale;
+        $data['listTh'] = $listTh;
+        $data['dataTr'] = $dataTr;
+        return view($this->templatePath . 'account.historial_pagospdf')
+            ->with($data);
+
+
+
+    }
     public function historialPagos()
     {
 
@@ -795,15 +1013,18 @@ class ShopAccountController extends RootFrontController
         $id1 = $customer['id'];
         $mapStyleStatus = AdminOrder::$mapStyleStatus;
 
-        $order = AdminOrder::where('customer_id',$id1)->get();
+    //    $order = AdminOrder::where('customer_id',$id1)->get();
+
+        $order =   AdminOrder::with(['details', 'orderTotal'])
+        ->join('sc_convenios', 'sc_shop_order.id', '=','sc_convenios.order_id' )
+        ->leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
+        ->select('sc_shop_order.*','nro_convenio')
+        ->where('sc_shop_order.customer_id', $id1)->get();
+     
+        
         $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
 
-        $historial_pagos =  HistorialPago::where('sc_historial_pagos.customer_id', $id1)->where('sc_historial_pagos.payment_status', '<>', 1)->orderByDesc('id','DESC')->join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
-        ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
-        ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
-        ->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_metodos_pagos.name as metodoPago' , 'sc_convenios.total as cb_total' , 'sc_shop_order_detail.name as nombre_product','sc_shop_order_detail.qty as cantidad' , 'sc_shop_order_detail.total_price as tota_product' , 'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas_pendiente' , 'sc_shop_customer.address1 as direccion' , 'sc_shop_order.cedula' , 'sc_shop_order.vendedor_id')->get();
-
+  
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
         return view($this->templatePath . '.account.historial_pagos')
@@ -812,9 +1033,10 @@ class ShopAccountController extends RootFrontController
                     'title'           => 'Historial de pagos',
                     'mapStyleStatus' => $mapStyleStatus,
                     'customer'        => $customer,
+                    'order'=> $order,
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
-                    'historial_pagos' => $historial_pagos,
+         
                     'breadcrumbs'     => [
                         ['url'        => sc_route('customer.historial_pagos'), 'title' => sc_language_render('front.my_account')],
                         ['url'        => '', 'title' => 'Reportar  pago'],
@@ -1444,7 +1666,7 @@ class ShopAccountController extends RootFrontController
 
 
 
-            $user_roles = AdminUser::where('id', $row->vendedor_id)->first();
+            $user_roles = '';
 
        
            

@@ -28,11 +28,12 @@
                     <a class="nav-link" id="tabevaluaciones-tab" data-toggle="tab" href="#tabevaluaciones" role="tab"
                         aria-controls="tabevaluaciones" aria-selected="false">Evaluaciones</a>
                 </li>
+                @endif
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="recibos-tab" data-toggle="tab" href="#recibos" role="tab"
                         aria-controls="recibos" aria-selected="false">Recibos</a>
                 </li>
-                @endif
+      
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabacciones-tab" data-toggle="tab" href="#tabacciones" role="tab"
