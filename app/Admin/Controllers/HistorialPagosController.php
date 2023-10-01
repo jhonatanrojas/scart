@@ -2599,10 +2599,15 @@ class HistorialPagosController extends RootAdminController
                 'sc_convenios.nro_convenio',
                 'sc_convenios.nro_coutas as cuotas_pendientes',
                 'sc_shop_order.cedula', 'sc_shop_order.vendedor_id',
-                'sc_historial_pagos.order_id');
+                'sc_historial_pagos.order_id')->first();
+
+               
         
-        if ($dataSearch['order_status'] != 'id_desc') {
+        if ($dataSearch['order_status']) {
             $orderList->where('sc_historial_pagos.payment_status', $dataSearch['order_status']);
+
+            
+            dd($dataSearch['order_status']);
         }
         
         if ($dataSearch['end_to'] && $dataSearch['order_status']) {
@@ -2669,9 +2674,6 @@ class HistorialPagosController extends RootAdminController
 
         foreach ($datos as  $dato) {
 
-            dd($dato);
-
-             
 
          
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
@@ -2690,7 +2692,6 @@ class HistorialPagosController extends RootAdminController
         }
 
     
-
         // Configurar la descarga del archivo
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
