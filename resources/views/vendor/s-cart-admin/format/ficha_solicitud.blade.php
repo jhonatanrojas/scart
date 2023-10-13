@@ -437,7 +437,7 @@
                                                         <td>{{ $detail['modelo'] }}</td>
                                                         <td>{{ $detail['qty'] }}</td>
                                                         <td>{{ $detail['nro_coutas'] }}</td>
-                                                        <td>${{ floor($inicial) }}</td>
+                                                        <td>${{ number_format($inicial,2) }}</td>
                                                
                                                         <td>${{ $monto_cuota }}   {{ $AlContado  }}</td>
                                                         <td>${{  $detail['monto_cuota_entrega']  }}</td>
