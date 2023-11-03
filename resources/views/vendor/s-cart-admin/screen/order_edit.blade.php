@@ -66,7 +66,7 @@
 
 
                             @php  $dblockconvenio="display:none;";   @endphp
-                            @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra >= 1 && $order->status == 5)
+                            @if (count($order->details) > 0 && empty($convenio) && $order->modalidad_de_compra >= 1 )
                                 @php  $dblockconvenio="display:block;";   @endphp
 
                                 <a class="dropdown-item" href="#" onclick="abrir_modal_convenio(event)">Generar

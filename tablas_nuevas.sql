@@ -53,6 +53,26 @@ CREATE TABLE `sc_convenios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `sc_tarjetas` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `customer_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `order_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nro_tarjeta` varchar(50) NOT NULL,
+  `fecha_de_entrega` date NULL DEFAULT NULL,
+ 
+   `garantia` varchar(50) DEFAULT '',
+   `lote` varchar(50) DEFAULT '' ,
+  `fecha_pagos` date NULL DEFAULT NULL,
+  `nro_coutas` int NOT NULL DEFAULT '0',
+  `total` decimal(15,2) DEFAULT '0.00',
+  `inicial` decimal(15,2) DEFAULT '0.00',
+  `modalidad` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE `sc_plantilla_convenio` (
 `id`  bigint(20)  NOT NULL AUTO_INCREMENT,

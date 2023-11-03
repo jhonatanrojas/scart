@@ -1081,9 +1081,8 @@ class HistorialPagosController extends RootAdminController
 
         if (Convenio::where('nro_convenio', $data['nro_convenio'])->exists()) {
             return redirect()->back()
-                ->with(['error' => 'Convenio ya Creado']);
-        } else {
-
+                ->with(['error' => 'El numero de Convenio ya exite']);
+        } 
 
 
 
@@ -1117,7 +1116,7 @@ class HistorialPagosController extends RootAdminController
                 $cuotas = $p->nro_coutas;
                 $abono_inicial = $p->abono_inicial;
                 $id_modalidad_pago = $p->id_modalidad_pago;
-                $fecha_maxima_entrega = $p->fecha_maxima_entrega;
+             
             }
 
 
@@ -1193,22 +1192,23 @@ class HistorialPagosController extends RootAdminController
             $borrado_html = [];
             $file_html = [];
 
-            switch ($dato_usuario['natural_jurídica']) {
+                    // Se asigna el valor de la clave 'natural_jurídica' a una variable
+        $tipo = $dato_usuario['natural_jurídica'];
 
-               
-                case 'N':
-                    $borrado_html = $abono_inicial > 0
-                        ?
-                        $borrado_html = Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+        // Se usa un if en lugar de un switch para evaluar el valor de la variable
+        if ($tipo == 'J') {
+            $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
 
-                        :
-                        $borrado_html = Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+        }  else {
+                      // Se usa un operador ternario para asignar el valor de $borrado_html según el valor de $abono_inicial
+                      $borrado_html = $abono_inicial > 0
+                      ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                      : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+            // Se asigna el valor de $borrado_html según la consulta a la base de datos
+        }
 
-                    break;
-                case 'J':
-                    $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
-                    break;
-            }
+
+       
 
             $file_html = Declaracion_jurada::all();
 
@@ -1269,7 +1269,7 @@ class HistorialPagosController extends RootAdminController
             $dataView = [];
 
             
-
+                
             foreach ($borrado_html as $replacee) {
 
                 
@@ -1440,7 +1440,7 @@ class HistorialPagosController extends RootAdminController
 
             }
 
-           
+         
 
             
 
@@ -1484,7 +1484,7 @@ class HistorialPagosController extends RootAdminController
 
             return redirect()->back()
                 ->with(['success' => 'Accion completada']);
-        }
+        
 
 
     }

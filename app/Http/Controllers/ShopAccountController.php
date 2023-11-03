@@ -825,14 +825,10 @@ class ShopAccountController extends RootFrontController
         ];
 
 
-
+        $monto_cuota_pendiente=0;
         $convenio = Convenio::where('order_id', $keyword)->first();
 
         $emitido_por = '';
-        if ($convenio == null) {
-            return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
-            ->with(['error' => 'Numero de convenio no generado ']);
-        }
 
 
         $order = AdminOrder::getOrderAdmin($keyword);
@@ -989,11 +985,11 @@ class ShopAccountController extends RootFrontController
 
 
 
-    
+      
         $data['totaleudsBS'] = $totale;
         $data['listTh'] = $listTh;
         $data['dataTr'] = $dataTr;
-        return view($this->templatePath . 'account.historial_pagospdf')
+        return view($this->templatePath . '.account.reporte_pagos_pdf')
             ->with($data);
 
 
@@ -1604,7 +1600,7 @@ class ShopAccountController extends RootFrontController
 
      public function view_QR($id){
 
-        $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->where('sc_historial_pagos.payment_status',5)
+        $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->whereIn('sc_historial_pagos.payment_status',[3,4,5,6])
         ->leftJoin('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
         ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
         ->leftJoin('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
@@ -1627,9 +1623,15 @@ class ShopAccountController extends RootFrontController
             'sc_shop_order.vendedor_id')->get();
 
 
+            $monto_cuota_pendiente=0;
             $order = AdminOrder::getOrderAdmin($id);
-            $historialPago = HistorialPago::where('order_id',$id)->where('payment_status', 5)->orderBy('nro_coutas')->get();
-        $cuota_pendientes = HistorialPago::where('order_id', $id)->where('payment_status','!=', 5)->orderBy('nro_coutas')->first();
+            $historialPago = HistorialPago::where('order_id',$id)->whereIn('payment_status',[3,4,5,6])
+            
+            ->orderBy('nro_coutas')->get();
+        $cuota_pendientes = HistorialPago::where('order_id', $id)
+        ->whereNotIn('payment_status',[3,4,5,6])
+
+        ->orderBy('nro_coutas')->first();
 
                 $cuota_pendiente = 0;
 
@@ -1639,6 +1641,7 @@ class ShopAccountController extends RootFrontController
                     }
                 }
 
+            
         $nro_total_pagos = 0;
       
 
@@ -1647,9 +1650,7 @@ class ShopAccountController extends RootFrontController
 
         $dataTr = [];
 
-        $totales = [];
-        $totale = [];
-     
+
         $total_usd_pagado = 0;
         $vendedor = '';
  
@@ -1662,6 +1663,8 @@ class ShopAccountController extends RootFrontController
 
         $pagado = 0;
         $total_bs=0;
+
+    
         foreach($orderList as $row){
 
 
@@ -1738,7 +1741,6 @@ class ShopAccountController extends RootFrontController
 
         $data['id_solicitud'] = $order->id ?? 0;
 
-
         $data['descuento'] = $order->discount ?? 0;
         $data['subtotal'] = $order->subtotal ?? 0;
         $data['totales'] = $order->total;
@@ -1758,7 +1760,7 @@ class ShopAccountController extends RootFrontController
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';
-        $data['order'] =   $historialPago[0]->importe_couta;
+        $data['order'] =  $cuota_pendiente;
 
         $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '';
                
