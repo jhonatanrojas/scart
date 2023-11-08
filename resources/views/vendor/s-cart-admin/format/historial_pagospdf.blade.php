@@ -1,8 +1,12 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/plugins/fontawesome-free/css/all.min.css')}}">
 <link rel="stylesheet" href="{{ sc_file('admin/LTE/dist/css/adminlte.min.css')}}">
+@php
+    
+    $storeId =1;
+@endphp
 
-<div class="page-content container ">
+<div class="page-content  ">
     <div class="page-header text-blue-d2">
       
         <div class="page-tools text-center m-auto">
@@ -19,17 +23,31 @@
 
     <div style="font-weight: bold;" class="container px-0">
         <div class="row ">
-
+ 
            <div class="col-12">
             <div class="row  align-items-center">
-                <div class="col-10"> 
-                    <img style="margin-left: 10%;" width="100" class=" img-fluid" src="{{ sc_file(sc_store('logo')) }}" >
-                            
+                <div class="col-3"> 
+                    <img style=";" width="200" class="  img-fluid" src="https://www.waika.com.ve/data/logo/logo-horizontal.png" >
+                           
+                     
+
                     
                 </div>
+
+                <div class="col-6 ">
+                 
+                    <p class="text-center">   <span  class="h4">WAIKA IMPORT C.A</span>
+                   </p>
+                   
+                    <p class="text-secundary fw-light">
+                        RIF. J-50145053-6
+                        {{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }} <br>
+                        TELÉF:                       0412-6354041/0412-6354039
+                       </p> 
+                </div>
     
-                <div  class="col-2">
-                    <img class="img-fluid" alt="Código QR" id="codigo">
+                <div  class="col-3 text-center">
+                    <img class="img-fluid " alt="Código QR" id="codigo">
     
                    
                 
@@ -37,26 +55,18 @@
             </div>
 
            </div>
-            <div class="col-12 col-lg-10 offset-lg-1">
+            <div class="col-12 ">
                 
                 <div class="row">
                   
-                    
-                    <div class="col-12 ">
-                        <span  class="h4">WAIKA IMPORT C.A</span>
-                       
-                       
-                        <p>
-                            RIF. J-50145053-6
-                            A.V CUARTA TRANSVERSAL CALLE MIRAIMA <br/>EDIF: G.M.S.Y.T , BOLEITA NORTE, CARACAS MIRANDA <br/>ZONA POSTAL 1073<br/>
-                            0412.635.40.41 / 0412.635.40.38</p>
-                    </div>
-                    <div class="col-12">
-                        <div class="text-center text-150">
+                      
+              
+                    <div class="col-12"> 
+                        <h5 class="text-center">
                             <span style="font-weight: bold;"  >
                                 HISTORIAL DE PAGO
                                 </span>
-                        </div>
+                            </h5>
                     </div>
                 </div>
                 <!-- .row -->
@@ -67,7 +77,7 @@
                     <div class="col-md-5">
                         
                         <div class="my-1">
-                            <i class="fas fa-user-tie"></i>Cliente:{{$cliente}}
+                            <i class="fas fa-user-tie"></i>Cliente: {{$cliente}}
                           </div>
                         
                         <div class="">
@@ -80,10 +90,10 @@
                     </div>
                     <!-- /.col -->
 
-                    <div class="text-50 col-md-4  d-sm-flex justify-content-end">
+                    <div class="text-50 col-md-6  d-sm-flex justify-content-end">
                         <hr class="d-sm-none" />
                         <div class="">
-                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Emitido por:{{$emitido_por}}</span> </div>
+                            <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Emitido por: {{$emitido_por}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">Fecha Emisión:{{$fecha_pago}}</span> </div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">sección:{{$lote}}</span></div>
                             <div class="my-1"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-90">N° de Convenio:{{$nro_convenio}}</span> </div>
@@ -99,11 +109,11 @@
 
                         <div class="table-responsive">
 
-                            <table style="font-weight: bold;" class="table table-hover box-body text-wrap table-bordered">
+                            <table class="table table-hover box-body text-wrap table-bordered" id="tabla-producto">
                                 <thead>
-                                    <td class="text-center" colspan="6"><h4 style="font-weight: bold;" >PRODUCTO</h4></td>
+                              
                                     <tr>
-                                       
+                                        
                                         <td>Descripción</td>
                                         <td>Serial</td>
                                         <td>Cant</td>
@@ -139,10 +149,10 @@
                                         <td  style="font-weight: bold;">{{ $order->total}}</td>
                                     </tr>
                                     <br>
-                                <td class="text-center text-uppercase" colspan="6"> <h4 style="font-weight: bold;"  class="p-0 m-0">
-                                        Fecha máxima de Entrega <hr>
+                                <td class="text-center text-uppercase" colspan="6"> <p  class="p-0 m-0">
+                                        Fecha máxima de Entrega:
                                         {{$fecha_maxima_entrega}}
-                                    </h4>
+                                </p>
                                     <span>La fecha de entrega puede ser modificada si el Beneficiario no realiza los pagos puntualmente (fecha de pago o día siguiente).</span></
                                 </td>
                                        
@@ -150,7 +160,7 @@
                 
                             </table>
                             <br>
-                            <table style="font-size: 1em; text-align: center;" class="table   text-wrap table-bordered">
+                            <table id="tabla-pago" style=" text-align: center;" class="table   text-wrap table-bordered">
                               <thead>
                                 <tr>
                                   @if (!empty($removeList))
@@ -185,7 +195,7 @@
                                                                <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
                               <tr>
-                                <td style="font-weight: bold;"  class="h4 text-center" colspan="10">RESUMEN</td>
+                                <td   class="h5 text-center" colspan="10">RESUMEN</td>
                               </tr>
                     
                               
@@ -289,9 +299,8 @@
     
 }
 
-table tr td {
-    font-weight: bold;
-    font-size: 15px;
+#tabla-producto   td,#tabla-pago   td {
+   padding:  0.30rem;
 
 } 
 .text-secondary-d1 {
@@ -393,8 +402,8 @@ hr {
     color: #68a3d5!important;
 }
 .text-150 {
-    font-size: 150%!important;
-}
+    font-size: 1.5rem;
+} 
 .text-60 {
     font-size: 60%!important;
 }

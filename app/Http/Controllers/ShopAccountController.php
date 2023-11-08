@@ -793,7 +793,7 @@ class ShopAccountController extends RootFrontController
 
         $listTh = [
             'N° de Pago' => 'N°',
-            'MONTO' => 'Importe',
+         
             'Reportado' => 'Reportado',
             'DIVISA' => 'Moneda',
             'CONVERSION' => 'Conversión',
@@ -802,6 +802,7 @@ class ShopAccountController extends RootFrontController
             'FORMA_DE_PAGO' => 'Forma de pago',
             'REFRENCIA' => 'Referencia',
             'FECHA_DE_PAGO' => 'Fecha de pago',
+            'observacion' => 'Nota',
 
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
@@ -938,7 +939,7 @@ class ShopAccountController extends RootFrontController
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
-                'MONTO' => $row->importe_couta . '$',
+       
                 'Reportado' => $Reportado ?? 0,
                 'DIVISA' => $diVisA ?? 'N/A',
                 'CONVERSION' => $Referencia ?? 0 ,
@@ -946,7 +947,8 @@ class ShopAccountController extends RootFrontController
                 'estatus' => $styleStatusPayment[$row->payment_status],
                 'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
                 'REFRENCIA' => $row->referencia ?? 0,
-                'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
+                'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A',
+                'observacion' =>  $row->observacion
 
             ];
 
