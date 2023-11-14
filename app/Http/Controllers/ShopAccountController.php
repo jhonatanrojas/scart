@@ -579,18 +579,16 @@ class ShopAccountController extends RootFrontController
         }
         $fecha_actual = date('Y-m-d');
 
-        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+5 day"));
+        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+30 day"));
 
         if ($order->modalidad_de_compra == 0) {
-            $historial_pagos =   HistorialPago::where('order_id', $id)->where('payment_status', '<>', 1)->orderBy('id', 'desc')->get();
+            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status',[1,8])->orderBy('id', 'desc')->get();
 
             
         }else{
             $historial_pagos =   HistorialPago::where('order_id', $id)
-            ->where('fecha_venciento','<' ,$fech_p) ->where('fecha_venciento','<' ,$fech_p)
-            ->orWhere('payment_status', 8)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
-            ->orWhere('payment_status', 7)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
-            ->orWhere('payment_status', 1)->where('order_id', $id)->where('fecha_venciento','<' ,$fech_p)
+            ->where('fecha_venciento','<' ,$fech_p)
+            ->whereIn('payment_status',[1,8])
             ->orderBy('fecha_venciento')->limit(1)
             ->get();
 
@@ -694,7 +692,7 @@ class ShopAccountController extends RootFrontController
 
 
        
-        $metodos_pagos = MetodoPago::all();
+        $metodos_pagos = MetodoPago::whereIn('id',[2,4])->get();
 
        
         sc_check_view($this->templatePath . '.account.reportar_pago');

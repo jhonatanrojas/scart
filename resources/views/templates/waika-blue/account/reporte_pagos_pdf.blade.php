@@ -27,7 +27,7 @@
            <div class="col-12">
             <div class="row  align-items-center">
                 <div class="col-3"> 
-                    <img style=";" width="200" class="  img-fluid" src="https://www.waika.com.ve/data/logo/logo-horizontal.png" >
+                    <img style=";" width="200" class="  img-fluid" src="https://www.waika.com.ve/data/logo/waika-logo.png" >
                            
                      
 
@@ -36,11 +36,10 @@
 
                 <div class="col-6 ">
                  
-                    <p class="text-center">   <span  class="h4">WAIKA IMPORT C.A</span>
-                   </p>
+             
                    
                     <p class="text-secundary fw-light">
-                        RIF. J-50145053-6
+                  
                         {{ sc_language_render('store.address') }}: {{ sc_store('address', ($storeId ?? null)) }}
                         TELÉF:                       0412-6354041/0412-6354039
                        </p> 

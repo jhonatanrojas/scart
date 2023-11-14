@@ -166,7 +166,7 @@ $layout_page = shop_profile
 
             <div class="col-md-6">
               <label for="forma_pago">Tasa de cambio</label>
-              <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="{{sc_currency_all()[0]->exchange_rate}}">     
+              <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="{{sc_currency_all()[1]->exchange_rate}}">     
               @error('tipo_cambio')
                 <small style="color: red">{{$message}}</small>
               @enderror
