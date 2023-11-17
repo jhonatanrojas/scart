@@ -1080,8 +1080,8 @@ class HistorialPagosController extends RootAdminController
 
 
         if (Convenio::where('nro_convenio', $data['nro_convenio'])->exists()) {
-            return redirect()->back()
-                ->with(['error' => 'El numero de Convenio ya exite']);
+            /*return redirect()->back()
+                ->with(['error' => 'El numero de Convenio ya exite']);*/
         } 
 
 

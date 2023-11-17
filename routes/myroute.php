@@ -92,7 +92,7 @@ Route::group(['prefix' => 'sc_admin/tarjetas'], function () use ($nameSpaceAdmin
     Route::get('/detail/{id}',$nameSpaceAdminProduct.'\TarjetaController@detail')->name('tarjetas.detail');
     Route::get('/tarjeta_pdf/{id}',$nameSpaceAdminProduct.'\TarjetaController@tarjeta_pdf')->name('tarjetas.pdf');
     
-    
+     
 
 
 

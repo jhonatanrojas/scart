@@ -106,6 +106,13 @@
                       <td><i class="fab fa-chrome"></i> {{ sc_language_render('store.admin.domain') }}</td>
                       <td><a href="#" class="editable-required editable editable-click" data-name="domain" data-type="text" data-pk="" data-source="" data-url="{{ sc_route_admin('admin_store.update') }}" data-title="{{ sc_language_render('store.admin.domain') }}" data-value="{{ $store->domain }}" data-original-title="" title="">{{$store->domain }}</a></td>
                     </tr>
+
+                    <tr>
+                      <td><i class="fas fa-university"></i> Banco Transferencia</td>
+                      <td><a href="#" class="editable-required editable editable-click" data-name="customer.banco1" data-type="text" data-pk="" data-source="" data-url="{{ sc_route_admin('admin_store.update') }}" data-title="{{sc_language_render('customer.banco1')}}" data-value="{{sc_language_render('customer.banco1')}}" data-original-title="" title="">{{sc_language_render('customer.banco1')}}</a></td>
+                    </tr> 
+
+
 @endif
 
 

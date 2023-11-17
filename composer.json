@@ -15,7 +15,8 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.28",
         "predis/predis": "^2.1",
-        "s-cart/core": "~7.1.20"
+        "s-cart/core": "~7.1.20",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

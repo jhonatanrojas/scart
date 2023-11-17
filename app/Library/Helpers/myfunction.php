@@ -231,6 +231,13 @@ use App\Models\SC_shop_customer;
 
 
 }
+function separarCadena($cadena) {
+    // Divide la cadena en fragmentos de 4 caracteres
+    $fragmentos = str_split($cadena, 4);
+
+    // Une los fragmentos con un espacio y devuelve el resultado
+    return implode(' ', $fragmentos);
+}
 
 function fechaEs($fecha) {
     $fecha = substr($fecha, 0, 10);

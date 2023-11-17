@@ -33,6 +33,14 @@ CREATE TABLE `sc_historial_pagos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `sc_tipo_tarjetas` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(50) NOT NULL,
+  `monto_limite` decimal(15,2) DEFAULT '0.00',
+    `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`) 
+) 
 DROP TABLE sc_convenios;
 CREATE TABLE `sc_convenios` (
   `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
@@ -53,25 +61,7 @@ CREATE TABLE `sc_convenios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE `sc_tarjetas` (
-  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
-  `customer_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `order_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nro_tarjeta` varchar(50) NOT NULL,
-  `fecha_de_entrega` date NULL DEFAULT NULL,
- 
-   `garantia` varchar(50) DEFAULT '',
-   `lote` varchar(50) DEFAULT '' ,
-  `fecha_pagos` date NULL DEFAULT NULL,
-  `nro_coutas` int NOT NULL DEFAULT '0',
-  `total` decimal(15,2) DEFAULT '0.00',
-  `inicial` decimal(15,2) DEFAULT '0.00',
-  `modalidad` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-    UNIQUE KEY `id` (`id`) 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `sc_tarjetas` ( `id` bigint(20) NOT NULL AUTO_INCREMENT, `customer_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, `nro_tarjeta` varchar(50) NOT NULL, `tipo_tarjeta_id` bigint(20), `fecha_de_entrega` date NULL DEFAULT NULL, `fecha_de_vencimiento` date NULL DEFAULT NULL, `monto_limite` decimal(15,2) DEFAULT '0.00', `periodo_pago` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, `codigo_seguridad` varchar(50) DEFAULT '' , `fecha_pagos` date NULL DEFAULT NULL, `nro_coutas` int NOT NULL DEFAULT '0', `activa` BOOLEAN NOT NULL DEFAULT true, `created_at` timestamp NULL DEFAULT NULL, `updated_at` timestamp NULL DEFAULT NULL, UNIQUE KEY `id` (`id`) );
 
 
 CREATE TABLE `sc_plantilla_convenio` (
@@ -99,8 +89,48 @@ CREATE TABLE `sc_rol_estatus_pedido` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `sc_modalidad_venta` ( `id` bigint(20) NOT NULL AUTO_INCREMENT, `descripcion` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL, `activo` BOOLEAN NOT NULL DEFAULT true, `created_at` timestamp NULL DEFAULT NULL, `updated_at` timestamp NULL DEFAULT NULL, UNIQUE KEY `id` (`id`) );
+
+ tarjatas_modalidad de compra
+ id,
+ id_tarjeta
+ id_modalidad
+ limite
+CREATE TABLE `sc_monto_tarjetas_modalidad` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `tarjeta_id`  bigint(20), 
+     `modalida_venta_id`  bigint(20),  
+   `monto` decimal(15,2) DEFAULT '0.00',
+    `activo` BOOLEAN NOT NULL DEFAULT true,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`)
+);
+transacciones_tarjetas
+id_tarjeta, 
+id_modalidad_compra,
+tipo_movimineto,(movimiento/debito)
+monto
+fecha
+id_solicitud
 
 
+CREATE TABLE `sc_transacciones_tarjetas` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `tarjeta_id`  bigint(20), 
+      `order_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+
+     `modalidad_venta_id`  bigint(20),  
+   `monto` decimal(15,2) DEFAULT '0.00',
+     `tipo_movimiento` varchar(50) COLLATE utf8mb4_unicode_ci,
+    `descripcion` varchar(250) DEFAULT '',
+
+    `activo` BOOLEAN NOT NULL DEFAULT true,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`)
+);
+INSERT INTO `sc_modalidad_venta` (`id`, `descripcion`, `activo`, `created_at`, `updated_at`) VALUES ('0', 'Al contado', '1', NULL, NULL), ('1', 'Financiamiento Convenio', '1', NULL, NULL);
 CREATE TABLE `sc_modalidad_pagos` (
   `id` int UNSIGNED NOT NULL PRIMARY KEY,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -114,6 +144,7 @@ INSERT INTO `sc_modalidad_pagos` (`id`, `name`, `created_at`, `updated_at`) VALU
 (2, 'Quincenal', NULL, NULL),
 (3, 'Mensual', NULL, NULL),
 
+//estandar 
 
 
 
@@ -124,6 +155,15 @@ CREATE TABLE `sc_metodos_pagos` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+
+CREATE TABLE `sc_tarjetas` (
+  `id` int UNSIGNED NOT NULL PRIMARY KEY,
+  `tipo_tarjeta_id`  bigint(20), 
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, 'Efectivo', NULL, NULL),

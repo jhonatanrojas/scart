@@ -57,6 +57,14 @@ INSERT INTO `adjuntar_documencts` (`id`, `first_name`, `email`, `telefono`, `car
 --
 -- Estructura de tabla para la tabla `estado`
 --
+CREATE TABLE `tipos_tarjetas` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `codigoestado` int(2) NOT NULL,
+  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `activo` int(1) NOT NULL,
+  `longitud` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `latitud` text COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `estado` (
   `id` bigint(20) UNSIGNED NOT NULL,
