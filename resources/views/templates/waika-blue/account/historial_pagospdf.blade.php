@@ -159,9 +159,9 @@
                     Descargar reporte
                 </a>
             
-                <a class="btn  btn-primary mx-1px  " href="{{sc_route('customer.order_detail',[$order->id])}}" data-title="Print">
+                <a class="btn  btn-primary mx-1px  " href="{{sc_route('customer.pagosPendientes',[$order->id])}}" data-title="Print">
                  
-                    Detalle del pedido
+                  Pagos pendientes / Pagar
                     <i class=" fas fa-credit-card  text-120 w-2"></i> 
                 </a>
             

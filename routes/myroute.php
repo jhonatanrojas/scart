@@ -80,15 +80,32 @@ Route::group(['prefix' => 'sc_admin/order'], function () use ($nameSpaceAdminPro
     Route::post('/reportar_pago','App\Admin\Controllers\HistorialPagosController@postReportarPago')->name('historial_pagos.postreportar');
 
 
-   
 
-   
+});
 
+
+Route::group(['prefix' => 'sc_admin/tarjetas'], function () use ($nameSpaceAdminProduct) {
+
+    Route::get('/',$nameSpaceAdminProduct.'\TarjetaController@index')->name('listar_tarjetas');
+    Route::get('/create',$nameSpaceAdminProduct.'\TarjetaController@create')->name('tarjetas.create');
+    Route::post('/create',$nameSpaceAdminProduct.'\TarjetaController@postCreate')->name('tarjetas.postCreate');
+    Route::get('/detail/{id}',$nameSpaceAdminProduct.'\TarjetaController@detail')->name('tarjetas.detail');
+    Route::get('/tarjeta_pdf/{id}',$nameSpaceAdminProduct.'\TarjetaController@tarjeta_pdf')->name('tarjetas.pdf');
     
+    
+
 
 
 });
 
+Route::group(['prefix' => 'sc_admin/tipo_tarjetas'], function () use ($nameSpaceAdminProduct) {
+
+    Route::get('/',$nameSpaceAdminProduct.'\TipoTarjetaController@index')->name('tipo_tarjetas');
+    Route::post('/crear',$nameSpaceAdminProduct.'\TipoTarjetaController@postCreate')->name('tipo_tarjetas.create');
+    Route::get('/edit/{id}',$nameSpaceAdminProduct.'\TipoTarjetaController@edit')->name('tipo_tarjetas.edit');
+    Route::post('/edit/{id}',$nameSpaceAdminProduct.'\TipoTarjetaController@postEdit')->name('tipo_tarjetas.edit');
+
+});
 
 
 
@@ -112,6 +129,8 @@ Route::group(
 
             $router->get('/listar-referencia', $nameSpaceFrontCustomer.'\ShopAccountController@lista_referencia')
             ->name('customer.lista_referencia');
+            $router->get('/pagos-pendientes/{id}', $nameSpaceFrontCustomer.'\ShopAccountController@pagosPendientes')
+            ->name('customer.pagosPendientes');
        
 
     }

@@ -644,6 +644,71 @@ class ShopAccountController extends RootFrontController
             );
     }
 
+    public function pagosPendientes(...$params){
+
+        if (config('app.seoLang')) {
+            $lang = $params[0] ?? '';
+            $id = $params[1] ?? '';
+            sc_lang_switch($lang);
+        } else {
+            $id = $params[0] ?? '';
+        }
+
+
+        $mapStyleStatus = AdminOrder::$mapStyleStatus;
+        $customer = auth()->user();
+        $statusOrder = ShopOrderStatus::getIdAll();
+        $statusShipping = ShopShippingStatus::getIdAll();
+        $attributesGroup = ShopAttributeGroup::pluck('name', 'id')->all();
+        $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
+
+        if ($order) {
+            $title = sc_language_render('customer.order_detail') . ' #' . $order->id;
+        } else {
+            return $this->pageNotFound();
+        }
+        $fecha_actual = date('Y-m-d');
+
+        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+30 day"));
+
+        if ($order->modalidad_de_compra == 0) {
+            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status',[1,8])->orderBy('id', 'desc')->get();
+
+            
+        }else{
+            $historial_pagos =   HistorialPago::where('order_id', $id)
+            ->where('fecha_venciento','<' ,$fech_p)
+            ->whereIn('payment_status',[1,8])
+            ->orderBy('fecha_venciento')->limit(1)
+            ->get();
+
+            
+        }
+
+
+        return view($this->templatePath . '.account.pagos_pendientes')
+        ->with(
+            [
+                'title'           => 'Pagos Pendientes',
+
+                'statusOrder'     => $statusOrder,
+ 
+                'mapStyleStatus' => $mapStyleStatus,
+                'statusShipping'  => $statusShipping,
+                'countries'       => ShopCountry::getCodeAll(),
+                'attributesGroup' => $attributesGroup,
+                'order'           => $order,
+                'customer'        => $customer,
+                'layout_page'     => 'shop_profile',
+                'historial_pagos'   => $historial_pagos,
+                'breadcrumbs'     => [
+                    ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                    ['url'        => '', 'title' => $title],
+                ],
+            ]
+        );
+
+    }
     /**
      * Process front address list
      *

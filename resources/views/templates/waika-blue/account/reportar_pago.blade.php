@@ -89,19 +89,14 @@ $layout_page = shop_profile
         @if (isset($lisPago))
           @if (sc_config('customer_Transferencia'))
             <div class="row justify-content-center align-items-center">
-              <div  class="col-12 col-lg-6 p-1">
-                  <ul class="list-group">
-                    <li class="list-group-item">{{sc_language_render('customer.banco1')}}</li>
-                    <li class="list-group-item">{{ sc_language_render('customer.Transferencia') }}:{{sc_language_render('customer.cuenta') }}</li>
-                    <li class="list-group-item">{{ sc_language_render('customer.rif') }}</li>
-                  </ul>
-              </div>
+        
               <div  class="col-12 col-lg-6 p-1">
                 @if (sc_config('customer_pago_movil'))
                   <ul class="list-group">
-                      <li class="list-group-item">{{sc_language_render('customer.banco2')}}</li>
-                      <li class="list-group-item">{{ sc_language_render('customer.pago_movil') }}:{{ sc_language_render('customer.telefono') }}</li>
-                      <li class="list-group-item">{{ sc_language_render('customer.rif') }}</li>
+                    <li class="list-group-item text-center">Datos pago movil</li>
+                      <li class="list-group-item">Banco: {{sc_language_render('customer.banco2')}}</li>
+                      <li class="list-group-item">Telefono: 04126354038</li>
+                      <li class="list-group-item">RIF: J501450536 </li>
                   </ul>
                 @endif
               </div>
