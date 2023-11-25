@@ -29,7 +29,7 @@ use App\Models\SC_shop_customer;
 use App\Models\SC_shop_order_status;
 use App\Models\shop_order_detail;
 use App\Models\ShopOrder;
-use App\Models\SC_admin_role;
+use App\Models\TransaccionesTarjetas;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\Models\Catalogo\MetodoPago;
@@ -39,7 +39,8 @@ use SCart\Core\Admin\Models\AdminUser;
 use App\Models\AdminRole;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use App\Models\Catalogo\ModalidadVenta;
+use App\Models\Tarjeta;
 
 class  AdminOrderController extends RootAdminController
 {
@@ -452,8 +453,9 @@ class  AdminOrderController extends RootAdminController
             ->select('sc_admin_user.id', 'sc_admin_user.id', 'sc_admin_role.name as rol', 'role_id')->first();
         $role = AdminRole::find($user_roles->role_id);
 
+       $modalidadVenta = ModalidadVenta::get();
 
-
+ 
 
 
 
@@ -483,6 +485,7 @@ class  AdminOrderController extends RootAdminController
         $data['propuestas']     = $propuestas;
         $data['currencies']     = $currencies;
         $data['countries']      = $countries;
+        $data['modalidadVenta'] = $modalidadVenta;
         $data['orderStatus']    = $orderStatus;
         $data['currenciesRate'] = $currenciesRate;
         $data['paymentMethod']  = $paymentMethod;
@@ -491,7 +494,7 @@ class  AdminOrderController extends RootAdminController
         return view($this->templatePathAdmin . 'screen.order_add')
             ->with($data);
     }
-
+ 
     /**
      * Post create new item in admin
      * @return [type] [description]
@@ -503,8 +506,8 @@ class  AdminOrderController extends RootAdminController
 
 
 
-
-
+        $id_tarjeta = request('id_tarjeta') ?? 0;
+    
 
         $validate = [
             'first_name'      => 'required|max:100',
@@ -515,6 +518,12 @@ class  AdminOrderController extends RootAdminController
 
 
         ];
+
+        if( request('modalidad_compra')==4 || request('modalidad_compra')==5 || request('modalidad_compra')==7){
+
+            if(!$id_tarjeta)
+            return  redirect()->back()->with('warning', 'Debe seleccionar una tarjeta');
+        }
         if (sc_config_admin('customer_lastname')) {
             $validate['last_name'] = 'required|max:100';
         }
@@ -591,6 +600,7 @@ class  AdminOrderController extends RootAdminController
             'shipping_method' => $data['shipping_method'] ?? 0,
             'exchange_rate'   => $data['exchange_rate'] ?? 0,
             'email'           => $data['email'],
+            'tarjeta_id'  =>$id_tarjeta,
             'modalidad_de_compra'           => $data['modalidad_compra'],
             'comment'         => $data['comment']  ?? '',
             'usuario_id'         =>  Admin::user()->id,
@@ -629,7 +639,7 @@ class  AdminOrderController extends RootAdminController
 
         $id_usuario_rol = Admin::user()->id;
         $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-
+        $modalidadVenta=ModalidadVenta::pluck('descripcion', 'id')->all();
 
         $user_roles = $dminUser::where('sc_admin_user.id', $id_usuario_rol)->orderBy('id')
             ->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')
@@ -647,7 +657,6 @@ class  AdminOrderController extends RootAdminController
 
 
 
-
         $clasificacion =  SC_shop_customer::where('id', $order->customer_id)->first();
 
 
@@ -658,6 +667,10 @@ class  AdminOrderController extends RootAdminController
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
+
+        $order->modalidad_venta= ModalidadVenta::find($order->modalidad_de_compra)->descripcion ?? '';
+        $classTarjeta = new Tarjeta;
+       $order->totalTransaccion = $classTarjeta->totalTransaccionModalidad($order->tarjeta_id,$order->modalidad_de_compra);
 
         $convenio = Convenio::where('order_id', $id)->first();
 
@@ -747,6 +760,7 @@ class  AdminOrderController extends RootAdminController
                 "modalidad_pago" =>  $modalidad_pago,
                 "products" => $products,
                 "statusOrder" => $styleStatus,
+                "modalidadVenta"=>$modalidadVenta,
                 "statusOrdert" => $this->statusOrder ?? '',
                 "statu_en" => ShopOrderStatus::whereIn('id', $id_status)->pluck('name', 'id')->all(),
                 "statusPayment" => $this->statusPayment,
@@ -758,6 +772,7 @@ class  AdminOrderController extends RootAdminController
                 'fecha_primer_pago' => $fecha_primer_pago,
                 'styleStatusPayment' => $styleStatusPayment,
                 'country' => $this->country,
+                'saldoDisponible' =>$order->totalTransaccion
             ]
         );
     }
@@ -1020,6 +1035,7 @@ class  AdminOrderController extends RootAdminController
         
 
         $order = AdminOrder::getOrderAdmin($orderId);
+        $classTarjeta = new Tarjeta;
 
         foreach ($addIds as $key => $id) {
             //where exits id and qty > 0
@@ -1032,7 +1048,25 @@ class  AdminOrderController extends RootAdminController
                 if($add_inicial[$key]>0){
                  $porcentaje_inicial=   round($add_inicial[$key] *100 / ($add_price[$key] * $add_qty[$key]),3);
                 }
+                $total_price =$add_price[$key] * $add_qty[$key];
+                if(in_array($order->modalidad_de_compra,[4,5,7]))
+                {
+                    $totalTransaccion = $classTarjeta->totalTransaccionModalidad($order->tarjeta_id,$order->modalidad_de_compra);
+                   
+                    if($total_price> $totalTransaccion){
 
+                        return response()->json(['error' => 1, 'msg' => 'Error: El total es mayor al saldo disponible de la tarjeta']);
+                    }
+
+                    TransaccionesTarjetas::create([
+                        'tarjeta_id'        => $order->tarjeta_id,
+                        'modalida_venta_id' => $order->modalidad_de_compra,
+                        'monto' => retornaNegativo($total_price),
+                        'tipo_movimiento' => 'Debito',
+                        'descripcion' => '- Debito '.$product->name
+        
+                    ]);
+                }
 
                 $pAttr = json_encode($add_att[$id] ?? []);
                 $items[] = array(
@@ -1053,7 +1087,7 @@ class  AdminOrderController extends RootAdminController
                     'monto_cuota_entrega' => $add_monto_cuota_entrega[$key],
                     'exchange_rate' => $order->exchange_rate,
                     'created_at' => sc_time_now(),
-                    'serial' => $serial[0] ?? 'serial del articulo',
+                    'serial' => $serial[0] ?? '',
 
                 );
             }
@@ -1190,9 +1224,18 @@ class  AdminOrderController extends RootAdminController
                 return response()->json(['error' => 1, 'msg' => sc_language_render('admin.data_not_found_detail', ['msg' => 'order#' . $orderId]), 'detail' => '']);
             }
 
+            if(in_array($order->modalidad_de_compra,[4,5,7]))
+            {
+            TransaccionesTarjetas::create([
+                'tarjeta_id'        => $order->tarjeta_id,
+                'modalida_venta_id' => $order->modalidad_de_compra,
+                'monto' => $itemDetail->total_price,
+                'tipo_movimiento' => 'Credito',
+                'descripcion' => '+ Reintegro por '.$itemDetail->name
 
+            ]);
 
-
+        }
             $pId = $itemDetail->product_id;
             $qty = $itemDetail->qty;
             $itemDetail->delete(); //Remove item from shop order detail

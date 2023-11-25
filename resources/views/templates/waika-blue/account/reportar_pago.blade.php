@@ -93,7 +93,7 @@ $layout_page = shop_profile
               <div  class="col-12 col-lg-6 p-1">
                 @if (sc_config('customer_pago_movil'))
                   <ul class="list-group">
-                    <li class="list-group-item text-center">Datos pago movil</li>
+                    <li class="list-group-item text-center">Datos Pago Movil</li>
                       <li class="list-group-item">Banco: {{sc_language_render('customer.banco2')}}</li>
                       <li class="list-group-item">Telefono: 04126354038</li>
                       <li class="list-group-item">RIF: J501450536 </li>
@@ -106,25 +106,37 @@ $layout_page = shop_profile
       </div>
       <div class="card-body">
           <div class="row g-3">
-            <div class="col-lg-6">
-              <label for="forma_pago">Forma de pago</label>
-              <select  id="forma_pago" name="forma_pago" required class="form-control">
-                @if (isset($lisPago['Transferencia']) || isset($lisPago['Pago Movil']))
-                  @if (isset($lisPago['Transferencia'] ) )                      
-                    <option  value="{{$metodos_pagos[1]->id}}" {!! $metodos_pagos[1]->name == $lisPago['Transferencia'] ? 'selected' :'' !!}  >{{ $metodos_pagos[1]->name}}</option>
-                  @endif
-                  @if (isset($lisPago['Pago Movil']))
-                    <option  value="{{$metodos_pagos[3]->id}}" {!! $metodos_pagos[3]->name ==$lisPago['Pago Movil'] ? 'selected' :'' !!}  >{{ $metodos_pagos[3]->name}}</option>
-                  @endif
-                @else
-                  @foreach($metodos_pagos as $metodo)
-                    <option  value="{{ $metodo->id}}" {!! $metodo->name == $lisPago ? 'selected' :'' !!}  >{{ $metodo->name}}</option>
-                  @endforeach;
-                @endif
-              </select>  
-              @error('forma_pago')
-                <small style="color: red">{{$message}}</small>
+
+            <div class="col-md-6">
+              <label for="telefono_origen">Telefono del Pagador</label>
+              <input type="text" class="form-control"  required name="telefono_origen" id="telefono_origen" placeholder="telefono">
+              @error('telefono_origen')
+                  <small style="color: red">{{$message}}</small>
               @enderror
+            </div>
+            <div class="col-md-6">
+              <label for="inputEmail4">Cedula del Pagador </label>
+              <input type="text" class="form-control"  required name="cedula_origen" id="cedula_origen" placeholder="Cedula">
+              @error('referencia')
+                  <small style="color: red">{{$message}}</small>
+              @enderror
+            </div>
+            <div class="col-lg-6">
+              <input id="forma_pago" name="forma_pago" type="hidden" type="hidden" value="4">
+         
+      
+                <label for="codigo_banco">Banco de Origen</label>
+                <select id="codigo_banco" class="form-control" required name="codigo_banco">
+                  @foreach ($bancos as $banco )
+                  <option {{$banco->codigo}}>{{$banco->nombre}}</option>
+                  @endforeach
+                  
+                </select>       
+                @error('codigo_banco')
+                    <small style="color: red">{{$message}}</small>
+                @enderror
+   
+        
             </div>
 
             <div class="col-md-6">
@@ -140,8 +152,8 @@ $layout_page = shop_profile
               <input type="date" class="form-control" required value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="referencia">
             </div>
             <div class="col-md-6">
-              <label for="forma_pago">Monto</label>
-              <input step="any" type="number" required class="form-control"  name="monto" id="monto" placeholder="Monto">
+              <label for="forma_pago">Monto Pagado</label>
+              <input step="any" type="number" step="any" required class="form-control"  name="monto" id="monto" placeholder="Monto">
               @error('monto')
                 <small style="color: red">{{$message}}</small>
               @enderror
@@ -149,10 +161,11 @@ $layout_page = shop_profile
 
             <div class="col-md-6">
               <label for="forma_pago">Divisa</label>
-              <select id="divisa" class="form-control" required name="moneda">
-                @foreach(sc_currency_all() as $moneda)
+              <select id="divisa" class="form-control" required name="moneda" >
+                <option value="Bs" selected="" data-exchange_rate="31"> Bs</option>
+               {{-- @foreach(sc_currency_all() as $moneda)
                 <option  value="{{$moneda->code}}"  {!! $moneda->code =='Bs' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
-                @endforeach
+                @endforeach --}}
               </select>       
               @error('divisa')
                 <small style="color: red">{{$message}}</small>
@@ -166,6 +179,7 @@ $layout_page = shop_profile
                 <small style="color: red">{{$message}}</small>
               @enderror
             </div>   
+       
             <div class="col-md-6">
                 <label for="forma_pago">Adjunta  referencia</label>
                 <input type="file" class="form-control-file" id="capture" name="capture" required="">

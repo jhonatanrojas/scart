@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use App\Models\Catalogo\MetodoPago;
+use App\Models\Catalogo\Banco;
 use App\Models\Catalogo\PaymentStatus;
 use App\Models\Convenio;
 use App\Models\Estado;
@@ -176,6 +177,7 @@ class ShopAccountController extends RootFrontController
 
         }
 
+
         
         HistorialPago::where('referencia',request()->id)  ->update([
                  
@@ -239,7 +241,7 @@ class ShopAccountController extends RootFrontController
         } else $dato = "";
 
         // dd($dato);
-
+   
 
         sc_check_view($this->templatePath . '.account.index');
         return view($this->templatePath . '.account.index')
@@ -249,6 +251,7 @@ class ShopAccountController extends RootFrontController
                     'customer'    => $customer,
                     'cart'    =>   Cart::content(),
                     'convenio'    => $Combenio,
+                 
                     'order'    => $Order_resultado,
                     'referencia'    => $referencia,
                     'mensaje'    => $dato,
@@ -741,7 +744,7 @@ class ShopAccountController extends RootFrontController
 
         
 
-
+        $bancos = Banco::all();
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
@@ -769,6 +772,7 @@ class ShopAccountController extends RootFrontController
                     'id_pago' => $id_pago['id_pago'] ?? "",
                     'lisPago' =>      $id_pago ?? "",
                     'historial_pago' => $historial_pago,
+                    'bancos' =>$bancos,
                     'customer'        => $customer,
                     'referencia'        => $referencia,
                     'metodos_pagos'  => $metodos_pagos,
@@ -796,10 +800,15 @@ class ShopAccountController extends RootFrontController
         $user = Auth::user();
         $cId = $user->id;
         $data = request()->all();
+
+
         $request->validate([
             'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
             'monto' => 'required',
             'referencia' => 'required',
+            'telefono_origen' => 'required',
+            'cedula_origen' => 'required',
+            'codigo_banco' =>'required',
             'order_id' => 'required',
             'tipo_cambio' => 'required'
         ]);
@@ -820,6 +829,9 @@ class ShopAccountController extends RootFrontController
             'tasa_cambio' => $request->tipo_cambio,
             'order_detail_id' => $request->id_detalle_orden,
             'producto_id' => $request->product_id,
+            'telefono_origen'=>$request->telefono_origen,
+            'codigo_banco'=>$request->codigo_banco,
+            'cedula_origen'=>$request->cedula_origen,
             'metodo_pago_id' => $request->forma_pago,
             'fecha_pago' => $request->fecha,
             'importe_pagado' => $request->monto,
@@ -851,7 +863,7 @@ class ShopAccountController extends RootFrontController
     
 
         $data = [];
-
+    
 
 
         $listTh = [

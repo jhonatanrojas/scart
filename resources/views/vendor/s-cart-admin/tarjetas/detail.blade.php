@@ -158,10 +158,10 @@
         <div class="col-md-12">
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Limites</button>
+                  <button class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Transacciones</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Transacciones</button>
+                  <button class="nav-link" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Limite</button>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ sc_route('tarjetas.pdf',[$id])}}">Descargar Tarjeta</a>
@@ -176,30 +176,26 @@
                             <th scope="col">#</th>
                             <th scope="col">Descripcion</th>
                             <th scope="col">Fecha</th>
-                            <th scope="col">Monto</th>
+                            <th scope="col">Monto $</th>
                           </tr>
                         </thead>
                         <tbody>
+                            @foreach ( $trasacciones as  $trasaccion)
+                                
                           <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>200</td>
+                            <th scope="row">{{  $trasaccion->id }}</th>
+                            <td>{{  $trasaccion->descripcion }}</td>
+                            <td>{{  $trasaccion->created_at }}</td>
+                            <td>{{  $trasaccion->monto }}</td>
                           </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>2023-11-15</td>
-                            <td>100</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>2023-11-15</td>
-                            <td>100</td>
-                          </tr>
+                          
+                          @endforeach
+                      
                         </tbody>
                       </table>
+                      {{ $trasacciones->links() }}
+
+
                 </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 
@@ -213,26 +209,21 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>200</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>2023-11-15</td>
-                            <td>100</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>2023-11-15</td>
-                            <td>100</td>
-                          </tr>
+                            @foreach ( $montosTarjetaModalidad as  $trasaccion)
+                                
+                            <tr>
+                              <th scope="row">{{  $trasaccion->id }}</th>
+                              <td>{{  $trasaccion->descripcion }}</td>
+                              <td>{{  $trasaccion->created_at }}</td>
+                              <td>{{  $trasaccion->monto }}</td>
+                            </tr>
+                            
+                            @endforeach
+                       
+                       
                         </tbody>
                       </table>
+                      {{ $montosTarjetaModalidad->links() }}
                 </div>
 
               </div>

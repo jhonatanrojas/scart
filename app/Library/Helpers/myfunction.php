@@ -239,6 +239,12 @@ function separarCadena($cadena) {
     return implode(' ', $fragmentos);
 }
 
+function retornaNegativo($numero){
+    $num     = gmp_init($numero);
+    $neg_num = gmp_neg($num);
+return gmp_strval($neg_num);
+}
+
 function fechaEs($fecha) {
     $fecha = substr($fecha, 0, 10);
     $numeroDia = date('d', strtotime($fecha));

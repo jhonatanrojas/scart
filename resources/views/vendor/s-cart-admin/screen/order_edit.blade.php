@@ -21,7 +21,7 @@
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                         aria-controls="home" aria-selected="true">Solicitud</a>
                 </li>
-                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7]))
                     
                
                 <li class="nav-item" role="presentation">
@@ -39,7 +39,7 @@
                     <a class="nav-link" id="tabacciones-tab" data-toggle="tab" href="#tabacciones" role="tab"
                         aria-controls="tabacciones" aria-selected="false">Historial Acciones</a>
                 </li>
-                @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7]))
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="tabtotales-tab" data-toggle="tab" href="#tabtotales" role="tab"
                         aria-controls="tabtotales" aria-selected="false">Totales</a>
@@ -91,7 +91,7 @@
                         @endif
 
 
-                        @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                        @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7]))
                             <a class="dropdown-item" href="{{ route('ficha_pedido', ['order_id' => $order->id]) }}"
                                 target="_blank">Descargar expediente</a>
                         @endif
@@ -124,7 +124,7 @@
 
                             <div class="row">
                                 <div class="col-4">
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2)
+                                    @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7,0]))
                                         <h3 class="card-title">{{ sc_language_render('order.order_detail') }}
                                             #{{ $order->id }}</h3>
                                     @elseif ($order->modalidad_de_compra == 3)
@@ -162,7 +162,7 @@
                         <div class="row" id="order-body">
                             <div class="col-sm-6">
                                 <table class="table table-bordered">
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2)
+                                    @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7,0]))
                                         <tr>
                                             <td class="td-title">{{ sc_language_render('order.order_status') }}:</td>
                                             <td>
@@ -213,22 +213,18 @@
                                         </tr>
                                     @endif
 
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                                    @if ( in_array($order->modalidad_de_compra,[1,2,4,5 ,7]))
                                         <tr>
                                             <td> Modalidad de compra</td>
-                                            <td>
-                                                @if ($order->modalidad_de_compra == 1)
-                                                    {{ 'Financiamiento' }}
-                                                @elseif ($order->modalidad_de_compra == 2)
-                                                    {{ 'Financiamiento/Entrega Inmediata' }}
-                                                @elseif ($order->modalidad_de_compra == 3)
-                                                    {{ 'propuesta' }}
-                                                @else
-                                                    {{ 'Al contado' }}
-                                                @endif
+                                          <td>
+                           {{  $order->modalidad_venta }}
                                             </td>
                                         </tr>
-
+                                        <tr>
+                                            <td>  Saldo Disponible:</td>
+                                            <td> {{ $order->totalTransaccion }}</td>
+                                        </tr>
+    
 
                                         <tr>
 
@@ -310,7 +306,7 @@
                                             </td>
                                         </tr>
                                     @endif
-                                    @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 2)
+                                    @if (in_array($order->modalidad_de_compra,[2,4,5 ,7]))
                                         <tr>
                                             <td> Estatus de pago Global:</td>
                                             <td><a href="#" class="updateStatus" data-name="payment_status"
@@ -337,9 +333,11 @@
                                     </tr>
 
                                     <tr>
-                                        <td></i> {{ sc_language_render('admin.created_at') }}:</td>
+                                        <td> {{ sc_language_render('admin.created_at') }}:</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
+                               
+                                    
                                     @if ($order->modalidad_de_compra == 1 || $order->modalidad_de_compra == 0 || $order->modalidad_de_compra == 2 || $order->modalidad_de_compra == 3)
                                         <tr>
                                             <td class="td-title">

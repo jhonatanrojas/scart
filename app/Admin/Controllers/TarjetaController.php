@@ -45,7 +45,7 @@ class TarjetaController extends RootAdminController
         $listTh = [
             'Acción'          => 'Acción',
             'Nombre&Apellido'          => 'Nombre& Apellido',
-            'nro_tarjeta'          => 'N° tarjeta',         
+            'nro_tarjeta'          => 'N° tarjeta',
             'Tipo'          => 'Tipo',
             'Codigo' => 'Codigo de Seguridad',
             'Creado'          => 'Creado',
@@ -100,19 +100,19 @@ class TarjetaController extends RootAdminController
         $data['dataTr'] = [];
 
 
-        $dataTmp =Tarjeta::listTarjetasAdmin();
-        dd( $dataTmp);
-        
+        $dataTmp = Tarjeta::listTarjetasAdmin();
+
+
         $dataTr = [];
         $AlContado = [];
         foreach ($dataTmp as $key => $row) {
-            dd($row['id']);
 
-           $tipoTajeta= TipoTarjeta::find($row['tipo_tarjeta_id']);
 
-          $nombreTipoTarjeta= $tipoTajeta->tipo ?? 'N/A';
+            $tipoTajeta = TipoTarjeta::find($row['tipo_tarjeta_id']);
 
-     
+            $nombreTipoTarjeta = $tipoTajeta->tipo ?? 'N/A';
+
+
             $dataMap = [
 
                 'Acción' =>  '
@@ -122,10 +122,10 @@ class TarjetaController extends RootAdminController
                 'Nombre & Apellido'          => $row['first_name'] . " " . $row['last_name'] ?? 'N/A',
                 'nro_tarjeta'          =>  $row['nro_tarjeta'] ?? 'N/A',
                 'Tipo' =>      $nombreTipoTarjeta ?? 'N/A',
-                'codigo'         => $row['codigo_seguridad'] ,
-                'Creado' => $row['created_at'],              
+                'codigo'         => $row['codigo_seguridad'],
+                'Creado' => $row['created_at'],
 
-     
+
             ];
             $dataTr[$row['id']] = $dataMap;
         }
@@ -222,13 +222,14 @@ class TarjetaController extends RootAdminController
             'tipoTajeta' => 'required',
             'nro_tarjeta' => 'required',
             'valor_tarjeta' => 'required',
-            'codigo_seguridad'=>'required'
+            'codigo_seguridad' => 'required'
 
         ], [
             'first_name.required' => sc_language_render('validation.required'),
             'valor_tarjeta.required' => sc_language_render('validation.required'),
         ]);
 
+    
         if ($validator->fails()) {
             // dd($validator->messages());
             return redirect()->back()
@@ -237,7 +238,7 @@ class TarjetaController extends RootAdminController
         }
         $dataOrigin = (object)$dataOrigin;
 
-      //  $fechaFormateada = Carbon::createFromFormat('d/m/Y', $dataOrigin->fecha_de_vencimiento)->format('Y-m-d');
+        //  $fechaFormateada = Carbon::createFromFormat('d/m/Y', $dataOrigin->fecha_de_vencimiento)->format('Y-m-d');
 
         $dataTarjeta = [
             'customer_id' => $dataOrigin->customer_id,
@@ -270,59 +271,88 @@ class TarjetaController extends RootAdminController
 
             ]);
 
-            
+
 
             # code...
         }
 
-                return redirect()->route('tarjetas.detail', ['id' => $id_tarjeta ? $id_tarjeta : 'not-found-id'])->with('success', sc_language_render('action.create_success'));
-
+        return redirect()->route('tarjetas.detail', ['id' => $id_tarjeta ? $id_tarjeta : 'not-found-id'])->with('success', sc_language_render('action.create_success'));
     }
 
-    public function detail($id){
+    public function detail($id)
+    {
 
 
         $classTarjeta = new Tarjeta;
         $totalLimite  =    $classTarjeta->totalLimite($id);
         $totalTransaccion =  $classTarjeta->totalTransaccion($id);
+        $trasacciones =  TransaccionesTarjetas::where('tarjeta_id', $id)->paginate(20);
+        $montosTarjetaModalidad =  MontoTarjetaModalidad::where('tarjeta_id', $id)->paginate(20);
 
-       $datosTarjeta = $classTarjeta->getTarjetaAdmin($id);
+        $datosTarjeta = $classTarjeta->getTarjetaAdmin($id);
 
-       $dataTarjeta=[
-        "title"         => 'Detatalle de la tarjeta',
-        "totalLimite"   => $totalLimite,
-        "id"=>$id,
-        "totalTransaccion" =>$totalTransaccion,
-        "subTitle"      => '',
-        'order'         => $datosTarjeta
-       ];
-  
+        $dataTarjeta = [
+            "title"         => 'Detatalle de la tarjeta',
+            "totalLimite"   => $totalLimite,
+            "trasacciones" => $trasacciones,
+            "montosTarjetaModalidad" => $montosTarjetaModalidad,
+            "id" => $id,
+            "totalTransaccion" => $totalTransaccion,
+            "subTitle"      => '',
+            'order'         => $datosTarjeta
+        ];
 
-       return view($this->templatePathAdmin . 'tarjetas.detail')->with($dataTarjeta);
 
+        return view($this->templatePathAdmin . 'tarjetas.detail')->with($dataTarjeta);
     }
 
-    public function tarjeta_pdf($id){
+    public function tarjeta_pdf($id)
+    {
 
         $classTarjeta = new Tarjeta;
         $datosTarjeta = $classTarjeta->getTarjetaAdmin($id);
-      
+
         $qrImage = public_path('qrcodes/qr-code.png');
-          QrCode::format('png')->size(200)->generate('Contenido del QR', $qrImage);
+        $urlLink = sc_route('customer.verificar-tarjeta', [$id]);
+        QrCode::format('png')->size(200)->generate($urlLink, $qrImage);
 
 
         $pdf = PDF::loadView($this->templatePathAdmin . 'tarjetas.tarjeta_pdf', [
             'datosTarjeta' => $datosTarjeta,
             "qrImage" => $qrImage
-          
+
         ]);
-    
-        
-        $pdf->setPaper('letter', 'landscape');
 
 
 
-      //  return $pdf->stream();
-      return view($this->templatePathAdmin . 'tarjetas.tarjeta_pdf')->with(compact('datosTarjeta'));
+        $pdf->setPaper([0, 0, 1006, 640]);
+
+
+        return $pdf->stream('tajerta');
+        // return view($this->templatePathAdmin . 'tarjetas.tarjeta_pdf')->with(compact('datosTarjeta','qrImage'));
+    }
+
+    public function obtenerTarjeta(){
+
+       /* if (!request()->ajax()) {
+            return response()->json(['error' => 1, 'msg' => sc_language_render('admin.method_not_allow')]);
+        }*/ 
+        $idCliente =request('id');
+  
+        $modalidad_compra =request('modalidad_compra');
+        $classTarjeta = new Tarjeta;
+        $datosTarjeta = $classTarjeta->getTarjetasCliente($idCliente);
+
+        $dataTarjeta = [];
+        foreach ($datosTarjeta as $key => $value) {
+            $value->totalLimite = $classTarjeta->totalLimiteModalidad($value->id_tarjeta,$modalidad_compra);
+            $value->totalTransaccion = $classTarjeta->totalTransaccionModalidad($value->id_tarjeta,$modalidad_compra);
+            $dataTarjeta[] =$value;
+        }
+
+
+  
+ 
+        return response()->json($dataTarjeta);
     }
 }

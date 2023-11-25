@@ -172,11 +172,15 @@ INSERT INTO `sc_metodos_pagos` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (4, 'Pago Movil', NULL, NULL),
 (5, 'Monedero Digital', NULL, NULL),
 
-
+ ALTER TABLE sc_historial_pagos ADD COLUMN telefono_origen   varchar(160)  DEFAULT '';
+ ALTER TABLE sc_historial_pagos ADD COLUMN cedula_origen   varchar(160)  DEFAULT '';
+ ALTER TABLE sc_historial_pagos ADD COLUMN codigo_banco   varchar(160)  DEFAULT '';
  ALTER TABLE sc_historial_pagos ADD COLUMN observacion   varchar(255)  DEFAULT '';
   ALTER TABLE sc_historial_pagos ADD COLUMN id_pago   varchar(150)  DEFAULT '';
 
  ALTER TABLE sc_shop_order ADD modalidad_pago VARCHAR(100)
+
+  ALTER TABLE sc_shop_order ADD modalidad_pago VARCHAR(100)
 
  ALTER TABLE sc_shop_order ADD cedula VARCHAR(100) DEFAULT '';
 

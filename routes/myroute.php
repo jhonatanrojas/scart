@@ -91,7 +91,7 @@ Route::group(['prefix' => 'sc_admin/tarjetas'], function () use ($nameSpaceAdmin
     Route::post('/create',$nameSpaceAdminProduct.'\TarjetaController@postCreate')->name('tarjetas.postCreate');
     Route::get('/detail/{id}',$nameSpaceAdminProduct.'\TarjetaController@detail')->name('tarjetas.detail');
     Route::get('/tarjeta_pdf/{id}',$nameSpaceAdminProduct.'\TarjetaController@tarjeta_pdf')->name('tarjetas.pdf');
-    
+    Route::get('/obtenerTarjeta',$nameSpaceAdminProduct.'\TarjetaController@obtenerTarjeta')->name('tarjetas.obtenerTarjeta');
      
 
 
@@ -113,7 +113,8 @@ $nameSpaceFrontCustomer = 'App\Http\Controllers';
 $suffix = sc_config('SUFFIX_URL')??'';
 $prefixCustomerClient = sc_config('PREFIX_MEMBER') ?? 'customer';
 
-
+Route::get('/verificar-tarjeta/{id}', $nameSpaceFrontCustomer.'\ShopAccountController@pagosPendientes')
+->name('customer.verificar-tarjeta');
 Route::group(
     [
         'prefix' => $langUrl.$prefixCustomerClient,
@@ -131,6 +132,9 @@ Route::group(
             ->name('customer.lista_referencia');
             $router->get('/pagos-pendientes/{id}', $nameSpaceFrontCustomer.'\ShopAccountController@pagosPendientes')
             ->name('customer.pagosPendientes');
+
+      
+       
        
 
     }

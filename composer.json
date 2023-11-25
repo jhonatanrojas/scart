@@ -16,7 +16,7 @@
         "phpoffice/phpspreadsheet": "^1.28",
         "predis/predis": "^2.1",
         "s-cart/core": "~7.1.20",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "simplesoftwareio/simple-qrcode": "*"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",
