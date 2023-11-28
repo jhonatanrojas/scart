@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Controllers\Auth\AuthTrait;
 use App\Models\Catalogo\MetodoPago;
-use App\Models\Catalogo\Banco;
+
 use App\Models\Catalogo\PaymentStatus;
 use App\Models\Convenio;
 use App\Models\Estado;
@@ -33,6 +33,7 @@ use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Cart;
+use App\Models\Catalogo\Banco;
 use App\DTOs\ConciliacionMovimientoDTO;
 use App\Services\ConciliacionMovimientosService;
 use SCart\Core\Admin\Models\AdminProduct;

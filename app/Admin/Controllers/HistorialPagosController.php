@@ -34,6 +34,7 @@ use App\Services\ConciliacionMovimientosService;
 use SCart\Core\Admin\Models\AdminProduct;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use App\Models\Catalogo\Banco;
 
 class HistorialPagosController extends RootAdminController
 {
@@ -377,7 +378,7 @@ class HistorialPagosController extends RootAdminController
         $cedula= $pago->cedula_origen;
         $dto = new ConciliacionMovimientoDTO($cedula,$pago->telefono_origen, $telefono_pago_movil,
         $pago->referencia, $fecha_pago, number_format($pago->importe_pagado,2), $pago->codigo_banco);
-        dd($dto);
+ 
       return $service->enviar($dto);
     }
     public function detalle()
@@ -548,7 +549,7 @@ class HistorialPagosController extends RootAdminController
             'css' => '',
             'js' => '',
         ];
-        //Process add content
+        //Process add content 
         $data['menuRight'] = sc_config_group('menuRight', \Request::route()->getName());
         $data['menuLeft'] = sc_config_group('menuLeft', \Request::route()->getName());
         $data['topMenuRight'] = sc_config_group('topMenuRight', \Request::route()->getName());
@@ -559,11 +560,14 @@ class HistorialPagosController extends RootAdminController
         $id_pago = request('id_pago');
         $data['id_pago'] = $id_pago;
 
+        $bancos = Banco::all();
+
         $historial_pago = HistorialPago::where('id', $id_pago)->first();
 
         $order = ShopOrder::where('id', $id_orden)->first();
         $statusPayment = ShopPaymentStatus::whereIn('id', [ 2, 3, 4, 5, 6])->get();
         $data['order'] = $order;
+        $data['bancos'] = $bancos;
         $data['statusPayment'] = $statusPayment;
         $data['historial_pago'] = $historial_pago;
 
@@ -721,6 +725,11 @@ class HistorialPagosController extends RootAdminController
         if ($request->moneda == 'Bs') {
             $importe_cuota = number_format($request->monto / $request->tipo_cambio, 2);
         }
+
+        $nacionalidad = $request->nacionalidad ?? '';
+        $cedula=  $request->cedula_origen?? '';
+        $cedula=   $nacionalidad.     $cedula;
+      
         $data_pago = [
             'order_id' => $request->order_id,
             'customer_id' => $order->customer_id,
@@ -730,6 +739,9 @@ class HistorialPagosController extends RootAdminController
             'producto_id' => $request->product_id,
             'metodo_pago_id' => $request->forma_pago,
             'fecha_pago' => $request->fecha,
+            'telefono_origen'=>$request->telefono_origen ?? '',
+            'codigo_banco'=>$request->codigo_banco ?? '',
+            'cedula_origen'=> $cedula,
             'importe_pagado' => $request->monto,
             'comment' => $request->observacion,
             'moneda' => $request->moneda,
