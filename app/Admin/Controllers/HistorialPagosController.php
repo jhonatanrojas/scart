@@ -12,7 +12,7 @@ use App\Models\Catalogo\PaymentStatus;
 use SCart\Core\Front\Models\ShopOrder;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\AdminOrder;
-use App\Models\SC_admin_role;
+
 use App\Models\ClientLevelCalculator;
 use App\Models\Estado;
 use App\Models\Municipio;
@@ -28,9 +28,9 @@ use SCart\Core\Front\Models\ShopCurrency;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Models\ShopPaymentStatus;
-use SCart\Core\Front\Models\ShopOrderDetail;
-use DateTime;
-use DateInterval;
+use App\DTOs\ConciliacionMovimientoDTO;
+use App\Services\ConciliacionMovimientosService;
+
 use SCart\Core\Admin\Models\AdminProduct;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -184,7 +184,7 @@ class HistorialPagosController extends RootAdminController
 
             
             $dataTr[$row->id] = [
-                'Convenio' => $Nr_convenio->nro_convenio,
+                'Convenio' => $Nr_convenio->nro_convenio?? '',
                 'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
                 'Importe pagado' => $row->importe_pagado,
                 'Referencia' => $row->referencia,
@@ -359,6 +359,26 @@ class HistorialPagosController extends RootAdminController
 
 
 
+    }
+
+    public function conciliar_pago(){
+
+
+        $id = request('id');
+        $pago = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+            ->join('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
+            ->join('sc_shop_payment_status', 'sc_historial_pagos.payment_status', '=', 'sc_shop_payment_status.id')
+            ->where('sc_historial_pagos.id', $id)
+            ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_metodos_pagos.name as metodo', 'sc_shop_payment_status.name as status', 'sc_shop_order.last_name')->first();
+
+        $telefono_pago_movil= config('services.conciliacion_movimientos.telefono_pago_movil');
+        $service = new ConciliacionMovimientosService();
+        $fecha_pago = date('Y-m-d', strtotime(  $pago->fecha_pago));
+        $cedula= $pago->cedula_origen;
+        $dto = new ConciliacionMovimientoDTO($cedula,$pago->telefono_origen, $telefono_pago_movil,
+        $pago->referencia, $fecha_pago, number_format($pago->importe_pagado,2), $pago->codigo_banco);
+        dd($dto);
+      return $service->enviar($dto);
     }
     public function detalle()
     {

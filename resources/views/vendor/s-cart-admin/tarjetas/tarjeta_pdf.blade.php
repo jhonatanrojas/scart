@@ -38,7 +38,7 @@
     position: absolute;
     top: 70%; /* Ajusta estos valores según necesites */
     left: 30%;
-    transform: translate(-50%, -50%);
+    transform: translate(-40%, -50%);
     z-index: 2;
         color: white; /* Cambia el color del texto si es necesario */
     text-align: center;
@@ -114,7 +114,7 @@
     <p class="nro-tarjeta">{{ separarCadena($datosTarjeta->nro_tarjeta)}}</p>
 
     <p class="vencimiento">{!!   date('m-Y',strtotime($datosTarjeta->fecha_de_vencimiento)) !!}</p> 
-    <p class="nombre-tarjeta">{{ substr($datosTarjeta->first_name." ".$datosTarjeta->last_name,0,25)}}</p>
+    <p class="nombre-tarjeta">{{ substr($datosTarjeta->first_name." ".$datosTarjeta->last_name,0,30)}}</p>
   </div>
 </div>
 

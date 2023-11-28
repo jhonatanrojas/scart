@@ -23,6 +23,36 @@
         return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
     }
 
+    function conciliar_pago(){
+        $.ajax({
+            url: '{{ sc_route_admin('conciliar_pago') }}',
+            type: "get",
+            dateType: "application/json; charset=utf-8",
+            data: {
+                id:$("#id_pago_h").val(),
+
+            },
+            beforeSend: function() {
+                $('#loading').show();
+          
+            },
+            success: function(returnedData) {
+                console.log(returnedData)
+                $('#loading').hide();
+                var dataMessage='Transaccion Verificada'
+                    if(returnedData.code!=1000){
+                         dataMessage=returnedData.data;
+                    }
+                Swal.fire({
+                    title: returnedData.message,
+                    html:  dataMessage               ,
+                    icon: 'info'
+                });
+            }
+        });
+
+    }
+
     function obtener_detalle_pago(id_pago) {
 
         $.ajax({
@@ -35,14 +65,19 @@
             },
             beforeSend: function() {
                 $('#loading').show();
+                $("#btn-conciliarpago").css('display','none')
             },
             success: function(returnedData) {
                 $('#modal_detalle_pago').modal('show')
-
+            $("#id_pago_h").val(id_pago)
                 var data = returnedData.data;
 
                 let fechas = data.fecha_pago.split(' ')
 
+                console.log(data.payment_status)
+                if(data.metodo_pago_id==4){
+                    $("#btn-conciliarpago").css('display','block')
+                }
                 fechaInicio = new Date(document.getElementById('mfecha').value = fechas[0])
 
                 $("#idpago").val(data.id)

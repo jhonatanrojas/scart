@@ -116,7 +116,24 @@ $layout_page = shop_profile
             </div>
             <div class="col-md-6">
               <label for="inputEmail4">Cedula del Pagador </label>
-              <input type="text" class="form-control"  required name="cedula_origen" id="cedula_origen" placeholder="Cedula">
+              <div class="input-group mb-3">
+     
+                <select name="nacionalidad" id="nacionalidad" class=""  style="   
+                width:100px;
+                font-size: 1rem;
+                font-weight: 400;
+                line-height: 1.5;
+                color: #212529;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #ced4da;">
+                <option class="V">V</option>
+                <option class="J">J</option>
+                </select>
+                <input type="text" class="form-control"  required name="cedula_origen" id="cedula_origen" placeholder="Cedula">
+              </div>
+              
+         
               @error('referencia')
                   <small style="color: red">{{$message}}</small>
               @enderror
@@ -128,7 +145,7 @@ $layout_page = shop_profile
                 <label for="codigo_banco">Banco de Origen</label>
                 <select id="codigo_banco" class="form-control" required name="codigo_banco">
                   @foreach ($bancos as $banco )
-                  <option {{$banco->codigo}}>{{$banco->nombre}}</option>
+                  <option value="{{$banco->codigo}}" >{{$banco->nombre}}</option>
                   @endforeach
                   
                 </select>       
@@ -187,13 +204,7 @@ $layout_page = shop_profile
                     <small style="color: red">{{$message}}</small>
                 @enderror
             </div>
-            <div class="col-md-12">
-              <label for="forma_pago">Observación</label>
-              <input type="text" class="form-control" id="observacion" name="observacion" required="">
-              @error('observacion')
-                  <small style="color: red">{{$message}}</small>
-              @enderror    
-            </div>
+        
             <div class="col">
               <input type="hidden" name="order_id" value="{{ $order->id}}">
               <input type="hidden" name="id_detalle_orden" value="{{ isset($order->details[0]) ? $order->details[0]->id  : 0}}">

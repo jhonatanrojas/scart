@@ -57,4 +57,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
+
+    'conciliacion_movimientos' => [
+        'base_url' => env('CONCILIACION_MOVIMIENTOS_BASE_URL'),
+        'api_key'=> env('CONCILIACION_MOVIMIENTOS_API_KEY'),
+        'telefono_pago_movil'=> env('TELEFONO_PAGO_MOVIL')
+    ],
+    
 ];

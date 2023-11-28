@@ -33,10 +33,11 @@ use App\Events\Biopago;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Cart;
-use Illuminate\Support\Facades\File;
+use App\DTOs\ConciliacionMovimientoDTO;
+use App\Services\ConciliacionMovimientosService;
 use SCart\Core\Admin\Models\AdminProduct;
-use SCart\Core\Admin\Models\AdminUser;
-use SCart\Core\Front\Models\ShopOrderDetail;
+
+
 use SCart\Core\Front\Models\ShopPaymentStatus;
 
 class ShopAccountController extends RootFrontController
@@ -796,7 +797,8 @@ class ShopAccountController extends RootFrontController
     {
 
 
-       
+
+
         $user = Auth::user();
         $cId = $user->id;
         $data = request()->all();
@@ -812,14 +814,35 @@ class ShopAccountController extends RootFrontController
             'order_id' => 'required',
             'tipo_cambio' => 'required'
         ]);
+
+
         $fileName = time() . '.' . $request->capture->extension();
         $path_archivo = 'data/clientes/pagos' . '/' . $fileName;
         $request->capture->move(public_path('data/clientes/pagos'), $fileName);
         $id_pago = $request->id_pago;
 
 
+     $telefono_pago_movil= config('services.conciliacion_movimientos.telefono_pago_movil');
+    $service = new ConciliacionMovimientosService();
+    $fecha_pago = date('Y-m-d', strtotime($request->fecha));
+    $cedula= $request->nacionalidad.$request->cedula_origen;
+    $dto = new ConciliacionMovimientoDTO($cedula,$request->telefono_origen, $telefono_pago_movil,
+    $request->referencia, $fecha_pago, number_format($request->monto,2), $request->codigo_banco);
+    $resultado = $service->enviar($dto);
+    $payment_status=2;
 
-       
+      $mensaje_final='Pago Reportado';
+    if($resultado['code']==1010){
+
+        $mensaje_final='Pago reportado, Por verificar';
+    }else if($resultado['code']== 1000){
+        $payment_status=5;
+        $mensaje_final='Pago Verificado '.$resultado['message'];
+    }
+
+
+
+
 
 
         $data_pago = [
@@ -831,14 +854,14 @@ class ShopAccountController extends RootFrontController
             'producto_id' => $request->product_id,
             'telefono_origen'=>$request->telefono_origen,
             'codigo_banco'=>$request->codigo_banco,
-            'cedula_origen'=>$request->cedula_origen,
+            'cedula_origen'=> $cedula,
             'metodo_pago_id' => $request->forma_pago,
             'fecha_pago' => $request->fecha,
             'importe_pagado' => $request->monto,
-            'comment' => $request->observacion,
+            'comment' => $mensaje_final,
             'moneda' => $request->moneda,
             'comprobante' =>   $path_archivo,
-            'payment_status' => 2
+            'payment_status' =>  $payment_status
 
         ];
 
@@ -855,7 +878,7 @@ class ShopAccountController extends RootFrontController
 
 
         return redirect(sc_route('customer.historial_pagos'))
-            ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
+            ->with(['success' => $mensaje_final]);
     }
 
     public function reportePagos(){

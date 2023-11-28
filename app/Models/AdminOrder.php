@@ -95,7 +95,7 @@ class AdminOrder extends ShopOrder
         }*/
             if(!empty($estatus)){
              
-                $orderList = $orderList->whereIn('status', $estatus)->whereIn('modalidad_de_compra', [1,2]);
+                $orderList = $orderList->whereIn('status', $estatus)->whereIn('modalidad_de_compra', [1,2,4,5,7]);
 
                
             }

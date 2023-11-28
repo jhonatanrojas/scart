@@ -249,8 +249,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-6">
+                         
+<input type="hidden" id="id_pago_h">
+                            <button id="btn-conciliarpago"
+                            onclick="conciliar_pago()"
+                            type="button" class="btn btn-primary mt-4 " style="display:none">Verificar Pago Movil</button>
+                            
+                                                </div>
                     </div>
-
+      
                     <div class="form-row">
 
 

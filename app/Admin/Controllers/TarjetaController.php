@@ -327,9 +327,8 @@ class TarjetaController extends RootAdminController
 
         $pdf->setPaper([0, 0, 1006, 640]);
 
-
-        return $pdf->stream('tajerta');
-        // return view($this->templatePathAdmin . 'tarjetas.tarjeta_pdf')->with(compact('datosTarjeta','qrImage'));
+   return $pdf->stream('tajerta');
+       //  return view($this->templatePathAdmin . 'tarjetas.tarjeta_pdf')->with(compact('datosTarjeta','qrImage'));
     }
 
     public function obtenerTarjeta(){
