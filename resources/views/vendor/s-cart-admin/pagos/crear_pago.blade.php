@@ -180,7 +180,7 @@
 
                                         <div class="col-md-4 bloque-pagomovil">
                                             <label for="telefono_origen">Telefono del Pagador</label>
-                                            <input type="text" class="form-control" required name="telefono_origen"
+                                            <input type="text" class="form-control"  name="telefono_origen"
                                                 id="telefono_origen" placeholder="telefono">
                                             @error('telefono_origen')
                                                 <small style="color: red">{{ $message }}</small>
@@ -196,7 +196,7 @@
                                                           width:100px;
                                                           font-size: 1rem;
                                                           font-weight: 400;
-                                                          line-height: 1.5;
+                                                          line-height: 1.5; 
                                                           color: #212529;
                                                           background-color: #fff;
                                                           background-clip: padding-box;
@@ -204,7 +204,7 @@
                                                     <option class="V">V</option>
                                                     <option class="J">J</option>
                                                 </select>
-                                                <input type="text" class="form-control" required name="cedula_origen"
+                                                <input type="text" class="form-control"  name="cedula_origen"
                                                     id="cedula_origen" placeholder="Cedula">
                                             </div>
 
@@ -215,7 +215,7 @@
                                         </div>
                                         <div class="col-md-4 bloque-pagomovil">
                                             <label for="codigo_banco">Banco de Origen</label>
-                                            <select id="codigo_banco" class="form-control" required name="codigo_banco">
+                                            <select id="codigo_banco" class="form-control"  name="codigo_banco">
                                                 @foreach ($bancos as $banco)
                                                     <option value="{{ $banco->codigo }}">{{ $banco->nombre }}</option>
                                                 @endforeach

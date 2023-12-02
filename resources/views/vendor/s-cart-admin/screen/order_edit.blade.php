@@ -697,7 +697,7 @@
                                                               data-type="number" min=0
                                                               data-pk="{{ $item->id }}"
                                                               data-url="{{ route('admin_order.edit_item') }}"
-                                                              data-title="Couta de entrega">
+                                                              data-title="Couta especial">
                                                               {!! $item->monto_cuota_entrega > 0 ? $item->monto_cuota_entrega: $monto_entrega !!}</a>
                                                             
                                                         </td>

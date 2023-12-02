@@ -118,6 +118,7 @@
                                      
                                               if ($product->monto_cuota_entrega >0){
 
+                                                
                                                 $Precio_cuota = number_format(($product->price - $item->inicial - $product->monto_cuota_entrega) / $item->Cuotas ,2) ;
 
 

@@ -15,6 +15,7 @@
         </style>
         <table class="table table-striped align-middle">
             <thead>
+             
                 @if($cartItem[0]->financiamiento == "1" || $cartItem[0]->financiamiento==2)
                     <tr>
                         <th style="width: 50px;">No.</th>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\Catalogo\PaymentStatus;
-
+use Carbon\Carbon;
 use App\Models\ShopProduct;
 use App\Models\SC_shop_customer;
 
@@ -40,7 +40,11 @@ class HistorialPago extends Model
 
     }
 
-   
+
+    public function setFechaVvencientoAttribute($value)
+    {
+        $this->attributes['fecha_venciento'] = Carbon::parse($value)->format('Y-m-d');
+    }
   
   
 }

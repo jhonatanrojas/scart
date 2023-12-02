@@ -19,11 +19,12 @@ class ConciliacionMovimientosService
 
     public function enviar(ConciliacionMovimientoDTO $dto): array
     {
-        $response = Http::withHeaders([
+        $response = Http::withOptions(['verify' => false])->withHeaders([
             'Content-Type' => 'application/json',
             'X-API-Key' => $this->apiKey
         ])->post($this->baseUrl . '/getMovement', $dto->toArray());
 
+      //  dd($response);
         return $response->json();
     }
 }

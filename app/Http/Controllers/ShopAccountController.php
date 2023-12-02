@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use SCart\Core\Admin\Models\AdminCustomer;
 use App\Models\AdminOrder;
 use App\Models\SC__documento;
@@ -61,34 +62,34 @@ class ShopAccountController extends RootFrontController
     {
 
         $request->validate([
-   
+
             'id' => 'required',
-                  ]);
+        ]);
         $dataUser = Auth::user();
         $id_pedido = $request->get('id');
-        $id_pago= $request->get('id_pago');
+        $id_pago = $request->get('id_pago');
 
-      
+
         $order = ShopOrder::where('id', $id_pedido)->first();
-  
+
         $monedas = sc_currency_all();
         $tasa_cambio = $monedas[0]->exchange_rate;
-       
+
         //Creación de solicitud de pago
         $Payment = new \stdClass;
         $Payment->idLetter = 'V'; //Letra de la cédula - V, E o P
-        $Payment->idNumber =  trim(substr($order->cedula,1)); //Número de cédula
-      //  dd( substr($order->cedula,1) ); 
-        if( $id_pago==null){
-        $Payment->amount = $order->total * $tasa_cambio; //Monto a combrar, DECIMAL
-        }else{
-       
+        $Payment->idNumber =  trim(substr($order->cedula, 1)); //Número de cédula
+        //  dd( substr($order->cedula,1) ); 
+        if ($id_pago == null) {
+            $Payment->amount = $order->total * $tasa_cambio; //Monto a combrar, DECIMAL
+        } else {
 
-            $historial_pago= HistorialPago::where('id',$id_pago)->first();
-           $Payment->amount =  $historial_pago->importe_couta  * $tasa_cambio;
+
+            $historial_pago = HistorialPago::where('id', $id_pago)->first();
+            $Payment->amount =  $historial_pago->importe_couta  * $tasa_cambio;
         }
-       
-      
+
+
 
         $Payment->currency = 1; //Moneda del pago, 0 - Bolivar Fuerte, 1 - Dolar
         $Payment->reference =  $id_pedido; //Código de referecia o factura
@@ -98,37 +99,35 @@ class ShopAccountController extends RootFrontController
         $Payment->cellphone = $order->phone;
         $Payment->urlToReturn = route('pago_exitoso'); //URL de retrono al finalizar el pago
 
-        $PaymentProcess = new Biopago($_ENV['AFILIADOBDV'],$_ENV['CLAVEBDV']); //Instanciación de la API de pago con usuario y clave
+        $PaymentProcess = new Biopago($_ENV['AFILIADOBDV'], $_ENV['CLAVEBDV']); //Instanciación de la API de pago con usuario y clave
         $response = $PaymentProcess->createPayment($Payment);
-     //   dd(  $response->paymentId );
+        //   dd(  $response->paymentId );
         if ($response->success == true) // Se procesó correctamente y es necesario redirigir a la página de pago
         {
             $user = Auth::user();
             $cId = $user->id;
-      $hoy = date("Y-m-d H:i:s");  
-        $data_pago =[
-                       
-            'customer_id' => $cId,
-           'referencia' =>$response->paymentId,      
-            'metodo_pago_id' =>7,
-            'fecha_pago' =>  $hoy,
-            'importe_pagado' =>$Payment->amount,
-            'comment' =>'BDV',
-            'moneda' =>'Bs',
-            'tasa_cambio' => $tasa_cambio,
-            'comprobante'=>   '',
-            'payment_status' => 5
-   
-           ];
-           if( $id_pago==null){
-            $data_pago['order_id'] = $id_pedido;
-             HistorialPago::create($data_pago);
-           }else{
-               HistorialPago::where('id',$id_pago)
-           ->update($data_pago);
-               
-           
-           }
+            $hoy = date("Y-m-d H:i:s");
+            $data_pago = [
+
+                'customer_id' => $cId,
+                'referencia' => $response->paymentId,
+                'metodo_pago_id' => 7,
+                'fecha_pago' =>  $hoy,
+                'importe_pagado' => $Payment->amount,
+                'comment' => 'BDV',
+                'moneda' => 'Bs',
+                'tasa_cambio' => $tasa_cambio,
+                'comprobante' =>   '',
+                'payment_status' => 5
+
+            ];
+            if ($id_pago == null) {
+                $data_pago['order_id'] = $id_pedido;
+                HistorialPago::create($data_pago);
+            } else {
+                HistorialPago::where('id', $id_pago)
+                    ->update($data_pago);
+            }
 
 
             if (strtolower(filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest') { //si es ajax
@@ -140,7 +139,7 @@ class ShopAccountController extends RootFrontController
                 die();
             }
         } else {
-            return redirect()->back()->with(['error' =>$response->responseMessage ]);
+            return redirect()->back()->with(['error' => $response->responseMessage]);
         }
     }
 
@@ -154,47 +153,46 @@ class ShopAccountController extends RootFrontController
     }
 
 
-    public function pago_exitoso(){
+    public function pago_exitoso()
+    {
 
         request()->id_pedido;
         request()->id;
-        $historial_pago= HistorialPago::where('referencia',request()->id)->first();
+        $historial_pago = HistorialPago::where('referencia', request()->id)->first();
 
-    
 
-     if( $historial_pago){
 
-        $id_usuario = $historial_pago->customer_id;
-        $datosUsuario = [];
-        $user = ShopCustomer::where('id' , $id_usuario)->get();
-        foreach($user as $key => $usuarios){ 
-        $datosUsuario = [
-                'first_name' =>  $usuarios->first_name,
-                'last_name' =>  $usuarios->last_name,
-                'email' =>  $usuarios->email,
-                'phone' =>  $usuarios->phone,
-                'address1'=>  $usuarios->address1,
-                'cedula' =>  $usuarios->cedula,
-        ];
+        if ($historial_pago) {
 
+            $id_usuario = $historial_pago->customer_id;
+            $datosUsuario = [];
+            $user = ShopCustomer::where('id', $id_usuario)->get();
+            foreach ($user as $key => $usuarios) {
+                $datosUsuario = [
+                    'first_name' =>  $usuarios->first_name,
+                    'last_name' =>  $usuarios->last_name,
+                    'email' =>  $usuarios->email,
+                    'phone' =>  $usuarios->phone,
+                    'address1' =>  $usuarios->address1,
+                    'cedula' =>  $usuarios->cedula,
+                ];
+            }
+
+
+
+            HistorialPago::where('referencia', request()->id)->update([
+
+
+                'metodo_pago_id' => 3,
+                'payment_status' => 5,
+                'observacion' => 'Pago realizado a traves de BDV BIOPAGO'
+
+            ]);
+
+            exito_biopago_email($datosUsuario);
         }
 
-
-        
-        HistorialPago::where('referencia',request()->id)  ->update([
-                 
-                     
-            'metodo_pago_id' =>3,           
-            'payment_status' => 5,
-            'observacion' => 'Pago realizado a traves de BDV BIOPAGO'
-   
-           ]);
-
-           exito_biopago_email($datosUsuario);
-      
-     }
-      
-     return view(
+        return view(
             $this->templatePath . '.screen.pago_exitoso',
             [
                 'title'       => 'PAGO RECIBIDO',
@@ -219,10 +217,10 @@ class ShopAccountController extends RootFrontController
         $id = $customer['id'];
 
 
-       
 
 
- 
+
+
         $documento = SC__documento::where('id_usuario', $id)->get();
         $order = AdminOrder::where('customer_id', $id)->get();
         $Combenio = [];
@@ -236,14 +234,14 @@ class ShopAccountController extends RootFrontController
             }
         }
 
-       
+
 
         if (!empty($documento[0]['id_usuario']) == $id) {
             $dato = "Para procesar sus solicitudes de compras, se requiere que adjunte Cedula, RIF y constancia de trabajo";
         } else $dato = "";
 
         // dd($dato);
-   
+
 
         sc_check_view($this->templatePath . '.account.index');
         return view($this->templatePath . '.account.index')
@@ -253,7 +251,7 @@ class ShopAccountController extends RootFrontController
                     'customer'    => $customer,
                     'cart'    =>   Cart::content(),
                     'convenio'    => $Combenio,
-                 
+
                     'order'    => $Order_resultado,
                     'referencia'    => $referencia,
                     'mensaje'    => $dato,
@@ -417,37 +415,37 @@ class ShopAccountController extends RootFrontController
 
         $usuario = AdminCustomer::find($cId);
 
-            if (!$usuario) {
+        if (!$usuario) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Usuario no encontrado'])
+                ->withInput();
+        }
+
+        $validatedData = [
+            'first_name' => $data['first_name'] ?? '',
+            'last_name' => $data['last_name'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'postcode' => $data['postcode'] ?? '',
+            'address1' => $data['address1'] ?? '',
+            'address2' => $data['address2'] ?? '',
+            'sex' => $data['sex'] ?? '',
+        ];
+
+        $socialMediaFields = ['re_facebook', 're_Twitter', 're_Instagram', 'LinkedIn'];
+
+        foreach ($socialMediaFields as $field) {
+            if (isset($data[$field]) && !filter_var($data[$field], FILTER_VALIDATE_URL)) {
                 return redirect()->back()
-                    ->withErrors(['message' => 'Usuario no encontrado'])
+                    ->withErrors(['message' => 'URL no válida para ' . $field])
                     ->withInput();
             }
+            $validatedData[$field] = $data[$field] ?? '';
+        }
 
-            $validatedData = [
-                'first_name' => $data['first_name'] ?? '',
-                'last_name' => $data['last_name'] ?? '',
-                'phone' => $data['phone'] ?? '',
-                'postcode' => $data['postcode'] ?? '',
-                'address1' => $data['address1'] ?? '',
-                'address2' => $data['address2'] ?? '',
-                'sex' => $data['sex'] ?? '',
-            ];
-
-            $socialMediaFields = ['re_facebook', 're_Twitter', 're_Instagram', 'LinkedIn'];
-
-            foreach ($socialMediaFields as $field) {
-                if (isset($data[$field]) && !filter_var($data[$field], FILTER_VALIDATE_URL)) {
-                    return redirect()->back()
-                        ->withErrors(['message' => 'URL no válida para ' . $field])
-                        ->withInput();
-                }
-                $validatedData[$field] = $data[$field] ?? '';
-            }
-
-            $usuario->update($validatedData);
+        $usuario->update($validatedData);
 
 
-        
+
 
         return redirect(sc_route('customer.index'))
             ->with(['success' => sc_language_render('customer.update_success')]);
@@ -507,20 +505,20 @@ class ShopAccountController extends RootFrontController
         $Order_resultado = [];
 
 
-       
-            $Name_product = [];
-       
-            $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
 
-            $REFERENCIA=ShopOrder::where('customer_id' , $id)->leftJoin('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->leftJoin('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->leftJoin('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name' , 'sc_convenios.total as cb_total' ,  'sc_convenios.fecha_maxima_entrega' ,'sc_convenios.nro_coutas as cuaotas' , 'sc_shop_order_detail.name as name_product' ,'sc_shop_order_detail.qty as cantidad' , 'sc_shop_customer.address1 as Direccion')->get();
+        $Name_product = [];
+
+        $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
+
+        $REFERENCIA = ShopOrder::where('customer_id', $id)->leftJoin('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')->leftJoin('sc_shop_order_detail', 'sc_shop_order.id', '=', 'sc_shop_order_detail.order_id')->leftJoin('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
+            ->select('sc_shop_order.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name', 'sc_convenios.lote', 'nro_convenio', 'sc_shop_order.last_name', 'sc_convenios.total as cb_total',  'sc_convenios.fecha_maxima_entrega', 'sc_convenios.nro_coutas as cuaotas', 'sc_shop_order_detail.name as name_product', 'sc_shop_order_detail.qty as cantidad', 'sc_shop_customer.address1 as Direccion')->get();
 
 
 
 
         $statusOrder = ShopOrderStatus::getIdAll();
 
-        
+
         sc_check_view($this->templatePath . '.account.order_list');
         return view($this->templatePath . '.account.order_list')
             ->with(
@@ -542,7 +540,6 @@ class ShopAccountController extends RootFrontController
                     ],
                 ]
             );
-            
     }
 
     /**
@@ -584,26 +581,22 @@ class ShopAccountController extends RootFrontController
         }
         $fecha_actual = date('Y-m-d');
 
-        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+30 day"));
+        $fech_p = date('Y-m-d', strtotime($fecha_actual . "+30 day"));
 
         if ($order->modalidad_de_compra == 0) {
-            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status',[1,8])->orderBy('id', 'desc')->get();
-
-            
-        }else{
+            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status', [1, 8])->orderBy('id', 'desc')->get();
+        } else {
             $historial_pagos =   HistorialPago::where('order_id', $id)
-            ->where('fecha_venciento','<' ,$fech_p)
-            ->whereIn('payment_status',[1,8])
-            ->orderBy('fecha_venciento')->limit(1)
-            ->get();
-
-            
+                ->where('fecha_venciento', '<', $fech_p)
+                ->whereIn('payment_status', [1, 8])
+                ->orderBy('fecha_venciento')->limit(1)
+                ->get();
         }
 
 
 
         $fecha_de_hoy = date('d-m-y');
-        $parse_fecha_hoy  = date_parse($fecha_de_hoy );
+        $parse_fecha_hoy  = date_parse($fecha_de_hoy);
         //dia de la fecha actual
         $dia_hoy = $parse_fecha_hoy['day'];
         //mes de la fecha actual
@@ -622,15 +615,15 @@ class ShopAccountController extends RootFrontController
 
         $product = AdminProduct::getProductAdmin($order2->product_id);
 
-        
+
         sc_check_view($this->templatePath . '.account.order_detail');
         return view($this->templatePath . '.account.order_detail')
             ->with(
                 [
                     'title'           => $title,
                     'referencia'           => $referencia,
-                    'cuotas_inmediatas' =>$product->cuotas_inmediatas ?? 0,
-                    'monto_inicial' => $product->monto_inicial?? 0,
+                    'cuotas_inmediatas' => $product->cuotas_inmediatas ?? 0,
+                    'monto_inicial' => $product->monto_inicial ?? 0,
                     'statusOrder'     => $statusOrder,
                     'mensaje'     => $dato,
                     'mapStyleStatus' => $mapStyleStatus,
@@ -649,7 +642,8 @@ class ShopAccountController extends RootFrontController
             );
     }
 
-    public function pagosPendientes(...$params){
+    public function pagosPendientes(...$params)
+    {
 
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
@@ -674,45 +668,40 @@ class ShopAccountController extends RootFrontController
         }
         $fecha_actual = date('Y-m-d');
 
-        $fech_p = date('Y-m-d',strtotime($fecha_actual . "+30 day"));
+        $fech_p = date('Y-m-d', strtotime($fecha_actual . "+30 day"));
 
         if ($order->modalidad_de_compra == 0) {
-            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status',[1,8])->orderBy('id', 'desc')->get();
-
-            
-        }else{
+            $historial_pagos =   HistorialPago::where('order_id', $id)->whereIn('payment_status', [1, 8])->orderBy('id', 'desc')->get();
+        } else {
             $historial_pagos =   HistorialPago::where('order_id', $id)
-            ->where('fecha_venciento','<' ,$fech_p)
-            ->whereIn('payment_status',[1,8])
-            ->orderBy('fecha_venciento')->limit(1)
-            ->get();
-
-            
+                ->where('fecha_venciento', '<', $fech_p)
+                ->whereIn('payment_status', [1, 8,2])
+                ->orderBy('fecha_venciento')->limit(3)
+                ->get();
         }
 
 
         return view($this->templatePath . '.account.pagos_pendientes')
-        ->with(
-            [
-                'title'           => 'Pagos Pendientes',
+            ->with(
+                [
+                    'title'           => 'Pagos Pendientes',
 
-                'statusOrder'     => $statusOrder,
- 
-                'mapStyleStatus' => $mapStyleStatus,
-                'statusShipping'  => $statusShipping,
-                'countries'       => ShopCountry::getCodeAll(),
-                'attributesGroup' => $attributesGroup,
-                'order'           => $order,
-                'customer'        => $customer,
-                'layout_page'     => 'shop_profile',
-                'historial_pagos'   => $historial_pagos,
-                'breadcrumbs'     => [
-                    ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
-                    ['url'        => '', 'title' => $title],
-                ],
-            ]
-        );
+                    'statusOrder'     => $statusOrder,
 
+                    'mapStyleStatus' => $mapStyleStatus,
+                    'statusShipping'  => $statusShipping,
+                    'countries'       => ShopCountry::getCodeAll(),
+                    'attributesGroup' => $attributesGroup,
+                    'order'           => $order,
+                    'customer'        => $customer,
+                    'layout_page'     => 'shop_profile',
+                    'historial_pagos'   => $historial_pagos,
+                    'breadcrumbs'     => [
+                        ['url'        => sc_route('customer.index'), 'title' => sc_language_render('front.my_account')],
+                        ['url'        => '', 'title' => $title],
+                    ],
+                ]
+            );
     }
     /**
      * Process front address list
@@ -729,11 +718,11 @@ class ShopAccountController extends RootFrontController
         return $this->_addressList();
     }
 
-    public function reportarPago(Request $request , ...$params)
+    public function reportarPago(Request $request, ...$params)
     {
 
 
-        
+
         if (config('app.seoLang')) {
             $lang = $params[0] ?? '';
             $id = $params[1] ?? '';
@@ -744,7 +733,7 @@ class ShopAccountController extends RootFrontController
         $customer = auth()->user();
         $pago = $request->all();
 
-        
+
 
         $bancos = Banco::all();
 
@@ -757,16 +746,16 @@ class ShopAccountController extends RootFrontController
         $historial_pago = HistorialPago::where('order_id', $params[1])->first();
 
 
-       
-            
 
 
-       
-        $metodos_pagos = MetodoPago::whereIn('id',[2,4])->get();
 
-       
+
+
+        $metodos_pagos = MetodoPago::whereIn('id', [2, 4])->get();
+
+
         sc_check_view($this->templatePath . '.account.reportar_pago');
-        
+
         return view($this->templatePath . '.account.reportar_pago')
             ->with(
                 [
@@ -774,7 +763,7 @@ class ShopAccountController extends RootFrontController
                     'id_pago' => $id_pago['id_pago'] ?? "",
                     'lisPago' =>      $id_pago ?? "",
                     'historial_pago' => $historial_pago,
-                    'bancos' =>$bancos,
+                    'bancos' => $bancos,
                     'customer'        => $customer,
                     'referencia'        => $referencia,
                     'metodos_pagos'  => $metodos_pagos,
@@ -806,75 +795,90 @@ class ShopAccountController extends RootFrontController
 
 
         $request->validate([
-            'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
+            // 'capture' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
             'monto' => 'required',
             'referencia' => 'required',
             'telefono_origen' => 'required',
             'cedula_origen' => 'required',
-            'codigo_banco' =>'required',
+            'codigo_banco' => 'required',
             'order_id' => 'required',
-            'tipo_cambio' => 'required'
+
         ]);
 
 
-        $fileName = time() . '.' . $request->capture->extension();
+        /* $fileName = time() . '.' . $request->capture->extension();
         $path_archivo = 'data/clientes/pagos' . '/' . $fileName;
-        $request->capture->move(public_path('data/clientes/pagos'), $fileName);
+        $request->capture->move(public_path('data/clientes/pagos'), $fileName);*/
         $id_pago = $request->id_pago;
 
+        $tasa_cambio = sc_currency_all()[1]->exchange_rate ?? 1;
+        $data_referencia = HistorialPago::where('referencia', $request->referencia)
+            ->where('codigo_banco', $request->codigo_banco)
+            ->exists();
 
-     $telefono_pago_movil= config('services.conciliacion_movimientos.telefono_pago_movil');
-    $service = new ConciliacionMovimientosService();
-    $fecha_pago = date('Y-m-d', strtotime($request->fecha));
-    $cedula= $request->nacionalidad.$request->cedula_origen;
-    $dto = new ConciliacionMovimientoDTO($cedula,$request->telefono_origen, $telefono_pago_movil,
-    $request->referencia, $fecha_pago, number_format($request->monto,2), $request->codigo_banco);
-    $resultado = $service->enviar($dto);
-    $payment_status=2;
+        if ($data_referencia) {
 
-      $mensaje_final='Pago Reportado';
-    if($resultado['code']==1010){
+            return redirect()->back()->withInput()->with(['warning' => "Lo sentimos, el numero de referencia $request->referencia ya se encuentra registrado "], compact('data'));
+        }
 
-        $mensaje_final='Pago reportado, Por verificar';
-    }else if($resultado['code']== 1000){
-        $payment_status=5;
-        $mensaje_final='Pago Verificado '.$resultado['message'];
-    }
+        $telefono_pago_movil = config('services.conciliacion_movimientos.telefono_pago_movil');
+        $service = new ConciliacionMovimientosService();
+        $fecha_pago = date('Y-m-d', strtotime($request->fecha));
+        $cedula = $request->nacionalidad . $request->cedula_origen;
 
+        $dto = new ConciliacionMovimientoDTO(
+            $cedula,
+            $request->telefono_origen,
+            $telefono_pago_movil,
+            $request->referencia,
+            $fecha_pago,
+            number_format($request->monto, 2),
+            $request->codigo_banco
+        );
 
+        try {
+            $resultado = $service->enviar($dto);
+        } catch (\Exception $th) {
+            return redirect()->back()->withInput()->with(['warning' => "Lo sentimos,  No pudimos validar su pago"]);
+        }
 
+        $payment_status = 2;
 
-
+        $mensaje_final = 'Pago Reportado, Su pago encuentra en Verificación ';
+        if ($resultado['code'] == 1000) {
+            $payment_status = 5;
+            $mensaje_final = 'Pago Verificado ' . $resultado['message'];
+        } else {
+            return redirect()->back()->withInput()->with(['warning' => "Lo sentimos,  " . $resultado['message']]);
+        }
 
         $data_pago = [
             'order_id' => $request->order_id,
             'customer_id' => $cId,
             'referencia' => $request->referencia,
-            'tasa_cambio' => $request->tipo_cambio,
+            'tasa_cambio' =>  $tasa_cambio,
             'order_detail_id' => $request->id_detalle_orden,
             'producto_id' => $request->product_id,
-            'telefono_origen'=>$request->telefono_origen,
-            'codigo_banco'=>$request->codigo_banco,
-            'cedula_origen'=> $cedula,
+            'telefono_origen' => $request->telefono_origen,
+            'codigo_banco' => $request->codigo_banco,
+            'cedula_origen' => $cedula,
             'metodo_pago_id' => $request->forma_pago,
             'fecha_pago' => $request->fecha,
             'importe_pagado' => $request->monto,
             'comment' => $mensaje_final,
-            'moneda' => $request->moneda,
-            'comprobante' =>   $path_archivo,
+            'moneda' => $request->moneda ?? 'Bs',
+            'comprobante' =>   $path_archivo ?? '',
             'payment_status' =>  $payment_status
 
         ];
 
-       
-      
+
+
         if ($id_pago == null) {
             HistorialPago::create($data_pago);
         } else {
             HistorialPago::where('id', $id_pago)
                 ->update($data_pago);
-
-
         }
 
 
@@ -882,17 +886,18 @@ class ShopAccountController extends RootFrontController
             ->with(['success' => $mensaje_final]);
     }
 
-    public function reportePagos(){
-        
-    
+    public function reportePagos()
+    {
+
+
 
         $data = [];
-    
+
 
 
         $listTh = [
             'N° de Pago' => 'N°',
-         
+
             'Reportado' => 'Reportado',
             'DIVISA' => 'Moneda',
             'CONVERSION' => 'Conversión',
@@ -925,51 +930,51 @@ class ShopAccountController extends RootFrontController
         ];
 
 
-        $monto_cuota_pendiente=0;
+        $monto_cuota_pendiente = 0;
         $convenio = Convenio::where('order_id', $keyword)->first();
 
         $emitido_por = '';
 
 
         $order = AdminOrder::getOrderAdmin($keyword);
-     
+
         //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
+        $historialPago = HistorialPago::where('order_id', $keyword)->whereIn('payment_status', [3, 4, 5, 6, 8])->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $keyword)
-        ->where('payment_status', 1)
-        ->orWhere('payment_status', 7)->where('order_id', $keyword)
-        ->orderBy('nro_coutas')->first();
+            ->where('payment_status', 1)
+            ->orWhere('payment_status', 7)->where('order_id', $keyword)
+            ->orderBy('nro_coutas')->first();
 
-                $cuota_pendiente = 0;
+        $cuota_pendiente = 0;
 
-                if ($cuota_pendientes != null) {
-                    if ($cuota_pendientes->exists()) {
-                        $cuota_pendiente = $cuota_pendientes->importe_couta;
-                    }
-                }
+        if ($cuota_pendientes != null) {
+            if ($cuota_pendientes->exists()) {
+                $cuota_pendiente = $cuota_pendientes->importe_couta;
+            }
+        }
 
         $nro_total_pagos = 0;
 
-       
+
 
 
         $dataTr = [];
 
-     
-        $totale = [];
-     
-        $total_usd_pagado = 0;
-       
- 
 
-        if (!$historialPago->count() >0) {
+        $totale = [];
+
+        $total_usd_pagado = 0;
+
+
+
+        if (!$historialPago->count() > 0) {
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
                 ->with(['error' => 'no se encontraron pagos reportado']);
         }
-      
+
 
         $pagado = 0;
-        $total_bs=0;
+        $total_bs = 0;
         foreach ($historialPago as $key => $row) {
 
 
@@ -977,71 +982,66 @@ class ShopAccountController extends RootFrontController
 
 
             $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-             $styleStatusPayment = $statusPayment;
+            $styleStatusPayment = $statusPayment;
             array_walk($styleStatusPayment, function (&$v, $k) {
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
 
-    
-         
 
-           
 
-         
-           
+
+
+
+
+
 
             $moneda = '';
-          
 
-           
-            if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
+
+
+            if ($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6) {
 
                 $pagado += $row->importe_couta;
 
                 $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
-    
+
                 $moneda = $row->moneda;
                 $monto = $row->importe_pagado;
-                
+
 
                 if ($moneda == 'USD') {
-                // El monto está en dólares
-                $monto_dolares = number_format($monto,2);
-                $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
-                $Referencia = $monto_bolivares."Bs";
-                $diVisA = $moneda;
-                $Reportado = $monto;
-            } else if ($moneda == 'Bs') {
-                // El monto está en bolívares
-                $monto_bolivares = number_format($monto ,2);
-                $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
-                $Referencia = $monto_dolares."$";
-                $diVisA = $moneda;
-                $Reportado = $monto;
-                $total_bs += $Reportado ;
-
-                
-
-            }
-
-            }else if($row->payment_status == 8 ){
+                    // El monto está en dólares
+                    $monto_dolares = number_format($monto, 2);
+                    $monto_bolivares = number_format($monto * $row->tasa_cambio, 2);
+                    $Referencia = $monto_bolivares . "Bs";
+                    $diVisA = $moneda;
+                    $Reportado = $monto;
+                } else if ($moneda == 'Bs') {
+                    // El monto está en bolívares
+                    $monto_bolivares = number_format($monto, 2);
+                    $monto_dolares = number_format($monto / $row->tasa_cambio, 2);
+                    $Referencia = $monto_dolares . "$";
+                    $diVisA = $moneda;
+                    $Reportado = $monto;
+                    $total_bs += $Reportado;
+                }
+            } else if ($row->payment_status == 8) {
                 $monto_dolares = 0.00;
-                $monto_bolivares =0.00;
-                $Referencia =0;
+                $monto_bolivares = 0.00;
+                $Referencia = 0;
                 $diVisA = 0;
                 $Reportado = 0;
-                
             }
-            
-            
+
+
 
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
-       
+
                 'Reportado' => $Reportado ?? 0,
                 'DIVISA' => $diVisA ?? 'N/A',
-                'CONVERSION' => $Referencia ?? 0 ,
+                'CONVERSION' => $Referencia ?? 0,
                 'tasa_cambio' => $row->tasa_cambio ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
                 'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
@@ -1050,12 +1050,10 @@ class ShopAccountController extends RootFrontController
                 'observacion' =>  $row->observacion
 
             ];
-
-
         } //fin foreach
 
 
-        
+
 
         $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
         $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
@@ -1068,14 +1066,14 @@ class ShopAccountController extends RootFrontController
         $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
         $data['vendedor'] =  '';
         $data['cedula'] = $order->cedula ?? '';
-        $data['cuota_pendiente'] =$cuota_pendiente ;
+        $data['cuota_pendiente'] = $cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
-        $data['total_bs'] = $total_bs ;
-        
+        $data['total_bs'] = $total_bs;
+
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
+        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas - $nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas - $nro_total_pagos;
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';
@@ -1086,15 +1084,12 @@ class ShopAccountController extends RootFrontController
 
 
 
-      
+
         $data['totaleudsBS'] = $totale;
         $data['listTh'] = $listTh;
         $data['dataTr'] = $dataTr;
         return view($this->templatePath . '.account.reporte_pagos_pdf')
             ->with($data);
-
-
-
     }
     public function historialPagos()
     {
@@ -1110,18 +1105,18 @@ class ShopAccountController extends RootFrontController
         $id1 = $customer['id'];
         $mapStyleStatus = AdminOrder::$mapStyleStatus;
 
-    //    $order = AdminOrder::where('customer_id',$id1)->get();
+        //    $order = AdminOrder::where('customer_id',$id1)->get();
 
         $order =   AdminOrder::with(['details', 'orderTotal'])
-        ->join('sc_convenios', 'sc_shop_order.id', '=','sc_convenios.order_id' )
-        ->leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
-        ->select('sc_shop_order.*','nro_convenio')
-        ->where('sc_shop_order.customer_id', $id1)->get();
-     
-        
+            ->join('sc_convenios', 'sc_shop_order.id', '=', 'sc_convenios.order_id')
+            ->leftjoin('sc_admin_user', 'sc_shop_order.usuario_id', '=', 'sc_admin_user.id')
+            ->select('sc_shop_order.*', 'nro_convenio')
+            ->where('sc_shop_order.customer_id', $id1)->get();
+
+
         $referencia = SC_referencia_personal::where('id_usuario', $id1)->get();
 
-  
+
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
         return view($this->templatePath . '.account.historial_pagos')
@@ -1130,10 +1125,10 @@ class ShopAccountController extends RootFrontController
                     'title'           => 'Historial de pagos',
                     'mapStyleStatus' => $mapStyleStatus,
                     'customer'        => $customer,
-                    'order'=> $order,
+                    'order' => $order,
                     'referencia'        => $referencia,
                     'layout_page'     => 'shop_profile',
-         
+
                     'breadcrumbs'     => [
                         ['url'        => sc_route('customer.historial_pagos'), 'title' => sc_language_render('front.my_account')],
                         ['url'        => '', 'title' => 'Reportar  pago'],
@@ -1168,8 +1163,6 @@ class ShopAccountController extends RootFrontController
                     ],
                 ]
             );
-
-           
     }
 
     /**
@@ -1441,70 +1434,74 @@ class ShopAccountController extends RootFrontController
     }
 
 
-       public static function fechaEs($fecha) {
-                $fecha = substr($fecha, 0, 10);
-                $numeroDia = date('d', strtotime($fecha));
-                $dia = date('l', strtotime($fecha));
-                $mes = date('F', strtotime($fecha));
-                $anio = date('Y', strtotime($fecha));
-                $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-                $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-                $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-                $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-                $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-                $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-                return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+    public static function fechaEs($fecha)
+    {
+        $fecha = substr($fecha, 0, 10);
+        $numeroDia = date('d', strtotime($fecha));
+        $dia = date('l', strtotime($fecha));
+        $mes = date('F', strtotime($fecha));
+        $anio = date('Y', strtotime($fecha));
+        $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+        $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+        $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+        $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
+        return $nombredia . " " . $numeroDia . " de " . $nombreMes . " de " . $anio;
     }
 
-    
-    public function borrador_pdf($id){
+
+    public function borrador_pdf($id)
+    {
 
 
         $estado = Estado::all();
         $municipio = Municipio::all();
         $parroquia = Parroquia::all();
-        $order = ShopOrder::where('id',$id)->get();
+        $order = ShopOrder::where('id', $id)->get();
         $letraconvertir_nuber = new NumeroLetra;
 
         if (!$order) {
             return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
         }
 
-        $convenio = Convenio::where('order_id',$id)->first();
-        
+        $convenio = Convenio::where('order_id', $id)->first();
+
         $usuario =  SC_shop_customer::where('email', $order[0]['email'])->get();
         $result = $usuario->all();
-        $productoDetail = shop_order_detail::where('order_id' , $id)->get();
-        $cantidaProduc = shop_order_detail::where('order_id',$id)->count();
+        $productoDetail = shop_order_detail::where('order_id', $id)->get();
+        $cantidaProduc = shop_order_detail::where('order_id', $id)->count();
         $nombreProduct = [];
         $cuotas = [];
         $abono_inicial = [];
         $id_modalidad_pago = [];
 
-        foreach($productoDetail as $key => $p){
+        foreach ($productoDetail as $key => $p) {
             $nombreProduct = $p->name;
             $cuotas = $p->nro_coutas;
             $abono_inicial = $p->abono_inicial;
             $id_modalidad_pago = $p->id_modalidad_pago;
             $fecha_maxima_entrega = $p->fecha_maxima_entrega;
         }
-        
 
-        $nombreEstado=[];
-        $nombreparroquias =[];
-        $nombremunicipos =[];
-        foreach($result as $c){
-            foreach($estado as $estados){
-           if($estados->codigoestado ==  $c['cod_estado']){$nombreEstado = $estados->nombre;}
 
-                foreach($municipio as $municipos){
-                    if($municipos->codigomunicipio ==$c['cod_municipio'])$nombremunicipos =$municipos->nombre;
+        $nombreEstado = [];
+        $nombreparroquias = [];
+        $nombremunicipos = [];
+        foreach ($result as $c) {
+            foreach ($estado as $estados) {
+                if ($estados->codigoestado ==  $c['cod_estado']) {
+                    $nombreEstado = $estados->nombre;
                 }
-                foreach($parroquia as $parroquias){
-                    if($parroquias->codigomunicipio == $c['cod_municipio']){
-                        $nombreparroquias = $parroquias->nombre;}
+
+                foreach ($municipio as $municipos) {
+                    if ($municipos->codigomunicipio == $c['cod_municipio']) $nombremunicipos = $municipos->nombre;
                 }
-              
+                foreach ($parroquia as $parroquias) {
+                    if ($parroquias->codigomunicipio == $c['cod_municipio']) {
+                        $nombreparroquias = $parroquias->nombre;
+                    }
+                }
             }
 
             $dato_usuario = [
@@ -1519,17 +1516,17 @@ class ShopAccountController extends RootFrontController
                 'address1' => $c['address1'],
                 'address2' => $c['address2'],
                 'cedula' => $c['cedula'],
-                'cod_estado' => $nombreEstado ,
+                'cod_estado' => $nombreEstado,
                 'cod_municipio' => $nombremunicipos,
                 'cod_parroquia' => $nombreparroquias,
                 'estado_civil' => $c['estado_civil'],
-                
-                
+
+
                 [
-        
-                    'subtotal'=> $order[0]['subtotal'],
-                    'cantidaProduc'=> $cantidaProduc,
-                    'nombreProduct'=> $nombreProduct,
+
+                    'subtotal' => $order[0]['subtotal'],
+                    'cantidaProduc' => $cantidaProduc,
+                    'nombreProduct' => $nombreProduct,
                     'cuotas' => $cuotas,
                     'abono_inicial' => $abono_inicial,
                     'id_modalidad_pago' => $id_modalidad_pago
@@ -1537,214 +1534,210 @@ class ShopAccountController extends RootFrontController
                 ]
 
             ];
-
-
         }
 
-            
-
-                    $Moneda_CAMBIOBS = sc_currency_all();
-                    foreach($Moneda_CAMBIOBS as $cambio){
-                        if($cambio->name == "Bolivares"){
-                           $cod_bolibares =  $cambio->exchange_rate;
-                        }
-                    }
-
-                $borrado_html = [];
-                switch ($dato_usuario['natural_jurídica']) {
-                    case 'N':
-                        $borrado_html = $abono_inicial > 0
-                            ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
-                            : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
-                        break;
-                    case 'J':
-                        $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
-                        break;
-                }
 
 
-                $pieces = explode(" ", $dato_usuario['cedula']);
-                if ($dato_usuario[0]['id_modalidad_pago']== 3) {
-                    $mesualQuinsena = "MENSUAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-                }else {
-                    $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
-                    $mesualQuinsena = " QUINCENAL";
-                    $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " .$suma ." DE CADA MES";
-                } 
-                if ($pieces[0] == "V" ) $Nacionalidad = "VENEZOLANO(A)";
-                    else $Nacionalidad = "Extranjer(A)"; 
+        $Moneda_CAMBIOBS = sc_currency_all();
+        foreach ($Moneda_CAMBIOBS as $cambio) {
+            if ($cambio->name == "Bolivares") {
+                $cod_bolibares =  $cambio->exchange_rate;
+            }
+        }
 
-               
-
-                    $monto = $dato_usuario[0]['subtotal'];
-                    $number1 =  $dato_usuario[0]['subtotal']/$dato_usuario[0]['cuotas'];
-                    $cuotas = $dato_usuario[0]['cuotas'];
-                    if($dato_usuario[0]['abono_inicial']>0){
-                        $totalinicial=($dato_usuario[0]['abono_inicial']*$dato_usuario[0]['subtotal'])/100;
-                        $monto = $dato_usuario[0]['subtotal'];
-                        $monto = $monto - $totalinicial;
-                        $number1 =  $monto/$dato_usuario[0]['cuotas'];
-                        $cuotas_entre_monto =  $dato_usuario[0]['subtotal']/$cuotas;
-                        $number2 =  $monto*$cod_bolibares;
-                       
-                      }
-    
-
-                  
-                  $number2 =  $monto*$cod_bolibares;
-                    
-
-                  foreach($borrado_html as $replacee){
-                    $dataFind = [
-                        '/\{\{\$numero_de_convenio\}\}/',
-                        '/\{\{\$razon_social\}\}/',
-                        '/\{\{\$rif\}\}/',
-                        '/\{\{\$nombre\}\}/',
-                        '/\{\{\$apellido\}\}/',
-                        '/\{\{\$direccion\}\}/',
-                        '/\{\{\$direccion2\}\}/',
-                        '/\{\{\$estado\}\}/',
-                        '/\{\{\$municipio\}\}/',
-                        '/\{\{\$parroquia\}\}/',
-                        '/\{\{\$cedula\}\}/',
-                        '/\{\{\$estado_civil\}\}/',
-                        '/\{\{\$nacionalidad\}\}/',
-                        '/\{\{\$modalidad_de_pago\}\}/',
-                        '/\{\{\$dia_modalida_pago\}\}/',
-                        '/\{\{\$cuotas\}\}/',
-                        '/\{\{\$cuotas_total\}\}/',
-                        '/\{\{\$cuotas_entre_precio_text\}\}/',
-                        '/\{\{\$cod_mespago\}\}/',
-                        '/\{\{\$fecha_entrega\}\}/',
-                        '/\{\{\$subtotal\}\}/',
-                        '/\{\{\$bolivar_text\}\}/',
-                        '/\{\{\$bolibares_number\}\}/',
-                        '/\{\{\$nombre_de_producto\}\}/',
-                        '/\{\{\$telefono\}\}/',
-                        '/\{\{\$email\}\}/',
-                        '/\{\{\$fecha_de_hoy\}\}/',
-                        '/\{\{\$logo_waika\}\}/',
-                        '/\{\{\$logo_global\}\}/',
-                        
-                    ];
-
-         
-                  
-                    
-
-                    $dataReplace = [
-                        'numero_de_convenio'=>  "sin convenio",
-                        'razon_social' => $dato_usuario['razon_social'],
-                        'rif' => $dato_usuario['rif'],
-                        'nombre' => $dato_usuario['first_name'],
-                        'apellido' =>$dato_usuario['last_name'],
-                        'direccion' => $dato_usuario['address1'],
-                        'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
-                        'estado'=> $dato_usuario['cod_estado'],
-                        'municipio'=>$dato_usuario['cod_municipio'],
-                        'parroquia'=>$dato_usuario['cod_parroquia'],
-                        'cedula'=>$dato_usuario['cedula'],
-                        'estado_civil'=>$dato_usuario['estado_civil'],
-                        'nacionalidad'=>$Nacionalidad,
-                        $mesualQuinsena,
-                        $letraconvertir_nuber->convertir1($cuotas),
-                        number_format($cuotas),
-                        number_format($number1, 2 ,',', ' '),
-                         $letraconvertir_nuber->convertir2($number1),
-                        $cod_diaMes ,
-                        'fecha_entrega'=>request()->fecha_maxima_entrega ?? 'no aplica',
-                         $monto ,
-                         $letraconvertir_nuber->convertir2($number2),
-                         number_format($number2, 2 ,',', ' '),
-                        $dato_usuario[0]['nombreProduct'] ,
-                        $dato_usuario['phone'],
-                        $dato_usuario['email'],
-                        $this->fechaEs(date('d-m-y')),
-                        sc_file(sc_store('logo', ($storeId ?? null))),
-                        sc_file(sc_store('logo', ($storeId ?? null))) ,
-                        'logo_waika' =>sc_file(sc_store('logo', ($storeId ?? null))),
-                        'logo_global' =>sc_file(sc_store('logo', ($storeId ?? null))),
-
-                    ];
+        $borrado_html = [];
+        switch ($dato_usuario['natural_jurídica']) {
+            case 'N':
+                $borrado_html = $abono_inicial > 0
+                    ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                    : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+                break;
+            case 'J':
+                $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
+                break;
+        }
 
 
-                    $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
-                    $dataView = [
-                        'content' => $content,
-                    ];
-
-                    
+        $pieces = explode(" ", $dato_usuario['cedula']);
+        if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
+            $mesualQuinsena = "MENSUAL";
+            $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+        } else {
+            $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
+            $mesualQuinsena = " QUINCENAL";
+            $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
+        }
+        if ($pieces[0] == "V") $Nacionalidad = "VENEZOLANO(A)";
+        else $Nacionalidad = "Extranjer(A)";
 
 
 
-                }
+        $monto = $dato_usuario[0]['subtotal'];
+        $number1 =  $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
+        $cuotas = $dato_usuario[0]['cuotas'];
+        if ($dato_usuario[0]['abono_inicial'] > 0) {
+            $totalinicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
+            $monto = $dato_usuario[0]['subtotal'];
+            $monto = $monto - $totalinicial;
+            $number1 =  $monto / $dato_usuario[0]['cuotas'];
+            $cuotas_entre_monto =  $dato_usuario[0]['subtotal'] / $cuotas;
+            $number2 =  $monto * $cod_bolibares;
+        }
+
+
+
+        $number2 =  $monto * $cod_bolibares;
+
+
+        foreach ($borrado_html as $replacee) {
+            $dataFind = [
+                '/\{\{\$numero_de_convenio\}\}/',
+                '/\{\{\$razon_social\}\}/',
+                '/\{\{\$rif\}\}/',
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$direccion\}\}/',
+                '/\{\{\$direccion2\}\}/',
+                '/\{\{\$estado\}\}/',
+                '/\{\{\$municipio\}\}/',
+                '/\{\{\$parroquia\}\}/',
+                '/\{\{\$cedula\}\}/',
+                '/\{\{\$estado_civil\}\}/',
+                '/\{\{\$nacionalidad\}\}/',
+                '/\{\{\$modalidad_de_pago\}\}/',
+                '/\{\{\$dia_modalida_pago\}\}/',
+                '/\{\{\$cuotas\}\}/',
+                '/\{\{\$cuotas_total\}\}/',
+                '/\{\{\$cuotas_entre_precio_text\}\}/',
+                '/\{\{\$cod_mespago\}\}/',
+                '/\{\{\$fecha_entrega\}\}/',
+                '/\{\{\$subtotal\}\}/',
+                '/\{\{\$bolivar_text\}\}/',
+                '/\{\{\$bolibares_number\}\}/',
+                '/\{\{\$nombre_de_producto\}\}/',
+                '/\{\{\$telefono\}\}/',
+                '/\{\{\$email\}\}/',
+                '/\{\{\$fecha_de_hoy\}\}/',
+                '/\{\{\$logo_waika\}\}/',
+                '/\{\{\$logo_global\}\}/',
+
+            ];
 
 
 
 
 
-            $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
-                    ['borrado_html'=> $dataView['content']]
+            $dataReplace = [
+                'numero_de_convenio' =>  "sin convenio",
+                'razon_social' => $dato_usuario['razon_social'],
+                'rif' => $dato_usuario['rif'],
+                'nombre' => $dato_usuario['first_name'],
+                'apellido' => $dato_usuario['last_name'],
+                'direccion' => $dato_usuario['address1'],
+                'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
+                'estado' => $dato_usuario['cod_estado'],
+                'municipio' => $dato_usuario['cod_municipio'],
+                'parroquia' => $dato_usuario['cod_parroquia'],
+                'cedula' => $dato_usuario['cedula'],
+                'estado_civil' => $dato_usuario['estado_civil'],
+                'nacionalidad' => $Nacionalidad,
+                $mesualQuinsena,
+                $letraconvertir_nuber->convertir1($cuotas),
+                number_format($cuotas),
+                number_format($number1, 2, ',', ' '),
+                $letraconvertir_nuber->convertir2($number1),
+                $cod_diaMes,
+                'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
+                $monto,
+                $letraconvertir_nuber->convertir2($number2),
+                number_format($number2, 2, ',', ' '),
+                $dato_usuario[0]['nombreProduct'],
+                $dato_usuario['phone'],
+                $dato_usuario['email'],
+                $this->fechaEs(date('d-m-y')),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_waika' => sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
 
-                    )->setOptions(['defaultFont' => 'sans-serif']);
+            ];
 
-                    return $pdf->stream();
-            // $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
-            // ['borrado_html'=> $plantilla->convenio],
-            // )->setOptions(['defaultFont' => 'sans-serif']);
 
-            //  return $pdf->stream();
+            $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
+            $dataView = [
+                'content' => $content,
+            ];
+        }
+
+
+
+
+
+        $pdf = Pdf::loadView(
+            $this->templatePath . '.screen.borrador_pdf',
+            ['borrado_html' => $dataView['content']]
+
+        )->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+        // $pdf = Pdf::loadView($this->templatePath.'.screen.borrador_pdf', 
+        // ['borrado_html'=> $plantilla->convenio],
+        // )->setOptions(['defaultFont' => 'sans-serif']);
+
+        //  return $pdf->stream();
 
     }
 
 
-     public function view_QR($id){
+    public function view_QR($id)
+    {
 
-        $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->whereIn('sc_historial_pagos.payment_status',[3,4,5,6])
-        ->leftJoin('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
-        ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
-        ->leftJoin('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
-        ->leftJoin('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
-        ->leftJoin('sc_shop_customer', 'sc_shop_order.customer_id', '=', 'sc_shop_customer.id')
-        ->select('sc_historial_pagos.*', 
-            'sc_shop_order.first_name', 
-            'sc_shop_order.last_name', 
-            'sc_convenios.lote', 
-            'sc_convenios.nro_convenio', 
-            'sc_metodos_pagos.name as metodoPago', 
-            'sc_convenios.total as cb_total',  
-            'sc_shop_order_detail.name as nombre_product', 
-            'sc_shop_order_detail.qty as cantidad', 
-            'sc_shop_order_detail.total_price as tota_product', 
-            'sc_convenios.fecha_maxima_entrega', 
-            'sc_convenios.nro_coutas as cuotas_pendiente', 
-            'sc_shop_customer.address1 as direccion', 
-            'sc_shop_order.cedula', 
-            'sc_shop_order.vendedor_id')->get();
+        $orderList = HistorialPago::where('sc_historial_pagos.order_id', $id)->whereIn('sc_historial_pagos.payment_status', [3, 4, 5, 6])
+            ->leftJoin('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+            ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
+            ->leftJoin('sc_metodos_pagos', 'sc_historial_pagos.metodo_pago_id', '=', 'sc_metodos_pagos.id')
+            ->leftJoin('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
+            ->leftJoin('sc_shop_customer', 'sc_shop_order.customer_id', '=', 'sc_shop_customer.id')
+            ->select(
+                'sc_historial_pagos.*',
+                'sc_shop_order.first_name',
+                'sc_shop_order.last_name',
+                'sc_convenios.lote',
+                'sc_convenios.nro_convenio',
+                'sc_metodos_pagos.name as metodoPago',
+                'sc_convenios.total as cb_total',
+                'sc_shop_order_detail.name as nombre_product',
+                'sc_shop_order_detail.qty as cantidad',
+                'sc_shop_order_detail.total_price as tota_product',
+                'sc_convenios.fecha_maxima_entrega',
+                'sc_convenios.nro_coutas as cuotas_pendiente',
+                'sc_shop_customer.address1 as direccion',
+                'sc_shop_order.cedula',
+                'sc_shop_order.vendedor_id'
+            )->get();
 
 
-            $monto_cuota_pendiente=0;
-            $order = AdminOrder::getOrderAdmin($id);
-            $historialPago = HistorialPago::where('order_id',$id)->whereIn('payment_status',[3,4,5,6])
-            
+        $monto_cuota_pendiente = 0;
+        $order = AdminOrder::getOrderAdmin($id);
+        $historialPago = HistorialPago::where('order_id', $id)->whereIn('payment_status', [3, 4, 5, 6])
+
             ->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $id)
-        ->whereNotIn('payment_status',[3,4,5,6])
+            ->whereNotIn('payment_status', [3, 4, 5, 6])
 
-        ->orderBy('nro_coutas')->first();
+            ->orderBy('nro_coutas')->first();
 
-                $cuota_pendiente = 0;
+        $cuota_pendiente = 0;
 
-                if ($cuota_pendientes != null) {
-                    if ($cuota_pendientes->exists()) {
-                        $cuota_pendiente = $cuota_pendientes->importe_couta;
-                    }
-                }
+        if ($cuota_pendientes != null) {
+            if ($cuota_pendientes->exists()) {
+                $cuota_pendiente = $cuota_pendientes->importe_couta;
+            }
+        }
 
-            
+
         $nro_total_pagos = 0;
-      
+
 
         $convenio = Convenio::where('order_id', $id)->first();
 
@@ -1754,37 +1747,37 @@ class ShopAccountController extends RootFrontController
 
         $total_usd_pagado = 0;
         $vendedor = '';
- 
 
-        if (!$historialPago->count() >0) {
+
+        if (!$historialPago->count() > 0) {
             return redirect('/')
                 ->with(['error' => 'no se encontraron pagos reportado']);
         }
-        
+
 
         $pagado = 0;
-        $total_bs=0;
+        $total_bs = 0;
 
-    
-        foreach($orderList as $row){
+
+        foreach ($orderList as $row) {
 
 
 
             $user_roles = '';
 
-       
-           
+
+
             $nro_total_pagos++;
 
 
             $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-             $styleStatusPayment = $statusPayment;
+            $styleStatusPayment = $statusPayment;
             array_walk($styleStatusPayment, function (&$v, $k) {
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
 
 
-         
+
             $pagado += $row->importe_couta;
 
 
@@ -1801,17 +1794,16 @@ class ShopAccountController extends RootFrontController
                 // El monto está en dólares
                 $monto_dolares = round($monto, 2);
                 $monto_bolivares = round($monto * $row->tasa_cambio, 2);
-                $Referencia = $monto_bolivares."Bs";
+                $Referencia = $monto_bolivares . "Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
             } elseif ($moneda == 'Bs') {
                 // El monto está en bolívares
                 $monto_bolivares = round($monto, 2);
                 $monto_dolares = round($monto / $row->tasa_cambio, 2);
-                $Referencia = $monto_dolares."$";
+                $Referencia = $monto_dolares . "$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
-
             }
 
 
@@ -1820,7 +1812,7 @@ class ShopAccountController extends RootFrontController
                 'MONTO' => $row->importe_couta . '$',
                 'Reportado' => $Reportado ?? 0,
                 'DIVISA' => $diVisA,
-                'CONVERSION' => $Referencia  ,
+                'CONVERSION' => $Referencia,
                 'tasa_cambio' => $row->tasa_cambio ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
                 'FORMA_DE_PAGO' => $row->metodo_pago->name ?? '',
@@ -1828,8 +1820,6 @@ class ShopAccountController extends RootFrontController
                 'FECHA_DE_PAGO' => $fecha_formateada
 
             ];
-
-
         } //fin foreach
 
         $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
@@ -1850,25 +1840,23 @@ class ShopAccountController extends RootFrontController
         $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
         $data['vendedor'] = $user_roles->name ?? '';
         $data['cedula'] = $order->cedula ?? '';
-        $data['cuota_pendiente'] =$cuota_pendiente;
+        $data['cuota_pendiente'] = $cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
-        $data['total_bs'] = $total_bs ;
-        
+        $data['total_bs'] = $total_bs;
+
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas - $nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas - $nro_total_pagos);
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';
         $data['order'] =  $cuota_pendiente;
 
         $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? $this->fechaEs($order->fecha_maxima_entrega) : '';
-               
-    
 
-                return view($this->templatePath.'.screen.vista_qr')->with($data);
+
+
+        return view($this->templatePath . '.screen.vista_qr')->with($data);
     }
-
-
 }

@@ -41,6 +41,44 @@ CREATE TABLE `sc_tipo_tarjetas` (
   `updated_at` timestamp NULL DEFAULT NULL,
     UNIQUE KEY `id` (`id`) 
 ) 
+ALTER TABLE sc_rifas_clientes ADD COLUMN nro_referencia varchar(300) CHARACTER DEFAULT NULL;
+ALTER TABLE sc_rifas_clientes ADD COLUMN codigo_banco varchar(300) CHARACTER DEFAULT NULL;
+DROP TABLE sc_rifas;
+CREATE TABLE `sc_rifas` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+ `product_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT NULL,
+ `precio` decimal(15,2) DEFAULT '0.00',
+ `total_numeros` bigint NOT NULL DEFAULT '0',
+   `premio` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+     `nombre_solteo` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fecha_solteo` timestamp NULL DEFAULT NULL,
+   `lugar_solteo` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `status` int NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+
+    UNIQUE KEY `id` (`id`) 
+) 
+
+CREATE TABLE `sc_rifas_clientes` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `rifa_id`  bigint(20)  NOT NULL,
+ `customer_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT NULL,
+  `vendor_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  DEFAULT NULL,
+ 
+   `forma_pago_id`  bigint(20)  NOT NULL,
+  `nombre_cliente` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `email` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `telefono` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cedula` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `numero_rifa`  bigint(20)  NOT NULL,
+
+   `status` int NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+
+    UNIQUE KEY `id` (`id`) 
+) 
 DROP TABLE sc_convenios;
 CREATE TABLE `sc_convenios` (
   `id`  bigint(20)  NOT NULL AUTO_INCREMENT,

@@ -69,47 +69,57 @@ $layout_page = shop_profile
     </div>
   </div>
 
-  <div class="card mb-5">
+  <div class="card mb-1">
     <form action="{{route('post_reporte_pago')}}"  method="post" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="id_pago" value="{{$id_pago}}">
       <div class="card-header">
         <h5>{{ $title }}</h5>
       </div>
-      @if($historial_pago)
-        <div class="card-body">
-          <h5 class="card-title">
-            Monto cuota: {{ $historial_pago->importe_couta }}$ 
-          </h5>
-          <h6 class="card-subtitle text-danger"> Vence: {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</h6>
+   
+
+
+      <div class="row justify-content-center align-items-center">
+    
+ 
+        <div class="col-md-8">
+          <div class="card-body">
+            @if (isset($lisPago))
+              @if (sc_config('customer_Transferencia'))
+                <div class="row justify-content-center align-items-center">
+            
+                  <div  class="col-12 col-lg-6 p-1">
+                    @if (sc_config('customer_pago_movil'))
+                      <ul class="list-group">
+                        <li class="list-group-item text-center"> @if($historial_pago)
+                          <h5 class="card-title">
+                            Monto cuota: {{ $historial_pago->importe_couta }}$ 
+                          </h5>
+                          <h6 class="card-subtitle text-danger"> Vence: {{ date('d-m-Y',strtotime($historial_pago->fecha_venciento)); }}</h6>
+                          @endif</li>
+                  
+                        <li class="list-group-item text-center">Datos Pago Movil</li>
+                          <li class="list-group-item">Banco de Venezuela</li>
+                          <li class="list-group-item">Teléfono: 04126354038</li>
+                          <li class="list-group-item">RIF: J501450536 </li>
+                      </ul>
+                    @endif
+                  </div>
+                </div>
+              @endif  
+            @endif
+          </div>
+
         </div>
-      @endif
-      
-      <div class="card-body">
-        @if (isset($lisPago))
-          @if (sc_config('customer_Transferencia'))
-            <div class="row justify-content-center align-items-center">
-        
-              <div  class="col-12 col-lg-6 p-1">
-                @if (sc_config('customer_pago_movil'))
-                  <ul class="list-group">
-                    <li class="list-group-item text-center">Datos Pago Movil</li>
-                      <li class="list-group-item">Banco: {{sc_language_render('customer.banco2')}}</li>
-                      <li class="list-group-item">Telefono: 04126354038</li>
-                      <li class="list-group-item">RIF: J501450536 </li>
-                  </ul>
-                @endif
-              </div>
-            </div>
-          @endif  
-        @endif
       </div>
+      
+
       <div class="card-body">
           <div class="row g-3">
 
             <div class="col-md-6">
-              <label for="telefono_origen">Telefono del Pagador</label>
-              <input type="text" class="form-control"  required name="telefono_origen" id="telefono_origen" placeholder="telefono">
+              <label for="telefono_origen">Teléfono del Pagador</label>
+              <input type="text" class="form-control"  value="{{ old('telefono_origen') }}"   required name="telefono_origen" id="telefono_origen" placeholder="telefono">
               @error('telefono_origen')
                   <small style="color: red">{{$message}}</small>
               @enderror
@@ -130,7 +140,7 @@ $layout_page = shop_profile
                 <option class="V">V</option>
                 <option class="J">J</option>
                 </select>
-                <input type="text" class="form-control"  required name="cedula_origen" id="cedula_origen" placeholder="Cedula">
+                <input type="text" class="form-control" value="{{ old('cedula_origen') }}"  required name="cedula_origen" id="cedula_origen" placeholder="Cedula">
               </div>
               
          
@@ -158,7 +168,7 @@ $layout_page = shop_profile
 
             <div class="col-md-6">
               <label for="inputEmail4">Nro de referencia</label>
-              <input type="text" class="form-control"  required name="referencia" id="referencia" placeholder="referencia">
+              <input type="text" class="form-control" value="{{ old('referencia') }}"   required name="referencia" id="referencia" placeholder="referencia">
               @error('referencia')
                   <small style="color: red">{{$message}}</small>
               @enderror
@@ -166,45 +176,45 @@ $layout_page = shop_profile
           
             <div class="col-md-6">
               <label for="inputEmail4">Fecha de pago</label>
-              <input type="date" class="form-control" required value="@php echo date('Y-m-d')  @endphp" name="fecha" id="fecha" placeholder="referencia">
+              <input type="date" class="form-control" required value="{{ old('fecha', date('Y-m-d')) }}" name="fecha" id="fecha" placeholder="referencia">
             </div>
             <div class="col-md-6">
               <label for="forma_pago">Monto Pagado</label>
-              <input step="any" type="number" step="any" required class="form-control"  name="monto" id="monto" placeholder="Monto">
+              <input step="any" type="number" step="any" required class="form-control"   value="{{ old('monto') }}"   name="monto" id="monto" placeholder="Monto">
               @error('monto')
                 <small style="color: red">{{$message}}</small>
               @enderror
             </div>
 
-            <div class="col-md-6">
-              <label for="forma_pago">Divisa</label>
-              <select id="divisa" class="form-control" required name="moneda" >
+                {{--   <div class="col-md-6">
+       
+              <select id="divisa" class="form-control" required name="moneda"
+               >
                 <option value="Bs" selected="" data-exchange_rate="31"> Bs</option>
-               {{-- @foreach(sc_currency_all() as $moneda)
-                <option  value="{{$moneda->code}}"  {!! $moneda->code =='Bs' ? 'selected' :''  !!} data-exchange_rate="{{$moneda->exchange_rate}}" > {{$moneda->code}}</option>
-                @endforeach --}}
-              </select>       
+         
+              </select>      --}} 
               @error('divisa')
                 <small style="color: red">{{$message}}</small>
               @enderror
             </div>
 
-            <div class="col-md-6">
+        {{--      <div class="col-md-6">
               <label for="forma_pago">Tasa de cambio</label>
               <input id="tipo_cambio" class="form-control" type="text" required name="tipo_cambio" readonly value="{{sc_currency_all()[1]->exchange_rate}}">     
               @error('tipo_cambio')
                 <small style="color: red">{{$message}}</small>
               @enderror
-            </div>   
+            </div>   --}} 
        
-            <div class="col-md-6">
+                {{--    <div class="col-md-6">
                 <label for="forma_pago">Adjunta  referencia</label>
                 <input type="file" class="form-control-file" id="capture" name="capture" required="">
                 @error('capture')
                     <small style="color: red">{{$message}}</small>
                 @enderror
-            </div>
+            </div> --}} 
         
+            <br>
             <div class="col">
               <input type="hidden" name="order_id" value="{{ $order->id}}">
               <input type="hidden" name="id_detalle_orden" value="{{ isset($order->details[0]) ? $order->details[0]->id  : 0}}">

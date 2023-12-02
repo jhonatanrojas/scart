@@ -23,8 +23,9 @@ use App\Models\SC_shop_customer;
 use App\Models\shop_order_detail;
 use SCart\Core\Admin\Models\AdminUser;
 use App\Models\TipoCambioBcv;
-use SCart\Core\Front\Models\ShopOrderTotal;
 use SCart\Core\Front\Models\ShopCurrency;
+use SCart\Core\Front\Models\ShopOrderTotal;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use SCart\Core\Front\Models\ShopPaymentStatus;
@@ -378,8 +379,15 @@ class HistorialPagosController extends RootAdminController
         $cedula= $pago->cedula_origen;
         $dto = new ConciliacionMovimientoDTO($cedula,$pago->telefono_origen, $telefono_pago_movil,
         $pago->referencia, $fecha_pago, number_format($pago->importe_pagado,2), $pago->codigo_banco);
- 
-      return $service->enviar($dto);
+
+        
+        try {
+         
+            return $service->enviar($dto);
+        } catch (\Exception $th) {
+         return   ['error' =>$th->getMessage()];
+        }
+
     }
     public function detalle()
     {
@@ -1643,15 +1651,6 @@ class HistorialPagosController extends RootAdminController
         $pago = HistorialPago::where('id', $request->id_pago)->first();
         // Obtén el cliente a partir de su ID
         $client = SC_shop_customer::find($pago->customer_id);
-
-
-        $estatus_pago = array(
-            '1' => 'NO APAGADO',
-            '2' => 'PAGO REPORTADO',
-            '3' => 'PAGO PENDIENTE',
-            '4' => 'PAGO EN MORA',
-            '5' => 'PAGADO'
-        );
 
         //   $Estatus = isset($estatus_pago[$pago->payment_status]) ? $estatus_pago[$pago->payment_status] : '';
 

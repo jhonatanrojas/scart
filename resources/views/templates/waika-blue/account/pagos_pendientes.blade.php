@@ -22,10 +22,7 @@ $layout_page = shop_profile
       <div class="col-12">
         <div class="d-flex flex-column flex-lg-row justify-content-between mb-3">
           <b class="title-store">{{ $title }}</b>
-          <span>
-            <b>{{ sc_language_render('order.order_status') }}:</b>
-            <span class="badge text-bg-{{ $mapStyleStatus[$order->status]??'' }}">{{ $statusOrder[$order->status] }} - {{ $order->mensaje }}</span>
-          </span>
+     
         </div>
       </div>
       <div class="col-12">
@@ -56,16 +53,14 @@ $layout_page = shop_profile
                       <th>No.</th>
                       <th>Monto</th>
                            <th>Divisa</th>
-                      <th class="text-center">Vence</th>
-                      <th class="text-center">estatus del pago</th>
+                      <th class="text-center">Fecha de Vencimiento</th>
+                      <th class="text-center">Estatus del pago</th>
                       @if($order->modalidad_de_compra==0)
                       <th>
                         {{ sc_language_render('common.created_at') }}
                       </th>
                        @endif
-                      @if($order->modalidad_de_compra>=1)
-                      <th class="text-center">Tasa de cambio</th>
-                      @endif
+                   
                       <th>Acciones</th>
                       
                     </tr>
@@ -91,7 +86,7 @@ foreach (sc_currency_all()  as $moneda) {
                           @endphp
                         <td>
                           <span class="item_21_id">
-                            {{ $n }}
+                            {{ $historial->nro_coutas; }}
                           </span>
                         </td>
                         <td>
@@ -100,7 +95,7 @@ foreach (sc_currency_all()  as $moneda) {
                      
                         <td>{{'USD' }}</td>
                         <td>
-                          <span class="item_21_sku">{!! $historial->fecha_vencimiento !!}
+                          <span class="item_21_sku">{!! $historial->fecha_venciento !!}
                           </span>
                         </td> 
                         <td>
@@ -108,11 +103,7 @@ foreach (sc_currency_all()  as $moneda) {
                               {{ $historial->estatus->name }}
                           </span>
                         </td>
-                        @if($order->modalidad_de_compra>=1)
-                          <td colspan="1">
-                           {!!   $monedaBs->exchange_rate !!} Bs
-                          </td>
-                        @endif
+                     
                         
                         @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2  && $historial->payment_status !=5)
                           <td>   
@@ -138,7 +129,7 @@ foreach (sc_currency_all()  as $moneda) {
                                   <div class="row mb-5">
                                     <div class="col-md-12">
                                 
-                                        <button type="button"  href="{{ route('biopago',['id' => $order->id ,'id_pago'=>$historial->id])}}"  id="bioPago" class="btn btn-danger btn-block">
+                                        <button type="button"  href="{{ route('biopago',['id' => $order->id ,'id_pago'=>$historial->id])}}"  id="bioPago" class="btn btn-danger btn-block btn-lg">
                                           <span class="d-flex">
                                             <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
                                             Biopago BDV
@@ -151,7 +142,7 @@ foreach (sc_currency_all()  as $moneda) {
                                   <div class="row  mb-5">
                                     <div class="col-12">
                                       <div class="puntoDeventa">
-                                        <button class="btn btn-danger btn-block" id="py-client" onclick="puntoYabioPago('{{$historial->importe_couta}}')">
+                                        <button class="btn btn-danger btn-block btn-lg" id="py-client" onclick="puntoYabioPago('{{$historial->importe_couta}}')">
                                           <span class="d-flex">
                                             <img width="15px" class="img-fluid" src="/images/BiopagoBDV-logo.png" alt="Biopago">
                                             PuntoYaBDV
@@ -160,23 +151,12 @@ foreach (sc_currency_all()  as $moneda) {
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="row mb-5">
-                                    <div class="col-12">
-                                      <div class="btn__transferencia">
-                                        <button type="button" onclick="transferencia({{$historial->id}})" id="tranferencia" class="btn btn-info btn-block">
-                                          <span class="d-flex">
-                                            <img width="20px" class="img-fluid" src="/images/tranfenrencia.png" alt="Biopago">
-                                            Transferencia
-                                          </span>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
+                                
                               
                                   <div class="row mb-5 ">
                                     <div class="col-12">
                                       <div class="btn__pagomovil">
-                                        <button type="button" id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning btn-block">
+                                        <button type="button" id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning btn-block btn-lg">
                                           <span class="d-flex">
                                             <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
                                             Pago movil

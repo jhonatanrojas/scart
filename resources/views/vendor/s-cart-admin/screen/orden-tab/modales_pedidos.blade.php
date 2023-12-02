@@ -178,6 +178,30 @@
                 <div class="modal-body">
                     <div class="form-row">
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="monto">Codigo Banco: </label>
+                                <input value="" class="form-control   " type="text"
+                                    name="codigo_banco" id="codigo_banco" placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="cedula_pagador">Cedula: </label>
+                                <input value="" class="form-control   " type="text"
+                                    name="cedula_pagador" id="cedula_pagador" placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="telefono_pagador">Telefono: </label>
+                                <input value="" class="form-control   " type="text"
+                                    name="telefono_pagador" id="telefono_pagador" placeholder="" readonly>
+                            </div>
+                        </div>
+
+
+
 
                         <div class="form-group col-md-6">
                             <label for="forma_pago">Forma de pago</label>
@@ -299,7 +323,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
 
 
-                    <button type="submit" class="btn btn-primary">Editar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
 
                 </div>
             </div>

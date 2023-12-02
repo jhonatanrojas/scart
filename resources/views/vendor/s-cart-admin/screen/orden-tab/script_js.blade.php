@@ -83,7 +83,10 @@
                 $("#idpago").val(data.id)
                 $("#order_id").val(data.order_id)
 
-
+                
+                $("#codigo_banco").val(data.codigo_banco)
+                $("#cedula_pagador").val(data.cedula_origen)
+                $("#telefono_pagador").val(data.telefono_origen)
 
                 $("#mforma_pago").val(data.metodo_pago_id)
                 $("#mreferencia").val(data.referencia)
