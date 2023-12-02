@@ -14,7 +14,7 @@ use Validator;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Catalogo\MetodoPago;
-
+use App\Models\Catalogo\Banco;
 class RifaController extends RootAdminController
 {
 
@@ -195,12 +195,14 @@ class RifaController extends RootAdminController
     {
 
         $modalidad = MetodoPago::all();
+        $bancos = Banco::all();
         $id_rifa = request('id');
         if (!$id_rifa) {
             return redirect()->back();
         }
 
        
+      
         $rifas = RifaCliente::where('rifa_id', $id_rifa)->pluck('numero_rifa')->toArray();
         $rifa =Rifa::find($id_rifa);
 
@@ -208,6 +210,7 @@ class RifaController extends RootAdminController
             'title'             => sc_language_render('Nuevo numero rifa -'. $rifa->nombre_solteo),
             'subTitle'          => '',
             'rifa'=> $rifa,
+            'bancos'=>$bancos,
             'rifas'=>  $rifas,
             'id_rifa' => $id_rifa,
             'modalidad' => $modalidad,
@@ -241,6 +244,8 @@ class RifaController extends RootAdminController
         ]);
 
 
+       
+
         if ($validator->fails()) {
             // dd($validator->messages());
             return redirect()->back()
@@ -249,6 +254,16 @@ class RifaController extends RootAdminController
         }
         $dataOrigin = (object)$dataOrigin;
 
+        if($dataOrigin->forma_pago_id==4 || $dataOrigin->forma_pago_id==2){
+            $tiene_referencia= RifaCliente::where('codigo_banco', $dataOrigin->codigo_banco)
+            ->where('nro_referencia', $dataOrigin->nro_referencia)
+            ->exists();
+
+            if( $tiene_referencia){
+                return redirect()->back()->withInput()->with(['warning' => "Lo sentimos, el numero de referencia $dataOrigin->nro_referencia  ya se encuentra registrado "]);
+            }
+          
+        }
 
         //  $fechaFormateada = Carbon::createFromFormat('d/m/Y', $dataOrigin->fecha_de_vencimiento)->format('Y-m-d');
         $tiene_rifa = RifaCliente::where('numero_rifa', $dataOrigin->numero_rifa)
@@ -270,6 +285,8 @@ class RifaController extends RootAdminController
             'cedula' => $dataOrigin->cedula,
             'email' => $dataOrigin->email,
             'forma_pago_id' => $dataOrigin->forma_pago_id,
+            'nro_referencia' => $dataOrigin->nro_referencia,
+            'codigo_banco' => $dataOrigin->codigo_banco,
 
 
         ];
@@ -344,9 +361,20 @@ class RifaController extends RootAdminController
         $classRifa =  Rifa::find($id);
         $rifas = RifaCliente::where('rifa_id', $id)->paginate(50);
 
+        $dataRifa=[];
+        foreach ($rifas as $key => $value) {
+
+         $usuario=   AdminUser::find($value->vendor_id);
+ 
+         $value->vendedor =$usuario->name ?? '';
+            # code...
+            $dataRifa[]= $value;
+        }
+
+ 
         $dataTarjeta = [
             "title"         => 'Detatalle de la Rifa',
-            "rifas" =>$rifas,
+            "rifas" =>$dataRifa,
             "id" => $id,
 
             'rifa'         => $classRifa

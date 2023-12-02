@@ -121,6 +121,9 @@
             <th scope="col">Telefono</th>
             <th scope="col">Cedula</th>
             <th scope="col">Email</th>
+            <th scope="col">Nro de Referencia</th>
+            <th scope="col">Codigo Banco</th>
+            <th scope="col">Vendedor</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -139,11 +142,14 @@
                 <td>{{$rif->telefono}}</td>
                 <td>{{$rif->cedula}}</td>
                 <td>{{$rif->email}}</td>
+                <td>{{$rif->nro_referencia}}</td>
+                <td>{{$rif->codigo_banco}}</td>
+                <td>{{$rif->vendedor}}</td>
                 <td><a class="btn btn-info" target="_blank" href="{{route('rifa.pdf',['id'=>$rifa->id,'numero_rifa'=>$rif->numero_rifa])}}">Descargar Recibo</a></td>
               </tr>
             @endforeach
      
-      
+       
      
         </tbody>
       </table>

@@ -79,6 +79,113 @@
                                 </div>
 
                             </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group   {{ $errors->has('forma_pago_id') ? ' text-red' : '' }}">
+                                    <label for="forma_pago_id" class=" col-form-label">Modalidad de Pago</label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+                                        </div>
+
+
+                                        <select name="forma_pago_id" class="form-control" id="forma_pago_id">
+                                            @foreach ($modalidad as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+
+
+
+                                        </select>
+
+
+                                    </div>
+                                    @if ($errors->has('forma_pago_id'))
+                                        <span class="text-sm">
+                                            {{ $errors->first('forma_pago_id') }}
+                                        </span>
+                                    @endif
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group  {{ $errors->has('nro_referencia') ? ' text-red' : '' }}">
+                                    <label for="nro_referencia" class="col-sm-4 col-form-label">Numero de referencia </label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                        <input type="text" id="nro_referencia" name="nro_referencia"
+                                            value="{{ old('nro_referencia') }}" class="form-control nro_referencia "
+                                            placeholder="" />
+                                    </div>
+                                    @if ($errors->has('nro_referencia'))
+                                        <span class="text-sm">
+                                            {{ $errors->first('nro_referencia') }}
+                                        </span>
+                                    @endif
+
+                                </div>
+                            </div>
+
+                      
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group  {{ $errors->has('codigo_banco') ? ' text-red' : '' }}">
+                                    <label for="last_name" class="col-sm-2 col-form-label">Banco</label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        </div>
+                                        
+                                        <select name="codigo_banco" id="codigo_banco" class="form-control">
+                                            @foreach ($bancos as  $banco)
+                                                <option value="{{$banco->codigo}}">{{$banco->nombre}}</option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
+                                    @if ($errors->has('codigo_banco'))
+                                        <span class="text-sm">
+                                            {{ $errors->first('codigo_banco') }}
+                                        </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
+                            
+                            <div class="col-md-6">
+
+                                <div class="form-group   {{ $errors->has('email') ? ' text-red' : '' }}">
+                                    <label for="fecha_solteo" class=" col-form-label">Email</label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
+                                        </div>
+                                        <input style="width: 150px" type="email" id="email" name="email"
+                                            value="{{ old('email') }}" class="form-control email" placeholder="" />
+                                    </div>
+                                    @if ($errors->has('email'))
+                                        <span class="text-sm">
+                                            {{ $errors->first('email') }}
+                                        </span>
+                                    @endif
+
+                                </div>
+
+
+                            </div>
                         </div>
                         <input type="hidden" name="id_rifa" id="id_rifa" value="{{ $id_rifa }}">
                         <div class="row">
@@ -127,61 +234,7 @@
 
                             </div>
 
-                            <div class="col-md-6">
-
-                                <div class="form-group   {{ $errors->has('email') ? ' text-red' : '' }}">
-                                    <label for="fecha_solteo" class=" col-form-label">Email</label>
-
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
-                                        </div>
-                                        <input style="width: 150px" type="email" id="email" name="email"
-                                            value="{{ old('email') }}" class="form-control email" placeholder="" />
-                                    </div>
-                                    @if ($errors->has('email'))
-                                        <span class="text-sm">
-                                            {{ $errors->first('email') }}
-                                        </span>
-                                    @endif
-
-                                </div>
-
-
-                            </div>
-                            <div class="col-md-6">
-
-                                <div class="form-group   {{ $errors->has('forma_pago_id') ? ' text-red' : '' }}">
-                                    <label for="forma_pago_id" class=" col-form-label">Modalidad de Pago</label>
-
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
-                                        </div>
-
-
-                                        <select name="forma_pago_id" class="form-control" id="forma_pago_id">
-                                            @foreach ($modalidad as $value)
-                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                            @endforeach
-
-
-
-                                        </select>
-
-
-                                    </div>
-                                    @if ($errors->has('forma_pago_id'))
-                                        <span class="text-sm">
-                                            {{ $errors->first('forma_pago_id') }}
-                                        </span>
-                                    @endif
-
-                                </div>
-
-
-                            </div>
-
+                            
                         </div>
 
 
