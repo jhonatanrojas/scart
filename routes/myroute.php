@@ -103,7 +103,9 @@ Route::group(['prefix' => 'sc_admin/rifas'], function () use ($nameSpaceAdminPro
     Route::get('/create', $nameSpaceAdminProduct . '\RifaController@create')->name('rifa.create');
     Route::get('/nueva-rifa', $nameSpaceAdminProduct . '\RifaController@createRifaCliente')->name('rifa.nueva_rifa');
     Route::post('/crear_rifa', $nameSpaceAdminProduct . '\RifaController@postCreateCliente')->name('rifa.postCreateCliente');
-
+    Route::post('/edit-rifa-cliente/{id_cliente}', $nameSpaceAdminProduct . '\RifaController@postEditCliente')->name('rifa.postEditCliente');
+    
+    Route::get('/edit-rifa/{id_cliente}', $nameSpaceAdminProduct . '\RifaController@editRifaCliente')->name('rifa.editRifaCliente');
     Route::post('/create', $nameSpaceAdminProduct . '\RifaController@postCreate')->name('rifa.postCreate');
     Route::get('/detail/{id}', $nameSpaceAdminProduct . '\RifaController@detail')->name('rifa.detail');
     Route::get('/rifa_pdf/{id}', $nameSpaceAdminProduct . '\RifaController@rifa_pdf')->name('rifa.pdf');

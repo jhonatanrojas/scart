@@ -209,8 +209,52 @@ class RifaController extends RootAdminController
         $data = [
             'title'             => sc_language_render('Nuevo numero rifa -'. $rifa->nombre_solteo),
             'subTitle'          => '',
+            'accion'=>'crear',
             'rifa'=> $rifa,
             'bancos'=>$bancos,
+            'rifas'=>  $rifas,
+            'id_rifa' => $id_rifa,
+            'modalidad' => $modalidad,
+            'title_description' => sc_language_render(''),
+            'icon'              => 'fa fa-plus',
+        ];
+
+        $users = AdminCustomer::getListAll();
+
+        $paymentMethod = [];
+        $shippingMethod = [];
+        return view($this->templatePathAdmin . 'rifas.add_rifa')
+            ->with($data);
+    }
+
+
+    
+    public function editRifaCliente($id_cliente)
+    {
+
+        $modalidad = MetodoPago::all();
+        $bancos = Banco::all();
+        $id_rifa = request('id');
+        if (!$id_rifa) {
+            return redirect()->back();
+        }
+
+       
+      
+        $rifas = RifaCliente::where('rifa_id', $id_rifa)->pluck('numero_rifa')->toArray();
+        $datoRifa = RifaCliente::where('rifa_id', $id_rifa)
+        ->where('id',$id_cliente)->first();
+    
+        $rifa =Rifa::find($id_rifa);
+     
+        $data = [
+            'title'             => sc_language_render('Editar rifa -'. $rifa->nombre_solteo),
+            'subTitle'          => '',
+            'accion'=>'edit',
+            'rifa'=> $rifa,
+            'bancos'=>$bancos,
+            'datoRifa'=>$datoRifa,
+            'id_cliente_rifa'=>$id_cliente,
             'rifas'=>  $rifas,
             'id_rifa' => $id_rifa,
             'modalidad' => $modalidad,
@@ -302,6 +346,70 @@ class RifaController extends RootAdminController
 
         return redirect()->route('rifa.detail', ['id' => $dataOrigin->id_rifa ? $dataOrigin->id_rifa : 'not-found-id'])->with('success', sc_language_render('action.create_success'));
     }
+
+    
+    public function postEditCliente($id)
+    {
+
+
+        $dataOrigin = request()->all();
+
+        $validator = Validator::make($dataOrigin, [
+            'forma_pago_id' => 'required',
+            'nombre_cliente' => 'required',
+            'email' => 'required',
+            'telefono' => 'required',
+            'cedula' => 'required',
+            'numero_rifa' => 'required'
+
+        ]);
+
+
+       
+
+        if ($validator->fails()) {
+            // dd($validator->messages());
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $dataOrigin = (object)$dataOrigin;
+
+
+        //  $fechaFormateada = Carbon::createFromFormat('d/m/Y', $dataOrigin->fecha_de_vencimiento)->format('Y-m-d');
+        $tiene_rifa = RifaCliente::where('numero_rifa', $dataOrigin->numero_rifa)
+            ->where('rifa_id', $dataOrigin->id_rifa)
+            ->exists();
+
+     
+        $dataTarjeta = [
+       
+
+            'nombre_cliente' => $dataOrigin->nombre_cliente,
+            'telefono' => $dataOrigin->telefono,
+            'numero_rifa'  => $dataOrigin->numero_rifa,
+            'cedula' => $dataOrigin->cedula,
+            'email' => $dataOrigin->email,
+            'forma_pago_id' => $dataOrigin->forma_pago_id,
+            'nro_referencia' => $dataOrigin->nro_referencia,
+            'codigo_banco' => $dataOrigin->codigo_banco,
+
+
+        ];
+
+
+        $rifa =  RifaCliente::where('id',$id)->update($dataTarjeta);
+
+
+
+
+        # code...
+
+
+        return redirect()->route('rifa.detail', ['id' => $dataOrigin->id_rifa ? $dataOrigin->id_rifa : 'not-found-id'])->with('success', sc_language_render('action.create_success'));
+    }
+
+
     public function postCreate()
     {
 
@@ -359,7 +467,7 @@ class RifaController extends RootAdminController
 
 
         $classRifa =  Rifa::find($id);
-        $rifas = RifaCliente::where('rifa_id', $id)->paginate(50);
+        $rifas = RifaCliente::where('rifa_id', $id)->orderBy('numero_rifa')->paginate(50);
 
         $dataRifa=[];
         foreach ($rifas as $key => $value) {
