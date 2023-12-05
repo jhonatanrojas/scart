@@ -111,7 +111,7 @@ font-size: 2.8rem;
 
 <div class="card-container">
     <img class="qr-imagen"   src="{{ asset('qrcodes/qr-code.png') }}" alt="Código QR"> 
-  <img src="{{ asset('images/rifa-waika.png') }}" alt="Tarjeta Premium" class="card-image">
+  <img src="{{ asset($dataRifa->imagen_rifa) }}" alt="Tarjeta Premium" class="card-image">
 
 
 

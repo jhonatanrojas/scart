@@ -31,7 +31,7 @@
                 <!-- form start -->
                 <div class="card-body">
                     <form action="{{ sc_route_admin('rifa.postCreate') }}" method="post" accept-charset="UTF-8"
-                        class="form-horizontal" id="form-main">
+                        class="form-horizontal" id="form-main" enctype="multipart/form-data">
 
 
                         <div class="row">
@@ -171,6 +171,13 @@
                                 </div>
 
 
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Imagen de fondo del Recibo </label>
+                                    <input type="file" class="form-control-file" id="ricibo" name="imagen_recibo">
+                                  </div>
                             </div>
 
                         </div>

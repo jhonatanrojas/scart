@@ -69,6 +69,9 @@
 
             </table>
         </div>
+        <div class="col-md-6">
+            <img src="{{ asset($rifa->imagen_rifa) }}" alt="Tarjeta Premium" class="card-image" width="530px">
+        </div>
 
 
 

@@ -17,6 +17,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Catalogo\MetodoPago;
 use App\Models\Catalogo\Banco;
 use App\Models\AdminRole;
+use Illuminate\Http\Request;
 class RifaController extends RootAdminController
 {
 
@@ -413,7 +414,7 @@ class RifaController extends RootAdminController
     }
 
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
 
 
@@ -426,7 +427,8 @@ class RifaController extends RootAdminController
             'lugar_solteo' => 'required',
 
             'premio' => 'required',
-            'total_numeros' => 'required'
+            'total_numeros' => 'required',
+            'imagen_recibo' => 'required|mimes:pdf,jpg,jpge,png|max:2048',
 
         ], [
             'fecha_solteo.required' => 'Fecha del Sorteo es requerido',
@@ -435,12 +437,29 @@ class RifaController extends RootAdminController
         ]);
 
 
+        
         if ($validator->fails()) {
             // dd($validator->messages());
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
+
+
+        $path_archivo = '';
+      
+        $imagen_recibo =$request->imagen_recibo;
+
+        if ($imagen_recibo) {
+            $fileName = time() . '.' . $imagen_recibo->extension();
+     
+           $path_archivo  = 'images/rifas' . '/' . $fileName;
+            $imagen_recibo->move(public_path('images/rifas/'), $fileName);
+
+        }
+
+
+  
         $dataOrigin = (object)$dataOrigin;
 
 
@@ -453,7 +472,8 @@ class RifaController extends RootAdminController
             'fecha_solteo'  => $dataOrigin->fecha_solteo,
             'nombre_solteo' => $dataOrigin->nombre_solteo,
             'lugar_solteo' => $dataOrigin->lugar_solteo,
-            'total_numeros' => $dataOrigin->total_numeros
+            'total_numeros' => $dataOrigin->total_numeros,
+            'imagen_rifa' => $path_archivo
 
         ];
 

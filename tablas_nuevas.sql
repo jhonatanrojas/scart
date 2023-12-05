@@ -43,6 +43,7 @@ CREATE TABLE `sc_tipo_tarjetas` (
 ) 
 ALTER TABLE sc_rifas_clientes ADD COLUMN nro_referencia varchar(300) CHARACTER DEFAULT NULL;
 ALTER TABLE sc_rifas_clientes ADD COLUMN codigo_banco varchar(300) CHARACTER DEFAULT NULL;
+ALTER TABLE sc_rifas ADD COLUMN imagen_rifa varchar(300) CHARACTER DEFAULT NULL;
 DROP TABLE sc_rifas;
 CREATE TABLE `sc_rifas` (
   `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
@@ -57,6 +58,14 @@ CREATE TABLE `sc_rifas` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
 
+    UNIQUE KEY `id` (`id`) 
+) 
+
+
+CREATE TABLE `sc_rifas_images` (
+  `id`  bigint(20)  NOT NULL AUTO_INCREMENT,
+  `rifa_id`  bigint(20)  NOT NULL,
+   `imagen` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     UNIQUE KEY `id` (`id`) 
 ) 
 
