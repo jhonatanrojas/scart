@@ -64,7 +64,7 @@ Route::group(['prefix' => 'product'], function () use ($nameSpaceAdminProduct) {
     Route::post('/clone', $nameSpaceAdminProduct . '\AdminProductController@cloneProduct')->name('admin_product.clone');
 });
 
-Route::group(['prefix' => 'sc_admin/order'], function () use ($nameSpaceAdminProduct) {
+Route::group(['prefix' => 'sc_admin/order','middleware' => SC_ADMIN_MIDDLEWARE], function () use ($nameSpaceAdminProduct) {
 
     Route::get('/detalle_pago', 'App\Admin\Controllers\HistorialPagosController@detalle')->name('historial_pagos.detalle');
     Route::get('/obtener_pago', 'App\Admin\Controllers\HistorialPagosController@obtener_pago')->name('obtener_pago');
@@ -96,17 +96,17 @@ Route::group(['prefix' => 'sc_admin/tarjetas'], function () use ($nameSpaceAdmin
     Route::get('/obtenerTarjeta', $nameSpaceAdminProduct . '\TarjetaController@obtenerTarjeta')->name('tarjetas.obtenerTarjeta');
 });
 
-
-Route::group(['prefix' => 'sc_admin/rifas'], function () use ($nameSpaceAdminProduct) {
+ 
+Route::group(['prefix' => 'sc_admin/rifas', 'middleware' => SC_ADMIN_MIDDLEWARE], function () use ($nameSpaceAdminProduct) {
 
     Route::get('/', $nameSpaceAdminProduct . '\RifaController@index')->name('rifa.index');
-    Route::get('/create', $nameSpaceAdminProduct . '\RifaController@create')->name('rifa.create');
+    Route::get('/crear-sorteo', $nameSpaceAdminProduct . '\RifaController@create')->name('rifa.create');
     Route::get('/nueva-rifa', $nameSpaceAdminProduct . '\RifaController@createRifaCliente')->name('rifa.nueva_rifa');
     Route::post('/crear_rifa', $nameSpaceAdminProduct . '\RifaController@postCreateCliente')->name('rifa.postCreateCliente');
     Route::post('/edit-rifa-cliente/{id_cliente}', $nameSpaceAdminProduct . '\RifaController@postEditCliente')->name('rifa.postEditCliente');
     
     Route::get('/edit-rifa/{id_cliente}', $nameSpaceAdminProduct . '\RifaController@editRifaCliente')->name('rifa.editRifaCliente');
-    Route::post('/create', $nameSpaceAdminProduct . '\RifaController@postCreate')->name('rifa.postCreate');
+    Route::post('/crear-sorteo', $nameSpaceAdminProduct . '\RifaController@postCreate')->name('rifa.postCreate');
     Route::get('/detail/{id}', $nameSpaceAdminProduct . '\RifaController@detail')->name('rifa.detail');
     Route::get('/rifa_pdf/{id}', $nameSpaceAdminProduct . '\RifaController@rifa_pdf')->name('rifa.pdf');
     // Route::get('/obtenerTarjeta',$nameSpaceAdminProduct.'\TarjetaController@obtenerTarjeta')->name('tarjetas.obtenerTarjeta');

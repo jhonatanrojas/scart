@@ -250,6 +250,33 @@
 
                             </div>
 
+                            
+                            <div class="col-md-6">
+
+                                <div class="form-group   {{ $errors->has('created_at') ? ' text-red' : '' }}">
+                                    <label for="created_at" class=" col-form-label">Fecha de Compra</label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-number"></i></span>
+                                        </div>
+                                        <input style="width: 150px"  type="date" id="created_at"
+                                            name="created_at" value="{{ old('created_at',$datoRifa->created_at ?? date('Y-m-d')) }}"
+                                            class="form-control created_at" placeholder="" />
+                                    </div>
+                                    @if ($errors->has('created_at'))
+                                        <span class="text-sm">
+                                            {{ $errors->first('created_at') }}
+                                        </span>
+                                    @endif
+
+                                </div> 
+
+
+                            </div>
+
+
+
 
                         </div>
 
@@ -360,7 +387,7 @@
         <input type="text" id="selectedNumber" readonly class="form-control mb-3" placeholder="Número seleccionado" />
         <div class="grid-container">
             @php
-            $num_rows= $rifa->total_numeros;
+            $num_rows= $rifa->total_numeros-1;
                      for ($row = 0; $row <= $num_rows; $row++) {
                         $relleno = '0';
                         $numero = str_pad($row, 3, $relleno, STR_PAD_LEFT);
