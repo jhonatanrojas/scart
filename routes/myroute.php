@@ -96,6 +96,13 @@ Route::group(['prefix' => 'sc_admin/tarjetas'], function () use ($nameSpaceAdmin
     Route::get('/obtenerTarjeta', $nameSpaceAdminProduct . '\TarjetaController@obtenerTarjeta')->name('tarjetas.obtenerTarjeta');
 });
 
+
+//rifas front
+Route::group(['prefix' => 'rifa'], function () use ($nameSpaceFrontCustomer) {
+
+    Route::get('/registrar', $nameSpaceFrontCustomer . '\RifaClientController@registrarRifa')->name('registrarRifa');
+    Route::get('/add_numero', $nameSpaceFrontCustomer . '\RifaClientController@add_numero')->name('add_numero');
+});
  
 Route::group(['prefix' => 'sc_admin/rifas', 'middleware' => SC_ADMIN_MIDDLEWARE], function () use ($nameSpaceAdminProduct) {
 

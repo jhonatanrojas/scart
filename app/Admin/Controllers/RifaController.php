@@ -515,23 +515,14 @@ class RifaController extends RootAdminController
 
         $dataFilRifa = RifaCliente::obtenerRifas($dataSearch,  $id);
 
+      
 
-        $dataRifa = [];
-
-        foreach ($dataFilRifa as $key => $value) {
-
-            $usuario =   AdminUser::find($value->vendor_id);
-
-
-            $value->vendedor = $usuario->name ?? '';
-            # code...
-            $dataRifa[] = $value;
-        }
+    
 
 
         $dataTarjeta = [
             "title"         => 'Detatalle de la Rifa',
-            "rifas" => $dataRifa,
+            "rifas" => $dataFilRifa,
             "id" => $id,
 
             'rifa'         => $classRifa

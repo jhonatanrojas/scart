@@ -184,13 +184,15 @@
                     <td>{{ $rif->codigo_banco }}</td>
                     <td>{{ $rif->metodo_pago->name ?? '' }}</td>
                     <td>{{ date('d/m/Y', strtotime($rif->created_at)) }}</td>
-                    <td>{{ $rif->vendedor }}</td>
+                    <td>{!!  $rif->vendedor->name ?? '' !!}</td>
 
                 </tr>
             @endforeach
 
 
 
-        </tbody>
-    </table>
+        </tbody> 
+    </table> 
+    {{ $rifas->links() }}
+  
 @endsection

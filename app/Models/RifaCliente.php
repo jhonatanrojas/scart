@@ -26,6 +26,11 @@ class RifaCliente extends Model
 
         return $this->hasOne(MetodoPago::class, 'id', 'forma_pago_id');
     }
+
+    public function vendedor(){
+        //\SCart\Core\Admin\Models\AdminUser::class
+        return $this->hasOne(\SCart\Core\Admin\Models\AdminUser::class, 'id', 'vendor_id');
+    }
     //forma_pago_id
 
     public static function obtenerRifas(array $dataSearch, int $id_rifa)
@@ -81,9 +86,9 @@ class RifaCliente extends Model
 
  
 
-    //    dd($orderList->toSql());
-
-        $orderList = $orderList->paginate(20);
+    //    dd($orderList->toSql()); 
+  
+        $orderList = $orderList->paginate(50);
 
         return $orderList;
     }

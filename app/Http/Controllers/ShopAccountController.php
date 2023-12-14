@@ -848,9 +848,12 @@ class ShopAccountController extends RootFrontController
         if ($resultado['code'] == 1000) {
             $payment_status = 5;
             $mensaje_final = 'Pago Verificado ' . $resultado['message'];
-        } else {
-            return redirect()->back()->withInput()->with(['warning' => "Lo sentimos,  " . $resultado['message']]);
+        
         }
+        
+        /*else {
+            return redirect()->back()->withInput()->with(['warning' => "Lo sentimos,  " . $resultado['message']]);
+        }*/
 
         $data_pago = [
             'order_id' => $request->order_id,
