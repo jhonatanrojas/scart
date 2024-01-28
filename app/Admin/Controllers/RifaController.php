@@ -521,7 +521,7 @@ class RifaController extends RootAdminController
 
 
         $dataTarjeta = [
-            "title"         => 'Detatalle de la Rifa',
+            "title"         => 'Detalle de la Rifa',
             "rifas" => $dataFilRifa,
             "id" => $id,
 

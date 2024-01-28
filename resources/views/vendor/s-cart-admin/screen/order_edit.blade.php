@@ -727,23 +727,13 @@
                                                                 {{ sc_currency_render_symbol($item->total_price, $order->currency) }}
                                                             </td>
 
-                                                            @if ($order->modalidad_de_compra >= 1 && empty($convenio))
                                                                 <td>
                                                                     <span onclick="deleteItem('{{ $item->id }}');"
                                                                         class="btn btn-danger btn-xs"
                                                                         data-title="Delete"><i class="fa fa-trash"
                                                                             aria-hidden="true"></i></span>
                                                                 </td>
-                                                            @endif
-
-                                                            @if ($order->modalidad_de_compra == 0)
-                                                                <td>
-                                                                    <span onclick="deleteItem('{{ $item->id }}');"
-                                                                        class="btn btn-danger btn-xs"
-                                                                        data-title="Delete"><i class="fa fa-trash"
-                                                                            aria-hidden="true"></i></span>
-                                                                </td>
-                                                            @endif
+                                                   
                                                         </tr>
                                                     @endforeach
 
