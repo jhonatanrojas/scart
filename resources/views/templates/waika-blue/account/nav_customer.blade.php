@@ -16,7 +16,7 @@
 
         <a class="list-group-item list-group-item-action {{ (Route::currentRouteName() == 'customer.address_list' ? 'active' : '')}}" href="{{ sc_route('customer.address_list') }}"><i class="fa-regular fa-rectangle-list"></i> {{ sc_language_render('customer.address_list') }}</a>
     
-        <a class="list-group-item list-group-item-action {{ (Route::currentRouteName() == 'customer.change_infomation' ? 'active' : '')}}" href="{{ sc_route('customer.change_infomation') }}"><i class="fa-solid fa-address-book"></i> Actulizar mis datos</a>
+        <a class="list-group-item list-group-item-action {{ (Route::currentRouteName() == 'customer.change_infomation' ? 'active' : '')}}" href="{{ sc_route('customer.change_infomation') }}"><i class="fa-solid fa-address-book"></i> Actualizar mis datos</a>
 
         <a class="list-group-item list-group-item-action {{ (Route::currentRouteName() == 'customer.change_password' ? 'active' : '')}}" href="{{ sc_route('customer.change_password') }}"><i class="fa fa-key" aria-hidden="true"></i> {{ sc_language_render('customer.change_password') }}</a>
 </ul>
