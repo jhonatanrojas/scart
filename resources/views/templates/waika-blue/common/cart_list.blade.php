@@ -146,7 +146,7 @@
                   
   
                         <td >
-                            <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
+                            <a onClick="return confirm('¿ ¿Está seguro de querer eliminar?')" title="Remove Item" alt="Remove Item"
                                 class="cart_quantity_delete"
                                 href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
                                 <i class="fa fa-times" aria-hidden="true"></i>
@@ -215,7 +215,7 @@
                         </td>
     
                         <td>
-                            <a onClick="return confirm('Confirm?')" title="Remove Item" alt="Remove Item"
+                            <a onClick="return confirm('¿Está seguro de querer eliminar?')" title="Remove Item" alt="Remove Item"
                                 class="cart_quantity_delete"
                                 href="{{ sc_route("cart.remove", ['id'=>$item->rowId, 'instance' => 'cart']) }}">
                                 <i class="fa fa-times" aria-hidden="true"></i>

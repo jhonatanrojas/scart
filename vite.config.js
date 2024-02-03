@@ -11,6 +11,11 @@ export default defineConfig({
                 'resources/js/adjuntar_document.js',
                 'resources/js/estado.js',
             ],
+            resolve: {
+                alias: {
+                    '@': '/resources/ts',
+                },
+            },
             refresh: true,
         }),
     ],
