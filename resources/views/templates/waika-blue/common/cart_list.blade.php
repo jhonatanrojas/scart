@@ -205,11 +205,11 @@
                             </td>
 
                             <td>
-                                <a onClick="return confirm('¿Está seguro de querer eliminar?')" title="Remove Item"
-                                    alt="Remove Item" class="cart_quantity_delete"
-                                    href="{{ sc_route('cart.remove', ['id' => $item->rowId, 'instance' => 'cart']) }}">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                </a>
+                                <a data-toggle="modal" data-target="#confirmModal" title="Remove Item" alt="Remove Item"
+                                class="cart_quantity_delete"
+                                href="{{ sc_route('cart.remove', ['id' => $item->rowId, 'instance' => 'cart']) }}">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                             </a>
                             </td>
                         </tr>
                     @endforeach
@@ -219,6 +219,29 @@
             </tbody>
         </table>
     </div>
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de querer eliminar?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger" href="{{ sc_route('cart.remove', ['id' => $item->rowId, 'instance' => 'cart']) }}">
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 
