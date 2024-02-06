@@ -735,24 +735,22 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
-        $pago = $request->all();
-
-
+    
+       $id_pago = $request->id_pago; 
 
         $bancos = Banco::all();
 
         $order = ShopOrder::where('id', $id)->where('customer_id', $customer->id)->first();
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
-        $id_pago = $request->all();
 
+        if($id_pago){
+            $historial_pago = HistorialPago::where('order_id', $params[1])->where('id' ,$id_pago)->first();
 
-        $historial_pago = HistorialPago::where('order_id', $params[1])->first();
+        }else{
+            $historial_pago = HistorialPago::where('order_id', $params[1])->first();
 
-
-
-
-
+        }
 
 
         $metodos_pagos = MetodoPago::whereIn('id', [2, 4])->get();
