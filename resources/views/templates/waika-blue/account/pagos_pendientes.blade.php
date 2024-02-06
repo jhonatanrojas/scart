@@ -244,20 +244,17 @@ foreach (sc_currency_all()  as $moneda) {
         }
 
         function pagoMovil (){
-          let id_pago = ${"#pagos_id"}.val()
-
+          let id_pago = $("#pagos_id").val()
           location.href="/es/customer/reportar-pago/{{$order->id}}?id_pago=" + id_pago
         }
 
         function bioPago (){
-          let id_pago = ${"#pagos_id"}.val()
-
+          let id_pago = $("#pagos_id").val()
           location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id_pago+"])}}" 
         }
 
-
         function pagar (id_pago){
-          ${"#pagos_id"}.val(id_pago)
+          $("#pagos_id").val(id_pago)
         }
 </script>
 
