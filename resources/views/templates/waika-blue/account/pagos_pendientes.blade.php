@@ -163,7 +163,7 @@ foreach (sc_currency_all()  as $moneda) {
                                   <div class="row mb-5 ">
                                     <div class="col-12">
                                       <div class="btn__pagomovil">
-                                        <button type="button" id="pagoMovil" onclick="pagoMovil({{$historial->id}})"  class="btn btn-warning btn-block btn-lg">
+                                        <button type="button" id="pagoMovil" onclick="pagoMovil()"  class="btn btn-warning btn-block btn-lg">
                                           <span class="d-flex">
                                             <img width="20px" class="img-fluid" src="/images/pagomovil.png" alt="Biopago">
                                             Pago movil
@@ -243,13 +243,13 @@ foreach (sc_currency_all()  as $moneda) {
             location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Transferencia=Transferencia`
         }
 
-        function pagoMovil (id_pago){
+        function pagoMovil (){
           let id_pago = ${"#pagos_id"}.val()
 
           location.href="/es/customer/reportar-pago/{{$order->id}}?id_pago=" + id_pago
         }
 
-        function bioPago (id){
+        function bioPago (){
           let id_pago = ${"#pagos_id"}.val()
 
           location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id_pago+"])}}" 
