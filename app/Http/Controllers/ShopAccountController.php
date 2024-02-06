@@ -678,7 +678,11 @@ class ShopAccountController extends RootFrontController
                 ->whereIn('payment_status', [1, 8,2])
                 ->orderBy('fecha_venciento')->limit(3)
                 ->get();
+
+                // dd( $historial_pagos);
         }
+
+
 
 
         return view($this->templatePath . '.account.pagos_pendientes')

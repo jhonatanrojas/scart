@@ -75,10 +75,16 @@ foreach (sc_currency_all()  as $moneda) {
     }
 }
                   @endphp
+
+                   
+
                   <tbody>
                     @foreach($historial_pagos as $historial)
                       <tr>
                           @php
+
+
+                          
                           $n = (isset($n)?$n:0);
                           $n++;
                             if($order->modalidad_de_compra==0)
@@ -236,8 +242,9 @@ foreach (sc_currency_all()  as $moneda) {
             location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Transferencia=Transferencia`
         }
 
-        function pagoMovil (id){
-          location.href=`{{ sc_route('customer.reportar_pago',['id' => $order->id ,'id_pago'])}}=${id}&Pago Movil=Pago Movil`
+        function pagoMovil (id_pago){
+
+          location.href="/es/customer/reportar-pago/{{$order->id}}?id_pago=" + id_pago
         }
 
         function bioPago (id){

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Admin\Controllers;
 
 use App\Events\Biopago;
@@ -52,7 +53,6 @@ class HistorialPagosController extends RootAdminController
     public function __construct()
     {
         parent::__construct();
-
     }
     /**
      * Index interface.
@@ -92,7 +92,7 @@ class HistorialPagosController extends RootAdminController
         $data['topMenuLeft'] = sc_config_group('topMenuLeft', \Request::route()->getName());
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
-        
+
 
         $listTh = [
             'Convenio' => 'Convenio',
@@ -137,7 +137,7 @@ class HistorialPagosController extends RootAdminController
             'order_status' => $sort_order,
             'perfil' => $perfil,
         ];
-        $dataSearch2= [
+        $dataSearch2 = [
             'keyword' => $keyword,
             'from_to' => $fechas1,
             'end_to' => $fechas2,
@@ -147,13 +147,13 @@ class HistorialPagosController extends RootAdminController
         ];
 
 
-        
 
-       
+
+
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
 
-       
+
 
         $dataTr = [];
         foreach ($dataTmp as $key => $row) {
@@ -163,11 +163,11 @@ class HistorialPagosController extends RootAdminController
             $order = AdminOrder::getOrderAdmin($row->order_id);
             $btn_estatus = '';
             $btn_ver_pago_estatus = '';
-            if ($row->payment_status == 2):
+            if ($row->payment_status == 2) :
                 $btn_estatus = '<a href="#" data-id="' . $row->id . '"><span  data-id="' . $row->id . '" title="Cambiar estatus" type="button" class="btn btn-flat mostrar_estatus_pago btn-sm btn-primary"><i class="fa fa-edit"></i></span></a>&nbsp;';
             endif;
             //whereIn('payment_status',[3,4,5,6])-
-            if ($row->payment_status == 2 || $row->payment_status == 5  || $row->payment_status == 6 || $row->payment_status == 4 || $row->payment_status == 3  ):
+            if ($row->payment_status == 2 || $row->payment_status == 5  || $row->payment_status == 6 || $row->payment_status == 4 || $row->payment_status == 3) :
                 $btn_ver_pago_estatus = ' <button  onclick="obtener_detalle_pago(' . $row->id . ')" ><span title="Detalle del pago" type="button" class="btn btn-flat btn-sm btn-success"><i class="fas fa-search"></i></span></button>';
                 $NOta = ' <a   href="' . sc_route_admin('notas.entrega') . '?notas_entrega=true&keyword=' . $row->order_id . '"><span title="Nota de entrega" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fas fa-clipboard"></i></span></a>&nbsp;';
 
@@ -176,17 +176,16 @@ class HistorialPagosController extends RootAdminController
 
             if ($row->comprobante) {
                 $Referencia = ' <a   href="' . sc_file($row->comprobante) . '"><span title="Descargar Referencia" type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-file"></i></span></a>&nbsp;';
-
             }
 
 
 
 
-            $Nr_convenio = Convenio::where('order_id' , $row->order_id)->first();
+            $Nr_convenio = Convenio::where('order_id', $row->order_id)->first();
 
-            
+
             $dataTr[$row->id] = [
-                'Convenio' => $Nr_convenio->nro_convenio?? '',
+                'Convenio' => $Nr_convenio->nro_convenio ?? '',
                 'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
                 'Importe pagado' => $row->importe_pagado,
                 'Referencia' => $row->referencia,
@@ -229,7 +228,7 @@ class HistorialPagosController extends RootAdminController
         $data['listTh'] = $listTh;
         $data['statusPayment'] = $statusPayment;
 
-        
+
 
 
         $data['dataTr'] = $dataTr;
@@ -312,7 +311,6 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin . 'pagos.detalle')
             ->with($data);
-
     }
 
     /**
@@ -338,7 +336,7 @@ class HistorialPagosController extends RootAdminController
                 'msg' => $validator->errors()->all(),
             ]);
         }
-        $order = ShopOrder::where('id',$request->order_id)->first();
+        $order = ShopOrder::where('id', $request->order_id)->first();
         $data_pago = [
             'nro_coutas' => $request->nro_couta,
             'customer_id' => $order->customer_id,
@@ -350,7 +348,7 @@ class HistorialPagosController extends RootAdminController
 
         ];
 
-      
+
         HistorialPago::create($data_pago);
 
         // reponse json
@@ -358,12 +356,10 @@ class HistorialPagosController extends RootAdminController
             'error' => 0,
             'msg' => 'Pago creado correctamente',
         ]);
-
-
-
     }
 
-    public function conciliar_pago(){
+    public function conciliar_pago()
+    {
 
 
         $id = request('id');
@@ -373,21 +369,27 @@ class HistorialPagosController extends RootAdminController
             ->where('sc_historial_pagos.id', $id)
             ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_metodos_pagos.name as metodo', 'sc_shop_payment_status.name as status', 'sc_shop_order.last_name')->first();
 
-        $telefono_pago_movil= config('services.conciliacion_movimientos.telefono_pago_movil');
+        $telefono_pago_movil = config('services.conciliacion_movimientos.telefono_pago_movil');
         $service = new ConciliacionMovimientosService();
-        $fecha_pago = date('Y-m-d', strtotime(  $pago->fecha_pago));
-        $cedula= $pago->cedula_origen;
-        $dto = new ConciliacionMovimientoDTO($cedula,$pago->telefono_origen, $telefono_pago_movil,
-        $pago->referencia, $fecha_pago, number_format($pago->importe_pagado,2), $pago->codigo_banco);
+        $fecha_pago = date('Y-m-d', strtotime($pago->fecha_pago));
+        $cedula = $pago->cedula_origen;
+        $dto = new ConciliacionMovimientoDTO(
+            $cedula,
+            $pago->telefono_origen,
+            $telefono_pago_movil,
+            $pago->referencia,
+            $fecha_pago,
+            number_format($pago->importe_pagado, 2),
+            $pago->codigo_banco
+        );
 
-        
+
         try {
-         
+
             return $service->enviar($dto);
         } catch (\Exception $th) {
-         return   ['error' =>$th->getMessage()];
+            return   ['error' => $th->getMessage()];
         }
-
     }
     public function detalle()
     {
@@ -490,8 +492,7 @@ class HistorialPagosController extends RootAdminController
 
 
                     
-                    '
-                ,
+                    ',
             ];
         }
 
@@ -573,7 +574,7 @@ class HistorialPagosController extends RootAdminController
         $historial_pago = HistorialPago::where('id', $id_pago)->first();
 
         $order = ShopOrder::where('id', $id_orden)->first();
-        $statusPayment = ShopPaymentStatus::whereIn('id', [ 2, 3, 4, 5, 6])->get();
+        $statusPayment = ShopPaymentStatus::whereIn('id', [2, 3, 4, 5, 6])->get();
         $data['order'] = $order;
         $data['bancos'] = $bancos;
         $data['statusPayment'] = $statusPayment;
@@ -584,7 +585,6 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin . 'pagos.crear_pago')
             ->with($data);
-
     }
 
 
@@ -620,7 +620,6 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin . 'screen.tasa_cambio')
             ->with($data);
-
     }
 
 
@@ -657,7 +656,6 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin . 'screen.list_tasa_cambio')
             ->with($data);
-
     }
 
 
@@ -689,7 +687,6 @@ class HistorialPagosController extends RootAdminController
         } else {
             TipoCambioBcv::where('id', $tipo_cambio->id)
                 ->update($data_pago);
-
         }
         if ($request->fecha == date('Y-m-d')) {
             //  exchange_rate
@@ -697,7 +694,6 @@ class HistorialPagosController extends RootAdminController
                 'exchange_rate' => $request->valor,
 
             ]);
-
         }
 
 
@@ -722,7 +718,6 @@ class HistorialPagosController extends RootAdminController
             $fileName = time() . '.' . $request->capture->extension();
             $path_archivo = 'data/clientes/pagos' . '/' . $fileName;
             $request->capture->move(public_path('data/clientes/pagos'), $fileName);
-
         }
 
 
@@ -735,9 +730,9 @@ class HistorialPagosController extends RootAdminController
         }
 
         $nacionalidad = $request->nacionalidad ?? '';
-        $cedula=  $request->cedula_origen?? '';
-        $cedula=   $nacionalidad.     $cedula;
-      
+        $cedula =  $request->cedula_origen ?? '';
+        $cedula =   $nacionalidad .     $cedula;
+
         $data_pago = [
             'order_id' => $request->order_id,
             'customer_id' => $order->customer_id,
@@ -747,9 +742,9 @@ class HistorialPagosController extends RootAdminController
             'producto_id' => $request->product_id,
             'metodo_pago_id' => $request->forma_pago,
             'fecha_pago' => $request->fecha,
-            'telefono_origen'=>$request->telefono_origen ?? '',
-            'codigo_banco'=>$request->codigo_banco ?? '',
-            'cedula_origen'=> $cedula,
+            'telefono_origen' => $request->telefono_origen ?? '',
+            'codigo_banco' => $request->codigo_banco ?? '',
+            'cedula_origen' => $cedula,
             'importe_pagado' => $request->monto,
             'comment' => $request->observacion,
             'moneda' => $request->moneda,
@@ -763,34 +758,32 @@ class HistorialPagosController extends RootAdminController
         } else {
             HistorialPago::where('id', $id_pago)
                 ->update($data_pago);
-
         }
 
 
-            // Obtén el ID del cliente
-            $clientId = $order->customer_id;
-            // Calcula el nivel del cliente
-            $calculator = new ClientLevelCalculator();
-            $level = $calculator->calculate($clientId);
-            // Obtén el cliente a partir de su ID
-            $client = SC_shop_customer::find($clientId);
+        // Obtén el ID del cliente
+        $clientId = $order->customer_id;
+        // Calcula el nivel del cliente
+        $calculator = new ClientLevelCalculator();
+        $level = $calculator->calculate($clientId);
+        // Obtén el cliente a partir de su ID
+        $client = SC_shop_customer::find($clientId);
 
-            // Actualiza el nivel del cliente
-            $client->nivel = $level;
+        // Actualiza el nivel del cliente
+        $client->nivel = $level;
 
-            // Guarda los cambios en la base de datos
-            $client->save();
+        // Guarda los cambios en la base de datos
+        $client->save();
 
 
 
         return redirect(sc_route_admin('admin_order.detail', ['id' => $request->order_id]))
             ->with(['success' => 'Su pago ha sido reportado de forma exitosa']);
-
     }
     public static function getPagosListAdmin(array $dataSearch)
     {
 
-        
+
         $keyword = $dataSearch['keyword'] ?? '';
         $fechas1 = $dataSearch['fechas1'] ?? '';
         $fechas2 = $dataSearch['fechas2'] ?? '';
@@ -804,65 +797,50 @@ class HistorialPagosController extends RootAdminController
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
         if ($storeId) {
-            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>',1)
+            $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>', 1)
                 ->orderBy('fecha_pago', 'desc');
         }
 
-       
+
         if ($keyword) {
 
-             
+
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('order_id', $keyword);
-
-                
             });
 
             $resultado = $orderList->get();
 
             if ($resultado->isEmpty() && $keyword) {
-                $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id') ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
+                $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
                 $convenio = Convenio::where('nro_convenio', $keyword)->first();
                 $keyworde = $convenio['order_id'] ?? 0;
 
-                    $orderList = $orderList->where(function ($sql) use ($keyworde) {
-                        $sql->Where('order_id', $keyworde);
-        
-                        
-                    });
+                $orderList = $orderList->where(function ($sql) use ($keyworde) {
+                    $sql->Where('order_id', $keyworde);
+                });
 
-                    $orderList = $orderList->paginate(20);
+                $orderList = $orderList->paginate(20);
 
-        
 
-                    return $orderList;
-                   
-                
+
+                return $orderList;
             }
-
-
         }
 
-       
+
         if ($fechas1 || $fechas2 || $keyword) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $keyword) {
                 if ($keyword) {
                     $sql->Where('order_id', $keyword);
                 }
                 if ($keyword && $fechas1 && $fechas2) {
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '>=', $fechas1)
-                    ;
-
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '>=', $fechas1);
                 }
                 if ($keyword && $fechas1 && $fechas2) {
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '<=', $fechas2)
-                    ;
-
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '<=', $fechas2);
                 }
-
-
             });
-
         }
 
 
@@ -871,18 +849,13 @@ class HistorialPagosController extends RootAdminController
 
                 if ($fechas1 && $fechas2) {
                     $fromTo = date('Y-m-d H:i:s', strtotime($fechas1));
-                    $sql->Where('fecha_pago', '>=', $fromTo)
-                    ;
+                    $sql->Where('fecha_pago', '>=', $fromTo);
                 }
                 if ($fechas1 && $fechas2) {
                     $fromTo = date('Y-m-d H:i:s', strtotime($fechas2));
-                    $sql->Where('fecha_pago', '<=', $fromTo)
-                    ;
+                    $sql->Where('fecha_pago', '<=', $fromTo);
                 }
-
             });
-
-
         }
 
         if ($email) {
@@ -905,12 +878,11 @@ class HistorialPagosController extends RootAdminController
 
         if ($sort_order && array_key_exists($sort_order, $arrSort)) {
 
-            
-        
+
+
             if ($sort_order == 1) {
                 $fecha_hoy = date('y-m-d');
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-
             } else if ($sort_order == 5) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
             } else if ($sort_order == 6) {
@@ -922,16 +894,14 @@ class HistorialPagosController extends RootAdminController
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
             } else if ($sort_order == 3) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-
-            }else if ($sort_order == 8) {
+            } else if ($sort_order == 8) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-
-            } 
-            } 
+            }
+        }
 
         $orderList = $orderList->paginate(20);
 
-        
+
 
         return $orderList;
     }
@@ -939,10 +909,11 @@ class HistorialPagosController extends RootAdminController
     /**
      * obtener la lista de pagos via ajax func getpagosajax where('sc_historial_pagos.order_id
      */
-    public function getPagosBdvAjax(){
-       $biopago= new Biopago($_ENV['AFILIADOBDV'],$_ENV['CLAVEBDV']);
-       $data_pago =$biopago->checkPayment(request()->id_pago);
-       return response()->json($data_pago);
+    public function getPagosBdvAjax()
+    {
+        $biopago = new Biopago($_ENV['AFILIADOBDV'], $_ENV['CLAVEBDV']);
+        $data_pago = $biopago->checkPayment(request()->id_pago);
+        return response()->json($data_pago);
     }
     public function getPagosAjax()
     {
@@ -962,7 +933,6 @@ class HistorialPagosController extends RootAdminController
         });*/
 
         return response()->json($data_pagos);
-
     }
 
 
@@ -970,7 +940,7 @@ class HistorialPagosController extends RootAdminController
     public static function getPagosListAdmin2(array $dataSearch)
     {
 
-       
+
         $keyword = $dataSearch['keyword'] ?? '';
         $historial_pago = $dataSearch['historial_pago'] ?? '';
         $fechas1 = $dataSearch['fecha1'] ?? '';
@@ -1004,8 +974,7 @@ class HistorialPagosController extends RootAdminController
 
         if ($keyword) {
             $orderList->where('sc_historial_pagos.order_id', $keyword)
-                ->whereIn('sc_historial_pagos.payment_status', [3, 4,5,6]);
-
+                ->whereIn('sc_historial_pagos.payment_status', [3, 4, 5, 6]);
         }
 
         if ($historial_pago && $keyword) {
@@ -1013,48 +982,32 @@ class HistorialPagosController extends RootAdminController
                 ->where('sc_historial_pagos.order_id', $keyword);
         }
 
-    
+
 
 
         if ($fechas1 || $fechas2) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2) {
 
                 if ($fechas1) {
-                    $sql->Where('fecha_pago', '=', $fechas1);
-
-                    ;
+                    $sql->Where('fecha_pago', '=', $fechas1);;
                 } else if ($fechas2) {
                     $fecha = explode('-', $fechas2);
                     $sql->whereYear('fecha_pago', $fecha[0])->whereMonth('fecha_pago', $fecha[1]);
-
-
                 }
-
             });
-
-
         }
 
         if ($fechas1 && $pdf_cobranzas || $fechas2) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $pdf_cobranzas) {
 
                 if ($fechas1) {
-                    $sql->Where('fecha_pago', '=', $fechas1);
-
-                    ;
+                    $sql->Where('fecha_pago', '=', $fechas1);;
                 }
                 if ($fechas2) {
                     $fechas2 = explode('-', $fechas2);
                     $sql->whereYear('fecha_pago', $fechas2[0])->whereMonth('fecha_pago', $fechas2[1]);
-
-
                 }
-
-
-
             });
-
-
         }
 
         if ($email) {
@@ -1079,7 +1032,6 @@ class HistorialPagosController extends RootAdminController
             if ($sort_order == 4) {
                 $fecha_hoy = date('y-m-d');
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-
             } else if ($sort_order == 5) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
             } else if ($sort_order == 6) {
@@ -1091,15 +1043,10 @@ class HistorialPagosController extends RootAdminController
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
             } else if ($sort_order == 3) {
                 $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-
             }
-
-
         } else {
             $orderList->where('sc_historial_pagos.payment_status', '<>', 2)
                 ->orderBy('fecha_pago', 'desc');
-
-
         }
         $orderList = $orderList->paginate(20);
 
@@ -1122,411 +1069,397 @@ class HistorialPagosController extends RootAdminController
         if (Convenio::where('nro_convenio', $data['nro_convenio'])->exists()) {
             /*return redirect()->back()
                 ->with(['error' => 'El numero de Convenio ya exite']);*/
-        } 
+        }
 
 
 
-            $estado = Estado::all();
-            $municipio = Municipio::all();
-            $parroquia = Parroquia::all();
-            
-            $order = AdminOrder::getOrderAdmin($data['c_order_id']);
-            $product = AdminProduct::getProductAdmin($order->product_id);
-            $letraconvertir_nuber = new NumeroLetra;
+        $estado = Estado::all();
+        $municipio = Municipio::all();
+        $parroquia = Parroquia::all();
 
-
-
-
-            if (!$order) {
-                return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
-            }
-
-
-            $usuario = SC_shop_customer::where('id', $order->customer_id)->get();
-            $result = $usuario->all();
-            $productoDetail = shop_order_detail::where('order_id', $data['c_order_id'])->get();
-            $cantidaProduc = shop_order_detail::where('order_id', $data['c_order_id'])->count();
-            $nombreProduct = [];
-            $cuotas = [];
-            $abono_inicial = [];
-            $id_modalidad_pago = [];
-
-            foreach ($productoDetail as $key => $p) {
-                $nombreProduct = $p->name;
-                $cuotas = $p->nro_coutas;
-                $abono_inicial = $p->abono_inicial;
-                $id_modalidad_pago = $p->id_modalidad_pago;
-             
-            }
+        $order = AdminOrder::getOrderAdmin($data['c_order_id']);
+        $product = AdminProduct::getProductAdmin($order->product_id);
+        $letraconvertir_nuber = new NumeroLetra;
 
 
 
 
-            $nombreEstado = [];
-            $nombreparroquias = [];
-            $nombremunicipos = [];
-            $dato_usuario = [];
-            foreach ($result as $c) {
-                foreach ($estado as $estados) {
-                    if ($estados->codigoestado == $c['cod_estado']) {
-                        $nombreEstado = $estados->nombre;
-                    }
-                    foreach ($municipio as $municipos) {
-                        if ($municipos->codigomunicipio == $c['cod_municipio'])
-                            $nombremunicipos = $municipos->nombre;
-                    }
-                    foreach ($parroquia as $parroquias) {
-                        if ($parroquias->codigomunicipio == $c['cod_municipio']) {
-                            $nombreparroquias = $parroquias->nombre;
-                        }
-                    }
+        if (!$order) {
+            return redirect()->route('admin.data_not_found')->with(['url' => url()->full()]);
+        }
+
+
+        $usuario = SC_shop_customer::where('id', $order->customer_id)->get();
+        $result = $usuario->all();
+        $productoDetail = shop_order_detail::where('order_id', $data['c_order_id'])->get();
+        $cantidaProduc = shop_order_detail::where('order_id', $data['c_order_id'])->count();
+        $nombreProduct = [];
+        $cuotas = [];
+        $abono_inicial = [];
+        $id_modalidad_pago = [];
+
+        foreach ($productoDetail as $key => $p) {
+            $nombreProduct = $p->name;
+            $cuotas = $p->nro_coutas;
+            $abono_inicial = $p->abono_inicial;
+            $id_modalidad_pago = $p->id_modalidad_pago;
+        }
+
+
+
+
+        $nombreEstado = [];
+        $nombreparroquias = [];
+        $nombremunicipos = [];
+        $dato_usuario = [];
+        foreach ($result as $c) {
+            foreach ($estado as $estados) {
+                if ($estados->codigoestado == $c['cod_estado']) {
+                    $nombreEstado = $estados->nombre;
                 }
-
-
-               
-
-
-                $dato_usuario = [
-                    'subtotal' => $c['subtotal'],
-                    'natural_jurídica' => $c['natural_jurídica'],
-                    'razon_social' => $c['razon_social'],
-                    'rif' => $c['rif'],
-                    'first_name' => $c['first_name'],
-                    'last_name' => $c['last_name'],
-                    'phone' => $c['phone'],
-                    'email' => $c['email'],
-                    'address1' => $c['address1'],
-                    'address2' => $c['address2'],
-                    'cedula' => $c['cedula'],
-                    'cod_estado' => $nombreEstado,
-                    'cod_municipio' => $nombremunicipos,
-                    'cod_parroquia' => $nombreparroquias,
-                    'estado_civil' => $c['estado_civil'],
-                    'nos_conocio' => $c->nos_conocio,
-
-                    [
-
-                        'subtotal' => $order['subtotal'],
-                        'cantidaProduc' => $cantidaProduc,
-                        'nombreProduct' => $nombreProduct,
-                        'cuotas' => $cuotas,
-                        'abono_inicial' => $abono_inicial,
-                        'id_modalidad_pago' => $id_modalidad_pago
-
-                    ]
-
-                ];
-
-
-            }
-
-            $cod_bolibares = 0;
-            $Moneda_CAMBIOBS = sc_currency_all();
-            foreach ($Moneda_CAMBIOBS as $cambio) {
-                
-                if ($cambio->code == "Bs") {
-                    $cod_bolibares = $cambio->exchange_rate;
+                foreach ($municipio as $municipos) {
+                    if ($municipos->codigomunicipio == $c['cod_municipio'])
+                        $nombremunicipos = $municipos->nombre;
+                }
+                foreach ($parroquia as $parroquias) {
+                    if ($parroquias->codigomunicipio == $c['cod_municipio']) {
+                        $nombreparroquias = $parroquias->nombre;
+                    }
                 }
             }
 
-            $borrado_html = [];
-            $file_html = [];
 
-                    // Se asigna el valor de la clave 'natural_jurídica' a una variable
+
+
+
+            $dato_usuario = [
+                'subtotal' => $c['subtotal'],
+                'natural_jurídica' => $c['natural_jurídica'],
+                'razon_social' => $c['razon_social'],
+                'rif' => $c['rif'],
+                'first_name' => $c['first_name'],
+                'last_name' => $c['last_name'],
+                'phone' => $c['phone'],
+                'email' => $c['email'],
+                'address1' => $c['address1'],
+                'address2' => $c['address2'],
+                'cedula' => $c['cedula'],
+                'cod_estado' => $nombreEstado,
+                'cod_municipio' => $nombremunicipos,
+                'cod_parroquia' => $nombreparroquias,
+                'estado_civil' => $c['estado_civil'],
+                'nos_conocio' => $c->nos_conocio,
+
+                [
+
+                    'subtotal' => $order['subtotal'],
+                    'cantidaProduc' => $cantidaProduc,
+                    'nombreProduct' => $nombreProduct,
+                    'cuotas' => $cuotas,
+                    'abono_inicial' => $abono_inicial,
+                    'id_modalidad_pago' => $id_modalidad_pago
+
+                ]
+
+            ];
+        }
+
+        $cod_bolibares = 0;
+        $Moneda_CAMBIOBS = sc_currency_all();
+        foreach ($Moneda_CAMBIOBS as $cambio) {
+
+            if ($cambio->code == "Bs") {
+                $cod_bolibares = $cambio->exchange_rate;
+            }
+        }
+
+        $borrado_html = [];
+        $file_html = [];
+
+        // Se asigna el valor de la clave 'natural_jurídica' a una variable
         $tipo = $dato_usuario['natural_jurídica'];
 
         // Se usa un if en lugar de un switch para evaluar el valor de la variable
         if ($tipo == 'J') {
             $borrado_html = Sc_plantilla_convenio::where('id', 3)->first()->where('name', 'persona_juridica')->get();
-
-        }  else {
-                      // Se usa un operador ternario para asignar el valor de $borrado_html según el valor de $abono_inicial
-                      $borrado_html = $abono_inicial > 0
-                      ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
-                      : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
+        } else {
+            // Se usa un operador ternario para asignar el valor de $borrado_html según el valor de $abono_inicial
+            $borrado_html = $abono_inicial > 0
+                ? Sc_plantilla_convenio::where('id', 2)->first()->where('name', 'con_inicial')->get()
+                : Sc_plantilla_convenio::where('id', 1)->first()->where('name', 'sin_inicial')->get();
             // Se asigna el valor de $borrado_html según la consulta a la base de datos
         }
 
 
-       
-
-            $file_html = Declaracion_jurada::all();
-
-            $pieces = explode(" ", $dato_usuario['cedula']);
-            if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
-                $mesualQuinsena = "MENSUAL";
-                $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
-            } else{
-                $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
-                $mesualQuinsena = " QUINCENAL";
-                $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
-            }
-            if ($pieces[0] == "V")
-                $Nacionalidad = "VENEZOLANO(A)";
-            else
-                $Nacionalidad = "Extranjer(A)";
 
 
-                
+        $file_html = Declaracion_jurada::all();
 
-             if($dato_usuario[0]['cuotas'] > 0){
-                $cuotas = $dato_usuario[0]['cuotas'];
-                $total_price = $dato_usuario[0]['subtotal'];
+        $pieces = explode(" ", $dato_usuario['cedula']);
+        if ($dato_usuario[0]['id_modalidad_pago'] == 3) {
+            $mesualQuinsena = "MENSUAL";
+            $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " DE CADA MES";
+        } else {
+            $suma = $dato_usuario[0]['cuotas'] + $dato_usuario[0]['cuotas'];
+            $mesualQuinsena = " QUINCENAL";
+            $cod_diaMes = "LOS DIAS " . $dato_usuario[0]['cuotas'] . " Y " . $suma . " DE CADA MES";
+        }
+        if ($pieces[0] == "V")
+            $Nacionalidad = "VENEZOLANO(A)";
+        else
+            $Nacionalidad = "Extranjer(A)";
+
+
+
+
+        if ($dato_usuario[0]['cuotas'] > 0) {
+            $cuotas = $dato_usuario[0]['cuotas'];
+            $total_price = $dato_usuario[0]['subtotal'];
             $precio_couta = $dato_usuario[0]['subtotal'] / $dato_usuario[0]['cuotas'];
-           
+
             if ($dato_usuario[0]['abono_inicial'] > 0 && $product->monto_cuota_entrega == 0) {
                 $inicial = ($dato_usuario[0]['abono_inicial'] * $dato_usuario[0]['subtotal']) / 100;
                 $total_price = $dato_usuario[0]['subtotal'] - $inicial;
                 $precio_couta = number_format($total_price / $dato_usuario[0]['cuotas'], 2);
-
-                
-
             }
-             }
+        }
 
-            
-             
-             if($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] === 1 || $dato_usuario[0]['cuotas'] === 0){
-                $cuotas =  $product->cuotas_inmediatas;
-                 $inicial = $product->monto_inicial;
-                $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
-                $precio_couta = number_format(($dato_usuario[0]['subtotal'] - $product->monto_inicial)/$product->cuotas_inmediatas,2);
 
-             }
 
-           
+        if ($product->cuotas_inmediatas > 0 && $dato_usuario[0]['cuotas'] === 1 || $dato_usuario[0]['cuotas'] === 0) {
+            $cuotas =  $product->cuotas_inmediatas;
+            $inicial = $product->monto_inicial;
+            $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
+            $precio_couta = number_format(($dato_usuario[0]['subtotal'] - $product->monto_inicial) / $product->cuotas_inmediatas, 2);
+        }
 
-            if ($product->monto_cuota_entrega > 0){
-                        $cuotas = $dato_usuario[0]['cuotas'];
-                        $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega: $product->monto_cuota_entrega;
-                        $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
-                        $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas ,2) ;
-                   }
 
-            $number2 = $total_price * $cod_bolibares;
+
+        if ($product->monto_cuota_entrega > 0) {
+            $cuotas = $dato_usuario[0]['cuotas'];
+            $valor = $productoDetail[0]->monto_cuota_entrega > 0 ? $productoDetail[0]->monto_cuota_entrega : $product->monto_cuota_entrega;
+            $total_price = $dato_usuario[0]['subtotal'] - $product->monto_inicial;
+            $precio_couta = number_format(($order->subtotal - $product->monto_inicial - $valor) / $productoDetail[0]->nro_coutas, 2);
+        }
+
+        $number2 = $total_price * $cod_bolibares;
+
+        $nro_convenio = $data['nro_convenio'];
+        $dataView = [];
+
+
+
+        foreach ($borrado_html as $replacee) {
+
 
             $nro_convenio = $data['nro_convenio'];
-            $dataView = [];
+            $dataFind = [
+                '/\{\{\$numero_de_convenio\}\}/',
+                '/\{\{\$razon_social\}\}/',
+                '/\{\{\$rif\}\}/',
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$direccion\}\}/',
+                '/\{\{\$direccion2\}\}/',
+                '/\{\{\$estado\}\}/',
+                '/\{\{\$municipio\}\}/',
+                '/\{\{\$parroquia\}\}/',
+                '/\{\{\$cedula\}\}/',
+                '/\{\{\$nos_conocio\}\}/',
+                '/\{\{\$estado_civil\}\}/',
+                '/\{\{\$nacionalidad\}\}/',
+                '/\{\{\$modalidad_de_pago\}\}/',
+                '/\{\{\$dia_modalida_pago\}\}/',
+                '/\{\{\$cuotas\}\}/',
+                '/\{\{\$cuotas_total\}\}/',
+                '/\{\{\$cuotas_entre_precio_text\}\}/',
+                '/\{\{\$cod_mespago\}\}/',
+                '/\{\{\$fecha_entrega\}\}/',
+                '/\{\{\$subtotal\}\}/',
+                '/\{\{\$bolivar_text\}\}/',
+                '/\{\{\$bolibares_number\}\}/',
+                '/\{\{\$nombre_de_producto\}\}/',
+                '/\{\{\$telefono\}\}/',
+                '/\{\{\$email\}\}/',
+                '/\{\{\$fecha_de_hoy\}\}/',
+                '/\{\{\$logo_waika\}\}/',
+                '/\{\{\$logo_global\}\}/',
 
-            
-                
-            foreach ($borrado_html as $replacee) {
-
-                
-                $nro_convenio = $data['nro_convenio'];
-                $dataFind = [
-                    '/\{\{\$numero_de_convenio\}\}/',
-                    '/\{\{\$razon_social\}\}/',
-                    '/\{\{\$rif\}\}/',
-                    '/\{\{\$nombre\}\}/',
-                    '/\{\{\$apellido\}\}/',
-                    '/\{\{\$direccion\}\}/',
-                    '/\{\{\$direccion2\}\}/',
-                    '/\{\{\$estado\}\}/',
-                    '/\{\{\$municipio\}\}/',
-                    '/\{\{\$parroquia\}\}/',
-                    '/\{\{\$cedula\}\}/',
-                    '/\{\{\$nos_conocio\}\}/',
-                    '/\{\{\$estado_civil\}\}/',
-                    '/\{\{\$nacionalidad\}\}/',
-                    '/\{\{\$modalidad_de_pago\}\}/',
-                    '/\{\{\$dia_modalida_pago\}\}/',
-                    '/\{\{\$cuotas\}\}/',
-                    '/\{\{\$cuotas_total\}\}/',
-                    '/\{\{\$cuotas_entre_precio_text\}\}/',
-                    '/\{\{\$cod_mespago\}\}/',
-                    '/\{\{\$fecha_entrega\}\}/',
-                    '/\{\{\$subtotal\}\}/',
-                    '/\{\{\$bolivar_text\}\}/',
-                    '/\{\{\$bolibares_number\}\}/',
-                    '/\{\{\$nombre_de_producto\}\}/',
-                    '/\{\{\$telefono\}\}/',
-                    '/\{\{\$email\}\}/',
-                    '/\{\{\$fecha_de_hoy\}\}/',
-                    '/\{\{\$logo_waika\}\}/',
-                    '/\{\{\$logo_global\}\}/',
-
-                ];
-                $dataReplace = [
-                    'numero_de_convenio' => $nro_convenio,
-                    'razon_social' => $dato_usuario['razon_social'],
-                    'rif' => $dato_usuario['rif'],
-                    'nombre' => $dato_usuario['first_name'],
-                    'apellido' => $dato_usuario['last_name'],
-                    'direccion' => $dato_usuario['address1'],
-                    'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
-                    'estado' => $dato_usuario['cod_estado'],
-                    'municipio' => $dato_usuario['cod_municipio'],
-                    'parroquia' => $dato_usuario['cod_parroquia'],
-                    'cedula' => $dato_usuario['cedula'],
-                    'nos_conocio' => $dato_usuario['nos_conocio'],
-                    'estado_civil' => $dato_usuario['estado_civil'],
-                    'nacionalidad' => $Nacionalidad,
-                    $mesualQuinsena,
-                    $letraconvertir_nuber->convertir1($cuotas),
-                    number_format($cuotas),
-                    number_format($precio_couta, 2, ',', ' '),
-                    $letraconvertir_nuber->convertir2($precio_couta),
-                    $cod_diaMes,
-                    'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
-                    $total_price,
-                    $letraconvertir_nuber->convertir2($number2),
-                    number_format($number2, 2, ',', ' '),
-                    $dato_usuario[0]['nombreProduct'],
-                    $dato_usuario['phone'],
-                    $dato_usuario['email'],
-                    $this->fechaEs($order->fecha_primer_pago ?? date('d-m-y')),
-                    sc_file(sc_store('logo', ($storeId ?? null))),
-                    sc_file(sc_store('logo', ($storeId ?? null))),
-                    'logo_waika' => sc_file(sc_store('logo', ($storeId ?? null))),
-                    'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
-                ];
-                $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
-                $dataView = [
-                    'content' => $content,
-                ];
-
-            }
-
-           
+            ];
+            $dataReplace = [
+                'numero_de_convenio' => $nro_convenio,
+                'razon_social' => $dato_usuario['razon_social'],
+                'rif' => $dato_usuario['rif'],
+                'nombre' => $dato_usuario['first_name'],
+                'apellido' => $dato_usuario['last_name'],
+                'direccion' => $dato_usuario['address1'],
+                'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
+                'estado' => $dato_usuario['cod_estado'],
+                'municipio' => $dato_usuario['cod_municipio'],
+                'parroquia' => $dato_usuario['cod_parroquia'],
+                'cedula' => $dato_usuario['cedula'],
+                'nos_conocio' => $dato_usuario['nos_conocio'],
+                'estado_civil' => $dato_usuario['estado_civil'],
+                'nacionalidad' => $Nacionalidad,
+                $mesualQuinsena,
+                $letraconvertir_nuber->convertir1($cuotas),
+                number_format($cuotas),
+                number_format($precio_couta, 2, ',', ' '),
+                $letraconvertir_nuber->convertir2($precio_couta),
+                $cod_diaMes,
+                'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
+                $total_price,
+                $letraconvertir_nuber->convertir2($number2),
+                number_format($number2, 2, ',', ' '),
+                $dato_usuario[0]['nombreProduct'],
+                $dato_usuario['phone'],
+                $dato_usuario['email'],
+                $this->fechaEs($order->fecha_primer_pago ?? date('d-m-y')),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_waika' => sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
+            ];
+            $content = preg_replace($dataFind, $dataReplace, $replacee->contenido);
+            $dataView = [
+                'content' => $content,
+            ];
+        }
 
 
-           
-
-            
 
 
-      
 
 
-            foreach ($file_html as $jurada) {
-                $dataFind = [
-                    '/\{\{\$numero_de_convenio\}\}/',
-                    '/\{\{\$razon_social\}\}/',
-                    '/\{\{\$rif\}\}/',
-                    '/\{\{\$nombre\}\}/',
-                    '/\{\{\$apellido\}\}/',
-                    '/\{\{\$direccion\}\}/',
-                    '/\{\{\$direccion2\}\}/',
-                    '/\{\{\$estado\}\}/',
-                    '/\{\{\$municipio\}\}/',
-                    '/\{\{\$parroquia\}\}/',
-                    '/\{\{\$cedula\}\}/',
-                    '/\{\{\$nos_conocio\}\}/',
-                    '/\{\{\$estado_civil\}\}/',
-                    '/\{\{\$nacionalidad\}\}/',
-                    '/\{\{\$modalidad_de_pago\}\}/',
-                    '/\{\{\$dia_modalida_pago\}\}/',
-                    '/\{\{\$cuotas\}\}/',
-                    '/\{\{\$cuotas_total\}\}/',
-                    '/\{\{\$cuotas_entre_precio_text\}\}/',
-                    '/\{\{\$cod_mespago\}\}/',
-                    '/\{\{\$fecha_entrega\}\}/',
-                    '/\{\{\$subtotal\}\}/',
-                    '/\{\{\$bolivar_text\}\}/',
-                    '/\{\{\$bolibares_number\}\}/',
-                    '/\{\{\$nombre_de_producto\}\}/',
-                    '/\{\{\$telefono\}\}/',
-                    '/\{\{\$email\}\}/',
-                    '/\{\{\$fecha_de_hoy\}\}/',
-                    '/\{\{\$logo_waika\}\}/',
-                    '/\{\{\$logo_global\}\}/',
-
-                ];
 
 
-                $dataReplaces = [
-                    'numero_de_convenio' => $nro_convenio,
-                    'razon_social' => $dato_usuario['razon_social'],
-                    'rif' => $dato_usuario['rif'],
-                    'nombre' => $dato_usuario['first_name'],
-                    'apellido' => $dato_usuario['last_name'],
-                    'direccion' => $dato_usuario['address1'],
-                    'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
-                    'estado' => $dato_usuario['cod_estado'],
-                    'municipio' => $dato_usuario['cod_municipio'],
-                    'parroquia' => $dato_usuario['cod_parroquia'],
-                    'cedula' => $dato_usuario['cedula'],
-                    'nos_conocio' => $dato_usuario['nos_conocio'],
-                    'estado_civil' => $dato_usuario['estado_civil'],
-                    'nacionalidad' => $Nacionalidad,
-                    $mesualQuinsena,
-                    $letraconvertir_nuber->convertir1($cuotas),
-                    number_format($cuotas),
-                    number_format($precio_couta, 2, ',', ' '),
-                    $letraconvertir_nuber->convertir2($precio_couta),
-                    $cod_diaMes,
-                    'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
-                    $total_price,
-                    $letraconvertir_nuber->convertir2($number2),
-                    number_format($number2, 2, ',', ' '),
-                    $dato_usuario[0]['nombreProduct'],
-                    $dato_usuario['phone'],
-                    $dato_usuario['email'],
-                    $this->fechaEs($order->fecha_primer_pago ?? date('d-m-y')),
-                    sc_file(sc_store('logo', ($storeId ?? null))),
-                    sc_file(sc_store('logo', ($storeId ?? null))),
-                    'logo_waika' => sc_file(sc_store('logo', ($storeId ?? null))),
-                    'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
-
-                ];
 
 
-                $contente = preg_replace($dataFind, $dataReplaces, $jurada->file_html);
-                $dataViewe = [
-                    'content' => $contente,
-                ];
 
 
-            }
+        foreach ($file_html as $jurada) {
+            $dataFind = [
+                '/\{\{\$numero_de_convenio\}\}/',
+                '/\{\{\$razon_social\}\}/',
+                '/\{\{\$rif\}\}/',
+                '/\{\{\$nombre\}\}/',
+                '/\{\{\$apellido\}\}/',
+                '/\{\{\$direccion\}\}/',
+                '/\{\{\$direccion2\}\}/',
+                '/\{\{\$estado\}\}/',
+                '/\{\{\$municipio\}\}/',
+                '/\{\{\$parroquia\}\}/',
+                '/\{\{\$cedula\}\}/',
+                '/\{\{\$nos_conocio\}\}/',
+                '/\{\{\$estado_civil\}\}/',
+                '/\{\{\$nacionalidad\}\}/',
+                '/\{\{\$modalidad_de_pago\}\}/',
+                '/\{\{\$dia_modalida_pago\}\}/',
+                '/\{\{\$cuotas\}\}/',
+                '/\{\{\$cuotas_total\}\}/',
+                '/\{\{\$cuotas_entre_precio_text\}\}/',
+                '/\{\{\$cod_mespago\}\}/',
+                '/\{\{\$fecha_entrega\}\}/',
+                '/\{\{\$subtotal\}\}/',
+                '/\{\{\$bolivar_text\}\}/',
+                '/\{\{\$bolibares_number\}\}/',
+                '/\{\{\$nombre_de_producto\}\}/',
+                '/\{\{\$telefono\}\}/',
+                '/\{\{\$email\}\}/',
+                '/\{\{\$fecha_de_hoy\}\}/',
+                '/\{\{\$logo_waika\}\}/',
+                '/\{\{\$logo_global\}\}/',
 
-         
+            ];
 
-            
 
-            $r_convenio = Convenio::create([
+            $dataReplaces = [
+                'numero_de_convenio' => $nro_convenio,
+                'razon_social' => $dato_usuario['razon_social'],
+                'rif' => $dato_usuario['rif'],
+                'nombre' => $dato_usuario['first_name'],
+                'apellido' => $dato_usuario['last_name'],
+                'direccion' => $dato_usuario['address1'],
+                'direccion2' => $dato_usuario['address2'] ?? 'no aplica',
+                'estado' => $dato_usuario['cod_estado'],
+                'municipio' => $dato_usuario['cod_municipio'],
+                'parroquia' => $dato_usuario['cod_parroquia'],
+                'cedula' => $dato_usuario['cedula'],
+                'nos_conocio' => $dato_usuario['nos_conocio'],
+                'estado_civil' => $dato_usuario['estado_civil'],
+                'nacionalidad' => $Nacionalidad,
+                $mesualQuinsena,
+                $letraconvertir_nuber->convertir1($cuotas),
+                number_format($cuotas),
+                number_format($precio_couta, 2, ',', ' '),
+                $letraconvertir_nuber->convertir2($precio_couta),
+                $cod_diaMes,
+                'fecha_entrega' => request()->fecha_maxima_entrega ?? 'no aplica',
+                $total_price,
+                $letraconvertir_nuber->convertir2($number2),
+                number_format($number2, 2, ',', ' '),
+                $dato_usuario[0]['nombreProduct'],
+                $dato_usuario['phone'],
+                $dato_usuario['email'],
+                $this->fechaEs($order->fecha_primer_pago ?? date('d-m-y')),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_waika' => sc_file(sc_store('logo', ($storeId ?? null))),
+                'logo_global' => sc_file(sc_store('logo', ($storeId ?? null))),
+
+            ];
+
+
+            $contente = preg_replace($dataFind, $dataReplaces, $jurada->file_html);
+            $dataViewe = [
+                'content' => $contente,
+            ];
+        }
+
+
+
+
+
+        $r_convenio = Convenio::create([
+            'order_id' => request()->c_order_id,
+            'nro_convenio' => request()->nro_convenio,
+            'lote' => request()->lote,
+            'fecha_pagos' => fecha_to_sql(request()->c_fecha_inicial),
+            'nro_coutas' => request()->c_nro_coutas,
+            'total' =>  $total_price,
+            'inicial' => request()->c_inicial,
+            'modalidad' => request()->c_modalidad,
+            'convenio' => $dataView['content'],
+            'declaracion_jurada' => $dataViewe['content'],
+            'fecha_maxima_entrega' => request()->fecha_maxima_entrega ?? '',
+        ]);
+
+
+
+
+        $order = AdminOrder::getOrderAdmin(request()->c_order_id);
+        //generar pagos
+        $ncouta = 1;
+        foreach (request()->coutas_calculo as $key => $value) {
+
+
+
+            $data_pago = [
                 'order_id' => request()->c_order_id,
-                'nro_convenio' => request()->nro_convenio,
-                'lote' => request()->lote,
-                'fecha_pagos' => fecha_to_sql(request()->c_fecha_inicial),
-                'nro_coutas' => request()->c_nro_coutas,
-                'total' =>  $total_price,
-                'inicial' => request()->c_inicial,
-                'modalidad' => request()->c_modalidad,
-                'convenio' => $dataView['content'],
-                'declaracion_jurada' => $dataViewe['content'],
-                'fecha_maxima_entrega' => request()->fecha_maxima_entrega ?? '',
-            ]);
+                'customer_id' => $order->customer_id,
+                'payment_status' => 1,
+                'importe_couta' => $value,
+                'fecha_venciento' => fecha_to_sql(request()->fechas_pago_cuotas[$key]),
+                'nro_coutas' => $ncouta,
+            ];
+
+            $order = HistorialPago::create($data_pago);
+            echo $ncouta++;
+        }
 
 
-
-
-            $order = AdminOrder::getOrderAdmin(request()->c_order_id);
-            //generar pagos
-            $ncouta = 1;
-            foreach (request()->coutas_calculo as $key => $value) {
-
-
-
-                $data_pago = [
-                    'order_id' => request()->c_order_id,
-                    'customer_id' => $order->customer_id,
-                    'payment_status' => 1,
-                    'importe_couta' => $value,
-                    'fecha_venciento' => fecha_to_sql(request()->fechas_pago_cuotas[$key]),
-                    'nro_coutas' => $ncouta,
-                ];
-
-                $order = HistorialPago::create($data_pago);
-                echo $ncouta++;
-            }
-
-
-            return redirect()->back()
-                ->with(['success' => 'Accion completada']);
-        
-
-
+        return redirect()->back()
+            ->with(['success' => 'Accion completada']);
     }
 
     public function postUpdate()
@@ -1546,8 +1479,6 @@ class HistorialPagosController extends RootAdminController
         // return redirect()->back()
         // ->with(['success' => 'Accion completada']);
         return response()->json(['error' => 0, 'msg' => sc_language_render('action.update_success')]);
-
-
     }
 
     /**
@@ -1584,8 +1515,6 @@ class HistorialPagosController extends RootAdminController
         // return redirect()->back()
         // ->with(['success' => 'Accion completada']);
         return response()->json(['error' => 0, 'data' => $pago]);
-
-
     }
 
     public function edit_pagos(Request $request)
@@ -1621,13 +1550,6 @@ class HistorialPagosController extends RootAdminController
 
         return redirect()->back()
             ->with(['success' => 'Historial de pago  actualizado']);
-
-
-
-
-
-
-
     }
 
     public function postEstatusPago(Request $request)
@@ -1644,7 +1566,7 @@ class HistorialPagosController extends RootAdminController
         ]);
 
 
-       
+
 
 
         $balance = 0;
@@ -1675,7 +1597,7 @@ class HistorialPagosController extends RootAdminController
                 $Estatus = 'PAGADO';
                 break;
 
-                 case 8:
+            case 8:
                 $Estatus = 'pagado en mora';
                 break;
 
@@ -1715,44 +1637,43 @@ class HistorialPagosController extends RootAdminController
         ]);
         //actulizar pagos
 
-     
-            $total_pagos = HistorialPago::where('order_id', $pago->order_id)
-                ->whereIn('payment_status',[3,4,5,6])
-                ->get();
 
-            // Obtén el ID del cliente
-            $clientId = $order->customer_id;
-            // Calcula el nivel del cliente
-            $calculator = new ClientLevelCalculator();
-            $level = $calculator->calculate($clientId);
-            // Obtén el cliente a partir de su ID
-            $client = SC_shop_customer::find($clientId);
+        $total_pagos = HistorialPago::where('order_id', $pago->order_id)
+            ->whereIn('payment_status', [3, 4, 5, 6])
+            ->get();
 
-            // Actualiza el nivel del cliente
-            $client->nivel = $level;
+        // Obtén el ID del cliente
+        $clientId = $order->customer_id;
+        // Calcula el nivel del cliente
+        $calculator = new ClientLevelCalculator();
+        $level = $calculator->calculate($clientId);
+        // Obtén el cliente a partir de su ID
+        $client = SC_shop_customer::find($clientId);
 
-            // Guarda los cambios en la base de datos
-            $client->save();
+        // Actualiza el nivel del cliente
+        $client->nivel = $level;
 
-            foreach ($total_pagos as $key => $value) {
-                $tasa = empty($pago->tasa_cambio) ? 1 : $pago->tasa_cambio;
-                $balance += ($pago->importe_pagado * $tasa);
-            }
-            $dataTotal = [];
+        // Guarda los cambios en la base de datos
+        $client->save();
 
-            $shopOrderTotal = ShopOrderTotal::where('order_id', $pago->order_id)->where('code', 'received')
-                ->first();
-            $dataTotal['id'] = $shopOrderTotal->id;
-            $dataTotal['value'] = -$balance;
-            $dataTotal['text'] = sc_currency_render_symbol($balance, $order->currency);
+        foreach ($total_pagos as $key => $value) {
+            $tasa = empty($pago->tasa_cambio) ? 1 : $pago->tasa_cambio;
+            $balance += ($pago->importe_pagado * $tasa);
+        }
+        $dataTotal = [];
 
-            AdminOrder::updateRowOrderTotal($dataTotal);
+        $shopOrderTotal = ShopOrderTotal::where('order_id', $pago->order_id)->where('code', 'received')
+            ->first();
+        $dataTotal['id'] = $shopOrderTotal->id;
+        $dataTotal['value'] = -$balance;
+        $dataTotal['text'] = sc_currency_render_symbol($balance, $order->currency);
 
-        
+        AdminOrder::updateRowOrderTotal($dataTotal);
+
+
 
         return redirect()->back()
             ->with(['success' => 'Estatus actualizado']);
-
     }
 
     public function pagos_realizado()
@@ -2179,8 +2100,6 @@ class HistorialPagosController extends RootAdminController
 
         return view($this->templatePathAdmin . 'pagos-diarios.cobranza_mensual')
             ->with($data);
-
-
     }
 
 
@@ -2191,15 +2110,11 @@ class HistorialPagosController extends RootAdminController
         $dminUser = new AdminUser;
         $list_usuarios = $dminUser->pluck('name', 'id')->all();
         $user_roles = $dminUser::where('id', Admin::user()->id)->join('sc_admin_role_user', 'sc_admin_user.id', '=', 'sc_admin_role_user.user_id')->select('sc_admin_user.*', 'sc_admin_user.id', 'sc_admin_role_user.role_id as role_user')->get();
-        
 
         $data = [];
-
-
-
         $listTh = [
             'N° de Pago' => 'N°',
-   
+
             'Reportado' => 'Reportado',
             'DIVISA' => 'Moneda',
             'CONVERSION' => 'Conversión',
@@ -2208,7 +2123,7 @@ class HistorialPagosController extends RootAdminController
             'FORMA_DE_PAGO' => 'Forma de pago',
             'REFRENCIA' => 'Referencia',
             'FECHA_DE_PAGO' => 'Fecha de pago',
-            'observacion' =>'Nota'
+            'observacion' => 'Nota'
 
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
@@ -2238,121 +2153,101 @@ class HistorialPagosController extends RootAdminController
         $emitido_por = $user_roles[0]->name;
         if ($convenio == null) {
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
-            ->with(['error' => 'Numero de convenio no generado ']);
+                ->with(['error' => 'Numero de convenio no generado ']);
         }
 
 
         $order = AdminOrder::getOrderAdmin($keyword);
-     
+
         //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-        $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
+        $historialPago = HistorialPago::where('order_id', $keyword)->whereIn('payment_status', [3, 4, 5, 6, 8])->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $keyword)
-        ->where('payment_status', 1)
-        ->orWhere('payment_status', 7)->where('order_id', $keyword)
-        ->orderBy('nro_coutas')->first();
+            ->where('payment_status', 1)
+            ->orWhere('payment_status', 7)->where('order_id', $keyword)
+            ->orderBy('nro_coutas')->first();
 
-                $cuota_pendiente = 0;
+        $cuota_pendiente = 0;
 
-                if ($cuota_pendientes != null) {
-                    if ($cuota_pendientes->exists()) {
-                        $cuota_pendiente = $cuota_pendientes->importe_couta;
-                    }
-                }
+        if ($cuota_pendientes != null) {
+            if ($cuota_pendientes->exists()) {
+                $cuota_pendiente = $cuota_pendientes->importe_couta;
+            }
+        }
 
         $nro_total_pagos = 0;
-
-       
-
-
         $dataTr = [];
-
-     
         $totale = [];
-     
         $total_usd_pagado = 0;
-       
- 
 
-        if (!$historialPago->count() >0) {
+
+
+        if (!$historialPago->count() > 0) {
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
                 ->with(['error' => 'no se encontraron pagos reportado']);
         }
         $user_roles = AdminUser::where('id', $order->vendedor_id)->first();
 
         $pagado = 0;
-        $total_bs=0;
+        $total_bs = 0;
+
         foreach ($historialPago as $key => $row) {
-
-
             $nro_total_pagos++;
-
-
             $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-             $styleStatusPayment = $statusPayment;
+            $styleStatusPayment = $statusPayment;
             array_walk($styleStatusPayment, function (&$v, $k) {
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
 
-    
-         
-
-           
-
-         
-           
-
             $moneda = '';
-          
 
-           
-            if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
+
+            // dd($row);
+
+            if ($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6) {
 
                 $pagado += $row->importe_couta;
 
                 $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
-    
+
                 $moneda = $row->moneda;
                 $monto = $row->importe_pagado;
-                
+
 
                 if ($moneda == 'USD') {
-                // El monto está en dólares
-                $monto_dolares = number_format($monto,2);
-                $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
-                $Referencia = $monto_bolivares."Bs";
-                $diVisA = $moneda;
-                $Reportado = $monto;
-            } else if ($moneda == 'Bs') {
-                // El monto está en bolívares
-                $monto_bolivares = number_format($monto ,2);
-                $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
-                $Referencia = $monto_dolares."$";
-                $diVisA = $moneda;
-                $Reportado = $monto;
-                $total_bs += $Reportado ;
+                    // El monto está en dólares
+                    $monto_dolares = number_format($monto, 2);
+                    $monto_bolivares = number_format($monto * $row->tasa_cambio, 2);
+                    $Referencia = $monto_bolivares . "Bs";
+                    $diVisA = $moneda;
+                    $Reportado = $monto;
 
-                
-
-            }
-
-            }else if($row->payment_status == 8 ){
+                    
+                } else if ($moneda == 'Bs') {
+                    // El monto está en bolívares
+                    $monto_bolivares = number_format($monto, 2);
+                    $monto_dolares = number_format($monto / $row->tasa_cambio, 2);
+                    $Referencia = $monto_dolares . "$";
+                    $diVisA = $moneda;
+                    $Reportado = $monto;
+                    $total_bs += $Reportado;
+                }
+            } else if ($row->payment_status == 8) {
                 $monto_dolares = 0.00;
-                $monto_bolivares =0.00;
-                $Referencia =0;
+                $monto_bolivares = 0.00;
+                $Referencia = 0;
                 $diVisA = 0;
                 $Reportado = 0;
-                
             }
-            
-            
+
+
 
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
-       
+
                 'Reportado' => $Reportado ?? 0,
                 'DIVISA' => $diVisA ?? 'N/A',
-                'CONVERSION' => $Referencia ?? 0 ,
+                'CONVERSION' => $Referencia ?? 0,
                 'tasa_cambio' => $row->tasa_cambio ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
                 'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
@@ -2361,12 +2256,10 @@ class HistorialPagosController extends RootAdminController
                 'observacion' =>  $row->observacion
 
             ];
-
-
         } //fin foreach
 
 
-        
+
 
         $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
         $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
@@ -2379,14 +2272,14 @@ class HistorialPagosController extends RootAdminController
         $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
         $data['vendedor'] = $user_roles->name ?? '';
         $data['cedula'] = $order->cedula ?? '';
-        $data['cuota_pendiente'] =$cuota_pendiente ;
+        $data['cuota_pendiente'] = $cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
-        $data['total_bs'] = $total_bs ;
-        
+        $data['total_bs'] = $total_bs;
+
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
         $data['total_usd_pagado'] = $total_usd_pagado;
-        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
+        $data['Cuotas_Pendientes'] =  $convenio->nro_coutas - $nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas - $nro_total_pagos;
         $data['fecha_pago'] = $fechaActual ?? '';
         $data['order_id'] = $order->id ?? '';
         $data['nro_convenio'] = $convenio->nro_convenio ?? '';
@@ -2397,23 +2290,17 @@ class HistorialPagosController extends RootAdminController
 
 
 
-    
+
         $data['totaleudsBS'] = $totale;
         $data['listTh'] = $listTh;
         $data['dataTr'] = $dataTr;
         return view($this->templatePathAdmin . 'format.historial_pagospdf')
             ->with($data);
-
-
-
-
-
-
     }
 
     public function notas_d_entrega()
     {
-       
+
 
         $dminUser = new AdminUser;
         $list_usuarios = $dminUser->pluck('name', 'id')->all();
@@ -2445,7 +2332,7 @@ class HistorialPagosController extends RootAdminController
         $id = $dataSearch['keyword'];
 
 
-    
+
 
 
         $dataTr = [];
@@ -2459,26 +2346,26 @@ class HistorialPagosController extends RootAdminController
 
 
 
-        $historialPago = HistorialPago::where('order_id',$id)->whereIn('payment_status',[3,4,5,6])->orderBy('nro_coutas')->get();
+        $historialPago = HistorialPago::where('order_id', $id)->whereIn('payment_status', [3, 4, 5, 6])->orderBy('nro_coutas')->get();
         $cuota_pendientes = HistorialPago::where('order_id', $id)
-        ->where('payment_status', 1)
-        ->orWhere('payment_status', 7)->where('order_id', $id)
-        ->orderBy('nro_coutas')->first();
+            ->where('payment_status', 1)
+            ->orWhere('payment_status', 7)->where('order_id', $id)
+            ->orderBy('nro_coutas')->first();
 
-        $convenio = Convenio::where('order_id',$id)->first();
+        $convenio = Convenio::where('order_id', $id)->first();
 
-        if (!$historialPago->count() >0) {
+        if (!$historialPago->count() > 0) {
             return redirect(sc_route_admin('admin_order.detail', ['id' => $dataSearch['keyword']]))
                 ->with(['error' => 'no se encontraron pagos reportado']);
         }
         $user_roles = AdminUser::where('id', $order->vendedor_id)->first();
 
 
-       
-           
 
 
-      
+
+
+
 
 
 
@@ -2487,7 +2374,6 @@ class HistorialPagosController extends RootAdminController
 
         foreach ($historia as $historias) {
             $lasuma += $historias->importe_couta;
-
         }
 
         $monedas = sc_currency_all();
@@ -2498,11 +2384,11 @@ class HistorialPagosController extends RootAdminController
         $subtotal = 0.00;
         $lote = 0;
         $pagado = 0;
-        $total_bs=0;
+        $total_bs = 0;
         $nro_total_pagos = 0;
         $total_usd_pagado = 0;
 
-       
+
 
         foreach ($historialPago as $key => $row) {
 
@@ -2518,31 +2404,28 @@ class HistorialPagosController extends RootAdminController
                 // El monto está en dólares
                 $monto_dolares = round($monto, 2);
                 $monto_bolivares = round($monto * $row->tasa_cambio, 2);
-                $Referencia = $monto_bolivares."Bs";
+                $Referencia = $monto_bolivares . "Bs";
                 $diVisA = $moneda;
                 $Reportado = $monto;
             } elseif ($moneda == 'Bs') {
                 // El monto está en bolívares
                 $monto_bolivares = round($monto, 2);
                 $monto_dolares = round($monto / $row->tasa_cambio, 2);
-                $Referencia = $monto_dolares."$";
+                $Referencia = $monto_dolares . "$";
                 $diVisA = $moneda;
                 $Reportado = $monto;
-
             }
 
-    
-            $fecha_pago = $row->fecha_pago;
-           
 
+            $fecha_pago = $row->fecha_pago;
         }
 
 
         $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
 
-       
 
-        $data['cliente'] =$cliente->last_name ?? '';
+
+        $data['cliente'] = $cliente->last_name ?? '';
         $data['vendedor'] = $vendedor ?? '';
         $data['serial_product'] = $serial_product ?? 'xxxx';
         $data['cedula'] = $cliente->cedula ?? '';
@@ -2558,7 +2441,7 @@ class HistorialPagosController extends RootAdminController
         $data['referencia'] = $lasuma ?? '';
         $data['descuento'] = $order->discount ?? 0;
         $data['order'] =   $order;
-        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos);
+        $data['Cuotas_Pendientes'] =  round($convenio->nro_coutas - $nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas - $nro_total_pagos);
         $data['totalPor_pagar'] = $order->total - $pagado;
         $data['total_usd_pagado'] = $monto_dolares;
         $data['order_id'] = $order->id ?? '';
@@ -2567,18 +2450,17 @@ class HistorialPagosController extends RootAdminController
         $data['emitido_por'] = $emitido_por ?? '';
         $data['total_monto_pagado'] = $pagado;
 
-       
+
 
         if ($dataSearch['notas_entrega']) {
             $data['dataTr'] = $dataTr;
             return view($this->templatePathAdmin . 'format.notas_d_entrega')
                 ->with($data);
         }
-
-
     }
 
-    public function actualizar_puntos_de_clientes(){
+    public function actualizar_puntos_de_clientes()
+    {
 
         $orders = ShopOrder::all();
 
@@ -2592,14 +2474,11 @@ class HistorialPagosController extends RootAdminController
 
             // Actualiza el nivel del cliente
             $client->nivel = $level;
-            echo $client->nivel.' '.$client->first_name.' '.$client->last_name.'<br>';
+            echo $client->nivel . ' ' . $client->first_name . ' ' . $client->last_name . '<br>';
             // Guarda los cambios en la base de datos
             $client->save();
         }
         $clientId = $order->customer_id;
-      
-
-
     }
 
 
@@ -2609,7 +2488,7 @@ class HistorialPagosController extends RootAdminController
         $search = request()->all();
 
 
-      
+
 
         $dataSearch = [
             'keyword'      => $search['keyword'] ?? '',
@@ -2617,12 +2496,13 @@ class HistorialPagosController extends RootAdminController
             'end_to'       => $search['end_to'] ?? '',
             'order_status' => $search['order_status'] ?? 0,
         ];
-        
+
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
             ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')
             ->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
-            ->select('sc_historial_pagos.*', 
-                'sc_shop_order.first_name', 
+            ->select(
+                'sc_historial_pagos.*',
+                'sc_shop_order.first_name',
                 'sc_shop_order.last_name',
                 'sc_convenios.lote',
                 'sc_shop_order.last_name',
@@ -2631,49 +2511,50 @@ class HistorialPagosController extends RootAdminController
                 'sc_convenios.fecha_maxima_entrega',
                 'sc_convenios.nro_convenio',
                 'sc_convenios.nro_coutas as cuotas_pendientes',
-                'sc_shop_order.cedula', 'sc_shop_order.vendedor_id',
-                'sc_historial_pagos.order_id')->first();
+                'sc_shop_order.cedula',
+                'sc_shop_order.vendedor_id',
+                'sc_historial_pagos.order_id'
+            )->first();
 
-               
-        
+
+
         if ($dataSearch['order_status']) {
             $orderList->where('sc_historial_pagos.payment_status', $dataSearch['order_status']);
 
-            
+
             dd($dataSearch['order_status']);
         }
-        
+
         if ($dataSearch['end_to'] && $dataSearch['order_status']) {
             $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
-            $orderList->where(function($query) use ($fromTo, $dataSearch) {
+            $orderList->where(function ($query) use ($fromTo, $dataSearch) {
                 $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
                     ->where('sc_historial_pagos.created_at', '<=', $fromTo);
             });
         }
-        
+
         if ($dataSearch['from_to'] && $dataSearch['order_status']) {
             $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['from_to']));
-            $orderList->where(function($query) use ($fromTo, $dataSearch) {
+            $orderList->where(function ($query) use ($fromTo, $dataSearch) {
                 $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
                     ->where('sc_historial_pagos.created_at', '>=', $fromTo);
             });
         }
-        
+
         if ($dataSearch['keyword']) {
             $keyword = $dataSearch['keyword'];
             $orderList->where('sc_historial_pagos.order_id', $keyword);
         }
-        
+
         $orderList->orderBy('fecha_pago', 'desc');
-        
+
         $Resultado = $orderList->get();
 
-     if(empty($Resultado)){
+        if (empty($Resultado)) {
             return redirect(sc_route_admin('historial_pagos.index'))
                 ->with(['error' => 'Selecciona un status de pago']);
-
         }
-    
+
 
         $spreadsheet = new Spreadsheet();
 
@@ -2690,17 +2571,17 @@ class HistorialPagosController extends RootAdminController
         $hoja->setCellValue('G1', 'Comentario');
         $hoja->setCellValue('H1', 'Fecha pago');
         $hoja->setCellValue('I1', 'Creado');
-    
-        
+
+
 
         $datos =  $Resultado;
         // Obtener los datos de la base de datos
-       
+
 
         $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
 
 
-       
+
 
         // Establecer los datos de la tabla
         $fila = 2;
@@ -2708,7 +2589,7 @@ class HistorialPagosController extends RootAdminController
         foreach ($datos as  $dato) {
 
 
-         
+
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
             $hoja->setCellValue('B' . $fila, $dato->first_name . $dato->order_id);
             $hoja->setCellValue('C' . $fila, $dato->tota_product ?? 'N/A');
@@ -2718,13 +2599,13 @@ class HistorialPagosController extends RootAdminController
             $hoja->setCellValue('G' . $fila, $dato->comment);
             $hoja->setCellValue('H' . $fila, $dato->fecha_pago);
             $hoja->setCellValue('I' . $fila, $dato->created_at);
-           
-           
+
+
 
             $fila++;
         }
 
-    
+
         // Configurar la descarga del archivo
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2734,7 +2615,4 @@ class HistorialPagosController extends RootAdminController
 
         exit;
     }
-
-
-    
 }
