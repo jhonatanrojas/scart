@@ -113,9 +113,10 @@ foreach (sc_currency_all()  as $moneda) {
                         
                         @if($order->modalidad_de_compra>=1 &&  $historial->payment_status != 2  && $historial->payment_status !=5)
                           <td>   
-                            <button onclick="pagar('{{$historial->order_id,$historial->id}}')" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
+                            <button onclick="pagar('{{$historial->id}}')" value="{{$historial->id}}" id="pagar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
                               PAGAR
                             </button>
+                           
                           </td>
                         @endif
                       </tr>
@@ -201,7 +202,7 @@ foreach (sc_currency_all()  as $moneda) {
       </div> <!-- .col -->
     </div> <!-- .row -->
   </div> <!-- .container -->
-
+  <input type="hidden" id="pagos_id" value="0">
 </section>
     
 @endsection
@@ -243,12 +244,20 @@ foreach (sc_currency_all()  as $moneda) {
         }
 
         function pagoMovil (id_pago){
+          let id_pago = ${"#pagos_id"}.val()
 
           location.href="/es/customer/reportar-pago/{{$order->id}}?id_pago=" + id_pago
         }
 
         function bioPago (id){
-          location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id+"])}}" 
+          let id_pago = ${"#pagos_id"}.val()
+
+          location.href="{{ route('biopago',['id' => $order->id ,'id'=>"+id_pago+"])}}" 
+        }
+
+
+        function pagar (id_pago){
+          ${"#pagos_id"}.val(id_pago)
         }
 </script>
 
