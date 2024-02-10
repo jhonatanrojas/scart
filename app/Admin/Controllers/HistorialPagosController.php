@@ -2125,6 +2125,7 @@ class HistorialPagosController extends RootAdminController
             'FECHA_DE_PAGO' => 'Fecha de pago',
             'observacion' => 'Nota'
 
+
         ];
         $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
         $keyword = sc_clean(request('keyword') ?? '');
@@ -2178,6 +2179,9 @@ class HistorialPagosController extends RootAdminController
         $dataTr = [];
         $totale = [];
         $total_usd_pagado = 0;
+        $sumaBolivares = 0;
+        $sumaDolares = 0 ;
+        $total_Bs = 0 ; 
 
 
 
@@ -2189,6 +2193,7 @@ class HistorialPagosController extends RootAdminController
 
         $pagado = 0;
         $total_bs = 0;
+        $tola_dolares= 0;
 
         foreach ($historialPago as $key => $row) {
             $nro_total_pagos++;
@@ -2200,19 +2205,23 @@ class HistorialPagosController extends RootAdminController
 
             $moneda = '';
 
+            if($row->moneda == 'Bs'){
+               $sumaBolivares +=  $row->importe_pagado; 
 
-            // dd($row);
+            }
+            if($row->moneda == 'USD'){
+               $sumaDolares +=  $row->importe_pagado * $row->tasa_cambio;
+               $tola_dolares = $sumaDolares;
+            }
+
+
 
             if ($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6) {
 
                 $pagado += $row->importe_couta;
-
                 $fecha_formateada = date('d-m-Y', strtotime($row->fecha_pago));
-
                 $moneda = $row->moneda;
                 $monto = $row->importe_pagado;
-
-
                 if ($moneda == 'USD') {
                     // El monto está en dólares
                     $monto_dolares = number_format($monto, 2);
@@ -2239,16 +2248,15 @@ class HistorialPagosController extends RootAdminController
                 $Reportado = 0;
             }
 
-
+           
 
 
             $dataTr[$row->id] = [
                 'N° de Pago' => $row->nro_coutas,
-
                 'Reportado' => $Reportado ?? 0,
                 'DIVISA' => $diVisA ?? 'N/A',
                 'CONVERSION' => $Referencia ?? 0,
-                'tasa_cambio' => $row->tasa_cambio ?? 0,
+                'tasa_cambio' => number_format($row->tasa_cambio ,4 ) ?? 0,
                 'estatus' => $styleStatusPayment[$row->payment_status],
                 'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
                 'REFRENCIA' => $row->referencia ?? 0,
@@ -2256,8 +2264,12 @@ class HistorialPagosController extends RootAdminController
                 'observacion' =>  $row->observacion
 
             ];
+
+
+           
         } //fin foreach
 
+        $total_Bs =  $tola_dolares + $sumaBolivares;
 
 
 
@@ -2274,7 +2286,7 @@ class HistorialPagosController extends RootAdminController
         $data['cedula'] = $order->cedula ?? '';
         $data['cuota_pendiente'] = $cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
-        $data['total_bs'] = $total_bs;
+        $data['total_bs'] =$total_Bs;
 
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;

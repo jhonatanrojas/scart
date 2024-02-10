@@ -188,11 +188,9 @@
                               </tbody>
 
                               <tr>
-                    
                                 <td colspan="4"></td> 
-                                <td colspan="2">Total Bs: {!!number_format($total_bs ,2)!!}   BS</td>
-                         
-                                                               <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
+                                <td colspan="2">Total Bs: {!!number_format($total_bs ,1)!!}   BS</td>
+                                <td colspan="2">Total Ref $: {{$total_monto_pagado}} $</td>
                               </tr>
                               <tr>
                                 <td   class="h5 text-center" colspan="10">RESUMEN</td>
