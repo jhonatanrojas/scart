@@ -159,9 +159,6 @@ class ShopAccountController extends RootFrontController
         request()->id_pedido;
         request()->id;
         $historial_pago = HistorialPago::where('referencia', request()->id)->first();
-
-
-
         if ($historial_pago) {
 
             $id_usuario = $historial_pago->customer_id;
@@ -675,11 +672,11 @@ class ShopAccountController extends RootFrontController
         } else {
             $historial_pagos =   HistorialPago::where('order_id', $id)
                 ->where('fecha_venciento', '<', $fech_p)
-                ->whereIn('payment_status', [1, 8,2])
+                ->whereIn('payment_status', [1, 8, 2])
                 ->orderBy('fecha_venciento')->limit(3)
                 ->get();
 
-                // dd( $historial_pagos);
+            // dd( $historial_pagos);
         }
 
 
@@ -735,8 +732,8 @@ class ShopAccountController extends RootFrontController
             $id = $params[0] ?? '';
         }
         $customer = auth()->user();
-    
-       $id_pago = $request->id_pago; 
+
+        $id_pago = $request->id_pago;
 
         $bancos = Banco::all();
 
@@ -744,12 +741,10 @@ class ShopAccountController extends RootFrontController
 
         $referencia = SC_referencia_personal::where('id_usuario', $id)->get();
 
-        if($id_pago){
-            $historial_pago = HistorialPago::where('order_id', $params[1])->where('id' ,$id_pago)->first();
-
-        }else{
+        if ($id_pago) {
+            $historial_pago = HistorialPago::where('order_id', $params[1])->where('id', $id_pago)->first();
+        } else {
             $historial_pago = HistorialPago::where('order_id', $params[1])->first();
-
         }
 
 
@@ -850,9 +845,8 @@ class ShopAccountController extends RootFrontController
         if ($resultado['code'] == 1000) {
             $payment_status = 5;
             $mensaje_final = 'Pago Verificado ' . $resultado['message'];
-        
         }
-        
+
         /*else {
             return redirect()->back()->withInput()->with(['warning' => "Lo sentimos,  " . $resultado['message']]);
         }*/
@@ -959,13 +953,7 @@ class ShopAccountController extends RootFrontController
         }
 
         $nro_total_pagos = 0;
-
-
-
-
         $dataTr = [];
-
-
         $totale = [];
 
         $total_usd_pagado = 0;
@@ -980,10 +968,23 @@ class ShopAccountController extends RootFrontController
 
         $pagado = 0;
         $total_bs = 0;
+
+        $sumaBolivares = 0;
+        $sumaDolares = 0;
+        $total_Bs = 0;
+        $tola_dolares = 0;
         foreach ($historialPago as $key => $row) {
 
 
             $nro_total_pagos++;
+
+            if ($row->moneda == 'Bs') {
+                $sumaBolivares +=  $row->importe_pagado;
+            }
+            if ($row->moneda == 'USD') {
+                $sumaDolares +=  $row->importe_pagado * $row->tasa_cambio;
+                $tola_dolares = $sumaDolares;
+            }
 
 
             $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
@@ -991,12 +992,6 @@ class ShopAccountController extends RootFrontController
             array_walk($styleStatusPayment, function (&$v, $k) {
                 $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
             });
-
-
-
-
-
-
 
 
 
@@ -1057,6 +1052,8 @@ class ShopAccountController extends RootFrontController
             ];
         } //fin foreach
 
+        $total_Bs =  $tola_dolares + $sumaBolivares;
+
 
 
 
@@ -1073,7 +1070,7 @@ class ShopAccountController extends RootFrontController
         $data['cedula'] = $order->cedula ?? '';
         $data['cuota_pendiente'] = $cuota_pendiente;
         $data['lote'] = $convenio->lote ?? '';
-        $data['total_bs'] = $total_bs;
+        $data['total_bs'] = $total_Bs;
 
         $data['direccion'] = $cliente->address1 ?? '';
         $data['total_monto_pagado'] = $pagado;
@@ -1125,7 +1122,7 @@ class ShopAccountController extends RootFrontController
 
         sc_check_view($this->templatePath . '.account.historial_pagos');
 
-     
+
         return view($this->templatePath . '.account.historial_pagos')
             ->with(
                 [
