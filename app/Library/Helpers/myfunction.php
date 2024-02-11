@@ -1,6 +1,6 @@
 <?php
 //Your functions
- 
+
 // function demoFunction() {
 //     echo "Hello world!";
 // } 
@@ -9,10 +9,10 @@ use App\Events\OrderCreated;
 use SCart\Core\Front\Models\ShopCustomer;
 use SCart\Core\Front\Models\ShopCustomField;
 use SCart\Core\Front\Models\ShopCountry;
-Use App\Models\Estado;
-Use App\Models\Municipio;
-Use App\Models\Parroquia;
-Use App\Models\ShopOrder;
+use App\Models\Estado;
+use App\Models\Municipio;
+use App\Models\Parroquia;
+use App\Models\ShopOrder;
 use App\Models\AdminOrder;
 use App\Models\Convenio;
 use App\Models\Catalogo\PaymentStatus;
@@ -21,9 +21,10 @@ use SCart\Core\Front\Models\ShopPaymentStatus;
 use Carbon\Carbon;
 use App\Models\SC_shop_customer;
 
- function reportePagosH($keyword,$historial_pago){
-        
-    
+function reportePagosH($keyword, $historial_pago)
+{
+
+
 
     $data = [];
 
@@ -68,69 +69,54 @@ use App\Models\SC_shop_customer;
     $convenio = Convenio::where('order_id', $keyword)->first();
 
     $emitido_por = '';
-   
+
 
     $order = AdminOrder::getOrderAdmin($keyword);
- 
+
     //  $dataTmp = $this->getPagosListAdmin2($dataSearch);
-    $historialPago = HistorialPago::where('order_id',$keyword)->whereIn('payment_status',[3,4,5,6,8])->orderBy('nro_coutas')->get();
+    $historialPago = HistorialPago::where('order_id', $keyword)->whereIn('payment_status', [3, 4, 5, 6, 8])->orderBy('nro_coutas')->get();
     $cuota_pendientes = HistorialPago::where('order_id', $keyword)
-    ->where('payment_status', 1)
-    ->orWhere('payment_status', 7)->where('order_id', $keyword)
-    ->orderBy('nro_coutas')->first();
+        ->where('payment_status', 1)
+        ->orWhere('payment_status', 7)->where('order_id', $keyword)
+        ->orderBy('nro_coutas')->first();
 
-            $cuota_pendiente = 0;
+    $cuota_pendiente = 0;
 
-            if ($cuota_pendientes != null) {
-                if ($cuota_pendientes->exists()) {
-                    $cuota_pendiente = $cuota_pendientes->importe_couta;
-                }
-            }
+    if ($cuota_pendientes != null) {
+        if ($cuota_pendientes->exists()) {
+            $cuota_pendiente = $cuota_pendientes->importe_couta;
+        }
+    }
 
     $nro_total_pagos = 0;
-
-   
-
-
     $dataTr = [];
-
- 
     $totale = [];
- 
     $total_usd_pagado = 0;
-   
-
-
-
-  
-
     $pagado = 0;
-    $total_bs=0;
+    $total_bs = 0;
+    $sumaBolivares = 0;
+    $sumaDolares = 0;
+    $total_Bs = 0;
+    $tola_dolares = 0;
     foreach ($historialPago as $key => $row) {
-
-
         $nro_total_pagos++;
-
-
         $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-         $styleStatusPayment = $statusPayment;
+        $styleStatusPayment = $statusPayment;
         array_walk($styleStatusPayment, function (&$v, $k) {
             $v = '<span class="text-black badge badge-' . (AdminOrder::$mapStyleStatus[$k] ?? 'light') . '">' . $v . '</span>';
         });
 
-
-     
-
-       
-
-     
-       
-
         $moneda = '';
-      
 
-       
-        if($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6){
+        if ($row->moneda == 'Bs') {
+            $sumaBolivares +=  $row->importe_pagado;
+        }
+        if ($row->moneda == 'USD') {
+            $sumaDolares +=  $row->importe_pagado * $row->tasa_cambio;
+            $tola_dolares = $sumaDolares;
+        }
+
+        if ($row->payment_status == 3 || $row->payment_status == 4 || $row->payment_status == 5 || $row->payment_status == 6) {
 
             $pagado += $row->importe_couta;
 
@@ -138,38 +124,32 @@ use App\Models\SC_shop_customer;
 
             $moneda = $row->moneda;
             $monto = $row->importe_pagado;
-            
 
             if ($moneda == 'USD') {
-            // El monto está en dólares
-            $monto_dolares = number_format($monto,2);
-            $monto_bolivares = number_format($monto * $row->tasa_cambio,2);
-            $Referencia = $monto_bolivares."Bs";
-            $diVisA = $moneda;
-            $Reportado = $monto;
-        } else if ($moneda == 'Bs') {
-            // El monto está en bolívares
-            $monto_bolivares = number_format($monto ,2);
-            $monto_dolares = number_format($monto / $row->tasa_cambio ,2);
-            $Referencia = $monto_dolares."$";
-            $diVisA = $moneda;
-            $Reportado = $monto;
-            $total_bs += $Reportado ;
-
-            
-
-        }
-
-        }else if($row->payment_status == 8 ){
+                // El monto está en dólares
+                $monto_dolares = number_format($monto, 2);
+                $monto_bolivares = number_format($monto * $row->tasa_cambio, 2);
+                $Referencia = $monto_bolivares . "Bs";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+            } else if ($moneda == 'Bs') {
+                // El monto está en bolívares
+                $monto_bolivares = number_format($monto, 2);
+                $monto_dolares = number_format($monto / $row->tasa_cambio, 2);
+                $Referencia = $monto_dolares . "$";
+                $diVisA = $moneda;
+                $Reportado = $monto;
+                $total_bs += $Reportado;
+            }
+        } else if ($row->payment_status == 8) {
             $monto_dolares = 0.00;
-            $monto_bolivares =0.00;
-            $Referencia =0;
+            $monto_bolivares = 0.00;
+            $Referencia = 0;
             $diVisA = 0;
             $Reportado = 0;
-            
         }
-        
-        
+
+
 
 
         $dataTr[$row->id] = [
@@ -177,7 +157,7 @@ use App\Models\SC_shop_customer;
             'MONTO' => $row->importe_couta . '$',
             'Reportado' => $Reportado ?? 0,
             'DIVISA' => $diVisA ?? 'N/A',
-            'CONVERSION' => $Referencia ?? 0 ,
+            'CONVERSION' => $Referencia ?? 0,
             'tasa_cambio' => $row->tasa_cambio ?? 0,
             'estatus' => $styleStatusPayment[$row->payment_status],
             'FORMA_DE_PAGO' => $row->metodo_pago->name ?? 'N/A',
@@ -185,12 +165,9 @@ use App\Models\SC_shop_customer;
             'FECHA_DE_PAGO' => $fecha_formateada ?? 'N/A'
 
         ];
-
-
     } //fin foreach
 
-
-    
+    $total_Bs =  $tola_dolares + $sumaBolivares;
 
     $fechaActual = Carbon::now()->format('d \d\e F \d\e Y');
     $cliente = SC_shop_customer::where('id', $order->customer_id)->first();
@@ -203,14 +180,14 @@ use App\Models\SC_shop_customer;
     $data['cliente'] = $cliente->first_name . ' ' . $cliente->last_name ?? '';
     $data['vendedor'] =  '';
     $data['cedula'] = $order->cedula ?? '';
-    $data['cuota_pendiente'] =$cuota_pendiente ;
+    $data['cuota_pendiente'] = $cuota_pendiente;
     $data['lote'] = $convenio->lote ?? '';
-    $data['total_bs'] = $total_bs ;
-    
+    $data['total_bs'] = $total_Bs;
+
     $data['direccion'] = $cliente->address1 ?? '';
     $data['total_monto_pagado'] = $pagado;
     $data['total_usd_pagado'] = $total_usd_pagado;
-    $data['Cuotas_Pendientes'] =  $convenio->nro_coutas -$nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas -$nro_total_pagos;
+    $data['Cuotas_Pendientes'] =  $convenio->nro_coutas - $nro_total_pagos < 0 ? 0 :  $convenio->nro_coutas - $nro_total_pagos;
     $data['fecha_pago'] = $fechaActual ?? '';
     $data['order_id'] = $order->id ?? '';
     $data['nro_convenio'] = $convenio->nro_convenio ?? '';
@@ -218,20 +195,14 @@ use App\Models\SC_shop_customer;
 
     $data['fecha_maxima_entrega'] = $order->fecha_maxima_entrega ? fechaEs($order->fecha_maxima_entrega) : '';
 
-
-
-
-
     $data['totaleudsBS'] = $totale;
     $data['listTh'] = $listTh;
     $data['dataTr'] = $dataTr;
-    return view( 'templates.waika-blue.account.historial_pagospdf')
+    return view('templates.waika-blue.account.historial_pagospdf')
         ->with($data);
-
-
-
 }
-function separarCadena($cadena) {
+function separarCadena($cadena)
+{
     // Divide la cadena en fragmentos de 4 caracteres
     $fragmentos = str_split($cadena, 4);
 
@@ -239,13 +210,15 @@ function separarCadena($cadena) {
     return implode(' ', $fragmentos);
 }
 
-function retornaNegativo($numero){
+function retornaNegativo($numero)
+{
     $num     = gmp_init($numero);
     $neg_num = gmp_neg($num);
-return gmp_strval($neg_num);
+    return gmp_strval($neg_num);
 }
 
-function fechaEs($fecha) {
+function fechaEs($fecha)
+{
     $fecha = substr($fecha, 0, 10);
     $numeroDia = date('d', strtotime($fecha));
     $dia = date('l', strtotime($fecha));
@@ -257,7 +230,7 @@ function fechaEs($fecha) {
     $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
     $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
     $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-    return $nombredia." ".$numeroDia." de ".$nombreMes." de ".$anio;
+    return $nombredia . " " . $numeroDia . " de " . $nombreMes . " de " . $anio;
 }
 function sc_event_order_created(ShopOrder $order)
 {
@@ -265,314 +238,313 @@ function sc_event_order_created(ShopOrder $order)
 }
 
 function sc_event_order_success(ShopOrder $order)
-    {
-        OrderSuccess::dispatch($order);
-    }
-
-
-    function sc_customer_data_insert_mapping(array $dataRaw)
-    {
-    
-
-        $dataInsert = [
-            'first_name' => $dataRaw['first_name'] ?? '',
-            'email' => $dataRaw['email'],
-            'cedula' => $dataRaw['cedula'],
-            'natural_jurídica' => $dataRaw['natural_jurídica'],
-            'nos_conocio' => $dataRaw['nos_conocio'] ,
-            'cod_estado' => $dataRaw['cod_estado'],
-            'cod_municipio' => $dataRaw['cod_municipio'],
-            'cod_parroquia' => $dataRaw['cod_parroquia'],
-            'password' => bcrypt($dataRaw['password']),
-         
-        ];
-
-       
-
-       
-
-        $validate = [
-            'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
-            'email' => config('validation.customer.email', 'required|string|email|max:255').'|unique:"'.ShopCustomer::class.'",email',
-            'password' => config('validation.customer.password_confirm', 'required|confirmed|string|min:6'),
-        ];
-
-        if (isset($dataRaw['status'])) {
-            $dataInsert['status']  = $dataRaw['status'];
-        }
-
-        if (isset($dataRaw['rif'])) {
-            $dataInsert['rif']  = $dataRaw['rif'];
-        }
-
-        if (isset($dataRaw['razon_social'])) {
-            $dataInsert['razon_social']  = $dataRaw['razon_social'];
-        }
-
-        if (isset($dataRaw['estado_civil'])) {
-            $dataInsert['estado_civil']  = $dataRaw['estado_civil'];
-        }
-        if (empty($dataRaw['nos_conocio'])) {
-            $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
-        }
-
-        if (empty($dataRaw['phone2'])) {
-            $dataInsert['phone2'] = $dataRaw['phone2'];
-        }
-
-        //Custom fields
-        $customFields = (new ShopCustomField)->getCustomField($type = 'customer');
-        if ($customFields) {
-            foreach ($customFields as $field) {
-                if ($field->required) {
-                    $validate['fields.'.$field->code] = 'required';
-                }
-            }
-        }
-
-        if (sc_config('customer_lastname')) {
-            if (sc_config('customer_lastname_required')) {
-                $validate['last_name'] = config('validation.customer.last_name_required', 'required|string|max:100');
-            } else {
-                $validate['last_name'] = config('validation.customer.last_name_null', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['last_name'])) {
-                $dataInsert['last_name'] = $dataRaw['last_name'];
-            }
-        }
-
-     
-        if (sc_config('customer_address1')) {
-            if (sc_config('customer_address1_required')) {
-                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:00');
-            } else {
-                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
-            }
-            if (!empty($dataRaw['address1'])) {
-                $dataInsert['address1'] = $dataRaw['address1'];
-            }
-        }
-
-        if (sc_config('customer_address2')) {
-            if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:240');
-            } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:240');
-            }
-            if (!empty($dataRaw['address2'])) {
-                $dataInsert['address2'] = $dataRaw['address2'];
-            }
-        }
-
-        if (sc_config('customer_address3')) {
-            if (sc_config('customer_address3_required')) {
-                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:100');
-            } else {
-                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['address3'])) {
-                $dataInsert['address3'] = $dataRaw['address3'];
-            }
-        }
-
-
-        if (sc_config('customer_phone')) {
-            if (sc_config('customer_phone_required')) {
-                $validate['phone'] = config('validation.customer.phone_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
-            } else {
-                $validate['phone'] = config('validation.customer.phone_null', 'nullable|regex:/^0[^0][0-9\-]{6,12}$/');
-            }
-            if (!empty($dataRaw['phone'])) {
-                $dataInsert['phone'] = $dataRaw['phone'];
-            }
-        }
-
-        if (sc_config('customer_country')) {
-            $arraycountry = (new ShopCountry)->pluck('code')->toArray();
-            if (sc_config('customer_country_required')) {
-                $validate['country'] = config('validation.customer.country_required', 'required|string|min:2').'|in:'. implode(',', $arraycountry);
-            } else {
-                $validate['country'] = config('validation.customer.country_null', 'nullable|string|min:2').'|in:'. implode(',', $arraycountry);
-            }
-            if (!empty($dataRaw['country'])) {
-                $dataInsert['country'] = $dataRaw['country'];
-            }
-        }
-
-        if (sc_config('customer_postcode')) {
-            if (sc_config('customer_postcode_required')) {
-                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
-            } else {
-                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
-            }
-            if (!empty($dataRaw['postcode'])) {
-                $dataInsert['postcode'] = $dataRaw['postcode'];
-            }
-        }
-
-        if (sc_config('customer_company')) {
-            if (sc_config('customer_company_required')) {
-                $validate['company'] = config('validation.customer.company_required', 'required|string|max:100');
-            } else {
-                $validate['company'] = config('validation.customer.company_null', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['company'])) {
-                $dataInsert['company'] = $dataRaw['company'];
-            }
-        }
-
-        if (sc_config('customer_sex')) {
-            if (sc_config('customer_sex_required')) {
-                $validate['sex'] = config('validation.customer.sex_required', 'required|integer|max:10');
-            } else {
-                $validate['sex'] = config('validation.customer.sex_null', 'nullable|integer|max:10');
-            }
-            if (!empty($dataRaw['sex'])) {
-                $dataInsert['sex'] = $dataRaw['sex'];
-            }
-        }
-
-        if (sc_config('customer_birthday')) {
-            if (sc_config('customer_birthday_required')) {
-                $validate['birthday'] = config('validation.customer.birthday_required', 'required|date|date_format:Y-m-d');
-            } else {
-                $validate['birthday'] = config('validation.customer.birthday_null', 'nullable|date|date_format:Y-m-d');
-            }
-            if (!empty($dataRaw['birthday'])) {
-                $dataInsert['birthday'] = $dataRaw['birthday'];
-            }
-        }
-
-        if (sc_config('customer_group')) {
-            if (sc_config('customer_group_required')) {
-                $validate['group'] = config('validation.customer.group_required', 'required|integer|max:10');
-            } else {
-                $validate['group'] = config('validation.customer.group_null', 'nullable|integer|max:10');
-            }
-            if (!empty($dataRaw['group'])) {
-                $dataInsert['group'] = $dataRaw['group'];
-            }
-        }
-
-        if (sc_config('customer_name_kana')) {
-            if (sc_config('customer_name_kana_required')) {
-                $validate['first_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
-                $validate['last_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
-            } else {
-                $validate['first_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
-                $validate['last_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['first_name_kana'])) {
-                $dataInsert['first_name_kana'] = $dataRaw['first_name_kana'];
-            }
-            if (!empty($dataRaw['last_name_kana'])) {
-                $dataInsert['last_name_kana'] = $dataRaw['last_name_kana'];
-            }
-        }
-
-
-        if (sc_config('customer_cedula')) {
-            if (sc_config('customer_cedula_required')) {
-                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-            } else {
-                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-            }
-            if (!empty($dataRaw['cedula'])) {
-                if($dataRaw['nacionalidad'] == "V"){
-                    $dataInsert['cedula'] = 'V '.$dataInsert['cedula'];
-                }else if($dataRaw['nacionalidad'] == "E"){
-                    $dataInsert['cedula'] = 'E '.$dataInsert['cedula'];
-                }
-
-            }
-        }
-
-if (sc_config('customer_estado')) {
-    $arraycountry = (new Estado)->pluck('codigoestado')->toArray();
-    if (sc_config('customer_estado_required')) {
-        $validate['cod_estado'] = config('cod_estado', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
-    } else {
-        $validate['cod_estado'] = config('cod_estado', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
-    }
-    if (!empty($dataRaw['cod_estado'])) {
-        $dataInsert['cod_estado'] = $dataRaw['cod_estado'];
-    }
-}
-if (sc_config('customer_municipio')) {
-    $arraycountry = (new Municipio)->pluck('codigomunicipio')->toArray();
-    if (sc_config('customer_municipio_required')) {
-        $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
-    } else {
-        $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
-    }
-    if (!empty($dataRaw['cod_municipio'])) {
-        $dataInsert['cod_municipio'] = $dataRaw['cod_municipio'];
-    }
+{
+    OrderSuccess::dispatch($order);
 }
 
-if (sc_config('customer_parroquias')) {
-    // if (sc_config('customer_parroquias_required')) {
-    //     $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
-    // } else {
-    //     $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
-    // }
 
-    // $arraycountry = (new Parroquia())->pluck('codigomunicipio')->toArray();
-    // if (sc_config('customer_parroquias_required')) {
-    //     $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
-    // } else {
-    //     $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
-    // }
-  
-    if (!empty($dataRaw['cod_parroquia'])) {
-        $dataInsert['cod_parroquia'] = $dataRaw['cod_parroquia'];
+function sc_customer_data_insert_mapping(array $dataRaw)
+{
+
+
+    $dataInsert = [
+        'first_name' => $dataRaw['first_name'] ?? '',
+        'email' => $dataRaw['email'],
+        'cedula' => $dataRaw['cedula'],
+        'natural_jurídica' => $dataRaw['natural_jurídica'],
+        'nos_conocio' => $dataRaw['nos_conocio'],
+        'cod_estado' => $dataRaw['cod_estado'],
+        'cod_municipio' => $dataRaw['cod_municipio'],
+        'cod_parroquia' => $dataRaw['cod_parroquia'],
+        'password' => bcrypt($dataRaw['password']),
+
+    ];
+
+
+
+
+
+    $validate = [
+        'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
+        'email' => config('validation.customer.email', 'required|string|email|max:255') . '|unique:"' . ShopCustomer::class . '",email',
+        'password' => config('validation.customer.password_confirm', 'required|confirmed|string|min:6'),
+    ];
+
+    if (isset($dataRaw['status'])) {
+        $dataInsert['status']  = $dataRaw['status'];
     }
-}
-        if (!empty($dataRaw['fields'])) {
-            $dataInsert['fields'] = $dataRaw['fields'];
+
+    if (isset($dataRaw['rif'])) {
+        $dataInsert['rif']  = $dataRaw['rif'];
+    }
+
+    if (isset($dataRaw['razon_social'])) {
+        $dataInsert['razon_social']  = $dataRaw['razon_social'];
+    }
+
+    if (isset($dataRaw['estado_civil'])) {
+        $dataInsert['estado_civil']  = $dataRaw['estado_civil'];
+    }
+    if (empty($dataRaw['nos_conocio'])) {
+        $dataInsert['nos_conocio'] = $dataRaw['nos_conocio'];
+    }
+
+    if (empty($dataRaw['phone2'])) {
+        $dataInsert['phone2'] = $dataRaw['phone2'];
+    }
+
+    //Custom fields
+    $customFields = (new ShopCustomField)->getCustomField($type = 'customer');
+    if ($customFields) {
+        foreach ($customFields as $field) {
+            if ($field->required) {
+                $validate['fields.' . $field->code] = 'required';
+            }
         }
-
-        $messages = [
-            'last_name.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.last_name')]),
-            'first_name.required'  => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.first_name')]),
-            'email.required'       => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.email')]),
-            'password.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.password')]),
-            'address1.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address3')]),
-            'phone.required'       => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.phone')]),
-            'country.required'     => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.country')]),
-            'postcode.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.postcode')]),
-            'company.required'     => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.company')]),
-            'sex.required'         => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.sex')]),
-            'birthday.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.birthday')]),
-            'email.email'          => sc_language_render('validation.email', ['attribute'=> sc_language_render('customer.email')]),
-            'phone.regex'          => sc_language_render('customer.phone_regex'),
-            'password.confirmed'   => sc_language_render('validation.confirmed', ['attribute'=> sc_language_render('customer.password')]),
-            'postcode.min'         => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.postcode')]),
-            'password.min'         => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.password')]),
-            'country.min'          => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.country')]),
-            'first_name.max'       => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.first_name')]),
-            'email.max'            => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.email')]),
-            'address1.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address3')]),
-            'last_name.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.last_name')]),
-            'birthday.date'        => sc_language_render('validation.date', ['attribute'=> sc_language_render('customer.birthday')]),
-            'birthday.date_format' => sc_language_render('validation.date_format', ['attribute'=> sc_language_render('customer.birthday')]),
-        
-        ];
-
-       
-        $dataMap = [
-            'validate' => $validate,
-            'messages' => $messages,
-            'dataInsert' => $dataInsert
-        ];
-       
-        
-        return $dataMap;
     }
+
+    if (sc_config('customer_lastname')) {
+        if (sc_config('customer_lastname_required')) {
+            $validate['last_name'] = config('validation.customer.last_name_required', 'required|string|max:100');
+        } else {
+            $validate['last_name'] = config('validation.customer.last_name_null', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['last_name'])) {
+            $dataInsert['last_name'] = $dataRaw['last_name'];
+        }
+    }
+
+
+    if (sc_config('customer_address1')) {
+        if (sc_config('customer_address1_required')) {
+            $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:00');
+        } else {
+            $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
+        }
+        if (!empty($dataRaw['address1'])) {
+            $dataInsert['address1'] = $dataRaw['address1'];
+        }
+    }
+
+    if (sc_config('customer_address2')) {
+        if (sc_config('customer_address2_required')) {
+            $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:240');
+        } else {
+            $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:240');
+        }
+        if (!empty($dataRaw['address2'])) {
+            $dataInsert['address2'] = $dataRaw['address2'];
+        }
+    }
+
+    if (sc_config('customer_address3')) {
+        if (sc_config('customer_address3_required')) {
+            $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:100');
+        } else {
+            $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['address3'])) {
+            $dataInsert['address3'] = $dataRaw['address3'];
+        }
+    }
+
+
+    if (sc_config('customer_phone')) {
+        if (sc_config('customer_phone_required')) {
+            $validate['phone'] = config('validation.customer.phone_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
+        } else {
+            $validate['phone'] = config('validation.customer.phone_null', 'nullable|regex:/^0[^0][0-9\-]{6,12}$/');
+        }
+        if (!empty($dataRaw['phone'])) {
+            $dataInsert['phone'] = $dataRaw['phone'];
+        }
+    }
+
+    if (sc_config('customer_country')) {
+        $arraycountry = (new ShopCountry)->pluck('code')->toArray();
+        if (sc_config('customer_country_required')) {
+            $validate['country'] = config('validation.customer.country_required', 'required|string|min:2') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['country'] = config('validation.customer.country_null', 'nullable|string|min:2') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['country'])) {
+            $dataInsert['country'] = $dataRaw['country'];
+        }
+    }
+
+    if (sc_config('customer_postcode')) {
+        if (sc_config('customer_postcode_required')) {
+            $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
+        } else {
+            $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
+        }
+        if (!empty($dataRaw['postcode'])) {
+            $dataInsert['postcode'] = $dataRaw['postcode'];
+        }
+    }
+
+    if (sc_config('customer_company')) {
+        if (sc_config('customer_company_required')) {
+            $validate['company'] = config('validation.customer.company_required', 'required|string|max:100');
+        } else {
+            $validate['company'] = config('validation.customer.company_null', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['company'])) {
+            $dataInsert['company'] = $dataRaw['company'];
+        }
+    }
+
+    if (sc_config('customer_sex')) {
+        if (sc_config('customer_sex_required')) {
+            $validate['sex'] = config('validation.customer.sex_required', 'required|integer|max:10');
+        } else {
+            $validate['sex'] = config('validation.customer.sex_null', 'nullable|integer|max:10');
+        }
+        if (!empty($dataRaw['sex'])) {
+            $dataInsert['sex'] = $dataRaw['sex'];
+        }
+    }
+
+    if (sc_config('customer_birthday')) {
+        if (sc_config('customer_birthday_required')) {
+            $validate['birthday'] = config('validation.customer.birthday_required', 'required|date|date_format:Y-m-d');
+        } else {
+            $validate['birthday'] = config('validation.customer.birthday_null', 'nullable|date|date_format:Y-m-d');
+        }
+        if (!empty($dataRaw['birthday'])) {
+            $dataInsert['birthday'] = $dataRaw['birthday'];
+        }
+    }
+
+    if (sc_config('customer_group')) {
+        if (sc_config('customer_group_required')) {
+            $validate['group'] = config('validation.customer.group_required', 'required|integer|max:10');
+        } else {
+            $validate['group'] = config('validation.customer.group_null', 'nullable|integer|max:10');
+        }
+        if (!empty($dataRaw['group'])) {
+            $dataInsert['group'] = $dataRaw['group'];
+        }
+    }
+
+    if (sc_config('customer_name_kana')) {
+        if (sc_config('customer_name_kana_required')) {
+            $validate['first_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
+            $validate['last_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
+        } else {
+            $validate['first_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
+            $validate['last_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['first_name_kana'])) {
+            $dataInsert['first_name_kana'] = $dataRaw['first_name_kana'];
+        }
+        if (!empty($dataRaw['last_name_kana'])) {
+            $dataInsert['last_name_kana'] = $dataRaw['last_name_kana'];
+        }
+    }
+
+
+    if (sc_config('customer_cedula')) {
+        if (sc_config('customer_cedula_required')) {
+            $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+        } else {
+            $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+        }
+        if (!empty($dataRaw['cedula'])) {
+            if ($dataRaw['nacionalidad'] == "V") {
+                $dataInsert['cedula'] = 'V ' . $dataInsert['cedula'];
+            } else if ($dataRaw['nacionalidad'] == "E") {
+                $dataInsert['cedula'] = 'E ' . $dataInsert['cedula'];
+            }
+        }
+    }
+
+    if (sc_config('customer_estado')) {
+        $arraycountry = (new Estado)->pluck('codigoestado')->toArray();
+        if (sc_config('customer_estado_required')) {
+            $validate['cod_estado'] = config('cod_estado', 'required|string|min:1') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['cod_estado'] = config('cod_estado', 'nullable|string|min:1') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['cod_estado'])) {
+            $dataInsert['cod_estado'] = $dataRaw['cod_estado'];
+        }
+    }
+    if (sc_config('customer_municipio')) {
+        $arraycountry = (new Municipio)->pluck('codigomunicipio')->toArray();
+        if (sc_config('customer_municipio_required')) {
+            $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['cod_municipio'])) {
+            $dataInsert['cod_municipio'] = $dataRaw['cod_municipio'];
+        }
+    }
+
+    if (sc_config('customer_parroquias')) {
+        // if (sc_config('customer_parroquias_required')) {
+        //     $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
+        // } else {
+        //     $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
+        // }
+
+        // $arraycountry = (new Parroquia())->pluck('codigomunicipio')->toArray();
+        // if (sc_config('customer_parroquias_required')) {
+        //     $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
+        // } else {
+        //     $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
+        // }
+
+        if (!empty($dataRaw['cod_parroquia'])) {
+            $dataInsert['cod_parroquia'] = $dataRaw['cod_parroquia'];
+        }
+    }
+    if (!empty($dataRaw['fields'])) {
+        $dataInsert['fields'] = $dataRaw['fields'];
+    }
+
+    $messages = [
+        'last_name.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.last_name')]),
+        'first_name.required'  => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.first_name')]),
+        'email.required'       => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.email')]),
+        'password.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.password')]),
+        'address1.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address1')]),
+        'address2.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address2')]),
+        'address3.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address3')]),
+        'phone.required'       => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.phone')]),
+        'country.required'     => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.country')]),
+        'postcode.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.postcode')]),
+        'company.required'     => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.company')]),
+        'sex.required'         => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.sex')]),
+        'birthday.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.birthday')]),
+        'email.email'          => sc_language_render('validation.email', ['attribute' => sc_language_render('customer.email')]),
+        'phone.regex'          => sc_language_render('customer.phone_regex'),
+        'password.confirmed'   => sc_language_render('validation.confirmed', ['attribute' => sc_language_render('customer.password')]),
+        'postcode.min'         => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.postcode')]),
+        'password.min'         => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.password')]),
+        'country.min'          => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.country')]),
+        'first_name.max'       => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.first_name')]),
+        'email.max'            => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.email')]),
+        'address1.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address1')]),
+        'address2.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address2')]),
+        'address3.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address3')]),
+        'last_name.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.last_name')]),
+        'birthday.date'        => sc_language_render('validation.date', ['attribute' => sc_language_render('customer.birthday')]),
+        'birthday.date_format' => sc_language_render('validation.date_format', ['attribute' => sc_language_render('customer.birthday')]),
+
+    ];
+
+
+    $dataMap = [
+        'validate' => $validate,
+        'messages' => $messages,
+        'dataInsert' => $dataInsert
+    ];
+
+
+    return $dataMap;
+}
 
 
 
@@ -594,7 +566,7 @@ if (!function_exists('sc_customer_sendmail_reset_notification') && !in_array('sc
             $dataReplace = [
                 sc_language_render('email.forgot_password.title'),
                 sc_language_render('email.forgot_password.reason_sendmail'),
-                sc_language_render('email.forgot_password.note_sendmail', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]),
+                sc_language_render('email.forgot_password.note_sendmail', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')]),
                 sc_language_render('email.forgot_password.note_access_link', ['reset_button' => sc_language_render('email.forgot_password.reset_button'), 'url' => $url]),
                 $url,
                 sc_language_render('email.forgot_password.reset_button'),
@@ -782,7 +754,7 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
     {
 
 
-       
+
         $dataAddress = [
             'first_name' => $dataRaw['first_name'] ?? '',
             'address1' => $dataRaw['address1'] ?? '',
@@ -792,70 +764,70 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
             'cod_parroquia' => $dataRaw['cod_parroquia'] ?? '',
             'rif' => $dataRaw['rif'] ?? '',
             'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
-            
-            
+
+
         ];
         $validate = [
             'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
             'address1' => config('validation.customer.address1_required', 'required|string|max:100'),
             'cedula' => config('validation.customer_cedula_required', 'required|string|min:5'),
-          
+
         ];
         if (sc_config('customer_lastname')) {
             $validate['last_name'] = config('validation.customer.last_name_required', 'required|string|max:100');
-            $dataAddress['last_name'] = $dataRaw['last_name']??'';
+            $dataAddress['last_name'] = $dataRaw['last_name'] ?? '';
         }
         if (sc_config('customer_address2')) {
             $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:100');
-            $dataAddress['address2'] = $dataRaw['address2']??'';
+            $dataAddress['address2'] = $dataRaw['address2'] ?? '';
         }
         if (sc_config('customer_address3')) {
             $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:100');
-            $dataAddress['address3'] = $dataRaw['address3']??'';
+            $dataAddress['address3'] = $dataRaw['address3'] ?? '';
         }
         if (sc_config('customer_phone')) {
             $validate['phone'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,12}$/');
-            $dataAddress['phone'] = $dataRaw['phone']??'';
+            $dataAddress['phone'] = $dataRaw['phone'] ?? '';
         }
 
         if (sc_config('customer_phone2')) {
             $validate['phone2'] = config('validation.customer.phone_required', 'required|regex:/^0[^0][0-9\-]{6,14}$/');
-            $dataAddress['phone2'] = $dataRaw['phone2']??'';
+            $dataAddress['phone2'] = $dataRaw['phone2'] ?? '';
         }
         // if (sc_config('customer_cedula')) {
         //     $validate['cedula'] = config('validation.customer_cedula_required', 'required|string|max:13');
         //     $dataAddress['cedula'] = $dataRaw['cedula']??'';
         // }
-  
-     
+
+
         if (sc_config('customer_country')) {
             $validate['country'] = config('validation.customer.country_required', 'required|string|min:2');
-            $dataAddress['country'] = $dataRaw['country']??'';
+            $dataAddress['country'] = $dataRaw['country'] ?? '';
         }
         if (sc_config('customer_postcode')) {
             $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
-            $dataAddress['postcode'] = $dataRaw['postcode']??'';
+            $dataAddress['postcode'] = $dataRaw['postcode'] ?? '';
         }
 
         $messages = [
-            'last_name.required'  => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.last_name')]),
-            'first_name.required' => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.first_name')]),
-            'address1.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address3')]),
-            'phone.required'      => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.phone')]),
-            'cedula.required'      => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.cedula')]),
-            'cod_estado.required'      => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.estado')]),
-            'country.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.country')]),
-            'postcode.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.postcode')]),
+            'last_name.required'  => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.last_name')]),
+            'first_name.required' => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.first_name')]),
+            'address1.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address1')]),
+            'address2.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address2')]),
+            'address3.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address3')]),
+            'phone.required'      => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.phone')]),
+            'cedula.required'      => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.cedula')]),
+            'cod_estado.required'      => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.estado')]),
+            'country.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.country')]),
+            'postcode.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.postcode')]),
             'cedula.regex'         => sc_language_render('customer.cedula_regex'),
-            'postcode.min'        => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.postcode')]),
-            'country.min'         => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.country')]),
-            'first_name.max'      => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.first_name')]),
-            'address1.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address3')]),
-            'last_name.max'       => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.last_name')]),
+            'postcode.min'        => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.postcode')]),
+            'country.min'         => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.country')]),
+            'first_name.max'      => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.first_name')]),
+            'address1.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address1')]),
+            'address2.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address2')]),
+            'address3.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address3')]),
+            'last_name.max'       => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.last_name')]),
         ];
 
         $dataMap = [
@@ -865,8 +837,6 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
         ];
         return $dataMap;
     }
-
-    
 }
 
 /**
@@ -877,389 +847,378 @@ if (!function_exists('sc_customer_address_mapping') && !in_array('sc_customer_ad
  * @return  [array]              [return description]
  */
 
-    function sc_customer_data_edit_mapping(array $dataRaw)
-    {
+function sc_customer_data_edit_mapping(array $dataRaw)
+{
 
 
 
-      
-
-        $dataUpdate = [
-            'first_name' => $dataRaw['first_name'],
-            'cedula' => $dataRaw['cedula'],
-            'estado_civil' => $dataRaw['estado_civil'],
-            'natural_jurídica' => $dataRaw['natural_jurídica'],
-            'rif' => $dataRaw['rif'] ?? '',
-            'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
-            
-        ];
-     
-        if (isset($dataRaw['status'])) {
-            $dataUpdate['status']  = $dataRaw['status'];
-        }
-
-        if (isset($dataRaw['nos_conocio'])) {
-            $dataUpdate['nos_conocio'] = $dataRaw['nos_conocio'];
-        }
 
 
-        if (isset($dataRaw['phone2'])) {
+    $dataUpdate = [
+        'first_name' => $dataRaw['first_name'],
+        'cedula' => $dataRaw['cedula'],
+        'estado_civil' => $dataRaw['estado_civil'],
+        'natural_jurídica' => $dataRaw['natural_jurídica'],
+        'rif' => $dataRaw['rif'] ?? '',
+        'razon_social' => $dataRaw['razon_social'] ?? "no aplica",
 
-            
-            $dataUpdate['phone2'] = $dataRaw['phone2'];
+    ];
 
+    if (isset($dataRaw['status'])) {
+        $dataUpdate['status']  = $dataRaw['status'];
+    }
 
-           
-        }
-
-        
-
-        if (!empty($dataRaw['estado_civil'])) {
-            $dataUpdate['estado_civil'] = $dataRaw['estado_civil'];
-        }
-        $validate = [
-            'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
-            'password' => config('validation.customer.password_null', 'nullable|string|min:6'),
-            
-        ];
-
-        //Custom fields
-        $customFields = (new ShopCustomField)->getCustomField($type = 'customer');
-        if ($customFields) {
-            foreach ($customFields as $field) {
-                if ($field->required) {
-                    $validate['fields.'.$field->code] = 'required';
-                }
-            }
-            $dataUpdate['fields'] = $dataRaw['fields'] ?? [];
-        }
-
-        if (!empty($dataRaw['password'])) {
-            $dataUpdate['password'] = bcrypt($dataRaw['password']);
-        }
-        if (!empty($dataRaw['email'])) {
-            $dataUpdate['email'] = $dataRaw['email'];
-            $validate['email'] = config('validation.customer.email', 'required|string|email|max:255').'|unique:"'.ShopCustomer::class.'",email,'.$dataRaw['id'].',id';
-        }
-        //Dont update id
-        unset($dataRaw['id']);
-
-        if (sc_config('customer_lastname')) {
-            if (sc_config('customer_lastname_required')) {
-                $validate['last_name'] = config('validation.customer.last_name_required', 'required|string|max:100');
-            } else {
-                $validate['last_name'] = config('validation.customer.last_name_null', 'nullable|string|max:100');
-            }
-            if (sc_config('customer_cedula_required')) {
-                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|max:100');
-            } else {
-                $validate['cedula'] = config('validation.customer.cedula', 'nullable|string|max:100');
-            }
-            
-            if (sc_config('customer_municipio_required')) {
-                $validate['cod_municipio'] = config('validation.customer.municipio_required', 'required|string|max:100');
-            } else {
-                $validate['cod_municipio'] = config('validation.customer.municipio', 'nullable|string|max:100');
-            }
-            if (sc_config('customer_parroquia_required')) {
-                $validate['cod_parroquia'] = config('validation.customer.parroquia_required', 'required|string|max:100');
-            } else {
-                $validate['cod_parroquia'] = config('validation.customer.cod_parroquia', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['last_name'])) {
-                $dataUpdate['last_name'] = $dataRaw['last_name'];
-            }
-        
-            if (!empty($dataRaw['cod_estado'])) {
-                $dataUpdate['cod_estado'] = $dataRaw['cod_estado'];
-            }
-            if (!empty($dataRaw['cod_municipio'])) {
-                $dataUpdate['cod_municipio'] = $dataRaw['cod_municipio'];
-            }
-            if (!empty($dataRaw['cod_parroquia'])) {
-                $dataUpdate['cod_parroquia'] = $dataRaw['cod_parroquia'];
-            }
-        }
-        if (sc_config('customer_cedula')) {
-            if (sc_config('customer_cedula_required')) {
-                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-            } else {
-                $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
-            }
-            if (!empty($dataRaw['cedula'])) {
-                if($dataRaw['nacionalidad'] == "V"){
-                    $dataUpdate['cedula'] = 'V '.$dataRaw['cedula'];
-                }else{
-                    $dataUpdate['cedula'] = 'E '.$dataRaw['cedula'];
-    
-                }
-            }
-        }
-      
-        if (sc_config('customer_estado')) {
-            $arraycountry = (new Estado)->pluck('codigoestado')->toArray();
-            if (sc_config('customer_estado_required')) {
-                $validate['cod_estado'] = config('cod_estado', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
-            } else {
-                $validate['cod_estado'] = config('cod_estado', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
-            }
-            if (!empty($dataRaw['cod_estado'])) {
-                $dataUpdate['cod_estado'] = $dataRaw['cod_estado'];
-            }
-        }
-        if (sc_config('customer_municipio')) {
-            $arraycountry = (new Municipio)->pluck('codigomunicipio')->toArray();
-            if (sc_config('customer_municipio_required')) {
-                $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1').'|in:'. implode(',', $arraycountry);
-            } else {
-                $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1').'|in:'. implode(',', $arraycountry);
-            }
-            if (!empty($dataRaw['cod_municipio'])) {
-                $dataUpdate['cod_municipio'] = $dataRaw['cod_municipio'];
-            }
-        }
-        if (sc_config('customer_nacionalidad')) {
-            if (sc_config('customer_nacionalidad_required')) {
-                $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
-            } else {
-                $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
-            }
-            
-        }
-    
-     
-        if (sc_config('customer_parroquias')) {
-            if (sc_config('customer_parroquias_required')) {
-                // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
-            } else {
-                // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
-            }
-            if (!empty($dataRaw['cod_parroquia'])) {
-                $dataUpdate['cod_parroquia'] = $dataRaw['cod_parroquia'];
-            }
-        }
-        if (sc_config('customer_address1')) {
-            if (sc_config('customer_address1_required')) {
-                $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:200');
-            } else {
-                $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
-            }
-            if (!empty($dataRaw['address1'])) {
-                $dataUpdate['address1'] = $dataRaw['address1'];
-            }
-        }
-
-        if (sc_config('customer_address2')) {
-            if (sc_config('customer_address2_required')) {
-                $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:200');
-            } else {
-                $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:200');
-            }
-            if (!empty($dataRaw['address2'])) {
-                $dataUpdate['address2'] = $dataRaw['address2'];
-            }
-        }
-
-        if (sc_config('customer_address3')) {
-            if (sc_config('customer_address3_required')) {
-                $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:200');
-            } else {
-                $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:200');
-            }
-            if (!empty($dataRaw['address3'])) {
-                $dataUpdate['address3'] = $dataRaw['address3'];
-            }
-        }
-
-
-        if (sc_config('customer_phone')) {
-            if (sc_config('customer_phone_required')) {
-                $validate['phone'] = config('validation.customer.phone_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
-            } else {
-                $validate['phone'] = config('validation.customer.phone_null', 'nullable|regex:/^0[^0][0-9\-]{6,12}$/');
-            }
-            if (!empty($dataRaw['phone'])) {
-                $dataUpdate['phone'] = $dataRaw['phone'];
-            }
-        }
-
-        if (sc_config('customer_country')) {
-            $arraycountry = (new ShopCountry)->pluck('code')->toArray();
-            if (sc_config('customer_country_required')) {
-                $validate['country'] = config('validation.customer.country_required', 'required|string|min:2').'|in:'. implode(',', $arraycountry);
-            } else {
-                $validate['country'] = config('validation.customer.country_null', 'nullable|string|min:2').'|in:'. implode(',', $arraycountry);
-            }
-            if (!empty($dataRaw['country'])) {
-                $dataUpdate['country'] = $dataRaw['country'];
-            }
-        }
-
-        if (sc_config('customer_postcode')) {
-            if (sc_config('customer_postcode_required')) {
-                $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
-            } else {
-                $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
-            }
-            if (!empty($dataRaw['postcode'])) {
-                $dataUpdate['postcode'] = $dataRaw['postcode'];
-            }
-        }
-
-        if (sc_config('customer_company')) {
-            if (sc_config('customer_company_required')) {
-                $validate['company'] = config('validation.customer.company_required', 'required|string|max:100');
-            } else {
-                $validate['company'] = config('validation.customer.company_null', 'nullable|string|max:100');
-            }
-            if (!empty($dataRaw['company'])) {
-                $dataUpdate['company'] = $dataRaw['company'];
-            }
-        }
-
-        if (sc_config('customer_sex')) {
-            if (sc_config('customer_sex_required')) {
-                $validate['sex'] = config('validation.customer.sex_required', 'required|integer|max:10');
-            } else {
-                $validate['sex'] = config('validation.customer.sex_null', 'nullable|integer|max:10');
-            }
-            if (!empty($dataRaw['sex'])) {
-                $dataUpdate['sex'] = $dataRaw['sex'];
-            }
-        }
-
-        if (sc_config('customer_birthday')) {
-            if (sc_config('customer_birthday_required')) {
-                $validate['birthday'] = config('validation.customer.birthday_required', 'required|date|date_format:Y-m-d');
-            } else {
-                $validate['birthday'] = config('validation.customer.birthday_null', 'nullable|date|date_format:Y-m-d');
-            }
-            if (!empty($dataRaw['birthday'])) {
-                $dataUpdate['birthday'] = $dataRaw['birthday'];
-            }
-        }
-
-        if (sc_config('customer_group')) {
-            if (sc_config('customer_group_required')) {
-                $validate['group'] = config('validation.customer.group_required', 'required|integer|max:10');
-            } else {
-                $validate['group'] = config('validation.customer.group_null', 'nullable|integer|max:10');
-            }
-            if (!empty($dataRaw['group'])) {
-                $dataUpdate['group'] = $dataRaw['group'];
-            }
-        }
-
-        if (sc_config('customer_name_kana')) {
-            if (sc_config('customer_name_kana_required')) {
-                $validate['first_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
-                $validate['last_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
-            } else {
-                $validate['first_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
-                $validate['last_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
-            }
-            $dataUpdate['first_name_kana'] = $dataRaw['first_name_kana']?? '';
-            $dataUpdate['last_name_kana'] = $dataRaw['last_name_kana']?? '';
-        }
-
-        $messages = [
-            'last_name.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.last_name')]),
-            'cedula.required'   => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.cedula')]),
-            'first_name.required'  => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.first_name')]),
-            'email.required'       => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.email')]),
-            'password.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.password')]),
-            'address1.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.address3')]),
-            'phone.required'       => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.phone')]),
-            'country.required'     => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.country')]),
-            'postcode.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.postcode')]),
-            'company.required'     => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.company')]),
-            'sex.required'         => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.sex')]),
-            'birthday.required'    => sc_language_render('validation.required', ['attribute'=> sc_language_render('customer.birthday')]),
-            'email.email'          => sc_language_render('validation.email', ['attribute'=> sc_language_render('customer.email')]),
-            'phone.regex'          => sc_language_render('customer.phone_regex'),
-            'password.confirmed'   => sc_language_render('validation.confirmed', ['attribute'=> sc_language_render('customer.password')]),
-            'postcode.min'         => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.postcode')]),
-            'password.min'         => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.password')]),
-            'country.min'          => sc_language_render('validation.min', ['attribute'=> sc_language_render('customer.country')]),
-            'first_name.max'       => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.first_name')]),
-            'email.max'            => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.email')]),
-            'address1.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address1')]),
-            'address2.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address2')]),
-            'address3.max'         => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.address3')]),
-            'last_name.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.last_name')]),
-            'cedula.max'        => sc_language_render('validation.max', ['attribute'=> sc_language_render('customer.cedula')]),
-            'birthday.date'        => sc_language_render('validation.date', ['attribute'=> sc_language_render('customer.birthday')]),
-            'birthday.date_format' => sc_language_render('validation.date_format', ['attribute'=> sc_language_render('customer.birthday')]),
-        ];
-
-
-        
-        $dataMap = [
-            'validate' => $validate,
-            'messages' => $messages,
-            'dataUpdate' => $dataUpdate
-        ];
-        return $dataMap;
+    if (isset($dataRaw['nos_conocio'])) {
+        $dataUpdate['nos_conocio'] = $dataRaw['nos_conocio'];
     }
 
 
-function fecha_to_sql ($fecha_europea, $con_horas=true) {
-		
+    if (isset($dataRaw['phone2'])) {
+
+
+        $dataUpdate['phone2'] = $dataRaw['phone2'];
+    }
+
+
+
+    if (!empty($dataRaw['estado_civil'])) {
+        $dataUpdate['estado_civil'] = $dataRaw['estado_civil'];
+    }
+    $validate = [
+        'first_name' => config('validation.customer.first_name', 'required|string|max:100'),
+        'password' => config('validation.customer.password_null', 'nullable|string|min:6'),
+
+    ];
+
+    //Custom fields
+    $customFields = (new ShopCustomField)->getCustomField($type = 'customer');
+    if ($customFields) {
+        foreach ($customFields as $field) {
+            if ($field->required) {
+                $validate['fields.' . $field->code] = 'required';
+            }
+        }
+        $dataUpdate['fields'] = $dataRaw['fields'] ?? [];
+    }
+
+    if (!empty($dataRaw['password'])) {
+        $dataUpdate['password'] = bcrypt($dataRaw['password']);
+    }
+    if (!empty($dataRaw['email'])) {
+        $dataUpdate['email'] = $dataRaw['email'];
+        $validate['email'] = config('validation.customer.email', 'required|string|email|max:255') . '|unique:"' . ShopCustomer::class . '",email,' . $dataRaw['id'] . ',id';
+    }
+    //Dont update id
+    unset($dataRaw['id']);
+
+    if (sc_config('customer_lastname')) {
+        if (sc_config('customer_lastname_required')) {
+            $validate['last_name'] = config('validation.customer.last_name_required', 'required|string|max:100');
+        } else {
+            $validate['last_name'] = config('validation.customer.last_name_null', 'nullable|string|max:100');
+        }
+        if (sc_config('customer_cedula_required')) {
+            $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|max:100');
+        } else {
+            $validate['cedula'] = config('validation.customer.cedula', 'nullable|string|max:100');
+        }
+
+        if (sc_config('customer_municipio_required')) {
+            $validate['cod_municipio'] = config('validation.customer.municipio_required', 'required|string|max:100');
+        } else {
+            $validate['cod_municipio'] = config('validation.customer.municipio', 'nullable|string|max:100');
+        }
+        if (sc_config('customer_parroquia_required')) {
+            $validate['cod_parroquia'] = config('validation.customer.parroquia_required', 'required|string|max:100');
+        } else {
+            $validate['cod_parroquia'] = config('validation.customer.cod_parroquia', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['last_name'])) {
+            $dataUpdate['last_name'] = $dataRaw['last_name'];
+        }
+
+        if (!empty($dataRaw['cod_estado'])) {
+            $dataUpdate['cod_estado'] = $dataRaw['cod_estado'];
+        }
+        if (!empty($dataRaw['cod_municipio'])) {
+            $dataUpdate['cod_municipio'] = $dataRaw['cod_municipio'];
+        }
+        if (!empty($dataRaw['cod_parroquia'])) {
+            $dataUpdate['cod_parroquia'] = $dataRaw['cod_parroquia'];
+        }
+    }
+    if (sc_config('customer_cedula')) {
+        if (sc_config('customer_cedula_required')) {
+            $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+        } else {
+            $validate['cedula'] = config('validation.customer.cedula_required', 'required|string|min:3');
+        }
+        if (!empty($dataRaw['cedula'])) {
+            if ($dataRaw['nacionalidad'] == "V") {
+                $dataUpdate['cedula'] = 'V ' . $dataRaw['cedula'];
+            } else {
+                $dataUpdate['cedula'] = 'E ' . $dataRaw['cedula'];
+            }
+        }
+    }
+
+    if (sc_config('customer_estado')) {
+        $arraycountry = (new Estado)->pluck('codigoestado')->toArray();
+        if (sc_config('customer_estado_required')) {
+            $validate['cod_estado'] = config('cod_estado', 'required|string|min:1') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['cod_estado'] = config('cod_estado', 'nullable|string|min:1') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['cod_estado'])) {
+            $dataUpdate['cod_estado'] = $dataRaw['cod_estado'];
+        }
+    }
+    if (sc_config('customer_municipio')) {
+        $arraycountry = (new Municipio)->pluck('codigomunicipio')->toArray();
+        if (sc_config('customer_municipio_required')) {
+            $validate['cod_municipio'] = config('cod_municipio', 'required|string|min:1') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['cod_municipio'] = config('cod_municipio', 'nullable|string|min:1') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['cod_municipio'])) {
+            $dataUpdate['cod_municipio'] = $dataRaw['cod_municipio'];
+        }
+    }
+    if (sc_config('customer_nacionalidad')) {
+        if (sc_config('customer_nacionalidad_required')) {
+            $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
+        } else {
+            $validate['nacionalidad'] = config('validation.customer.nacionalidad_required', 'required|string|min:1');
+        }
+    }
+
+
+    if (sc_config('customer_parroquias')) {
+        if (sc_config('customer_parroquias_required')) {
+            // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
+        } else {
+            // $validate['cod_parroquia'] = config('validation.customer.cod_parroquia_null', 'nullable|regex:/^0[^0][0-9\-]{1,12}$/');
+        }
+        if (!empty($dataRaw['cod_parroquia'])) {
+            $dataUpdate['cod_parroquia'] = $dataRaw['cod_parroquia'];
+        }
+    }
+    if (sc_config('customer_address1')) {
+        if (sc_config('customer_address1_required')) {
+            $validate['address1'] = config('validation.customer.address1_required', 'required|string|max:200');
+        } else {
+            $validate['address1'] = config('validation.customer.address1_null', 'nullable|string|max:200');
+        }
+        if (!empty($dataRaw['address1'])) {
+            $dataUpdate['address1'] = $dataRaw['address1'];
+        }
+    }
+
+    if (sc_config('customer_address2')) {
+        if (sc_config('customer_address2_required')) {
+            $validate['address2'] = config('validation.customer.address2_required', 'required|string|max:200');
+        } else {
+            $validate['address2'] = config('validation.customer.address2_null', 'nullable|string|max:200');
+        }
+        if (!empty($dataRaw['address2'])) {
+            $dataUpdate['address2'] = $dataRaw['address2'];
+        }
+    }
+
+    if (sc_config('customer_address3')) {
+        if (sc_config('customer_address3_required')) {
+            $validate['address3'] = config('validation.customer.address3_required', 'required|string|max:200');
+        } else {
+            $validate['address3'] = config('validation.customer.address3_null', 'nullable|string|max:200');
+        }
+        if (!empty($dataRaw['address3'])) {
+            $dataUpdate['address3'] = $dataRaw['address3'];
+        }
+    }
+
+
+    if (sc_config('customer_phone')) {
+        if (sc_config('customer_phone_required')) {
+            $validate['phone'] = config('validation.customer.phone_required', 'regex:/^0[^0][0-9\-]{6,12}$/');
+        } else {
+            $validate['phone'] = config('validation.customer.phone_null', 'nullable|regex:/^0[^0][0-9\-]{6,12}$/');
+        }
+        if (!empty($dataRaw['phone'])) {
+            $dataUpdate['phone'] = $dataRaw['phone'];
+        }
+    }
+
+    if (sc_config('customer_country')) {
+        $arraycountry = (new ShopCountry)->pluck('code')->toArray();
+        if (sc_config('customer_country_required')) {
+            $validate['country'] = config('validation.customer.country_required', 'required|string|min:2') . '|in:' . implode(',', $arraycountry);
+        } else {
+            $validate['country'] = config('validation.customer.country_null', 'nullable|string|min:2') . '|in:' . implode(',', $arraycountry);
+        }
+        if (!empty($dataRaw['country'])) {
+            $dataUpdate['country'] = $dataRaw['country'];
+        }
+    }
+
+    if (sc_config('customer_postcode')) {
+        if (sc_config('customer_postcode_required')) {
+            $validate['postcode'] = config('validation.customer.postcode_required', 'required|min:4');
+        } else {
+            $validate['postcode'] = config('validation.customer.postcode_null', 'nullable|min:4');
+        }
+        if (!empty($dataRaw['postcode'])) {
+            $dataUpdate['postcode'] = $dataRaw['postcode'];
+        }
+    }
+
+    if (sc_config('customer_company')) {
+        if (sc_config('customer_company_required')) {
+            $validate['company'] = config('validation.customer.company_required', 'required|string|max:100');
+        } else {
+            $validate['company'] = config('validation.customer.company_null', 'nullable|string|max:100');
+        }
+        if (!empty($dataRaw['company'])) {
+            $dataUpdate['company'] = $dataRaw['company'];
+        }
+    }
+
+    if (sc_config('customer_sex')) {
+        if (sc_config('customer_sex_required')) {
+            $validate['sex'] = config('validation.customer.sex_required', 'required|integer|max:10');
+        } else {
+            $validate['sex'] = config('validation.customer.sex_null', 'nullable|integer|max:10');
+        }
+        if (!empty($dataRaw['sex'])) {
+            $dataUpdate['sex'] = $dataRaw['sex'];
+        }
+    }
+
+    if (sc_config('customer_birthday')) {
+        if (sc_config('customer_birthday_required')) {
+            $validate['birthday'] = config('validation.customer.birthday_required', 'required|date|date_format:Y-m-d');
+        } else {
+            $validate['birthday'] = config('validation.customer.birthday_null', 'nullable|date|date_format:Y-m-d');
+        }
+        if (!empty($dataRaw['birthday'])) {
+            $dataUpdate['birthday'] = $dataRaw['birthday'];
+        }
+    }
+
+    if (sc_config('customer_group')) {
+        if (sc_config('customer_group_required')) {
+            $validate['group'] = config('validation.customer.group_required', 'required|integer|max:10');
+        } else {
+            $validate['group'] = config('validation.customer.group_null', 'nullable|integer|max:10');
+        }
+        if (!empty($dataRaw['group'])) {
+            $dataUpdate['group'] = $dataRaw['group'];
+        }
+    }
+
+    if (sc_config('customer_name_kana')) {
+        if (sc_config('customer_name_kana_required')) {
+            $validate['first_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
+            $validate['last_name_kana'] = config('validation.customer.name_kana_required', 'required|string|max:100');
+        } else {
+            $validate['first_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
+            $validate['last_name_kana'] = config('validation.customer.name_kana_null', 'nullable|string|max:100');
+        }
+        $dataUpdate['first_name_kana'] = $dataRaw['first_name_kana'] ?? '';
+        $dataUpdate['last_name_kana'] = $dataRaw['last_name_kana'] ?? '';
+    }
+
+    $messages = [
+        'last_name.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.last_name')]),
+        'cedula.required'   => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.cedula')]),
+        'first_name.required'  => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.first_name')]),
+        'email.required'       => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.email')]),
+        'password.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.password')]),
+        'address1.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address1')]),
+        'address2.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address2')]),
+        'address3.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.address3')]),
+        'phone.required'       => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.phone')]),
+        'country.required'     => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.country')]),
+        'postcode.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.postcode')]),
+        'company.required'     => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.company')]),
+        'sex.required'         => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.sex')]),
+        'birthday.required'    => sc_language_render('validation.required', ['attribute' => sc_language_render('customer.birthday')]),
+        'email.email'          => sc_language_render('validation.email', ['attribute' => sc_language_render('customer.email')]),
+        'phone.regex'          => sc_language_render('customer.phone_regex'),
+        'password.confirmed'   => sc_language_render('validation.confirmed', ['attribute' => sc_language_render('customer.password')]),
+        'postcode.min'         => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.postcode')]),
+        'password.min'         => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.password')]),
+        'country.min'          => sc_language_render('validation.min', ['attribute' => sc_language_render('customer.country')]),
+        'first_name.max'       => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.first_name')]),
+        'email.max'            => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.email')]),
+        'address1.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address1')]),
+        'address2.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address2')]),
+        'address3.max'         => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.address3')]),
+        'last_name.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.last_name')]),
+        'cedula.max'        => sc_language_render('validation.max', ['attribute' => sc_language_render('customer.cedula')]),
+        'birthday.date'        => sc_language_render('validation.date', ['attribute' => sc_language_render('customer.birthday')]),
+        'birthday.date_format' => sc_language_render('validation.date_format', ['attribute' => sc_language_render('customer.birthday')]),
+    ];
+
+
+
+    $dataMap = [
+        'validate' => $validate,
+        'messages' => $messages,
+        'dataUpdate' => $dataUpdate
+    ];
+    return $dataMap;
+}
+
+
+function fecha_to_sql($fecha_europea, $con_horas = true)
+{
+
     $fecha_europea = str_replace("/", "-", $fecha_europea);
-    
+
     if ($con_horas) {
 
         $fecha_sql = date("Y-m-d H:i:s", strtotime($fecha_europea));
-
-    }
-    else {
+    } else {
 
         $fecha_sql = date("Y-m-d", strtotime($fecha_europea));
-
     }
-    
-    return $fecha_sql;
 
+    return $fecha_sql;
 }
 
-function fecha_europea ($fecha_sql) {
+function fecha_europea($fecha_sql)
+{
 
-		// Por defecto
-		$fecha_europea = $fecha_sql;
-	
-		// Obtenemos el valor time de la fecha SQL, para transformar la fecha
-		$time_fecha_sql = strtotime($fecha_sql);
-	
-		// Si es fecha solo
-		if (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}$/", $fecha_sql)) {
-	
-			// Obtenemos la nueva fecha
-			$fecha_europea = date("d/m/Y", $time_fecha_sql);
-	
-		}
-	
-		// Si es fecha y hora (con segundos)
-		elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
-	
-			// Obtenemos la nueva fecha 
-			$fecha_europea = date("d/m/Y", $time_fecha_sql);
-	
-		}
-	
-		// Si es fecha y hora (sin segundos)
-		elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
-	
-			// Obtenemos la nueva fecha 
-			$fecha_europea = date("d/m/Y H:i", $time_fecha_sql);
-	
-		}
-	
-		return $fecha_europea;
-	
-	}
-function sc_order_process_after_success(string $orderID = null):array
+    // Por defecto
+    $fecha_europea = $fecha_sql;
+
+    // Obtenemos el valor time de la fecha SQL, para transformar la fecha
+    $time_fecha_sql = strtotime($fecha_sql);
+
+    // Si es fecha solo
+    if (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}$/", $fecha_sql)) {
+
+        // Obtenemos la nueva fecha
+        $fecha_europea = date("d/m/Y", $time_fecha_sql);
+    }
+
+    // Si es fecha y hora (con segundos)
+    elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
+
+        // Obtenemos la nueva fecha 
+        $fecha_europea = date("d/m/Y", $time_fecha_sql);
+    }
+
+    // Si es fecha y hora (sin segundos)
+    elseif (preg_match("/^(\d){4}(\-)(\d){2}(\-)(\d){2}(\s)(\d){2}(\:)(\d){2}$/", $fecha_sql)) {
+
+        // Obtenemos la nueva fecha 
+        $fecha_europea = date("d/m/Y H:i", $time_fecha_sql);
+    }
+
+    return $fecha_europea;
+}
+function sc_order_process_after_success(string $orderID = null): array
 {
 
     $templatePath = 'templates.' . sc_store('template');
@@ -1282,7 +1241,7 @@ function sc_order_process_after_success(string $orderID = null):array
                 $pathDownload = $product->downloadPath->path ?? '';
                 $nameProduct = $detail['name'];
                 if ($product && $pathDownload && $product->property == SC_PROPERTY_DOWNLOAD) {
-                    $nameProduct .="<br><a href='".sc_path_download_render($pathDownload)."'>Download</a>";
+                    $nameProduct .= "<br><a href='" . sc_path_download_render($pathDownload) . "'>Download</a>";
                 }
 
                 $orderDetail .= '<tr>
@@ -1319,8 +1278,8 @@ function sc_order_process_after_success(string $orderID = null):array
                 $orderID,
                 $data['first_name'],
                 $data['last_name'],
-                $data['first_name'].' '.$data['last_name'],
-                $data['address1'] . ' ' . $data['address2'].' '.$data['address3'],
+                $data['first_name'] . ' ' . $data['last_name'],
+                $data['address1'] . ' ' . $data['address2'] . ' ' . $data['address3'],
                 $data['address1'],
                 $data['address2'],
                 $data['address3'],
@@ -1346,7 +1305,7 @@ function sc_order_process_after_success(string $orderID = null):array
                     'to' => sc_store('email'),
                     'subject' => sc_language_render('email.order.email_subject_to_admin', ['order_id' => $orderID]),
                 ];
-              
+
                 sc_send_mail($templatePath . '.mail.order_success_to_admin', $dataView, $config, []);
             }
 
@@ -1367,11 +1326,11 @@ function sc_order_process_after_success(string $orderID = null):array
                 if (sc_config('order_success_to_customer_pdf')) {
                     // Invoice pdf
                     \PDF::loadView($templatePath . '.mail.order_success_to_customer_pdf', $dataView)
-                        ->save(\Storage::disk('invoice')->path('order-'.$orderID.'.pdf'));
+                        ->save(\Storage::disk('invoice')->path('order-' . $orderID . '.pdf'));
                     $attach['attachFromStorage'] = [
                         [
                             'file_storage' => 'invoice',
-                            'file_path' => 'order-'.$orderID.'.pdf',
+                            'file_path' => 'order-' . $orderID . '.pdf',
                         ]
                     ];
                 }
@@ -1392,7 +1351,7 @@ function exito_biopago_email(array $data)
 
     if (sc_config('biopago_customer')) {
         $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'biopago')->where('status', 1)->first();
-        
+
         if ($checkContent) {
             $content = $checkContent->text;
             $dataFind = [
@@ -1422,12 +1381,11 @@ function exito_biopago_email(array $data)
                 'subject' => 'pago realizado con exito ',
             ];
 
-           
+
 
             sc_send_mail('templates.' . sc_store('template') . '.mail.welcome_customer', $dataView, $config, []);
         }
     }
-   
 }
 
 
@@ -1436,48 +1394,46 @@ function estatus_del_pedido(array $data)
 {
 
 
-        $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_del_pedido')->where('status', 1)->first();
+    $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_del_pedido')->where('status', 1)->first();
 
-        if ($checkContent) {
-            $content = $checkContent->text;
-            $dataFind = [
-                '/\{\{\$titulo\}\}/',
-                '/\{\{\$nombre\}\}/',
-                '/\{\{\$apellido\}\}/',
-                '/\{\{\$email\}\}/',
-                '/\{\{\$estatus\}\}/',
-                '/\{\{\$estatus_mensaje\}\}/',
-                '/\{\{\$numero_del_pedido\}\}/',
-            ];
-            $dataReplace = [
-                $data['titulo'] ?? 'Estatus del pedido',
-                $data['first_name'] ?? '',
-                $data['last_name'] ?? '',
-                $data['email'] ?? '',
-                $data['estatus'] ?? '',
-                $data['estatus_mensaje'] ?? '',
-                $data['numero_del_pedido'] ?? '',
-               
-                
-            ];
-            $content = preg_replace($dataFind, $dataReplace, $content);
-            $dataView = [
-                'content' => $content,
-               
+    if ($checkContent) {
+        $content = $checkContent->text;
+        $dataFind = [
+            '/\{\{\$titulo\}\}/',
+            '/\{\{\$nombre\}\}/',
+            '/\{\{\$apellido\}\}/',
+            '/\{\{\$email\}\}/',
+            '/\{\{\$estatus\}\}/',
+            '/\{\{\$estatus_mensaje\}\}/',
+            '/\{\{\$numero_del_pedido\}\}/',
+        ];
+        $dataReplace = [
+            $data['titulo'] ?? 'Estatus del pedido',
+            $data['first_name'] ?? '',
+            $data['last_name'] ?? '',
+            $data['email'] ?? '',
+            $data['estatus'] ?? '',
+            $data['estatus_mensaje'] ?? '',
+            $data['numero_del_pedido'] ?? '',
 
-            ];
 
-            $config = [
-                'to' => $data['email'],
-                'subject' => 'ESTATUS DE SOLICITUD',
-            ];
+        ];
+        $content = preg_replace($dataFind, $dataReplace, $content);
+        $dataView = [
+            'content' => $content,
 
-           
 
-            sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
-        }
-    
-   
+        ];
+
+        $config = [
+            'to' => $data['email'],
+            'subject' => 'ESTATUS DE SOLICITUD',
+        ];
+
+
+
+        sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
+    }
 }
 
 
@@ -1485,7 +1441,7 @@ function estatus_de_pago(array $data)
 
 {
 
-   
+
     if (sc_config('customer_estatus_de_pago')) {
         $checkContent = (new \SCart\Core\Front\Models\ShopEmailTemplate)->where('group', 'estatus_de_pago')->where('status', 1)->first();
 
@@ -1510,23 +1466,23 @@ function estatus_de_pago(array $data)
                 $data['last_name'] ?? '',
                 $data['email'] ?? '',
                 $data['estatus'] ?? '',
-                $data['estatus_mensaje'] ?? '', 
+                $data['estatus_mensaje'] ?? '',
                 $data['numero_del_pedido'] ?? '',
                 $data['numero_referencia'] ?? '',
                 $data['fecha_venciento'] ?? '',
                 $data['observacion'] ?? '',
                 $data['id_del_pago'] ?? '',
-               
-                
+
+
             ];
             $content = preg_replace($dataFind, $dataReplace, $content);
             $dataView = [
                 'content' => $content,
-               
+
 
             ];
 
-           
+
 
             $config = [
                 'to' => $data['email'],
@@ -1537,8 +1493,6 @@ function estatus_de_pago(array $data)
             sc_send_mail('templates.' . sc_store('template') . '.mail.order_success_to_customer', $dataView, $config, []);
         }
     }
-
-   
 }
 
 if (!function_exists('getBadgeHtml')) {
@@ -1569,7 +1523,3 @@ if (!function_exists('getBadgeHtml')) {
         return "<span class='badge badge-pill  text-light    ' style='background-color: {$color};'>{$level}</span>";
     }
 }
-
-
-
-

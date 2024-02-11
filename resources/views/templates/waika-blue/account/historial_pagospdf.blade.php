@@ -33,6 +33,7 @@
                                     </tr>
                                 </thead>
                                 
+                                
                 
                                 <tbody>
                                     @foreach ( $order->details as $product)
