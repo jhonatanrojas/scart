@@ -143,18 +143,10 @@ class HistorialPagosController extends RootAdminController
             'order_status' => $sort_order,
             'perfil' => $perfil,
         ];
-        $dataSearch2 = [
-            'keyword' => $keyword,
-            'from_to' => $fechas1,
-            'end_to' => $fechas2,
-            'sort_order' => $sort_order,
-            'order_status' => $sort_order,
-            'perfil' => $perfil,
-        ];
 
 
-
-
+        // dd($dataSearch);
+      
 
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
@@ -227,9 +219,9 @@ class HistorialPagosController extends RootAdminController
 
 
         // $ruta_exel = route('descargar.excelpago');
-        foreach ($dataSearch2 as $key => $value) {
-            $inpuExcel .= '<input required type="hidden" name="' . $key . '" value="' . $value . '">';
-        }
+        // foreach ($dataSearch as $key => $value) {
+        //     $inpuExcel .= '<input required type="hidden" name="' . $key . '" value="' . $value . '">';
+        // }
 
         $data['listTh'] = $listTh;
         $data['statusPayment'] = $statusPayment;
@@ -834,6 +826,24 @@ class HistorialPagosController extends RootAdminController
             }
         }
 
+        if ($sort_order == 1) {
+            $fecha_hoy = date('y-m-d');
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        } else if ($sort_order == 5) {
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        } else if ($sort_order == 6) {
+            $fecha_hoy = date('y-m-d');
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
+        } else if ($sort_order == 2) {
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        } else if ($sort_order == 4) {
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        } else if ($sort_order == 3) {
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        } else if ($sort_order == 8) {
+            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
+        }
+
 
         if ($fechas1 || $fechas2 || $keyword) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $keyword) {
@@ -850,18 +860,31 @@ class HistorialPagosController extends RootAdminController
         }
 
 
-        if ($fechas1 || $fechas2) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $sort_order) {
+    
 
-                if ($fechas1 && $fechas2) {
-                    $fromTo = date('Y-m-d H:i:s', strtotime($fechas1));
-                    $sql->Where('fecha_pago', '>=', $fromTo);
+        if ($fechas1 || $fechas2 ) {
+            $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $order_status) {
+                if ($fechas1 && $fechas2 && $order_status != 1) {
+                    
+                } elseif ($fechas1) {
+                    $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)));
+                } elseif ($fechas2) {
+                    $sql->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
                 }
-                if ($fechas1 && $fechas2) {
-                    $fromTo = date('Y-m-d H:i:s', strtotime($fechas2));
-                    $sql->Where('fecha_pago', '<=', $fromTo);
+
+                if ($order_status == 1) {
+                    if ($fechas1 && $fechas2) {
+                        $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)))
+                            ->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
+                    } elseif ($fechas1) {
+                        $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)));
+                    } elseif ($fechas2) {
+                        $sql->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
+                    }
                 }
             });
+
+            
         }
 
         if ($email) {
@@ -871,6 +894,8 @@ class HistorialPagosController extends RootAdminController
         }
 
         if ($from_to) {
+
+           
             $orderList = $orderList->where(function ($sql) use ($from_to) {
                 $sql->Where('created_at', '>=', $from_to);
             });
@@ -882,27 +907,17 @@ class HistorialPagosController extends RootAdminController
             });
         }
 
+   
+
+
+
+      
+
         if ($sort_order && array_key_exists($sort_order, $arrSort)) {
 
 
 
-            if ($sort_order == 1) {
-                $fecha_hoy = date('y-m-d');
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 5) {
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 6) {
-                $fecha_hoy = date('y-m-d');
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
-            } else if ($sort_order == 2) {
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 4) {
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 3) {
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            } else if ($sort_order == 8) {
-                $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-            }
+         
         }
 
         $orderList = $orderList->paginate(20);
@@ -2534,8 +2549,8 @@ class HistorialPagosController extends RootAdminController
 
 
         if ($dataSearch['order_status']) {
-            $orderList->where('sc_historial_pagos.payment_status', 1);
-           
+            $orderList->where('sc_historial_pagos.payment_status', request('order_status'));
+    
         }else if ($dataSearch['end_to'] && request('order_status')) {
             $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
             $orderList->where(function ($query) use ($fromTo, $dataSearch) {
@@ -2553,13 +2568,17 @@ class HistorialPagosController extends RootAdminController
             $orderList->where('sc_historial_pagos.order_id', $keyword);
         }
 
-        $Resultado = $orderList->first();
+        $orderList->orderBy('fecha_pago', 'desc');
+
+        $Resultado = $orderList->get();
+
         if (empty($Resultado)) {
             return redirect(sc_route_admin('historial_pagos.index'))
                 ->with(['error' => 'Selecciona un status de pago']);
         }
 
         $spreadsheet = new Spreadsheet();
+
         // Obtener la hoja activa
         $hoja = $spreadsheet->getActiveSheet();
 
@@ -2575,15 +2594,18 @@ class HistorialPagosController extends RootAdminController
         $hoja->setCellValue('I1', 'Creado');
 
         $datos =  $Resultado;
+       
+
+       
         // Obtener los datos de la base de datos
         $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
 
         // Establecer los datos de la tabla
         $fila = 2;
-
         foreach ($datos as  $dato) {
+           if(request('order_status') == 1){
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
-            $hoja->setCellValue('B' . $fila, $dato->first_name . $dato->order_id);
+            $hoja->setCellValue('B' . $fila, $dato['first_name'] . $dato->order_id);
             $hoja->setCellValue('C' . $fila, $dato->tota_product ?? 'N/A');
             $hoja->setCellValue('D' . $fila, $dato->referencia ?? 'N/A');
             $hoja->setCellValue('E' . $fila,  $dato->metodoPago ?? 'N/A');
@@ -2592,6 +2614,8 @@ class HistorialPagosController extends RootAdminController
             $hoja->setCellValue('H' . $fila, $dato->fecha_pago);
             $hoja->setCellValue('I' . $fila, $dato->created_at);
             $fila++;
+
+           }
         }
 
 
