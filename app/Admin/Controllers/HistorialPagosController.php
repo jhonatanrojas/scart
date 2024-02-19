@@ -93,6 +93,9 @@ class HistorialPagosController extends RootAdminController
         $data['blockBottom'] = sc_config_group('blockBottom', \Request::route()->getName());
 
 
+        // dd(request('sort_order'));
+
+
 
         $listTh = [
             'Convenio' => 'Convenio',
@@ -106,12 +109,15 @@ class HistorialPagosController extends RootAdminController
             'Creado' => 'Creado',
             'action' => sc_language_render('action.title'),
         ];
-        $sort_order = sc_clean(request('sort_order') ?? 'id_desc');
+        $sort_order = sc_clean(request('sort_order'));
 
         $keyword = sc_clean(request('keyword') ?? '');
         $fechas1 = sc_clean(request('fecha1') ?? '');
         $fechas2 = sc_clean(request('fecha2') ?? '');
         $statusPayment = PaymentStatus::select(['name', 'id'])->get();
+
+
+        // dd($sort_order);
 
 
         $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to=' . $fechas1 . '&end_to=' . $fechas2 . '&from_to=' . $fechas1 . '&keyword=' . $keyword . '&order_status=' . $sort_order . '"><i class="fa fa-download"></i>Export Ecxel </a>';
@@ -220,7 +226,7 @@ class HistorialPagosController extends RootAdminController
         $inpuExcel = '';
 
 
-        $ruta_exel = route('descargar.excelpago');
+        // $ruta_exel = route('descargar.excelpago');
         foreach ($dataSearch2 as $key => $value) {
             $inpuExcel .= '<input required type="hidden" name="' . $key . '" value="' . $value . '">';
         }
@@ -256,7 +262,7 @@ class HistorialPagosController extends RootAdminController
                 <div class="col-md-3 form-group">
                         <label>' . 'Status' . ':</label>
                         <div class="input-group">
-                        <select class="form-control rounded-0" name="sort_order" id="">
+                        <select class="form-control rounded-0" name="sort_order" id="sort_order">
                        
                         <option value=""> Búsqueda por Estatus</option>
                         <option value="1">No pagado</option><option value="2">Pago reportado(Pendiente)</option><option value="3">Pago Pendiente</option><option value="4">Pago en mora (Vencido)</option><option value="5">Pagado</option><option value="0">Todos</option>
@@ -468,7 +474,7 @@ class HistorialPagosController extends RootAdminController
 
 
         if (isset($dataTmp[0]->cliente->first_name)) {
-            $data['title'] = 'Detalle de pago- Cliente: ' . $dataTmp[0]->cliente->first_name . '  ' . $dataTmp[0]->cliente->last_name;
+            $data['title'] = 'Detalle de pago-Cliente: ' . $dataTmp[0]->cliente->first_name . '  ' . $dataTmp[0]->cliente->last_name;
         }
 
 
@@ -2497,16 +2503,13 @@ class HistorialPagosController extends RootAdminController
     public function descargar()
     {
 
+
         $search = request()->all();
-
-
-
-
         $dataSearch = [
             'keyword'      => $search['keyword'] ?? '',
             'from_to'      => $search['from_to'] ?? '',
             'end_to'       => $search['end_to'] ?? '',
-            'order_status' => $search['order_status'] ?? 0,
+            'order_status' => request('order_status') ?? 0,
         ];
 
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
@@ -2526,50 +2529,37 @@ class HistorialPagosController extends RootAdminController
                 'sc_shop_order.cedula',
                 'sc_shop_order.vendedor_id',
                 'sc_historial_pagos.order_id'
-            )->first();
+            );
 
 
 
         if ($dataSearch['order_status']) {
-            $orderList->where('sc_historial_pagos.payment_status', $dataSearch['order_status']);
-
-
-            dd($dataSearch['order_status']);
-        }
-
-        if ($dataSearch['end_to'] && $dataSearch['order_status']) {
+            $orderList->where('sc_historial_pagos.payment_status', 1);
+           
+        }else if ($dataSearch['end_to'] && request('order_status')) {
             $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
             $orderList->where(function ($query) use ($fromTo, $dataSearch) {
-                $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
+                $query->where('sc_historial_pagos.payment_status', request('order_status'))
                     ->where('sc_historial_pagos.created_at', '<=', $fromTo);
             });
-        }
-
-        if ($dataSearch['from_to'] && $dataSearch['order_status']) {
+        }else if ($dataSearch['from_to'] && request('order_status')) {
             $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['from_to']));
             $orderList->where(function ($query) use ($fromTo, $dataSearch) {
-                $query->where('sc_historial_pagos.payment_status', $dataSearch['order_status'])
+                $query->where('sc_historial_pagos.payment_status', request('order_status'))
                     ->where('sc_historial_pagos.created_at', '>=', $fromTo);
             });
-        }
-
-        if ($dataSearch['keyword']) {
+        }else if ($dataSearch['keyword']) {
             $keyword = $dataSearch['keyword'];
             $orderList->where('sc_historial_pagos.order_id', $keyword);
         }
 
-        $orderList->orderBy('fecha_pago', 'desc');
-
-        $Resultado = $orderList->get();
-
+        $Resultado = $orderList->first();
         if (empty($Resultado)) {
             return redirect(sc_route_admin('historial_pagos.index'))
                 ->with(['error' => 'Selecciona un status de pago']);
         }
 
-
         $spreadsheet = new Spreadsheet();
-
         // Obtener la hoja activa
         $hoja = $spreadsheet->getActiveSheet();
 
@@ -2584,24 +2574,14 @@ class HistorialPagosController extends RootAdminController
         $hoja->setCellValue('H1', 'Fecha pago');
         $hoja->setCellValue('I1', 'Creado');
 
-
-
         $datos =  $Resultado;
         // Obtener los datos de la base de datos
-
-
         $statusPayment = ShopPaymentStatus::pluck('name', 'id')->all();
-
-
-
 
         // Establecer los datos de la tabla
         $fila = 2;
 
         foreach ($datos as  $dato) {
-
-
-
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
             $hoja->setCellValue('B' . $fila, $dato->first_name . $dato->order_id);
             $hoja->setCellValue('C' . $fila, $dato->tota_product ?? 'N/A');
@@ -2611,9 +2591,6 @@ class HistorialPagosController extends RootAdminController
             $hoja->setCellValue('G' . $fila, $dato->comment);
             $hoja->setCellValue('H' . $fila, $dato->fecha_pago);
             $hoja->setCellValue('I' . $fila, $dato->created_at);
-
-
-
             $fila++;
         }
 
