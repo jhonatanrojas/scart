@@ -801,8 +801,6 @@ class HistorialPagosController extends RootAdminController
 
 
         if ($keyword) {
-
-
             $orderList = $orderList->where(function ($sql) use ($keyword) {
                 $sql->Where('order_id', $keyword);
             });
@@ -851,10 +849,10 @@ class HistorialPagosController extends RootAdminController
                     $sql->Where('order_id', $keyword);
                 }
                 if ($keyword && $fechas1 && $fechas2) {
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '>=', $fechas1);
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '<=', $fechas1);
                 }
                 if ($keyword && $fechas1 && $fechas2) {
-                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '<=', $fechas2);
+                    $sql->Where('order_id', $keyword)->Where('fecha_pago', '>=', $fechas2);
                 }
             });
         }
@@ -865,19 +863,18 @@ class HistorialPagosController extends RootAdminController
         if ($fechas1 || $fechas2 ) {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $order_status) {
                 if ($fechas1 && $fechas2 && $order_status != 1) {
+                    if ($fechas1) {
+                        $sql->Where('fecha_venciento', '>=', $fechas1)
+                        ->orderBy('fecha_venciento', 'desc');
+                    } elseif ($fechas2) {
+                        $sql->Where('fecha_venciento', '<=', $fechas2)
+                        ->orderBy('fecha_venciento', 'desc');
+                    }
                     
-                } elseif ($fechas1) {
-                    $sql->Where('fecha_venciento', '>=', $fechas1)
-                    ->orderBy('fecha_venciento', 'desc');
-                } elseif ($fechas2) {
-                    $sql->Where('fecha_venciento', '<=', $fechas2)
-                    ->orderBy('fecha_venciento', 'desc');
-                }
+                } 
 
                 if ($order_status == 1) {
-                    if ($fechas1 && $fechas2) {
-                    
-                    } elseif ($fechas1) {
+                     if ($fechas1) {
                         $sql->Where('fecha_venciento', '>=', $fechas1)
                         ->orderBy('fecha_venciento', 'desc');
                     } elseif ($fechas2) {
@@ -912,22 +909,11 @@ class HistorialPagosController extends RootAdminController
 
    
 
-
-
-      
-
-        if ($sort_order && array_key_exists($sort_order, $arrSort)) {
+                    $orderList = $orderList->paginate(20);
 
 
 
-         
-        }
-
-        $orderList = $orderList->paginate(20);
-
-
-
-        return $orderList;
+                    return $orderList;
     }
 
     /**
@@ -2547,7 +2533,7 @@ class HistorialPagosController extends RootAdminController
                 'sc_shop_order.cedula',
                 'sc_shop_order.vendedor_id',
                 'sc_historial_pagos.order_id'
-            );
+            )->first();
 
 
 
@@ -2606,7 +2592,7 @@ class HistorialPagosController extends RootAdminController
         // Establecer los datos de la tabla
         $fila = 2;
         foreach ($datos as  $dato) {
-           if(request('order_status') == 1){
+           
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
             $hoja->setCellValue('B' . $fila, $dato['first_name'] . $dato->order_id);
             $hoja->setCellValue('C' . $fila, $dato->tota_product ?? 'N/A');
@@ -2618,7 +2604,6 @@ class HistorialPagosController extends RootAdminController
             $hoja->setCellValue('I' . $fila, $dato->created_at);
             $fila++;
 
-           }
         }
 
 
