@@ -325,7 +325,7 @@ class HistorialPagosController extends RootAdminController
         $validator = Validator::make($request->all(), [
             'importe_couta' => 'required',
             'order_id' => 'required',
-            'fecha_vencimiento' => 'required',
+            'fecha_venciento' => 'required',
             'nro_couta' => 'required',
         ]);
         if ($validator->fails()) {
@@ -340,7 +340,7 @@ class HistorialPagosController extends RootAdminController
             'customer_id' => $order->customer_id,
             'order_id' => $request->order_id,
             'importe_couta' => $request->importe_couta,
-            'fecha_venciento' => $request->fecha_vencimiento,
+            'fecha_venciento' => $request->fecha_venciento,
             'order_detail_id' => 0,
             'payment_status' => $request->payment_status ?? 1
 
@@ -867,45 +867,48 @@ class HistorialPagosController extends RootAdminController
                 if ($fechas1 && $fechas2 && $order_status != 1) {
                     
                 } elseif ($fechas1) {
-                    $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)));
+                    $sql->Where('fecha_venciento', '>=', $fechas1)
+                    ->orderBy('fecha_venciento', 'desc');
                 } elseif ($fechas2) {
-                    $sql->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
+                    $sql->Where('fecha_venciento', '<=', $fechas2)
+                    ->orderBy('fecha_venciento', 'desc');
                 }
 
                 if ($order_status == 1) {
                     if ($fechas1 && $fechas2) {
-                        $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)))
-                            ->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
+                    
                     } elseif ($fechas1) {
-                        $sql->Where('fecha_venciento', '>=', date('Y-m-d', strtotime($fechas1)));
+                        $sql->Where('fecha_venciento', '>=', $fechas1)
+                        ->orderBy('fecha_venciento', 'desc');
                     } elseif ($fechas2) {
-                        $sql->Where('fecha_venciento', '<=', date('Y-m-d', strtotime($fechas2)));
-                    }
+                        $sql->Where('fecha_venciento', '<=', $fechas2)
+                        ->orderBy('fecha_venciento', 'desc');
+                    } 
                 }
             });
 
             
         }
 
-        if ($email) {
-            $orderList = $orderList->where(function ($sql) use ($email) {
-                $sql->Where('email', 'like', '%' . $email . '%');
-            });
-        }
+                    if ($email) {
+                        $orderList = $orderList->where(function ($sql) use ($email) {
+                            $sql->Where('email', 'like', '%' . $email . '%');
+                        });
+                    }
 
-        if ($from_to) {
+                    if ($from_to) {
 
-           
-            $orderList = $orderList->where(function ($sql) use ($from_to) {
-                $sql->Where('created_at', '>=', $from_to);
-            });
-        }
+                    
+                        $orderList = $orderList->where(function ($sql) use ($from_to) {
+                            $sql->Where('created_at', '>=', $from_to);
+                        });
+                    }
 
-        if ($end_to) {
-            $orderList = $orderList->where(function ($sql) use ($end_to) {
-                $sql->Where('created_at', '<=', $end_to);
-            });
-        }
+                    if ($end_to) {
+                        $orderList = $orderList->where(function ($sql) use ($end_to) {
+                            $sql->Where('created_at', '<=', $end_to);
+                        });
+                    }
 
    
 
