@@ -793,23 +793,48 @@ class HistorialPagosController extends RootAdminController
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
         ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
-        $orderList = $orderList->orderByDesc('fecha_venciento');
+        if ($sort_order == 1 && $fechas1 && $fechas2) {
+            $orderList = $orderList->where('fecha_venciento', '>=', $fechas1)
+            ->where('fecha_venciento', '<=', $fechas2)
+            ->orderBy('fecha_venciento', 'ASC')
+            ->paginate(20);                    
+            return $orderList;
+        }elseif($sort_order == 1){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', 1)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);
+            return $orderList;
 
-                if ($sort_order == 1 && $fechas1 && $fechas2) {
-                    $orderList = $orderList->whereBetween('fecha_venciento', [$fechas1, $fechas2])->paginate(10);
-                } elseif ($sort_order == 1) {
-                    $orderList = $orderList->where('sc_historial_pagos.payment_status', 1)->paginate(20);
-                } elseif (in_array($sort_order, [2, 3, 4, 5, 6, 8])) {
-                    if ($fechas1 != '' && $fechas2 != '') {
-                        $orderList = $orderList->whereBetween('fecha_pago', [$fechas1, $fechas2])->paginate(10);
-                    } elseif (in_array($sort_order, [2, 3, 4, 5, 6, 8])) {
-                        $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)->orderByDesc('fecha_pago')->paginate(20);
-                    }
-                } elseif ($sort_order == 0) {
-                    $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1)->paginate(20);
-                }
+        }elseif ($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8 ) {
+            
 
+            if( $fechas1 != '' && $fechas2 != ''){
+                $orderList = $orderList->where('fecha_pago', '>=', $fechas1)
+                ->where('fecha_pago', '<=', $fechas2)
+                ->orderBy('fecha_pago', 'ASC')
+                ->paginate(20);
                 return $orderList;
+
+            }elseif($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8){
+                $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+                ->orderBy('fecha_pago', 'desc')
+                ->paginate(20);
+                return $orderList;
+    
+            }
+           
+         }else if ($sort_order == 0){
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
+            ->paginate(20);
+                return $orderList;
+         }
+
+        
+         
+         
+          
+         
 
 
         if (isset($storeId)) {
