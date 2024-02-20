@@ -185,13 +185,13 @@ class HistorialPagosController extends RootAdminController
             $dataTr[$row->id] = [
                 'Convenio' => $Nr_convenio->nro_convenio ?? '',
                 'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
-                'Importe pagado' => $row->importe_pagado,
-                'Referencia' => $row->referencia,
-                'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : '',
+                'Importe pagado' => $row->importe_pagado ?? 'N/A',
+                'Referencia' => $row->referencia ?? 'N/A',
+                'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : 'N/A' ?? 'N/A',
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
-                'Comentario' => $row->comment,
-                'fecha_pago' => $row->fecha_pago,
-                'Creado' => $row->created_at,
+                'Comentario' => $row->comment ?? 'N/A',
+                'fecha_pago' => $row->fecha_pago ?? $row->fecha_venciento,
+                'Creado' => $row->created_at ?? 'N/A',
 
 
 
@@ -780,8 +780,6 @@ class HistorialPagosController extends RootAdminController
     }
     public static function getPagosListAdmin(array $dataSearch)
     {
-
-
         $keyword = $dataSearch['keyword'] ?? '';
         $fechas1 = $dataSearch['fechas1'] ?? '';
         $fechas2 = $dataSearch['fechas2'] ?? '';
@@ -792,9 +790,58 @@ class HistorialPagosController extends RootAdminController
         $arrSort = $dataSearch['arrSort'] ?? '';
         $order_status = $dataSearch['order_status'] ?? '';
         $storeId = $dataSearch['storeId'] ?? '';
-        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
+        $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
+        ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
-        if ($storeId) {
+
+        
+       
+        if ($sort_order == 1 && $fechas1 && $fechas2) {
+            
+            $orderList = $orderList->where('fecha_venciento', '>=', $fechas1)
+                                   ->where('fecha_venciento', '<=', $fechas2)
+                                   ->orderBy('fecha_venciento', 'ASC')
+                                   ->paginate(10);
+            return $orderList;
+        }elseif($sort_order == 1){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', 1)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);
+            return $orderList;
+
+        }elseif ($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8 ) {
+            
+
+            if( $fechas1 != '' && $fechas2 != ''){
+                $orderList = $orderList->where('fecha_pago', '>=', $fechas1)
+                ->where('fecha_pago', '<=', $fechas2)
+                ->orderBy('fecha_pago', 'ASC')
+                ->paginate(10);
+                return $orderList;
+
+            }elseif($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8){
+                $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+                ->orderBy('fecha_pago', 'desc')
+                ->paginate(20);
+                return $orderList;
+    
+            }
+           
+         }else if ($sort_order == 0){
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
+            ->paginate(20);
+                return $orderList;
+         }
+
+        
+         
+         
+          
+         
+
+
+        if (isset($storeId)) {
             $orderList = $orderList->where('store_id', $storeId)->where('sc_historial_pagos.payment_status', '<>', 1)
                 ->orderBy('fecha_pago', 'desc');
         }
@@ -824,26 +871,8 @@ class HistorialPagosController extends RootAdminController
             }
         }
 
-        if ($sort_order == 1) {
-            $fecha_hoy = date('y-m-d');
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        } else if ($sort_order == 5) {
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        } else if ($sort_order == 6) {
-            $fecha_hoy = date('y-m-d');
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order)->Where('fecha_pago', '=', $fecha_hoy);
-        } else if ($sort_order == 2) {
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        } else if ($sort_order == 4) {
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        } else if ($sort_order == 3) {
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        } else if ($sort_order == 8) {
-            $orderList = $orderList->Where('sc_historial_pagos.payment_status', $sort_order);
-        }
 
-
-        if ($fechas1 || $fechas2 || $keyword) {
+        if ($fechas1 && $fechas2 &&  $keyword != '') {
             $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $keyword) {
                 if ($keyword) {
                     $sql->Where('order_id', $keyword);
@@ -856,64 +885,30 @@ class HistorialPagosController extends RootAdminController
                 }
             });
         }
-
-
-    
-
-        if ($fechas1 || $fechas2 ) {
-            $orderList = $orderList->where(function ($sql) use ($fechas1, $fechas2, $order_status) {
-                if ($fechas1 && $fechas2 && $order_status != 1) {
-                    if ($fechas1) {
-                        $sql->Where('fecha_venciento', '>=', $fechas1)
-                        ->orderBy('fecha_venciento', 'desc');
-                    } elseif ($fechas2) {
-                        $sql->Where('fecha_venciento', '<=', $fechas2)
-                        ->orderBy('fecha_venciento', 'desc');
-                    }
-                    
-                } 
-
-                if ($order_status == 1) {
-                     if ($fechas1) {
-                        $sql->Where('fecha_venciento', '>=', $fechas1)
-                        ->orderBy('fecha_venciento', 'desc');
-                    } elseif ($fechas2) {
-                        $sql->Where('fecha_venciento', '<=', $fechas2)
-                        ->orderBy('fecha_venciento', 'desc');
-                    } 
-                }
+        if ($email) {
+            $orderList = $orderList->where(function ($sql) use ($email) {
+                $sql->Where('email', 'like', '%' . $email . '%');
             });
-
-            
         }
 
-                    if ($email) {
-                        $orderList = $orderList->where(function ($sql) use ($email) {
-                            $sql->Where('email', 'like', '%' . $email . '%');
-                        });
-                    }
+        if ($from_to) {
+            $orderList = $orderList->where(function ($sql) use ($from_to) {
+                $sql->Where('created_at', '>=', $from_to);
+            });
+        }
 
-                    if ($from_to) {
+        if ($end_to) {
+            $orderList = $orderList->where(function ($sql) use ($end_to) {
+                $sql->Where('created_at', '<=', $end_to);
+            });
+        }
 
-                    
-                        $orderList = $orderList->where(function ($sql) use ($from_to) {
-                            $sql->Where('created_at', '>=', $from_to);
-                        });
-                    }
+        $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1);
+        
+        
+        $orderList = $orderList->paginate(20);
 
-                    if ($end_to) {
-                        $orderList = $orderList->where(function ($sql) use ($end_to) {
-                            $sql->Where('created_at', '<=', $end_to);
-                        });
-                    }
-
-   
-
-                    $orderList = $orderList->paginate(20);
-
-
-
-                    return $orderList;
+        return $orderList;
     }
 
     /**
