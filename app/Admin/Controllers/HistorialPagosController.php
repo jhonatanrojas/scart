@@ -105,6 +105,7 @@ class HistorialPagosController extends RootAdminController
             'Metodo de pago' => 'Metodo',
             'Estatus' => 'Estatus',
             'Comentario' => 'Comentario',
+            'fecha_venciminto' => 'fecha Venciminto',
             'fecha_pago' => 'Fecha pago',
             'Creado' => 'Creado',
             'action' => sc_language_render('action.title'),
@@ -128,12 +129,7 @@ class HistorialPagosController extends RootAdminController
             # code...
         }
 
-
-
         $arrSort['0'] = 'Todos';
-
-
-
         $dataSearch = [
             'keyword' => $keyword,
             'fechas1' => $fechas1,
@@ -181,7 +177,6 @@ class HistorialPagosController extends RootAdminController
 
             $Nr_convenio = Convenio::where('order_id', $row->order_id)->first();
 
-
             $dataTr[$row->id] = [
                 'Convenio' => $Nr_convenio->nro_convenio ?? '',
                 'solicitud' => $row->order_id . '<br>' .  $order->first_name . '  ' . $order->last_name,
@@ -190,6 +185,7 @@ class HistorialPagosController extends RootAdminController
                 'Metodo de pago' => isset($row->metodo_pago->name) ? $row->metodo_pago->name : 'N/A' ?? 'N/A',
                 'Estatus' => $row->estatus->name . '<br><small>' . $row->observacion . '</small>',
                 'Comentario' => $row->comment ?? 'N/A',
+                'fecha_venciminto' => $row->fecha_venciento ?? 'N/A',
                 'fecha_pago' => $row->fecha_pago ?? $row->fecha_venciento,
                 'Creado' => $row->created_at ?? 'N/A',
 
@@ -257,7 +253,7 @@ class HistorialPagosController extends RootAdminController
                         <select class="form-control rounded-0" name="sort_order" id="sort_order">
                        
                         <option value=""> Búsqueda por Estatus</option>
-                        <option value="1">No pagado</option><option value="2">Pago reportado(Pendiente)</option><option value="3">Pago Pendiente</option><option value="4">Pago en mora (Vencido)</option><option value="5">Pagado</option><option value="0">Todos</option>
+                        <option value="1">No pagado</option><option value="2">Pago reportado(Pendiente)</option><option value="3">Pagado (Dentro del rango)</option><option value="4">Pago en mora</option><option value="5">Pagado (al día)</option><option value="7">Vencido</option><option value="0">Todos</option>
                 
                       </select>
                         </div>
@@ -794,47 +790,87 @@ class HistorialPagosController extends RootAdminController
         ->select('sc_historial_pagos.*', 'sc_shop_order.first_name', 'sc_shop_order.last_name');
 
         if ($sort_order == 1 && $fechas1 && $fechas2) {
-            $orderList = $orderList->where('fecha_venciento', '>=', $fechas1)
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)->where('fecha_venciento', '>=', $fechas1)
             ->where('fecha_venciento', '<=', $fechas2)
             ->orderBy('fecha_venciento', 'ASC')
             ->paginate(20);                    
             return $orderList;
         }elseif($sort_order == 1){
            
-            $orderList = $orderList->where('sc_historial_pagos.payment_status', 1)
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
             ->orderBy('fecha_venciento', 'desc')
             ->paginate(20);
             return $orderList;
 
-        }elseif ($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8 ) {
-            
+        }
+        if($sort_order == 2){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);
+            return $orderList;
 
+        }
+        if($sort_order == 3){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);
+            return $orderList;
+
+        }
+        
+        if($sort_order == 4){
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+            ->orderBy('fecha_pago', 'desc')
+            ->paginate(20);
+            return $orderList;
+
+        }
+         if($sort_order == 5  && $fechas1 == '' && $fechas2 == ''){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+            ->orderBy('fecha_pago', 'desc')
+            ->paginate(20);
+            return $orderList;
+
+        }
+     
+        if($sort_order == 8){
+           
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);
+            return $orderList;
+
+        }
+
+        if ($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8 ) {
             if( $fechas1 != '' && $fechas2 != ''){
-                $orderList = $orderList->where('fecha_pago', '>=', $fechas1)
+                $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)->where('fecha_pago', '>=', $fechas1)
                 ->where('fecha_pago', '<=', $fechas2)
                 ->orderBy('fecha_pago', 'ASC')
                 ->paginate(20);
                 return $orderList;
 
-            }elseif($sort_order == 2 || $sort_order == 3 || $sort_order == 4 || $sort_order == 5 || $sort_order == 6 || $sort_order == 8){
-                $orderList = $orderList->where('sc_historial_pagos.payment_status', $sort_order)
-                ->orderBy('fecha_pago', 'desc')
-                ->paginate(20);
-                return $orderList;
-    
             }
            
+         }
+         
+         if ($sort_order == 0 && $fechas1 && $fechas2 ){
+
+          
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1)->where('fecha_venciento', '>=', $fechas1)
+            ->where('fecha_venciento', '<=', $fechas2)
+            ->orderBy('fecha_venciento', 'desc')
+            ->paginate(20);                    
+            return $orderList;
          }else if ($sort_order == 0){
-            $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>', 1)
+            $orderList = $orderList->where('sc_historial_pagos.payment_status', '<>')
+            ->orderBy('fecha_venciento', 'desc')
             ->paginate(20);
                 return $orderList;
          }
-
-        
-         
-         
-          
-         
 
 
         if (isset($storeId)) {
