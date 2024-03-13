@@ -117,11 +117,15 @@ class HistorialPagosController extends RootAdminController
         $fechas2 = sc_clean(request('fecha2') ?? '');
         $statusPayment = PaymentStatus::select(['name', 'id'])->get();
 
+        $estatus = $sort_order;
 
-        // dd($sort_order);
+
+        //  dd($sort_order);
         $ruta_exel = route('descargar.excelpago');
+        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel .'?from_to=' . $fechas1 . '&end_to=' . $fechas2 .  '&keyword=' . $keyword . '&order_status=' . $estatus . '"><i class="fa fa-download"></i>Export Ecxel </a>';
 
-        $data['menuLeft'][] = '<a class="btn btn-flat btn-success  btn-sm" href="' . $ruta_exel . '?from_to=' . $fechas1 . '&end_to=' . $fechas2 . '&from_to=' . $fechas1 . '&keyword=' . $keyword . '&order_status=' . $sort_order . '"><i class="fa fa-download"></i>Export Ecxel </a>';
+
+        
 
 
         foreach ($statusPayment as $key => $value) {
@@ -146,7 +150,7 @@ class HistorialPagosController extends RootAdminController
 
 
         $dataTmp = $this->getPagosListAdmin($dataSearch);
-
+        
 
 
         $dataTr = [];
@@ -214,7 +218,7 @@ class HistorialPagosController extends RootAdminController
         $inpuExcel = '';
 
 
-        // $ruta_exel = route('descargar.excelpago');
+         $ruta_exel = route('descargar.excelpago');
         // foreach ($dataSearch as $key => $value) {
         //     $inpuExcel .= '<input required type="hidden" name="' . $key . '" value="' . $value . '">';
         // }
@@ -2532,22 +2536,18 @@ class HistorialPagosController extends RootAdminController
     public function descargar()
     {
 
-
-       
-
         $search = request()->all();
         $dataSearch = [
             'keyword'      => $search['keyword'] ?? '',
             'from_to'      => $search['from_to'] ?? '',
             'end_to'       => $search['end_to'] ?? '',
-            'order_status' => request('order_status') ?? 1,
+            'order_status' => request('order_status'),
         ];
 
         $orderList = HistorialPago::join('sc_shop_order', 'sc_historial_pagos.order_id', '=', 'sc_shop_order.id')
-            ->join('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->join('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
-            ->join('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
-            ->join('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
-            ->orderBy('nro_coutas')
+            ->leftJoin('sc_convenios', 'sc_historial_pagos.order_id', '=', 'sc_convenios.order_id')->leftJoin('sc_metodos_pagos', 'sc_metodos_pagos.id', '=', 'sc_historial_pagos.metodo_pago_id')
+            ->leftJoin('sc_shop_order_detail', 'sc_historial_pagos.order_id', '=', 'sc_shop_order_detail.order_id')
+            ->leftJoin('sc_shop_customer', 'sc_shop_customer.id', '=', 'sc_shop_order.customer_id')
             ->select('sc_historial_pagos.*',
              'sc_shop_order.first_name',
               'sc_shop_order.last_name',
@@ -2565,31 +2565,48 @@ class HistorialPagosController extends RootAdminController
                       'sc_shop_order.cedula', 
                       'sc_shop_order.vendedor_id');
 
-            if (isset($dataSearch['order_status'])) {
+            
+
+
+            
+
+            
+            
+            if ($dataSearch['order_status'] == 0  && $dataSearch['order_status'] != null ) {
+               
                 $orderList->whereIn('sc_historial_pagos.payment_status', [1,2,3, 4, 5, 6,7,8]);
+                
+               
+            }
+            
+            if($dataSearch['order_status'] ){
+                $orderList->where('sc_historial_pagos.payment_status',$dataSearch['order_status']);
+               
+
             }
     
             
-    //   if ($dataSearch['end_to'] && request('order_status')) {
-    //         $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
-    //         $orderList->where(function ($query) use ($fromTo, $dataSearch) {
-    //             $query->where('sc_historial_pagos.payment_status', request('order_status'))
-    //                 ->where('sc_historial_pagos.created_at', '<=', $fromTo);
-    //         });
-    //     }else if ($dataSearch['from_to'] && request('order_status')) {
-    //         $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['from_to']));
-    //         $orderList->where(function ($query) use ($fromTo, $dataSearch) {
-    //             $query->where('sc_historial_pagos.payment_status', request('order_status'))
-    //                 ->where('sc_historial_pagos.created_at', '>=', $fromTo);
-    //         });
-    //     }else if ($dataSearch['keyword']) {
-    //         $keyword = $dataSearch['keyword'];
-    //         $orderList->where('sc_historial_pagos.order_id', $keyword);
-    //     }
+      if ($dataSearch['end_to'] && request('order_status')) {
+            $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['end_to']));
+            $orderList->where(function ($query) use ($fromTo, $dataSearch) {
+                $query->where('sc_historial_pagos.payment_status', request('order_status'))
+                    ->where('sc_historial_pagos.fecha_venciento', '<=', $fromTo);
+            });
+        }else if ($dataSearch['from_to'] && request('order_status')) {
+            $fromTo = date('Y-m-d H:i:s', strtotime($dataSearch['from_to']));
+            $orderList->where(function ($query) use ($fromTo, $dataSearch) {
+                $query->where('sc_historial_pagos.payment_status', request('order_status'))
+                    ->where('sc_historial_pagos.fecha_venciento', '>=', $fromTo);
+            });
+        }else if ($dataSearch['keyword']) {
+            $keyword = $dataSearch['keyword'];
+            $orderList->where('sc_historial_pagos.order_id', $keyword);
+        }
 
         $orderList->orderBy('sc_historial_pagos.fecha_venciento', 'desc');
-
         $results = $orderList->get();
+
+       
 
 
        
@@ -2607,16 +2624,21 @@ class HistorialPagosController extends RootAdminController
         // Agregar el encabezado de las columnas
         $hoja->setCellValue('A1', 'Convenio');
         $hoja->setCellValue('B1', 'Solicitud /Cliente');
-        $hoja->setCellValue('C1', 'Cuotas');
-        $hoja->setCellValue('D1', 'Pagado');
-        $hoja->setCellValue('E1', 'Tasa de cambio');
-        $hoja->setCellValue('F1', 'Referencia');
-        $hoja->setCellValue('G1', 'Metodo');
-        $hoja->setCellValue('H1', 'Estatus');
-        $hoja->setCellValue('I1', 'Comentario');
-        $hoja->setCellValue('J1', 'Fecha de vencimiento');
-        $hoja->setCellValue('K1', 'Fecha pago');
-        $hoja->setCellValue('l1', 'Creado');
+        $hoja->setCellValue('C1', 'Cedula');
+        $hoja->setCellValue('D1', 'Direccion');
+        $hoja->setCellValue('E1', 'Nombre del articulo');
+        $hoja->setCellValue('F1', 'Precio del articulo');
+        $hoja->setCellValue('G1', 'Cuaotas pendiente');
+        $hoja->setCellValue('H1', 'Pagado');
+        $hoja->setCellValue('I1', 'Tasa de cambio');
+        $hoja->setCellValue('J1', 'Referencia');
+        $hoja->setCellValue('K1', 'Metodo');
+        $hoja->setCellValue('L1', 'Estatus');
+        $hoja->setCellValue('M1', 'Comentario');
+        $hoja->setCellValue('N1', 'Fecha de vencimiento');
+        $hoja->setCellValue('O1', 'Fecha pago');
+        $hoja->setCellValue('P1', 'Fecha maxima entrega');
+        $hoja->setCellValue('Q1', 'Creado');
 
         $datos =  $results;
 
@@ -2628,8 +2650,6 @@ class HistorialPagosController extends RootAdminController
         $fila = 2;
         foreach ($datos as  $dato) {
 
-            dd($dato);
-
             $total = 0;
             if($dato->moneda == 'USD') {
                 $total = $dato->importe_pagado . ' ' .'USD';
@@ -2639,16 +2659,21 @@ class HistorialPagosController extends RootAdminController
     
             $hoja->setCellValue('A' . $fila, $dato->nro_convenio ?? 'N/A');
             $hoja->setCellValue('B' . $fila, $dato['first_name'] . $dato->order_id);
-            $hoja->setCellValue('C' . $fila, $dato->cuotas ?? 'N/A');
-            $hoja->setCellValue('D' . $fila, $total ?? 'N/A');
-            $hoja->setCellValue('E' . $fila, $dato->tasa_cambio ?? 'N/A');
-            $hoja->setCellValue('F' . $fila, $dato->referencia ?? 'N/A');
-            $hoja->setCellValue('G' . $fila,  $dato->metodoPago ?? 'N/A');
-            $hoja->setCellValue('H' . $fila,  $statusPayment[$dato->payment_status] ?? 'N/A');
-            $hoja->setCellValue('I' . $fila, $dato->comment);
-            $hoja->setCellValue('J' . $fila, $dato->fecha_venciento);
-            $hoja->setCellValue('K' . $fila, $dato->fecha_pago);
-            $hoja->setCellValue('L' . $fila, $dato->created_at);
+            $hoja->setCellValue('C' . $fila, $dato['cedula']);
+            $hoja->setCellValue('D' . $fila, $dato['direccion']);
+            $hoja->setCellValue('E' . $fila, $dato['nombre_product']);
+            $hoja->setCellValue('F' . $fila, $dato['tota_product'] . ' USD ')  ;
+            $hoja->setCellValue('G' . $fila, $dato->cuaotas_pendiente ?? 'N/A');
+            $hoja->setCellValue('H' . $fila, $total ?? 'N/A');
+            $hoja->setCellValue('I' . $fila, $dato->tasa_cambio ?? 'N/A');
+            $hoja->setCellValue('J' . $fila, $dato->referencia ?? 'N/A');
+            $hoja->setCellValue('K' . $fila,  $dato->metodoPago ?? 'N/A');
+            $hoja->setCellValue('L' . $fila,  $statusPayment[$dato->payment_status] ?? 'N/A');
+            $hoja->setCellValue('M' . $fila, $dato->comment);
+            $hoja->setCellValue('N' . $fila, $dato->fecha_venciento);
+            $hoja->setCellValue('O' . $fila, $dato->fecha_pago);
+            $hoja->setCellValue('P' . $fila, $dato->fecha_maxima_entrega);
+            $hoja->setCellValue('Q' . $fila, $dato->created_at);
             $fila++;
 
         }
