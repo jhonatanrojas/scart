@@ -8,7 +8,7 @@ use App\Http\Controllers\Municipio;
 use App\Http\Controllers\Parroquia;
 use App\Http\Controllers\Productos_cuota;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\EmailController;
 
 Route::get('municipio/{id}', [Municipio::class , 'get_municipio']);
 Route::get('parroquia/{municipio}/{estado}', [Parroquia::class , 'get_parroquia']);
@@ -54,7 +54,8 @@ Route::get('sc_admin/list_propuesta', [AdminOrderController::class,'list_propues
 Route::get('sc_admin/export_product', [AdminProductController::class,'export_product'])->name('export_product');
 Route::get('sc_admin/actualizar_imagenes', [AdminProductController::class,'actualizar_imagenes'])->name('actualizar_imagenes');
 
- 
+Route::post('/send-email', [EmailController::class, 'sendEmail']);
+
 
 //[ 'middleware' => 'admin']
 

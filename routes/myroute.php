@@ -14,7 +14,6 @@ if (sc_config('customer_verify')) {
 
 
 
-
 $nameSpaceAdminCustomer = 'App\Admin\Controllers';
 
 Route::group(['prefix' => 'customer'], function () use ($nameSpaceAdminCustomer) {
